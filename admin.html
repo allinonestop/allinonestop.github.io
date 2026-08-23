@@ -4,199 +4,329 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AllInOneStop Admin Panel</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#eef2ff,#f8fbff 45%,#ecfeff);color:#172033}
-.wrap{max-width:1150px;margin:25px auto;padding:15px}.box{background:#fff;padding:25px;border-radius:22px;box-shadow:0 15px 45px #26305018;margin-bottom:20px;border:1px solid #ffffff}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-h1{margin:0;color:#4f46e5}h2{margin-top:0}label{font-size:13px;font-weight:800;color:#475467}
-input,select{width:100%;padding:12px;margin:6px 0 13px;border:1px solid #d9deea;border-radius:11px;font-size:14px;background:#fff}
-input:focus,select:focus{outline:2px solid #c7d2fe;border-color:#6366f1}
-button,.btn{padding:11px 16px;background:linear-gradient(135deg,#5b5cf0,#287cff);color:#fff;border:0;border-radius:11px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block}
-button:hover,.btn:hover{transform:translateY(-1px)}.logout{background:#475467}.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.hidden{display:none}.msg{padding:12px;border-radius:10px;margin-top:12px;background:#ecfdf3;color:#087443;font-size:14px}.error{background:#fef2f2;color:#b42318}
-.credential{background:linear-gradient(135deg,#f5f3ff,#eff6ff);border:1px solid #dfe3ff;border-radius:15px;padding:16px;margin-top:15px}
-.credential-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.cred{background:#fff;border-radius:11px;padding:10px;border:1px solid #e5e7eb}.cred small{display:block;color:#667085;margin-bottom:4px}.cred strong{font-family:monospace;font-size:15px;word-break:break-all}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.hint{font-size:12px;color:#667085;margin:-5px 0 10px}
-table{width:100%;border-collapse:collapse}td,th{padding:10px;border-bottom:1px solid #eaecf0;text-align:left;font-size:13px}
-.badge{display:inline-block;padding:6px 10px;background:#eef2ff;color:#4f46e5;border-radius:999px;font-size:12px;font-weight:800}
-@media(max-width:700px){.grid,.credential-grid{grid-template-columns:1fr}table{display:block;overflow:auto}}
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%,#7c5cff20,transparent 30%),
+    radial-gradient(circle at 90% 15%,#00d2ff18,transparent 30%),
+    linear-gradient(135deg,#eef2ff,#f8fbff 45%,#ecfeff);
+  color:#172033;
+  min-height:100vh;
+}
+
+button,
+input,
+select{
+  font:inherit;
+}
+
+button,
+.btn{
+  padding:11px 16px;
+  background:linear-gradient(135deg,#5b5cf0,#287cff);
+  color:#fff;
+  border:0;
+  border-radius:11px;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
+  transition:.2s;
+}
+
+button:hover,
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 20px #3658ff30;
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+}
+
+.logout{
+  background:#475467;
+}
+
+.wrap{
+  max-width:1150px;
+  margin:25px auto;
+  padding:15px;
+}
+
+.box{
+  background:#ffffffee;
+  padding:25px;
+  border-radius:22px;
+  box-shadow:0 15px 45px #26305018;
+  margin-bottom:20px;
+  border:1px solid #ffffff;
+  backdrop-filter:blur(12px);
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+h1{
+  margin:0;
+  color:#4f46e5;
+}
+
+h2{
+  margin-top:0;
+}
+
+p{
+  color:#667085;
+}
+
+label{
+  font-size:13px;
+  font-weight:800;
+  color:#475467;
+}
+
+input,
+select{
+  width:100%;
+  padding:12px;
+  margin:6px 0 13px;
+  border:1px solid #d9deea;
+  border-radius:11px;
+  font-size:14px;
+  background:#fff;
+}
+
+input:focus,
+select:focus{
+  outline:2px solid #c7d2fe;
+  border-color:#6366f1;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.msg{
+  padding:12px;
+  border-radius:10px;
+  margin-top:12px;
+  background:#ecfdf3;
+  color:#087443;
+  font-size:14px;
+  font-weight:600;
+}
+
+.error{
+  background:#fef2f2;
+  color:#b42318;
+}
+
+.warning{
+  background:#fffbeb;
+  color:#92400e;
+}
+
+.credential{
+  background:linear-gradient(135deg,#f5f3ff,#eff6ff);
+  border:1px solid #dfe3ff;
+  border-radius:15px;
+  padding:16px;
+  margin-top:15px;
+}
+
+.credential-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.cred{
+  background:#fff;
+  border-radius:11px;
+  padding:12px;
+  border:1px solid #e5e7eb;
+}
+
+.cred small{
+  display:block;
+  color:#667085;
+  margin-bottom:4px;
+}
+
+.cred strong{
+  font-family:monospace;
+  font-size:15px;
+  word-break:break-all;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.hint{
+  font-size:12px;
+  color:#667085;
+  margin:-5px 0 10px;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  background:#eef2ff;
+  color:#4f46e5;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.status-online{
+  color:#087443;
+  background:#ecfdf3;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:850px;
+}
+
+td,
+th{
+  padding:10px;
+  border-bottom:1px solid #eaecf0;
+  text-align:left;
+  font-size:13px;
+  vertical-align:middle;
+}
+
+th{
+  color:#475467;
+  background:#f8fafc;
+}
+
+.table-wrap{
+  overflow:auto;
+  margin-top:12px;
+  border:1px solid #eaecf0;
+  border-radius:14px;
+}
+
+.small-btn{
+  padding:8px 11px;
+  font-size:12px;
+}
+
+.loading{
+  text-align:center;
+  padding:25px;
+  color:#667085;
+}
+
+.login-box{
+  max-width:550px;
+  margin:70px auto;
+}
+
+.login-icon{
+  width:70px;
+  height:70px;
+  border-radius:20px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#6366f1,#06b6d4);
+  color:white;
+  font-size:34px;
+  margin-bottom:18px;
+}
+
+.divider{
+  height:1px;
+  background:#eaecf0;
+  margin:22px 0;
+}
+
+footer{
+  text-align:center;
+  color:#7b8496;
+  font-size:12px;
+  padding:20px;
+}
+
+@media(max-width:700px){
+
+  .wrap{
+    margin:10px auto;
+    padding:10px;
+  }
+
+  .box{
+    padding:18px;
+    border-radius:18px;
+  }
+
+  .grid,
+  .credential-grid{
+    grid-template-columns:1fr;
+  }
+
+  .login-box{
+    margin:25px auto;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <div class="wrap">
 
-  <div class="box" id="login">
-    <div class="top"><div><h1>🔐 Admin Login</h1><p>AllInOneStop management portal</p></div><a class="btn logout" href="index.html">Home</a></div>
-    <input id="email" type="email" placeholder="Admin email" autocomplete="username">
-    <input id="pass" type="password" placeholder="Admin password" autocomplete="current-password">
-    <button onclick="login()">Login</button>
-    <div id="lm"></div>
-  </div>
+  <!-- =========================
+       ADMIN LOGIN
+  ========================== -->
+  <div class="box login-box" id="login">
 
-  <div id="panel" class="hidden">
-    <div class="box">
-      <div class="top">
-        <div><h1>🛠️ Admin Panel</h1><div id="who"></div></div>
-        <button class="logout" onclick="logout()">Logout</button>
-      </div>
+    <div class="login-icon">
+      🔐
     </div>
 
-    <div class="box">
-      <h2>➕ Create New Retailer</h2>
-      <p class="hint">Username/retailer ID aur password automatically generate honge. Password retailer ko email se bhejne ke liye backend Edge Function use karega.</p>
+    <h1>Admin Login</h1>
 
-      <div class="grid">
-        <div><label>Retailer Full Name</label><input id="rn" placeholder="Retailer full name"></div>
-        <div><label>Mobile Number</label><input id="rm" maxlength="10" inputmode="numeric" placeholder="10 digit mobile"></div>
-        <div><label>Email</label><input id="re" type="email" placeholder="retailer@gmail.com" autocomplete="off"></div>
-        <div><label>Retailer Number</label><input id="rr" placeholder="Optional — auto generated if blank"></div>
-      </div>
+    <p>
+      AllInOneStop management portal
+    </p>
 
-      <div class="grid">
-        <div>
-          <label>Auto Generated Username / User ID</label>
-          <input id="ru" readonly>
-          <div class="hint">Example: RET-8F3K2A</div>
-        </div>
-        <div>
-          <label>Auto Generated Password</label>
-          <input id="rp" readonly>
-          <div class="hint">Strong temporary password</div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button onclick="generateCredentials()">🔄 Generate ID & Password</button>
-        <button onclick="createRetailer()">👤 Create Retailer & Send Email</button>
-      </div>
-      <div id="cm"></div>
-
-      <div id="credentialBox" class="credential hidden">
-        <strong>✅ Retailer credentials created</strong>
-        <div class="credential-grid" style="margin-top:10px">
-          <div class="cred"><small>Username / Retailer ID</small><strong id="showUser"></strong></div>
-          <div class="cred"><small>Password</small><strong id="showPass"></strong></div>
-        </div>
-        <div class="actions">
-          <button onclick="copyCredentials()">📋 Copy Credentials</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="box">
-      <div class="top"><h2>📋 Applications</h2><button onclick="loadApps()">Refresh</button></div>
-      <div style="overflow:auto;margin-top:12px">
-        <table>
-          <thead><tr><th>TR</th><th>Service</th><th>Amount</th><th>Payment</th><th>Status</th><th>Remark</th><th>Save</th></tr></thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-const SUPABASE_URL="https://dixsmucrgnyuvudhymdj.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_Pdfqt8QfkhprpEtyQJ8jLA_G_-V9D58";
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-
-function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]))}
-function msg(el,t,e=false){el.innerHTML='<div class="msg '+(e?'error':'')+'">'+esc(t)+'</div>'}
-
-function randomString(n, chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"){
-  let out=""; for(let i=0;i<n;i++) out+=chars[Math.floor(Math.random()*chars.length)]; return out;
-}
-function generateCredentials(){
-  const username="RET-"+randomString(6);
-  const password=randomString(5)+"@"+randomString(4,"abcdefghijkmnopqrstuvwxyz")+"9!";
-  document.getElementById("ru").value=username;
-  document.getElementById("rp").value=password;
-  const rr=document.getElementById("rr");
-  if(!rr.value.trim()) rr.value=username;
-}
-generateCredentials();
-
-async function login(){
-  const e=document.getElementById('email').value.trim(),p=document.getElementById('pass').value,l=document.getElementById('lm');
-  if(!e||!p){msg(l,'Email and password are required.',true);return}
-  const {data,error}=await supabaseClient.auth.signInWithPassword({email:e,password:p});
-  if(error){msg(l,error.message,true);return}
-  const {data:profile,error:pe}=await supabaseClient.from('profiles').select('full_name,role').eq('id',data.user.id).maybeSingle();
-  if(pe||!profile||profile.role!=='admin'){
-    await supabaseClient.auth.signOut();msg(l,'This account is not an admin account.',true);return
-  }
-  openPanel(profile,data.user)
-}
-async function openPanel(profile,user){
-  document.getElementById('login').classList.add('hidden');
-  document.getElementById('panel').classList.remove('hidden');
-  document.getElementById('who').textContent='Logged in: '+(profile.full_name||user.email);
-  await loadApps();
-}
-async function restore(){
-  const {data}=await supabaseClient.auth.getSession();if(!data.session)return;
-  const {data:p}=await supabaseClient.from('profiles').select('full_name,role').eq('id',data.session.user.id).maybeSingle();
-  if(p&&p.role==='admin')openPanel(p,data.session.user);
-}
-async function logout(){await supabaseClient.auth.signOut();location.reload()}
-
-async function createRetailer(){
-  const cm=document.getElementById('cm');
-  const body={
-    full_name:document.getElementById('rn').value.trim(),
-    mobile:document.getElementById('rm').value.trim(),
-    email:document.getElementById('re').value.trim(),
-    retailer_number:document.getElementById('rr').value.trim(),
-    username:document.getElementById('ru').value.trim(),
-    password:document.getElementById('rp').value
-  };
-  if(!body.full_name||!body.mobile||!body.email){msg(cm,'Name, mobile and email are required.',true);return}
-  if(body.mobile.length!==10||!/^\d+$/.test(body.mobile)){msg(cm,'Mobile number must be 10 digits.',true);return}
-  if(!body.username||!body.password){generateCredentials();body.username=document.getElementById('ru').value;body.password=document.getElementById('rp').value}
-  const {data:s}=await supabaseClient.auth.getSession();
-  if(!s.session){msg(cm,'Admin session expired. Please login again.',true);return}
-
-  const {data,error}=await supabaseClient.functions.invoke('admin-create-retailer',{body});
-  if(error){msg(cm,error.message||'Retailer creation failed.',true);return}
-  if(data?.error){msg(cm,data.error,true);return}
-
-  document.getElementById('showUser').textContent=data?.username||body.username;
-  document.getElementById('showPass').textContent=data?.password||body.password;
-  document.getElementById('credentialBox').classList.remove('hidden');
-  msg(cm,'Retailer created successfully. Credentials are shown below.');
-  document.getElementById('rn').value='';document.getElementById('rm').value='';document.getElementById('re').value='';
-  generateCredentials();
-}
-async function copyCredentials(){
-  const text="AllInOneStop Retailer Login\nUsername: "+document.getElementById('showUser').textContent+"\nPassword: "+document.getElementById('showPass').textContent;
-  try{await navigator.clipboard.writeText(text);alert('Credentials copied.')}catch(e){alert(text)}
-}
-
-async function loadApps(){
-  const r=document.getElementById('rows');r.innerHTML='<tr><td colspan="7">Loading...</td></tr>';
-  const {data,error}=await supabaseClient.from('applications').select('tr_number,service_name,amount,payment_status,application_status,remark').order('created_at',{ascending:false});
-  if(error){r.innerHTML='<tr><td colspan="7">'+esc(error.message)+'</td></tr>';return}
-  if(!data?.length){r.innerHTML='<tr><td colspan="7">No applications yet.</td></tr>';return}
-  r.innerHTML=data.map(a=>{
-    const t=esc(a.tr_number);
-    return '<tr><td>'+t+'</td><td>'+esc(a.service_name)+'</td><td>₹'+esc(a.amount)+'</td>'+
-    '<td><select id="p-'+t+'"><option '+(a.payment_status==='Pending'?'selected':'')+'>Pending</option><option '+(a.payment_status==='Paid'?'selected':'')+'>Paid</option><option '+(a.payment_status==='Failed'?'selected':'')+'>Failed</option></select></td>'+
-    '<td><select id="s-'+t+'"><option '+(a.application_status==='Received'?'selected':'')+'>Received</option><option '+(a.application_status==='Verification'?'selected':'')+'>Verification</option><option '+(a.application_status==='Processing'?'selected':'')+'>Processing</option><option '+(a.application_status==='Completed'?'selected':'')+'>Completed</option><option '+(a.application_status==='Rejected'?'selected':'')+'>Rejected</option></select></td>'+
-    '<td><input id="r-'+t+'" value="'+esc(a.remark||'')+'"></td><td><button class="saveBtn" data-tr="'+t+'">Save</button></td></tr>'
-  }).join('')
-}
-document.addEventListener('click', function(e){
-  const btn=e.target.closest('.saveBtn');
-  if(btn) saveStatus(btn.dataset.tr);
-});
-async function saveStatus(t){
-  const {data:s}=await supabaseClient.auth.getSession();if(!s.session){alert('Admin session expired. Please login again.');return}
-  const body={tr_number:t,payment_status:document.getElementById('p-'+t).value,application_status:document.getElementById('s-'+t).value,remark:document.getElementById('r-'+t).value};
-  const {data,error}=await supabaseClient.functions.invoke('send-status-email',{body});
-  if(error){alert(error.message);return}if(data?.error){alert(data.error);return}alert('Status updated.');loadApps()
-}
-restore();
-</script>
-</body>
-</html>
+    <div class="
