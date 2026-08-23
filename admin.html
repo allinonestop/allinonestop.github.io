@@ -10,8 +10,6 @@
 <style>
 *{box-sizing:border-box}
 
-html{scroll-behavior:smooth}
-
 body{
   margin:0;
   font-family:Inter,Segoe UI,Arial,sans-serif;
@@ -46,25 +44,12 @@ button:hover,.btn:hover{
 button:disabled{
   opacity:.6;
   cursor:not-allowed;
-  transform:none;
 }
 
 .logout{background:#475467}
 
-.delete-btn{
-  background:linear-gradient(135deg,#dc2626,#b91c1c);
-}
-
-.reset-btn{
-  background:linear-gradient(135deg,#f59e0b,#d97706);
-}
-
-.copy-btn{
-  background:linear-gradient(135deg,#0891b2,#2563eb);
-}
-
 .wrap{
-  max-width:1250px;
+  max-width:1200px;
   margin:25px auto;
   padding:15px;
 }
@@ -75,7 +60,7 @@ button:disabled{
   border-radius:22px;
   box-shadow:0 15px 45px #26305018;
   margin-bottom:20px;
-  border:1px solid #ffffff;
+  border:1px solid #fff;
   backdrop-filter:blur(12px);
 }
 
@@ -92,13 +77,9 @@ h1{
   color:#4f46e5;
 }
 
-h2{
-  margin-top:0;
-}
+h2{margin-top:0}
 
-p{
-  color:#667085;
-}
+p{color:#667085}
 
 label{
   font-size:13px;
@@ -127,8 +108,13 @@ input:focus,select:focus{
   gap:15px;
 }
 
-.hidden{
-  display:none!important;
+.hidden{display:none!important}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
 }
 
 .msg{
@@ -149,6 +135,63 @@ input:focus,select:focus{
 .warning{
   background:#fffbeb;
   color:#92400e;
+}
+
+.hint{
+  font-size:12px;
+  color:#667085;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  background:#eef2ff;
+  color:#4f46e5;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.online{
+  display:inline-block;
+  padding:6px 10px;
+  background:#ecfdf3;
+  color:#087443;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.stat{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 10px 30px #26305012;
+  border:1px solid #eef0f5;
+}
+
+.stat-icon{
+  font-size:28px;
+}
+
+.stat-number{
+  font-size:30px;
+  font-weight:900;
+  margin-top:8px;
+  color:#4f46e5;
+}
+
+.stat-title{
+  color:#667085;
+  font-size:13px;
+  font-weight:700;
 }
 
 .credential{
@@ -181,398 +224,4 @@ input:focus,select:focus{
 .cred strong{
   font-family:monospace;
   font-size:15px;
-  word-break:break-all;
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.hint{
-  font-size:12px;
-  color:#667085;
-  margin:-5px 0 10px;
-}
-
-.badge{
-  display:inline-block;
-  padding:6px 10px;
-  background:#eef2ff;
-  color:#4f46e5;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-}
-
-.status-online{
-  color:#087443;
-  background:#ecfdf3;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-bottom:20px;
-}
-
-.stat{
-  background:#fff;
-  border:1px solid #eaecf0;
-  border-radius:18px;
-  padding:20px;
-  box-shadow:0 10px 30px #26305010;
-}
-
-.stat-icon{
-  font-size:27px;
-  margin-bottom:8px;
-}
-
-.stat-title{
-  font-size:13px;
-  color:#667085;
-  font-weight:700;
-}
-
-.stat-value{
-  font-size:28px;
-  font-weight:900;
-  margin-top:4px;
-  color:#172033;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:950px;
-}
-
-td,th{
-  padding:11px;
-  border-bottom:1px solid #eaecf0;
-  text-align:left;
-  font-size:13px;
-  vertical-align:middle;
-}
-
-th{
-  color:#475467;
-  background:#f8fafc;
-}
-
-.table-wrap{
-  overflow:auto;
-  margin-top:12px;
-  border:1px solid #eaecf0;
-  border-radius:14px;
-}
-
-.small-btn{
-  padding:8px 10px;
-  font-size:12px;
-}
-
-.loading{
-  text-align:center;
-  padding:25px;
-  color:#667085;
-}
-
-.login-box{
-  max-width:550px;
-  margin:70px auto;
-}
-
-.login-icon{
-  width:70px;
-  height:70px;
-  border-radius:20px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,#6366f1,#06b6d4);
-  color:white;
-  font-size:34px;
-  margin-bottom:18px;
-}
-
-.divider{
-  height:1px;
-  background:#eaecf0;
-  margin:22px 0;
-}
-
-.section-title{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.retailer-id{
-  font-family:monospace;
-  font-weight:900;
-  color:#4f46e5;
-}
-
-.action-group{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
-
-footer{
-  text-align:center;
-  color:#7b8496;
-  font-size:12px;
-  padding:20px;
-}
-
-@media(max-width:900px){
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
-@media(max-width:700px){
-  .wrap{
-    margin:10px auto;
-    padding:10px;
-  }
-
-  .box{
-    padding:18px;
-    border-radius:18px;
-  }
-
-  .grid,
-  .credential-grid,
-  .stats{
-    grid-template-columns:1fr;
-  }
-
-  .login-box{
-    margin:25px auto;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="wrap">
-
-<!-- ================= LOGIN ================= -->
-
-<div class="box login-box" id="login">
-
-  <div class="login-icon">🔐</div>
-
-  <h1>Admin Login</h1>
-
-  <p>AllInOneStop management portal</p>
-
-  <label>Admin Email</label>
-  <input
-    id="email"
-    type="email"
-    placeholder="Enter admin email"
-    autocomplete="username"
-  >
-
-  <label>Admin Password</label>
-  <input
-    id="pass"
-    type="password"
-    placeholder="Enter admin password"
-    autocomplete="current-password"
-  >
-
-  <button id="loginBtn" type="button" onclick="login()">
-    🔐 Login
-  </button>
-
-  <a
-    class="btn logout"
-    href="index.html"
-    style="margin-left:8px"
-  >
-    🏠 Home
-  </a>
-
-  <div id="lm"></div>
-
-</div>
-
-
-<!-- ================= ADMIN PANEL ================= -->
-
-<div id="panel" class="hidden">
-
-<!-- HEADER -->
-
-<div class="box">
-
-  <div class="top">
-
-    <div>
-
-      <h1>🛠️ Admin Panel</h1>
-
-      <div style="margin-top:8px">
-
-        <span class="status-online">
-          ● Admin Online
-        </span>
-
-        <span
-          id="who"
-          class="badge"
-          style="margin-left:6px"
-        ></span>
-
-      </div>
-
-    </div>
-
-    <div class="actions">
-
-      <a
-        class="btn logout"
-        href="index.html"
-      >
-        🏠 Home
-      </a>
-
-      <button
-        type="button"
-        class="logout"
-        onclick="logout()"
-      >
-        🚪 Logout
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-
-<!-- ================= DASHBOARD ================= -->
-
-<div class="stats">
-
-  <div class="stat">
-    <div class="stat-icon">👥</div>
-    <div class="stat-title">Total Retailers</div>
-    <div class="stat-value" id="totalRetailers">0</div>
-  </div>
-
-  <div class="stat">
-    <div class="stat-icon">📋</div>
-    <div class="stat-title">Total Applications</div>
-    <div class="stat-value" id="totalApps">0</div>
-  </div>
-
-  <div class="stat">
-    <div class="stat-icon">💰</div>
-    <div class="stat-title">Paid Applications</div>
-    <div class="stat-value" id="paidApps">0</div>
-  </div>
-
-  <div class="stat">
-    <div class="stat-icon">⏳</div>
-    <div class="stat-title">Pending Payments</div>
-    <div class="stat-value" id="pendingApps">0</div>
-  </div>
-
-</div>
-
-
-<!-- ================= CREATE RETAILER ================= -->
-
-<div class="box">
-
-  <div class="section-title">
-    <h2>➕ Create New Retailer</h2>
-  </div>
-
-  <p class="hint">
-    Retailer ID और strong password automatically generate होंगे।
-    Email sending disabled है। Credentials आप खुद retailer को देंगे।
-  </p>
-
-  <div class="divider"></div>
-
-  <div class="grid">
-
-    <div>
-      <label>Retailer Full Name</label>
-      <input
-        id="rn"
-        type="text"
-        placeholder="Retailer full name"
-      >
-    </div>
-
-    <div>
-      <label>Mobile Number</label>
-      <input
-        id="rm"
-        type="tel"
-        maxlength="10"
-        inputmode="numeric"
-        placeholder="10 digit mobile number"
-      >
-    </div>
-
-    <div>
-      <label>Retailer Email</label>
-      <input
-        id="re"
-        type="email"
-        placeholder="Retailer email"
-        autocomplete="off"
-      >
-      <div class="hint">
-        Auth login के लिए email जरूरी है।
-      </div>
-    </div>
-
-    <div>
-      <label>Retailer Number</label>
-      <input
-        id="rr"
-        type="text"
-        placeholder="Optional - auto generated"
-      >
-    </div>
-
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="grid">
-
-    <div>
-      <label>Auto Generated Retailer ID</label>
-
-      <input
-        id="ru"
-        type="text"
-        readonly
-      >
-
-      <div class="hint">
-        Example: RET-8F3K2A
-      </div>
-    </div>
-
-    <div>
+  word-break:
