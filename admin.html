@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -46,9 +47,7 @@ button:disabled{
   cursor:not-allowed;
 }
 
-.logout{
-  background:#475467;
-}
+.logout{background:#475467}
 
 .wrap{
   max-width:1200px;
@@ -79,13 +78,9 @@ h1{
   color:#4f46e5;
 }
 
-h2{
-  margin-top:0;
-}
+h2{margin-top:0}
 
-p{
-  color:#667085;
-}
+p{color:#667085}
 
 label{
   font-size:13px;
@@ -114,9 +109,7 @@ input:focus,select:focus{
   gap:15px;
 }
 
-.hidden{
-  display:none!important;
-}
+.hidden{display:none!important}
 
 .actions{
   display:flex;
@@ -488,7 +481,7 @@ th{
           autocomplete="off"
         >
         <div class="hint">
-          Email optional है। Login के लिए internal Auth email इस्तेमाल होगा।
+          Email optional है। Login के लिए Auth account में internal email रखा जाएगा।
         </div>
       </div>
 
@@ -702,9 +695,9 @@ th{
 
 <script>
 
-/* =====================================================
+/* =================================
    SUPABASE CONFIG
-===================================================== */
+================================= */
 
 const SUPABASE_URL =
   "https://dixsmucrgnyuvudhymdj.supabase.co";
@@ -719,9 +712,9 @@ const supabaseClient =
   );
 
 
-/* =====================================================
+/* =================================
    HELPERS
-===================================================== */
+================================= */
 
 function esc(value){
   return String(value ?? "")
@@ -748,9 +741,9 @@ function msg(element,text,isError=false){
 }
 
 
-/* =====================================================
+/* =================================
    CREDENTIAL GENERATOR
-===================================================== */
+================================= */
 
 function randomString(
   length,
@@ -803,9 +796,9 @@ function generateCredentials(){
 }
 
 
-/* =====================================================
+/* =================================
    ADMIN LOGIN
-===================================================== */
+================================= */
 
 async function login(){
 
@@ -850,10 +843,10 @@ async function login(){
       data,
       error
     } =
-      await supabaseClient.auth.signInWithPassword({
-        email:email,
-        password:password
-      });
+    await supabaseClient.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
 
     if(error){
       msg(
@@ -877,11 +870,11 @@ async function login(){
       data:profile,
       error:profileError
     } =
-      await supabaseClient
-        .from("profiles")
-        .select("full_name,role")
-        .eq("id",data.user.id)
-        .maybeSingle();
+    await supabaseClient
+      .from("profiles")
+      .select("full_name,role")
+      .eq("id",data.user.id)
+      .maybeSingle();
 
     if(profileError){
 
@@ -933,9 +926,9 @@ async function login(){
 }
 
 
-/* =====================================================
+/* =================================
    OPEN PANEL
-===================================================== */
+================================= */
 
 async function openPanel(profile,user){
 
@@ -961,9 +954,9 @@ async function openPanel(profile,user){
 }
 
 
-/* =====================================================
+/* =================================
    RESTORE SESSION
-===================================================== */
+================================= */
 
 async function restore(){
 
@@ -973,7 +966,7 @@ async function restore(){
       data,
       error
     } =
-      await supabaseClient.auth.getSession();
+    await supabaseClient.auth.getSession();
 
     if(error || !data.session){
       return;
@@ -986,11 +979,11 @@ async function restore(){
       data:profile,
       error:profileError
     } =
-      await supabaseClient
-        .from("profiles")
-        .select("full_name,role")
-        .eq("id",user.id)
-        .maybeSingle();
+    await supabaseClient
+      .from("profiles")
+      .select("full_name,role")
+      .eq("id",user.id)
+      .maybeSingle();
 
     if(
       !profileError &&
@@ -1017,9 +1010,9 @@ async function restore(){
 }
 
 
-/* =====================================================
+/* =================================
    LOGOUT
-===================================================== */
+================================= */
 
 async function logout(){
 
@@ -1029,9 +1022,9 @@ async function logout(){
 }
 
 
-/* =====================================================
+/* =================================
    CREATE RETAILER
-===================================================== */
+================================= */
 
 async function createRetailer(){
 
@@ -1108,7 +1101,7 @@ async function createRetailer(){
     data:sessionData,
     error:sessionError
   } =
-    await supabaseClient.auth.getSession();
+  await supabaseClient.auth.getSession();
 
   if(
     sessionError ||
@@ -1143,17 +1136,12 @@ async function createRetailer(){
       data,
       error
     } =
-      await supabaseClient.functions.invoke(
-        "admin-create-retailer",
-        {
-          body:body,
-          headers:{
-            Authorization:
-              "Bearer " +
-              sessionData.session.access_token
-          }
-        }
-      );
+    await supabaseClient.functions.invoke(
+      "admin-create-retailer",
+      {
+        body:body
+      }
+    );
 
     console.log(
       "Retailer response:",
@@ -1178,17 +1166,11 @@ async function createRetailer(){
             await error.context.json();
 
           if(server?.error){
-            text =
-              server.error +
-              (
-                server.details
-                  ? "\n" +
-                    server.details
-                  : ""
-              );
+            text=server.error;
           }
 
-        }catch(e){}
+        }
+        catch(e){}
 
       }
 
@@ -1261,9 +1243,9 @@ async function createRetailer(){
 }
 
 
-/* =====================================================
+/* =================================
    COPY CREDENTIALS
-===================================================== */
+================================= */
 
 async function copyCredentials(){
 
@@ -1301,9 +1283,9 @@ Login: ${window.location.origin}/retailer.html`;
 }
 
 
-/* =====================================================
+/* =================================
    LOAD RETAILERS
-===================================================== */
+================================= */
 
 async function loadRetailers(){
 
@@ -1327,16 +1309,18 @@ async function loadRetailers(){
       data,
       error
     } =
-      await supabaseClient
-        .from("profiles")
-        .select(
-          "id,full_name,mobile,retailer_number,role"
-        )
-        .eq("role","retailer")
-        .order(
-          "full_name",
-          {ascending:true}
-        );
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "id,full_name,mobile,retailer_number,role"
+      )
+      .eq("role","retailer")
+      .order(
+        "full_name",
+        {
+          ascending:true
+        }
+      );
 
     if(error){
 
@@ -1373,11 +1357,19 @@ async function loadRetailers(){
           r.retailer_number ||
           "RET";
 
+        /*
+          ID ko HTML attribute mein
+          safely store karne ke liye
+          dataset use karenge.
+        */
+
         return `
         <tr>
 
           <td>
-            <strong>${esc(retailerId)}</strong>
+            <strong>
+              ${esc(retailerId)}
+            </strong>
           </td>
 
           <td>
@@ -1393,7 +1385,10 @@ async function loadRetailers(){
           </td>
 
           <td>
-            ${esc(r.retailer_number || retailerId)}
+            ${esc(
+              r.retailer_number ||
+              retailerId
+            )}
           </td>
 
           <td>
@@ -1403,10 +1398,9 @@ async function loadRetailers(){
               <button
                 type="button"
                 class="small-btn password-btn"
-                onclick="resetRetailerPassword(
-                  '${esc(r.id)}',
-                  '${esc(retailerId)}'
-                )"
+                data-action="reset-password"
+                data-user-id="${esc(r.id)}"
+                data-retailer-id="${esc(retailerId)}"
               >
                 🔑 Reset Password
               </button>
@@ -1414,10 +1408,9 @@ async function loadRetailers(){
               <button
                 type="button"
                 class="small-btn delete-btn"
-                onclick="deleteRetailer(
-                  '${esc(r.id)}',
-                  '${esc(retailerId)}'
-                )"
+                data-action="delete-retailer"
+                data-user-id="${esc(r.id)}"
+                data-retailer-id="${esc(retailerId)}"
               >
                 🗑️ Delete
               </button>
@@ -1447,44 +1440,136 @@ async function loadRetailers(){
 }
 
 
-/* =====================================================
-   GET CURRENT ADMIN ACCESS TOKEN
-   IMPORTANT FOR EDGE FUNCTIONS
-===================================================== */
+/* =================================
+   EDGE FUNCTION ACTION HELPER
+================================= */
 
-async function getAdminAccessToken(){
+async function callAdminRetailerAction(
+  action,
+  userId
+){
+
+  /*
+    Current logged-in Supabase session
+    se access token lenge.
+  */
 
   const {
-    data,
-    error
+    data:sessionData,
+    error:sessionError
   } =
-    await supabaseClient.auth.getSession();
+  await supabaseClient.auth.getSession();
 
-  if(error){
+  if(sessionError){
+
     throw new Error(
-      "Could not read admin session: " +
-      error.message
+      "Could not get admin session: " +
+      sessionError.message
     );
   }
 
-  if(
-    !data ||
-    !data.session ||
-    !data.session.access_token
-  ){
+  const session =
+    sessionData?.session;
+
+  if(!session){
 
     throw new Error(
       "Admin session expired. Please login again."
     );
   }
 
-  return data.session.access_token;
+  const accessToken =
+    session.access_token;
+
+  if(!accessToken){
+
+    throw new Error(
+      "Admin access token is missing. Please login again."
+    );
+  }
+
+  /*
+    Direct fetch.
+
+    Isse Edge Function ko exact:
+    Authorization: Bearer <JWT>
+    milega.
+  */
+
+  const response =
+    await fetch(
+      SUPABASE_URL +
+      "/functions/v1/admin-retailer-action",
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":
+            "application/json",
+
+          "Authorization":
+            "Bearer " +
+            accessToken,
+
+          "apikey":
+            SUPABASE_PUBLISHABLE_KEY
+        },
+
+        body:JSON.stringify({
+          action:action,
+          user_id:userId
+        })
+      }
+    );
+
+  let data=null;
+
+  try{
+    data=await response.json();
+  }
+  catch(error){
+    data=null;
+  }
+
+  console.log(
+    "admin-retailer-action:",
+    response.status,
+    data
+  );
+
+  if(!response.ok){
+
+    const errorText =
+      data?.error ||
+      data?.message ||
+      data?.details ||
+      (
+        "Edge Function request failed. HTTP " +
+        response.status
+      );
+
+    throw new Error(errorText);
+  }
+
+  if(data?.error){
+
+    throw new Error(
+      data.error +
+      (
+        data.details
+          ? "\n" + data.details
+          : ""
+      )
+    );
+  }
+
+  return data;
 }
 
 
-/* =====================================================
+/* =================================
    RESET RETAILER PASSWORD
-===================================================== */
+================================= */
 
 async function resetRetailerPassword(
   userId,
@@ -1495,7 +1580,8 @@ async function resetRetailerPassword(
     confirm(
       "Reset password for " +
       retailerId +
-      "?\n\nA new password will be generated."
+      "?\n\n" +
+      "A new password will be generated."
     );
 
   if(!confirmReset){
@@ -1504,90 +1590,25 @@ async function resetRetailerPassword(
 
   try{
 
-    const accessToken =
-      await getAdminAccessToken();
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.functions.invoke(
-        "admin-retailer-action",
-        {
-          body:{
-            action:"reset_password",
-            user_id:userId
-          },
-          headers:{
-            Authorization:
-              "Bearer " +
-              accessToken
-          }
-        }
+    const data =
+      await callAdminRetailerAction(
+        "reset_password",
+        userId
       );
-
-    console.log(
-      "Reset password:",
-      data,
-      error
-    );
-
-    if(error){
-
-      let text =
-        error.message ||
-        "Password reset failed.";
-
-      if(
-        error.context &&
-        typeof error.context.json === "function"
-      ){
-
-        try{
-
-          const server =
-            await error.context.json();
-
-          if(server?.error){
-
-            text =
-              server.error +
-              (
-                server.details
-                  ? "\n\n" +
-                    server.details
-                  : ""
-              );
-          }
-
-        }
-        catch(e){}
-
-      }
-
-      alert(text);
-
-      return;
-    }
-
-    if(data?.error){
-
-      alert(
-        data.error +
-        (
-          data.details
-            ? "\n\n" +
-              data.details
-            : ""
-        )
-      );
-
-      return;
-    }
 
     const newPassword =
       data?.password ||
       data?.temporary_password;
+
+    if(!newPassword){
+
+      alert(
+        "Password reset response received, " +
+        "but new password was not returned."
+      );
+
+      return;
+    }
 
     alert(
       "Password reset successfully.\n\n" +
@@ -1604,7 +1625,7 @@ async function resetRetailerPassword(
   catch(error){
 
     console.error(
-      "Password reset error:",
+      "RESET PASSWORD ERROR:",
       error
     );
 
@@ -1617,10 +1638,9 @@ async function resetRetailerPassword(
 }
 
 
-/* =====================================================
+/* =================================
    DELETE RETAILER
-   FIXED VERSION
-===================================================== */
+================================= */
 
 async function deleteRetailer(
   userId,
@@ -1631,164 +1651,49 @@ async function deleteRetailer(
     prompt(
       "DELETE retailer " +
       retailerId +
-      "?\n\nType DELETE to confirm."
+      "?\n\n" +
+      "Type DELETE to confirm."
     );
 
   if(confirmation !== "DELETE"){
-    alert("Delete cancelled.");
+
+    alert(
+      "Delete cancelled."
+    );
+
     return;
   }
 
   try{
 
-    /*
-      IMPORTANT:
-      Current logged-in ADMIN access token
-      explicitly retrieve kar rahe hain.
-    */
-
-    const accessToken =
-      await getAdminAccessToken();
-
-    console.log(
-      "Delete request starting..."
-    );
-
-    console.log(
-      "User ID:",
-      userId
-    );
-
-    console.log(
-      "Access token exists:",
-      !!accessToken
-    );
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.functions.invoke(
-        "admin-retailer-action",
-        {
-          body:{
-            action:"delete",
-            user_id:userId
-          },
-
-          /*
-            IMPORTANT FIX:
-            Edge Function ko admin JWT explicitly bhejna.
-          */
-
-          headers:{
-            Authorization:
-              "Bearer " +
-              accessToken
-          }
-        }
+    const data =
+      await callAdminRetailerAction(
+        "delete",
+        userId
       );
 
-    console.log(
-      "Delete retailer response:",
-      data,
-      error
-    );
+    if(
+      !data ||
+      data.success !== true
+    ){
 
-    if(error){
-
-      let text =
-        error.message ||
-        "Retailer deletion failed.";
-
-      /*
-        Server ka actual JSON error
-        read karne ki koshish.
-      */
-
-      if(
-        error.context &&
-        typeof error.context.json === "function"
-      ){
-
-        try{
-
-          const server =
-            await error.context.json();
-
-          console.error(
-            "Server delete error:",
-            server
-          );
-
-          if(server?.error){
-
-            text =
-              server.error +
-              (
-                server.details
-                  ? "\n\n" +
-                    server.details
-                  : ""
-              );
-          }
-
-        }
-        catch(e){
-
-          console.error(
-            "Could not read server error:",
-            e
-          );
-
-        }
-
-      }
-
-      alert(text);
-
-      return;
-    }
-
-    if(data?.error){
-
-      alert(
-        data.error +
-        (
-          data.details
-            ? "\n\n" +
-              data.details
-            : ""
-        )
+      throw new Error(
+        data?.error ||
+        "Retailer deletion failed."
       );
-
-      return;
-    }
-
-    if(data?.success){
-
-      alert(
-        "Retailer deleted successfully."
-      );
-
-      /*
-        Dashboard + retailer table refresh
-      */
-
-      await refreshDashboard();
-
-      return;
     }
 
     alert(
-      "Unexpected response from server."
+      "Retailer deleted successfully."
     );
+
+    await refreshDashboard();
 
   }
   catch(error){
 
     console.error(
-      "DELETE ERROR:",
+      "DELETE RETAILER ERROR:",
       error
     );
 
@@ -1801,9 +1706,70 @@ async function deleteRetailer(
 }
 
 
-/* =====================================================
+/* =================================
+   RETAILER BUTTON EVENTS
+================================= */
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    const button =
+      event.target.closest(
+        "button[data-action]"
+      );
+
+    if(!button){
+      return;
+    }
+
+    const action =
+      button.dataset.action;
+
+    const userId =
+      button.dataset.userId;
+
+    const retailerId =
+      button.dataset.retailerId;
+
+    if(!userId){
+      alert(
+        "Retailer User ID is missing."
+      );
+      return;
+    }
+
+    if(
+      action ===
+      "reset-password"
+    ){
+
+      resetRetailerPassword(
+        userId,
+        retailerId
+      );
+
+    }
+
+    if(
+      action ===
+      "delete-retailer"
+    ){
+
+      deleteRetailer(
+        userId,
+        retailerId
+      );
+
+    }
+
+  }
+);
+
+
+/* =================================
    LOAD APPLICATIONS
-===================================================== */
+================================= */
 
 async function loadApps(){
 
@@ -1825,15 +1791,17 @@ async function loadApps(){
       data,
       error
     } =
-      await supabaseClient
-        .from("applications")
-        .select(
-          "tr_number,service_name,amount,payment_status,application_status,remark"
-        )
-        .order(
-          "created_at",
-          {ascending:false}
-        );
+    await supabaseClient
+      .from("applications")
+      .select(
+        "tr_number,service_name,amount,payment_status,application_status,remark"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
 
     if(error){
 
@@ -2014,16 +1982,18 @@ async function loadApps(){
 }
 
 
-/* =====================================================
+/* =================================
    SAVE APPLICATION STATUS
-===================================================== */
+================================= */
 
 document.addEventListener(
   "click",
   function(event){
 
     const button =
-      event.target.closest(".saveBtn");
+      event.target.closest(
+        ".saveBtn"
+      );
 
     if(button){
 
@@ -2077,25 +2047,25 @@ async function saveStatus(
       data,
       error
     } =
-      await supabaseClient
-        .from("applications")
-        .update({
+    await supabaseClient
+      .from("applications")
+      .update({
 
-          payment_status:
-            paymentElement.value,
+        payment_status:
+          paymentElement.value,
 
-          application_status:
-            statusElement.value,
+        application_status:
+          statusElement.value,
 
-          remark:
-            remarkElement.value
+        remark:
+          remarkElement.value
 
-        })
-        .eq(
-          "tr_number",
-          trNumber
-        )
-        .select();
+      })
+      .eq(
+        "tr_number",
+        trNumber
+      )
+      .select();
 
     if(error){
 
@@ -2125,9 +2095,9 @@ async function saveStatus(
 }
 
 
-/* =====================================================
+/* =================================
    DASHBOARD
-===================================================== */
+================================= */
 
 async function refreshDashboard(){
 
@@ -2140,9 +2110,9 @@ async function refreshDashboard(){
 }
 
 
-/* =====================================================
+/* =================================
    LOAD STATS
-===================================================== */
+================================= */
 
 async function loadStats(){
 
@@ -2151,19 +2121,19 @@ async function loadStats(){
     const {
       count:retailerCount
     } =
-      await supabaseClient
-        .from("profiles")
-        .select(
-          "id",
-          {
-            count:"exact",
-            head:true
-          }
-        )
-        .eq(
-          "role",
-          "retailer"
-        );
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "id",
+        {
+          count:"exact",
+          head:true
+        }
+      )
+      .eq(
+        "role",
+        "retailer"
+      );
 
     document.getElementById(
       "totalRetailers"
@@ -2174,11 +2144,11 @@ async function loadStats(){
     const {
       data:applications
     } =
-      await supabaseClient
-        .from("applications")
-        .select(
-          "payment_status"
-        );
+    await supabaseClient
+      .from("applications")
+      .select(
+        "payment_status"
+      );
 
     const list =
       applications || [];
@@ -2193,7 +2163,8 @@ async function loadStats(){
     ).textContent =
       list.filter(
         x =>
-          x.payment_status === "Paid"
+          x.payment_status ===
+          "Paid"
       ).length;
 
     document.getElementById(
@@ -2202,7 +2173,8 @@ async function loadStats(){
       list.filter(
         x =>
           !x.payment_status ||
-          x.payment_status === "Pending"
+          x.payment_status ===
+          "Pending"
       ).length;
 
   }
@@ -2217,9 +2189,9 @@ async function loadStats(){
 }
 
 
-/* =====================================================
+/* =================================
    AUTH STATE
-===================================================== */
+================================= */
 
 supabaseClient.auth.onAuthStateChange(
   function(event,session){
@@ -2227,17 +2199,18 @@ supabaseClient.auth.onAuthStateChange(
     console.log(
       "Auth event:",
       event,
-      "Session:",
-      !!session
+      session
+        ? "session available"
+        : "no session"
     );
 
   }
 );
 
 
-/* =====================================================
+/* =================================
    INITIALIZE
-===================================================== */
+================================= */
 
 generateCredentials();
 
@@ -2247,3 +2220,4 @@ restore();
 
 </body>
 </html>
+```
