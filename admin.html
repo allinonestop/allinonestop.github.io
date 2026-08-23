@@ -3,27 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>AllInOneStop Admin Panel</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
   font-family:Inter,Segoe UI,Arial,sans-serif;
   background:
-    radial-gradient(circle at 10% 10%,#7c5cff20,transparent 30%),
-    radial-gradient(circle at 90% 15%,#00d2ff18,transparent 30%),
+    radial-gradient(circle at 5% 5%,#6366f125,transparent 28%),
+    radial-gradient(circle at 95% 10%,#06b6d420,transparent 28%),
     linear-gradient(135deg,#eef2ff,#f8fbff 45%,#ecfeff);
   color:#172033;
   min-height:100vh;
 }
 
-button,input,select{font:inherit}
+button,
+input,
+select{
+  font:inherit;
+}
 
-button,.btn{
+button,
+.btn{
   padding:11px 16px;
   background:linear-gradient(135deg,#5b5cf0,#287cff);
   color:#fff;
@@ -36,7 +49,8 @@ button,.btn{
   transition:.2s;
 }
 
-button:hover,.btn:hover{
+button:hover,
+.btn:hover{
   transform:translateY(-1px);
   box-shadow:0 8px 20px #3658ff30;
 }
@@ -44,12 +58,27 @@ button:hover,.btn:hover{
 button:disabled{
   opacity:.6;
   cursor:not-allowed;
+  transform:none;
 }
 
-.logout{background:#475467}
+.logout{
+  background:#475467;
+}
+
+.danger{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+.success{
+  background:linear-gradient(135deg,#10b981,#059669);
+}
+
+.secondary{
+  background:#667085;
+}
 
 .wrap{
-  max-width:1200px;
+  max-width:1250px;
   margin:25px auto;
   padding:15px;
 }
@@ -60,7 +89,7 @@ button:disabled{
   border-radius:22px;
   box-shadow:0 15px 45px #26305018;
   margin-bottom:20px;
-  border:1px solid #fff;
+  border:1px solid #ffffff;
   backdrop-filter:blur(12px);
 }
 
@@ -77,9 +106,13 @@ h1{
   color:#4f46e5;
 }
 
-h2{margin-top:0}
+h2{
+  margin-top:0;
+}
 
-p{color:#667085}
+p{
+  color:#667085;
+}
 
 label{
   font-size:13px;
@@ -87,7 +120,8 @@ label{
   color:#475467;
 }
 
-input,select{
+input,
+select{
   width:100%;
   padding:12px;
   margin:6px 0 13px;
@@ -97,7 +131,8 @@ input,select{
   background:#fff;
 }
 
-input:focus,select:focus{
+input:focus,
+select:focus{
   outline:2px solid #c7d2fe;
   border-color:#6366f1;
 }
@@ -108,13 +143,8 @@ input:focus,select:focus{
   gap:15px;
 }
 
-.hidden{display:none!important}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
+.hidden{
+  display:none !important;
 }
 
 .msg{
@@ -140,27 +170,81 @@ input:focus,select:focus{
 .hint{
   font-size:12px;
   color:#667085;
+  margin:-5px 0 10px;
 }
 
-.badge{
-  display:inline-block;
-  padding:6px 10px;
-  background:#eef2ff;
-  color:#4f46e5;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
+.divider{
+  height:1px;
+  background:#eaecf0;
+  margin:22px 0;
 }
 
-.online{
-  display:inline-block;
-  padding:6px 10px;
-  background:#ecfdf3;
-  color:#087443;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
 }
+
+/* ===============================
+   LOGIN
+================================ */
+
+.login-box{
+  max-width:550px;
+  margin:70px auto;
+}
+
+.login-icon{
+  width:70px;
+  height:70px;
+  border-radius:20px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#6366f1,#06b6d4);
+  color:white;
+  font-size:34px;
+  margin-bottom:18px;
+}
+
+/* ===============================
+   HEADER
+================================ */
+
+.admin-header{
+  background:
+    linear-gradient(135deg,#4f46e5,#2563eb 55%,#0891b2);
+  color:white;
+  padding:28px;
+  border-radius:24px;
+  box-shadow:0 18px 45px #3143a440;
+  margin-bottom:20px;
+}
+
+.admin-header h1{
+  color:white;
+}
+
+.admin-header p{
+  color:#e0e7ff;
+  margin-bottom:0;
+}
+
+.header-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.header-actions .btn,
+.header-actions button{
+  background:#ffffff20;
+  border:1px solid #ffffff35;
+}
+
+/* ===============================
+   DASHBOARD CARDS
+================================ */
 
 .stats{
   display:grid;
@@ -169,23 +253,29 @@ input:focus,select:focus{
   margin-bottom:20px;
 }
 
-.stat{
+.stat-card{
   background:#fff;
+  border:1px solid #e5e7eb;
   border-radius:18px;
   padding:20px;
   box-shadow:0 10px 30px #26305012;
-  border:1px solid #eef0f5;
+  transition:.2s;
+}
+
+.stat-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 35px #26305020;
 }
 
 .stat-icon{
-  font-size:28px;
-}
-
-.stat-number{
-  font-size:30px;
-  font-weight:900;
-  margin-top:8px;
-  color:#4f46e5;
+  width:45px;
+  height:45px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:#eef2ff;
+  font-size:23px;
+  margin-bottom:13px;
 }
 
 .stat-title{
@@ -193,6 +283,46 @@ input:focus,select:focus{
   font-size:13px;
   font-weight:700;
 }
+
+.stat-number{
+  font-size:30px;
+  font-weight:900;
+  color:#172033;
+  margin-top:5px;
+}
+
+/* ===============================
+   QUICK NAV
+================================ */
+
+.quick-nav{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.quick-btn{
+  padding:17px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  color:#344054;
+  text-decoration:none;
+  font-weight:800;
+  text-align:center;
+  transition:.2s;
+}
+
+.quick-btn:hover{
+  transform:translateY(-2px);
+  border-color:#a5b4fc;
+  color:#4f46e5;
+}
+
+/* ===============================
+   CREDENTIAL
+================================ */
 
 .credential{
   background:linear-gradient(135deg,#f5f3ff,#eff6ff);
@@ -224,4 +354,2721 @@ input:focus,select:focus{
 .cred strong{
   font-family:monospace;
   font-size:15px;
-  word-break:
+  word-break:break-all;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  background:#eef2ff;
+  color:#4f46e5;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.status-online{
+  color:#087443;
+  background:#ecfdf3;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+}
+
+/* ===============================
+   TABLE
+================================ */
+
+.table-wrap{
+  overflow:auto;
+  margin-top:12px;
+  border:1px solid #eaecf0;
+  border-radius:14px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:900px;
+}
+
+td,
+th{
+  padding:12px;
+  border-bottom:1px solid #eaecf0;
+  text-align:left;
+  font-size:13px;
+  vertical-align:middle;
+}
+
+th{
+  color:#475467;
+  background:#f8fafc;
+  font-weight:900;
+}
+
+tr:hover td{
+  background:#fafbff;
+}
+
+.small-btn{
+  padding:8px 11px;
+  font-size:12px;
+}
+
+/* ===============================
+   STATUS
+================================ */
+
+.status-badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.pending{
+  background:#fff7ed;
+  color:#c2410c;
+}
+
+.paid{
+  background:#ecfdf3;
+  color:#047857;
+}
+
+.processing{
+  background:#eff6ff;
+  color:#1d4ed8;
+}
+
+.completed{
+  background:#ecfdf3;
+  color:#047857;
+}
+
+.rejected{
+  background:#fef2f2;
+  color:#b42318;
+}
+
+.received{
+  background:#f5f3ff;
+  color:#6d28d9;
+}
+
+/* ===============================
+   LOADING
+================================ */
+
+.loading{
+  text-align:center;
+  padding:25px;
+  color:#667085;
+}
+
+/* ===============================
+   SEARCH
+================================ */
+
+.search-box{
+  max-width:350px;
+}
+
+/* ===============================
+   FOOTER
+================================ */
+
+footer{
+  text-align:center;
+  color:#7b8496;
+  font-size:12px;
+  padding:20px;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media(max-width:900px){
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .quick-nav{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:700px){
+
+  .wrap{
+    margin:10px auto;
+    padding:10px;
+  }
+
+  .box{
+    padding:18px;
+    border-radius:18px;
+  }
+
+  .grid,
+  .credential-grid{
+    grid-template-columns:1fr;
+  }
+
+  .stats,
+  .quick-nav{
+    grid-template-columns:1fr;
+  }
+
+  .login-box{
+    margin:25px auto;
+  }
+
+  .admin-header{
+    padding:20px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+<!-- ==================================================
+     LOGIN
+================================================== -->
+
+<div class="box login-box" id="login">
+
+  <div class="login-icon">
+    🔐
+  </div>
+
+  <h1>Admin Login</h1>
+
+  <p>
+    AllInOneStop management portal
+  </p>
+
+  <label>Admin Email</label>
+
+  <input
+    id="email"
+    type="email"
+    placeholder="Enter admin email"
+    autocomplete="username"
+  >
+
+  <label>Admin Password</label>
+
+  <input
+    id="pass"
+    type="password"
+    placeholder="Enter admin password"
+    autocomplete="current-password"
+  >
+
+  <button
+    id="loginBtn"
+    type="button"
+    onclick="login()"
+  >
+    🔐 Login
+  </button>
+
+  <a
+    class="btn logout"
+    href="index.html"
+    style="margin-left:8px"
+  >
+    🏠 Home
+  </a>
+
+  <div id="lm"></div>
+
+</div>
+
+
+<!-- ==================================================
+     ADMIN PANEL
+================================================== -->
+
+<div id="panel" class="hidden">
+
+
+<!-- HEADER -->
+
+<div class="admin-header">
+
+  <div class="top">
+
+    <div>
+
+      <h1>
+        🛠️ AllInOneStop Admin
+      </h1>
+
+      <p>
+        Manage retailers, applications & payments
+      </p>
+
+      <div style="margin-top:12px">
+
+        <span class="status-online">
+          ● Admin Online
+        </span>
+
+        <span
+          id="who"
+          class="badge"
+          style="margin-left:6px"
+        ></span>
+
+      </div>
+
+    </div>
+
+    <div class="header-actions">
+
+      <a
+        class="btn"
+        href="index.html"
+      >
+        🏠 Home
+      </a>
+
+      <button
+        type="button"
+        onclick="logout()"
+      >
+        🚪 Logout
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     DASHBOARD STATISTICS
+================================================== -->
+
+<div class="stats">
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+      👥
+    </div>
+
+    <div class="stat-title">
+      Total Retailers
+    </div>
+
+    <div
+      class="stat-number"
+      id="totalRetailers"
+    >
+      0
+    </div>
+
+  </div>
+
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+      📋
+    </div>
+
+    <div class="stat-title">
+      Total Applications
+    </div>
+
+    <div
+      class="stat-number"
+      id="totalApplications"
+    >
+      0
+    </div>
+
+  </div>
+
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+      💰
+    </div>
+
+    <div class="stat-title">
+      Pending Payments
+    </div>
+
+    <div
+      class="stat-number"
+      id="pendingPayments"
+    >
+      0
+    </div>
+
+  </div>
+
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+      ✅
+    </div>
+
+    <div class="stat-title">
+      Completed
+    </div>
+
+    <div
+      class="stat-number"
+      id="completedApplications"
+    >
+      0
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     QUICK NAVIGATION
+================================================== -->
+
+<div class="quick-nav">
+
+  <a
+    href="#createRetailer"
+    class="quick-btn"
+  >
+    ➕ Create Retailer
+  </a>
+
+  <a
+    href="#retailerHistory"
+    class="quick-btn"
+  >
+    👥 Retailer History
+  </a>
+
+  <a
+    href="#applications"
+    class="quick-btn"
+  >
+    📋 Applications
+  </a>
+
+  <a
+    href="#payments"
+    class="quick-btn"
+  >
+    💰 Payment Status
+  </a>
+
+</div>
+
+
+<!-- ==================================================
+     CREATE RETAILER
+================================================== -->
+
+<div
+  class="box"
+  id="createRetailer"
+>
+
+  <div class="top">
+
+    <div>
+
+      <h2>
+        ➕ Create New Retailer
+      </h2>
+
+      <p class="hint">
+        Retailer ID और password automatically generate होंगे।
+        Email sending का कोई option नहीं है।
+      </p>
+
+    </div>
+
+    <span class="badge">
+      Retailer Management
+    </span>
+
+  </div>
+
+  <div class="divider"></div>
+
+
+  <div class="grid">
+
+    <div>
+
+      <label>
+        Retailer Full Name
+      </label>
+
+      <input
+        id="rn"
+        type="text"
+        placeholder="Retailer full name"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>
+        Mobile Number
+      </label>
+
+      <input
+        id="rm"
+        type="tel"
+        maxlength="10"
+        inputmode="numeric"
+        placeholder="10 digit mobile number"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>
+        Retailer Number
+      </label>
+
+      <input
+        id="rr"
+        type="text"
+        placeholder="Auto generated"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>
+        Retailer ID
+      </label>
+
+      <input
+        id="ru"
+        type="text"
+        readonly
+      >
+
+      <div class="hint">
+        Example: RET-8F3K2A
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="grid">
+
+    <div>
+
+      <label>
+        Generated Password
+      </label>
+
+      <input
+        id="rp"
+        type="text"
+        readonly
+      >
+
+      <div class="hint">
+        Strong temporary password
+      </div>
+
+    </div>
+
+    <div>
+
+      <label>
+        Account Type
+      </label>
+
+      <input
+        value="Retailer"
+        readonly
+      >
+
+    </div>
+
+  </div>
+
+
+  <div class="actions">
+
+    <button
+      type="button"
+      onclick="generateCredentials()"
+    >
+      🔄 Generate ID & Password
+    </button>
+
+
+    <button
+      type="button"
+      id="createBtn"
+      onclick="createRetailer()"
+      class="success"
+    >
+      👤 Create Retailer
+    </button>
+
+  </div>
+
+
+  <div id="cm"></div>
+
+
+  <!-- CREDENTIAL RESULT -->
+
+  <div
+    id="credentialBox"
+    class="credential hidden"
+  >
+
+    <strong>
+      ✅ Retailer Created Successfully
+    </strong>
+
+    <p style="font-size:12px">
+      नीचे दिए गए credentials को admin manually retailer को दे सकता है।
+    </p>
+
+
+    <div class="credential-grid">
+
+      <div class="cred">
+
+        <small>
+          Retailer ID / Username
+        </small>
+
+        <strong id="showUser"></strong>
+
+      </div>
+
+
+      <div class="cred">
+
+        <small>
+          Password
+        </small>
+
+        <strong id="showPass"></strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        type="button"
+        onclick="copyCredentials()"
+      >
+        📋 Copy Credentials
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     RETAILER HISTORY
+================================================== -->
+
+<div
+  class="box"
+  id="retailerHistory"
+>
+
+  <div class="top">
+
+    <div>
+
+      <h2>
+        👥 Retailer History
+      </h2>
+
+      <p class="hint">
+        सभी registered retailers यहाँ दिखाई देंगे।
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      onclick="loadRetailers()"
+    >
+      🔄 Refresh
+    </button>
+
+  </div>
+
+
+  <div style="margin-top:10px">
+
+    <input
+      id="retailerSearch"
+      class="search-box"
+      type="search"
+      placeholder="🔎 Search retailer..."
+      oninput="filterRetailers()"
+    >
+
+  </div>
+
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>#</th>
+          <th>Retailer ID</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Retailer Number</th>
+          <th>Role</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="retailerRows">
+
+        <tr>
+          <td
+            colspan="6"
+            class="loading"
+          >
+            Loading retailers...
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     APPLICATIONS
+================================================== -->
+
+<div
+  class="box"
+  id="applications"
+>
+
+  <div class="top">
+
+    <div>
+
+      <h2>
+        📋 Applications
+      </h2>
+
+      <p class="hint">
+        Application status और payment status यहाँ manage करें।
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      onclick="loadApps()"
+    >
+      🔄 Refresh
+    </button>
+
+  </div>
+
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            TR Number
+          </th>
+
+          <th>
+            Service
+          </th>
+
+          <th>
+            Amount
+          </th>
+
+          <th>
+            Payment
+          </th>
+
+          <th>
+            Application
+          </th>
+
+          <th>
+            Remark
+          </th>
+
+          <th>
+            Save
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody id="rows">
+
+        <tr>
+
+          <td
+            colspan="7"
+            class="loading"
+          >
+            Loading applications...
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     PAYMENT STATUS
+================================================== -->
+
+<div
+  class="box"
+  id="payments"
+>
+
+  <div class="top">
+
+    <div>
+
+      <h2>
+        💰 Payment Status
+      </h2>
+
+      <p class="hint">
+        Payment summary और application status overview।
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      onclick="loadApps()"
+    >
+      🔄 Update
+    </button>
+
+  </div>
+
+
+  <div class="stats">
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ⏳
+      </div>
+
+      <div class="stat-title">
+        Pending
+      </div>
+
+      <div
+        class="stat-number"
+        id="paymentPending2"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        💵
+      </div>
+
+      <div class="stat-title">
+        Paid
+      </div>
+
+      <div
+        class="stat-number"
+        id="paymentPaid2"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ❌
+      </div>
+
+      <div class="stat-title">
+        Failed
+      </div>
+
+      <div
+        class="stat-number"
+        id="paymentFailed2"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ⚙️
+      </div>
+
+      <div class="stat-title">
+        Processing
+      </div>
+
+      <div
+        class="stat-number"
+        id="processingApplications2"
+      >
+        0
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<footer>
+
+© <span id="year"></span>
+AllInOneStop • All Online Services in One Place
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+"https://dixsmucrgnyuvudhymdj.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_Pdfqt8QfkhprpEtyQJ8jLA_G_-V9D58";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =====================================================
+   GLOBAL DATA
+===================================================== */
+
+let retailerData = [];
+let applicationData = [];
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+document.getElementById("year").textContent =
+new Date().getFullYear();
+
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g,function(c){
+
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[c];
+
+    });
+
+}
+
+
+function msg(element,text,isError=false){
+
+  element.innerHTML =
+    '<div class="msg ' +
+    (isError ? "error" : "") +
+    '">' +
+    esc(text) +
+    '</div>';
+
+}
+
+
+/* =====================================================
+   RANDOM CREDENTIALS
+===================================================== */
+
+function randomString(
+  length,
+  chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+){
+
+  let result="";
+
+  for(let i=0;i<length;i++){
+
+    result +=
+      chars[
+        Math.floor(
+          Math.random()*chars.length
+        )
+      ];
+
+  }
+
+  return result;
+
+}
+
+
+function generateCredentials(){
+
+  const username =
+    "RET-" +
+    randomString(6);
+
+
+  const password =
+    randomString(5) +
+    "@" +
+    randomString(
+      4,
+      "abcdefghijkmnopqrstuvwxyz"
+    ) +
+    "9!";
+
+
+  document.getElementById("ru").value =
+    username;
+
+
+  document.getElementById("rp").value =
+    password;
+
+
+  const rr =
+    document.getElementById("rr");
+
+
+  if(!rr.value.trim()){
+
+    rr.value =
+      username;
+
+  }
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+async function login(){
+
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("pass")
+      .value;
+
+  const message =
+    document.getElementById("lm");
+
+  const button =
+    document.getElementById("loginBtn");
+
+
+  if(!email){
+
+    msg(
+      message,
+      "Please enter admin email.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if(!password){
+
+    msg(
+      message,
+      "Please enter admin password.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  button.disabled=true;
+
+  button.textContent =
+    "⏳ Logging in...";
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email:email,
+
+      password:password
+
+    });
+
+
+    if(error){
+
+      msg(
+        message,
+        error.message,
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(!data?.user){
+
+      msg(
+        message,
+        "Login failed.",
+        true
+      );
+
+      return;
+
+    }
+
+
+    const {
+      data:profile,
+      error:profileError
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select("full_name,role")
+      .eq("id",data.user.id)
+      .maybeSingle();
+
+
+    if(profileError){
+
+      await supabaseClient.auth.signOut();
+
+      msg(
+        message,
+        profileError.message,
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(
+      !profile ||
+      profile.role !== "admin"
+    ){
+
+      await supabaseClient.auth.signOut();
+
+      msg(
+        message,
+        "This account is not an admin account.",
+        true
+      );
+
+      return;
+
+    }
+
+
+    await openPanel(
+      profile,
+      data.user
+    );
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    msg(
+      message,
+      error.message ||
+      "Login error.",
+      true
+    );
+
+  }
+
+  finally{
+
+    button.disabled=false;
+
+    button.textContent =
+      "🔐 Login";
+
+  }
+
+}
+
+
+/* =====================================================
+   OPEN PANEL
+===================================================== */
+
+async function openPanel(
+  profile,
+  user
+){
+
+  document
+    .getElementById("login")
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById("panel")
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById("who")
+    .textContent =
+      "Logged in: " +
+      (
+        profile.full_name ||
+        user.email ||
+        "Admin"
+      );
+
+
+  await Promise.all([
+    loadDashboard(),
+    loadApps(),
+    loadRetailers()
+  ]);
+
+}
+
+
+/* =====================================================
+   RESTORE SESSION
+===================================================== */
+
+async function restore(){
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient.auth.getSession();
+
+
+    if(error){
+
+      console.error(error);
+
+      return;
+
+    }
+
+
+    if(!data?.session){
+
+      return;
+
+    }
+
+
+    const user =
+      data.session.user;
+
+
+    const {
+      data:profile,
+      error:profileError
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select("full_name,role")
+      .eq("id",user.id)
+      .maybeSingle();
+
+
+    if(
+      !profileError &&
+      profile?.role === "admin"
+    ){
+
+      await openPanel(
+        profile,
+        user
+      );
+
+    }
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Restore error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  window.location.href =
+    "admin.html";
+
+}
+
+
+/* =====================================================
+   CREATE RETAILER
+===================================================== */
+
+async function createRetailer(){
+
+  const message =
+    document.getElementById("cm");
+
+  const button =
+    document.getElementById("createBtn");
+
+
+  const full_name =
+    document
+      .getElementById("rn")
+      .value
+      .trim();
+
+
+  const mobile =
+    document
+      .getElementById("rm")
+      .value
+      .trim();
+
+
+  const retailer_number =
+    document
+      .getElementById("rr")
+      .value
+      .trim();
+
+
+  let username =
+    document
+      .getElementById("ru")
+      .value
+      .trim();
+
+
+  let password =
+    document
+      .getElementById("rp")
+      .value;
+
+
+  if(!full_name){
+
+    msg(
+      message,
+      "Retailer full name is required.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if(!/^\d{10}$/.test(mobile)){
+
+    msg(
+      message,
+      "Mobile number must be exactly 10 digits.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if(!username || !password){
+
+    generateCredentials();
+
+    username =
+      document
+        .getElementById("ru")
+        .value
+        .trim();
+
+    password =
+      document
+        .getElementById("rp")
+        .value;
+
+  }
+
+
+  const {
+    data:sessionData,
+    error:sessionError
+  } =
+  await supabaseClient.auth.getSession();
+
+
+  if(
+    sessionError ||
+    !sessionData?.session
+  ){
+
+    msg(
+      message,
+      "Admin session expired. Please login again.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  button.disabled=true;
+
+  button.textContent =
+    "⏳ Creating...";
+
+
+  try{
+
+    /*
+      IMPORTANT:
+
+      Email intentionally removed from UI.
+
+      The Edge Function should create the
+      internal Auth identity itself.
+    */
+
+    const body={
+
+      full_name:full_name,
+
+      mobile:mobile,
+
+      retailer_number:
+        retailer_number || username,
+
+      username:username,
+
+      password:password
+
+    };
+
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient.functions.invoke(
+      "admin-create-retailer",
+      {
+        body:body
+      }
+    );
+
+
+    console.log(
+      "Retailer response:",
+      data,
+      error
+    );
+
+
+    if(error){
+
+      let errorText =
+        error.message ||
+        "Retailer creation failed.";
+
+
+      if(
+        error.context &&
+        typeof error.context.json === "function"
+      ){
+
+        try{
+
+          const serverData =
+            await error.context.json();
+
+          if(serverData?.error){
+
+            errorText =
+              serverData.error;
+
+          }
+
+        }
+
+        catch(e){}
+
+      }
+
+
+      msg(
+        message,
+        errorText,
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(data?.error){
+
+      msg(
+        message,
+        data.error,
+        true
+      );
+
+      return;
+
+    }
+
+
+    document
+      .getElementById("showUser")
+      .textContent =
+        data?.username ||
+        username;
+
+
+    document
+      .getElementById("showPass")
+      .textContent =
+        data?.password ||
+        password;
+
+
+    document
+      .getElementById("credentialBox")
+      .classList
+      .remove("hidden");
+
+
+    msg(
+      message,
+      "Retailer created successfully."
+    );
+
+
+    document
+      .getElementById("rn")
+      .value="";
+
+
+    document
+      .getElementById("rm")
+      .value="";
+
+
+    document
+      .getElementById("rr")
+      .value="";
+
+
+    generateCredentials();
+
+
+    await loadDashboard();
+
+    await loadRetailers();
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    msg(
+      message,
+      error.message ||
+      "Retailer creation failed.",
+      true
+    );
+
+  }
+
+  finally{
+
+    button.disabled=false;
+
+    button.textContent =
+      "👤 Create Retailer";
+
+  }
+
+}
+
+
+/* =====================================================
+   COPY CREDENTIALS
+===================================================== */
+
+async function copyCredentials(){
+
+  const username =
+    document
+      .getElementById("showUser")
+      .textContent;
+
+
+  const password =
+    document
+      .getElementById("showPass")
+      .textContent;
+
+
+  const text =
+`AllInOneStop Retailer Login
+
+Retailer ID: ${username}
+
+Password: ${password}
+
+Login: ${window.location.origin}/retailer.html`;
+
+
+  try{
+
+    await navigator.clipboard.writeText(text);
+
+    alert(
+      "Retailer credentials copied."
+    );
+
+  }
+
+  catch(error){
+
+    alert(text);
+
+  }
+
+}
+
+
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
+
+async function loadDashboard(){
+
+  try{
+
+    const {
+      count:retailerCount,
+      error:retailerError
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select("id",{count:"exact",head:true})
+      .eq("role","retailer");
+
+
+    if(!retailerError){
+
+      document
+        .getElementById("totalRetailers")
+        .textContent =
+          retailerCount || 0;
+
+    }
+
+
+    const {
+      data:apps,
+      error:appsError
+    } =
+    await supabaseClient
+      .from("applications")
+      .select(
+        "payment_status,application_status"
+      );
+
+
+    if(appsError){
+
+      console.error(
+        appsError
+      );
+
+      return;
+
+    }
+
+
+    const list =
+      apps || [];
+
+
+    const total =
+      list.length;
+
+
+    const pending =
+      list.filter(
+        x =>
+          String(
+            x.payment_status ||
+            "Pending"
+          ).toLowerCase()
+          === "pending"
+      ).length;
+
+
+    const completed =
+      list.filter(
+        x =>
+          String(
+            x.application_status ||
+            ""
+          ).toLowerCase()
+          === "completed"
+      ).length;
+
+
+    const paid =
+      list.filter(
+        x =>
+          String(
+            x.payment_status ||
+            ""
+          ).toLowerCase()
+          === "paid"
+      ).length;
+
+
+    const failed =
+      list.filter(
+        x =>
+          String(
+            x.payment_status ||
+            ""
+          ).toLowerCase()
+          === "failed"
+      ).length;
+
+
+    const processing =
+      list.filter(
+        x =>
+          String(
+            x.application_status ||
+            ""
+          ).toLowerCase()
+          === "processing"
+      ).length;
+
+
+    document
+      .getElementById("totalApplications")
+      .textContent =
+        total;
+
+
+    document
+      .getElementById("pendingPayments")
+      .textContent =
+        pending;
+
+
+    document
+      .getElementById("completedApplications")
+      .textContent =
+        completed;
+
+
+    document
+      .getElementById("paymentPending2")
+      .textContent =
+        pending;
+
+
+    document
+      .getElementById("paymentPaid2")
+      .textContent =
+        paid;
+
+
+    document
+      .getElementById("paymentFailed2")
+      .textContent =
+        failed;
+
+
+    document
+      .getElementById("processingApplications2")
+      .textContent =
+        processing;
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Dashboard error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   LOAD RETAILERS
+===================================================== */
+
+async function loadRetailers(){
+
+  const rows =
+    document.getElementById(
+      "retailerRows"
+    );
+
+
+  rows.innerHTML =
+`
+<tr>
+  <td colspan="6" class="loading">
+    Loading retailer history...
+  </td>
+</tr>
+`;
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "id,full_name,mobile,retailer_number,role"
+      )
+      .eq(
+        "role",
+        "retailer"
+      )
+      .order(
+        "full_name",
+        {
+          ascending:true
+        }
+      );
+
+
+    if(error){
+
+      rows.innerHTML =
+`
+<tr>
+  <td colspan="6" class="loading">
+    ${esc(error.message)}
+  </td>
+</tr>
+`;
+
+      return;
+
+    }
+
+
+    retailerData =
+      data || [];
+
+
+    renderRetailers(
+      retailerData
+    );
+
+  }
+
+  catch(error){
+
+    rows.innerHTML =
+`
+<tr>
+  <td colspan="6" class="loading">
+    ${esc(error.message)}
+  </td>
+</tr>
+`;
+
+  }
+
+}
+
+
+/* =====================================================
+   RENDER RETAILERS
+===================================================== */
+
+function renderRetailers(list){
+
+  const rows =
+    document.getElementById(
+      "retailerRows"
+    );
+
+
+  if(!list.length){
+
+    rows.innerHTML =
+`
+<tr>
+  <td colspan="6" class="loading">
+    No retailers found.
+  </td>
+</tr>
+`;
+
+    return;
+
+  }
+
+
+  rows.innerHTML =
+    list.map(
+      function(retailer,index){
+
+        return `
+<tr>
+
+  <td>
+    <strong>${index+1}</strong>
+  </td>
+
+  <td>
+    <span class="badge">
+      ${esc(
+        retailer.retailer_number ||
+        retailer.id
+      )}
+    </span>
+  </td>
+
+  <td>
+    <strong>
+      ${esc(
+        retailer.full_name ||
+        "-"
+      )}
+    </strong>
+  </td>
+
+  <td>
+    ${esc(
+      retailer.mobile ||
+      "-"
+    )}
+  </td>
+
+  <td>
+    ${esc(
+      retailer.retailer_number ||
+      "-"
+    )}
+  </td>
+
+  <td>
+    <span class="status-badge completed">
+      RETAILER
+    </span>
+  </td>
+
+</tr>
+`;
+
+      }
+    ).join("");
+
+}
+
+
+/* =====================================================
+   FILTER RETAILERS
+===================================================== */
+
+function filterRetailers(){
+
+  const search =
+    document
+      .getElementById(
+        "retailerSearch"
+      )
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  if(!search){
+
+    renderRetailers(
+      retailerData
+    );
+
+    return;
+
+  }
+
+
+  const filtered =
+    retailerData.filter(
+      function(item){
+
+        return (
+
+          String(
+            item.full_name || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+          ||
+
+          String(
+            item.mobile || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+          ||
+
+          String(
+            item.retailer_number || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+        );
+
+      }
+    );
+
+
+  renderRetailers(
+    filtered
+  );
+
+}
+
+
+/* =====================================================
+   LOAD APPLICATIONS
+===================================================== */
+
+async function loadApps(){
+
+  const rows =
+    document.getElementById(
+      "rows"
+    );
+
+
+  rows.innerHTML =
+`
+<tr>
+  <td colspan="7" class="loading">
+    Loading applications...
+  </td>
+</tr>
+`;
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("applications")
+      .select(
+        "tr_number,service_name,amount,payment_status,application_status,remark"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+    if(error){
+
+      rows.innerHTML =
+`
+<tr>
+  <td colspan="7" class="loading">
+    ${esc(error.message)}
+  </td>
+</tr>
+`;
+
+      return;
+
+    }
+
+
+    applicationData =
+      data || [];
+
+
+    updatePaymentCards(
+      applicationData
+    );
+
+
+    if(!applicationData.length){
+
+      rows.innerHTML =
+`
+<tr>
+  <td colspan="7" class="loading">
+    No applications yet.
+  </td>
+</tr>
+`;
+
+      return;
+
+    }
+
+
+    rows.innerHTML =
+      applicationData.map(
+        function(application){
+
+          const tr =
+            String(
+              application.tr_number ||
+              ""
+            );
+
+
+          const safeTr =
+            tr.replace(
+              /[^a-zA-Z0-9_-]/g,
+              "_"
+            );
+
+
+          const payment =
+            application.payment_status ||
+            "Pending";
+
+
+          const status =
+            application.application_status ||
+            "Received";
+
+
+          return `
+<tr>
+
+  <td>
+    <strong>
+      ${esc(tr)}
+    </strong>
+  </td>
+
+  <td>
+    ${esc(
+      application.service_name ||
+      "-"
+    )}
+  </td>
+
+  <td>
+    ₹${esc(
+      application.amount ||
+      "0"
+    )}
+  </td>
+
+  <td>
+
+    <select
+      id="p-${safeTr}"
+    >
+
+      <option
+        value="Pending"
+        ${payment==="Pending"?"selected":""}
+      >
+        Pending
+      </option>
+
+      <option
+        value="Paid"
+        ${payment==="Paid"?"selected":""}
+      >
+        Paid
+      </option>
+
+      <option
+        value="Failed"
+        ${payment==="Failed"?"selected":""}
+      >
+        Failed
+      </option>
+
+    </select>
+
+  </td>
+
+  <td>
+
+    <select
+      id="s-${safeTr}"
+    >
+
+      <option
+        value="Received"
+        ${status==="Received"?"selected":""}
+      >
+        Received
+      </option>
+
+      <option
+        value="Verification"
+        ${status==="Verification"?"selected":""}
+      >
+        Verification
+      </option>
+
+      <option
+        value="Processing"
+        ${status==="Processing"?"selected":""}
+      >
+        Processing
+      </option>
+
+      <option
+        value="Completed"
+        ${status==="Completed"?"selected":""}
+      >
+        Completed
+      </option>
+
+      <option
+        value="Rejected"
+        ${status==="Rejected"?"selected":""}
+      >
+        Rejected
+      </option>
+
+    </select>
+
+  </td>
+
+  <td>
+
+    <input
+      id="r-${safeTr}"
+      value="${esc(
+        application.remark || ""
+      )}"
+      placeholder="Remark"
+    >
+
+  </td>
+
+  <td>
+
+    <button
+      type="button"
+      class="small-btn saveBtn"
+      data-tr="${esc(tr)}"
+      data-safe="${safeTr}"
+    >
+      💾 Save
+    </button>
+
+  </td>
+
+</tr>
+`;
+
+        }
+      ).join("");
+
+  }
+
+  catch(error){
+
+    rows.innerHTML =
+`
+<tr>
+  <td colspan="7" class="loading">
+    ${esc(error.message)}
+  </td>
+</tr>
+`;
+
+  }
+
+}
+
+
+/* =====================================================
+   PAYMENT CARDS
+===================================================== */
+
+function updatePaymentCards(list){
+
+  const pending =
+    list.filter(
+      x =>
+        String(
+          x.payment_status ||
+          "Pending"
+        ).toLowerCase()
+        === "pending"
+    ).length;
+
+
+  const paid =
+    list.filter(
+      x =>
+        String(
+          x.payment_status ||
+          ""
+        ).toLowerCase()
+        === "paid"
+    ).length;
+
+
+  const failed =
+    list.filter(
+      x =>
+        String(
+          x.payment_status ||
+          ""
+        ).toLowerCase()
+        === "failed"
+    ).length;
+
+
+  const processing =
+    list.filter(
+      x =>
+        String(
+          x.application_status ||
+          ""
+        ).toLowerCase()
+        === "processing"
+    ).length;
+
+
+  document
+    .getElementById(
+      "paymentPending2"
+    )
+    .textContent =
+      pending;
+
+
+  document
+    .getElementById(
+      "paymentPaid2"
+    )
+    .textContent =
+      paid;
+
+
+  document
+    .getElementById(
+      "paymentFailed2"
+    )
+    .textContent =
+      failed;
+
+
+  document
+    .getElementById(
+      "processingApplications2"
+    )
+    .textContent =
+      processing;
+
+
+  document
+    .getElementById(
+      "pendingPayments"
+    )
+    .textContent =
+      pending;
+
+
+  document
+    .getElementById(
+      "completedApplications"
+    )
+    .textContent =
+      list.filter(
+        x =>
+          String(
+            x.application_status ||
+            ""
+          ).toLowerCase()
+          === "completed"
+      ).length;
+
+
+  document
+    .getElementById(
+      "totalApplications"
+    )
+    .textContent =
+      list.length;
+
+}
+
+
+/* =====================================================
+   SAVE STATUS
+===================================================== */
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    const button =
+      event.target.closest(
+        ".saveBtn"
+      );
+
+
+    if(button){
+
+      saveStatus(
+        button.dataset.tr,
+        button.dataset.safe
+      );
+
+    }
+
+  }
+);
+
+
+async function saveStatus(
+  trNumber,
+  safeTr
+){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient.auth.getSession();
+
+
+  if(
+    error ||
+    !data?.session
+  ){
+
+    alert(
+      "Admin session expired. Please login again."
+    );
+
+    return;
+
+  }
+
+
+  const paymentElement =
+    document.getElementById(
+      "p-" + safeTr
+    );
+
+
+  const statusElement =
+    document.getElementById(
+      "s-" + safeTr
+    );
+
+
+  const remarkElement =
+    document.getElementById(
+      "r-" + safeTr
+    );
+
+
+  if(
+    !paymentElement ||
+    !statusElement ||
+    !remarkElement
+  ){
+
+    alert(
+      "Application row not found."
+    );
+
+    return;
+
+  }
+
+
+  const body={
+
+    tr_number:
+      trNumber,
+
+    payment_status:
+      paymentElement.value,
+
+    application_status:
+      statusElement.value,
+
+    remark:
+      remarkElement.value
+
+  };
+
+
+  try{
+
+    /*
+      Email/status Edge Function is no longer
+      required for this Admin panel.
+
+      Direct update is attempted first.
+    */
+
+    const {
+      error:updateError
+    } =
+    await supabaseClient
+      .from("applications")
+      .update({
+
+        payment_status:
+          body.payment_status,
+
+        application_status:
+          body.application_status,
+
+        remark:
+          body.remark
+
+      })
+      .eq(
+        "tr_number",
+        body.tr_number
+      );
+
+
+    if(updateError){
+
+      alert(
+        "Status update failed: " +
+        updateError.message
+      );
+
+      return;
+
+    }
+
+
+    alert(
+      "Application status updated successfully."
+    );
+
+
+    await loadDashboard();
+
+    await loadApps();
+
+  }
+
+  catch(error){
+
+    alert(
+      error.message ||
+      "Status update failed."
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+supabaseClient.auth.onAuthStateChange(
+  function(event){
+
+    console.log(
+      "Auth event:",
+      event
+    );
+
+  }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+generateCredentials();
+
+restore();
+
+</script>
+
+</body>
+</html>
