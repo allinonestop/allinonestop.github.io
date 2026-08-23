@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+    content="width=device-width, initial-scale=1.0">
 
-  <title>
-    Track Application - AllInOneStop
-  </title>
+  <title>Track Application - AllInOneStop</title>
 
   <style>
 
@@ -19,850 +18,354 @@
 
     body {
       margin: 0;
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
-
-      background:
-        linear-gradient(
-          135deg,
-          #eef2ff,
-          #f8fafc
-        );
-
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
       color: #172033;
     }
 
     .header {
-      background: #111827;
+      background: #0d47a1;
       color: white;
-
-      padding:
-        16px 20px;
-
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 15px;
-      flex-wrap: wrap;
+      padding: 18px;
+      text-align: center;
     }
 
-    .brand {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .nav {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .nav a {
-      color: white;
-      text-decoration: none;
-
-      background: #2563eb;
-
-      padding:
-        9px 14px;
-
-      border-radius: 8px;
-
-      font-size: 14px;
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
     }
 
     .container {
-      width:
-        min(
-          850px,
-          calc(100% - 30px)
-        );
-
-      margin:
-        35px auto;
+      max-width: 750px;
+      margin: 35px auto;
+      padding: 0 15px;
     }
 
     .card {
       background: white;
-
-      border-radius: 18px;
-
       padding: 25px;
-
-      box-shadow:
-        0 10px 35px
-        rgba(
-          15,
-          23,
-          42,
-          0.10
-        );
-
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.08);
       margin-bottom: 20px;
     }
 
-    h1,
-    h2,
-    h3 {
+    h2 {
       margin-top: 0;
     }
 
-    .subtitle {
-      color: #64748b;
-      margin-bottom: 25px;
-      line-height: 1.5;
-    }
-
-    .search-box {
-      display: flex;
-      gap: 10px;
-    }
-
-    .search-box input {
-      flex: 1;
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
     }
 
     input {
       width: 100%;
-
-      padding:
-        13px 14px;
-
-      border:
-        1px solid #cbd5e1;
-
-      border-radius: 9px;
-
+      padding: 13px;
+      border: 1px solid #ccd4df;
+      border-radius: 7px;
       font-size: 16px;
-
-      outline: none;
-    }
-
-    input:focus {
-      border-color:
-        #2563eb;
-
-      box-shadow:
-        0 0 0 3px
-        rgba(
-          37,
-          99,
-          235,
-          0.10
-        );
+      text-transform: uppercase;
     }
 
     button {
-      border: 0;
-
-      border-radius: 9px;
-
-      padding:
-        13px 20px;
-
-      cursor: pointer;
-
-      font-size: 15px;
-
-      font-weight: 700;
-    }
-
-    .btn-primary {
-      background:
-        #2563eb;
-
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background:
-        #1d4ed8;
-    }
-
-    .btn-secondary {
-      background:
-        #475569;
-
-      color: white;
-    }
-
-    .message {
-      padding: 13px;
-
-      border-radius: 9px;
-
+      width: 100%;
       margin-top: 15px;
-
-      display: none;
-
-      line-height: 1.5;
+      padding: 13px;
+      border: 0;
+      border-radius: 7px;
+      background: #1976d2;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
-    .message.error {
-      display: block;
-
-      background:
-        #fee2e2;
-
-      color:
-        #991b1b;
-    }
-
-    .message.success {
-      display: block;
-
-      background:
-        #dcfce7;
-
-      color:
-        #166534;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .result {
-      margin-top: 25px;
-    }
-
-    .status-header {
-      padding: 20px;
-
-      border-radius: 12px;
-
-      background:
-        #eff6ff;
-
-      border:
-        1px solid #bfdbfe;
-
-      margin-bottom: 20px;
-    }
-
-    .tr {
-      font-size: 25px;
-
-      font-weight: 800;
-
-      color:
-        #1d4ed8;
-
-      word-break:
-        break-word;
+    button:disabled {
+      opacity: .6;
     }
 
     .status {
-      display: inline-block;
-
-      margin-top: 10px;
-
-      padding:
-        8px 14px;
-
-      border-radius: 30px;
-
-      background:
-        #dbeafe;
-
-      color:
-        #1e40af;
-
-      font-weight: 700;
+      display: none;
+      padding: 13px;
+      border-radius: 7px;
+      margin-bottom: 15px;
     }
 
-    .grid {
-      display: grid;
-
-      grid-template-columns:
-        repeat(
-          2,
-          minmax(
-            0,
-            1fr
-          )
-        );
-
-      gap: 15px;
-    }
-
-    .item {
-      background:
-        #f8fafc;
-
-      padding:
-        15px;
-
-      border-radius:
-        10px;
-    }
-
-    .item-label {
+    .success {
       display: block;
-
-      font-size: 13px;
-
-      color:
-        #64748b;
-
-      margin-bottom:
-        6px;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1px solid #a5d6a7;
     }
 
-    .item-value {
-      font-weight:
-        700;
-
-      word-break:
-        break-word;
+    .error {
+      display: block;
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1px solid #ef9a9a;
     }
 
-    .files {
-      margin-top:
-        20px;
+    .info {
+      display: block;
+      background: #e3f2fd;
+      color: #0d47a1;
+      border: 1px solid #90caf9;
     }
 
-    .file {
-      background:
-        #f8fafc;
+    .result {
+      display: none;
+    }
 
-      border:
-        1px solid #e2e8f0;
+    .tr {
+      text-align: center;
+      background: #e8f5e9;
+      border: 2px solid #43a047;
+      padding: 18px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
 
-      border-radius:
-        10px;
+    .tr-number {
+      font-size: 25px;
+      font-weight: bold;
+      color: #1b5e20;
+      margin-top: 8px;
+    }
 
-      padding:
-        12px 14px;
-
-      margin-top:
-        8px;
-
+    .row {
       display: flex;
-
-      justify-content:
-        space-between;
-
-      align-items:
-        center;
-
-      gap: 10px;
-
-      flex-wrap:
-        wrap;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e9ef;
     }
 
-    .file a {
-      color:
-        #2563eb;
-
-      font-weight:
-        600;
-
-      text-decoration:
-        none;
+    .row:last-child {
+      border-bottom: 0;
     }
 
-    .loading {
-      text-align:
-        center;
-
-      padding:
-        20px;
-
-      color:
-        #64748b;
+    .key {
+      font-weight: bold;
+      color: #455a64;
     }
 
-    @media (max-width: 650px) {
+    .value {
+      text-align: right;
+      font-weight: 600;
+    }
 
-      .search-box {
-        flex-direction:
-          column;
-      }
+    .payment {
+      padding: 10px;
+      border-radius: 6px;
+      background: #fff8e1;
+    }
 
-      .search-box button {
-        width:
-          100%;
-      }
+    .received {
+      color: #1565c0;
+    }
 
-      .grid {
-        grid-template-columns:
-          1fr;
-      }
+    .pending {
+      color: #e65100;
+    }
 
-      .container {
-        width:
-          calc(100% - 20px);
+    .completed {
+      color: #2e7d32;
+    }
 
-        margin:
-          20px auto;
-      }
+    .rejected {
+      color: #c62828;
+    }
 
-      .card {
-        padding:
-          18px;
-      }
-
+    .drive-link {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 15px;
+      background: #455a64;
+      color: white;
+      text-decoration: none;
+      border-radius: 7px;
     }
 
   </style>
+
 </head>
 
 <body>
 
-  <header class="header">
+<div class="header">
 
-    <div class="brand">
-      AllInOneStop
-    </div>
+  <h1>AllInOneStop</h1>
 
-    <div class="nav">
+  <div>
+    Application Tracking
+  </div>
 
-      <a href="index.html">
-        Home
-      </a>
-
-      <a href="retailer.html">
-        Retailer Login
-      </a>
-
-    </div>
-
-  </header>
+</div>
 
 
-  <main class="container">
+<div class="container">
 
-    <section class="card">
+  <div class="card">
 
-      <h1>
-        Track Your Application
-      </h1>
+    <h2>Track Your Application</h2>
 
-      <div class="subtitle">
-        Enter your TR Number to check
-        application status, payment status
-        and application details.
+    <div id="status" class="status"></div>
+
+    <label>
+      TR Number
+    </label>
+
+    <input
+      id="trNumber"
+      type="text"
+      placeholder="TR-20260823-123456-123">
+
+    <button
+      id="trackBtn"
+      onclick="trackApplication()">
+      Track Application
+    </button>
+
+  </div>
+
+
+  <div
+    id="result"
+    class="card result">
+
+    <div class="tr">
+
+      <div>
+        Application TR Number
       </div>
-
-
-      <form id="trackingForm">
-
-        <div class="search-box">
-
-          <input
-            type="text"
-            id="trNumber"
-            placeholder="Example: TR-20260823-123456-123"
-            autocomplete="off"
-            required
-          >
-
-          <button
-            type="submit"
-            class="btn-primary"
-            id="trackButton"
-          >
-            Track
-          </button>
-
-        </div>
-
-      </form>
-
 
       <div
-        id="message"
-        class="message"
-      ></div>
-
-    </section>
-
-
-    <section
-      id="resultSection"
-      class="card result hidden"
-    >
-
-      <div class="status-header">
-
-        <div>
-          TR Number
-        </div>
-
-        <div
-          id="resultTr"
-          class="tr"
-        >
-          -
-        </div>
-
-        <div
-          id="applicationStatus"
-          class="status"
-        >
-          Received
-        </div>
-
+        class="tr-number"
+        id="resultTr">
       </div>
 
-
-      <h2>
-        Application Details
-      </h2>
+    </div>
 
 
-      <div class="grid">
-
-        <div class="item">
-
-          <span class="item-label">
-            Applicant Name
-          </span>
-
-          <span
-            id="applicantName"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            Service
-          </span>
-
-          <span
-            id="serviceName"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            Service Code
-          </span>
-
-          <span
-            id="serviceCode"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            Amount
-          </span>
-
-          <span
-            id="amount"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            Payment Status
-          </span>
-
-          <span
-            id="paymentStatus"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            Customer Mobile
-          </span>
-
-          <span
-            id="customerMobile"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            Retailer ID
-          </span>
-
-          <span
-            id="retailerId"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            Created At
-          </span>
-
-          <span
-            id="createdAt"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            English Name
-          </span>
-
-          <span
-            id="englishName"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            Gujarati Name
-          </span>
-
-          <span
-            id="gujaratiName"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
-
-        <div class="item">
-
-          <span class="item-label">
-            UTR Number
-          </span>
-
-          <span
-            id="utrNumber"
-            class="item-value"
-          >
-            -
-          </span>
-
-        </div>
-
+    <div class="row">
+      <div class="key">Application Status</div>
+      <div
+        class="value"
+        id="applicationStatus">
       </div>
+    </div>
 
 
-      <div class="files">
-
-        <h3>
-          Uploaded Documents
-        </h3>
-
-        <div id="filesList">
-          No files.
-        </div>
-
+    <div class="row">
+      <div class="key">Payment Status</div>
+      <div
+        class="value"
+        id="paymentStatus">
       </div>
+    </div>
 
 
-      <div style="margin-top:20px;">
-
-        <button
-          class="btn-secondary"
-          onclick="window.location.href='retailer.html'"
-        >
-          Retailer Login
-        </button>
-
+    <div class="row">
+      <div class="key">Service</div>
+      <div
+        class="value"
+        id="serviceName">
       </div>
+    </div>
 
-    </section>
 
-  </main>
+    <div class="row">
+      <div class="key">Applicant Name</div>
+      <div
+        class="value"
+        id="applicantName">
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="key">Customer Mobile</div>
+      <div
+        class="value"
+        id="customerMobile">
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="key">Amount</div>
+      <div
+        class="value"
+        id="amount">
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="key">UTR Number</div>
+      <div
+        class="value"
+        id="utrNumber">
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="key">Created At</div>
+      <div
+        class="value"
+        id="createdAt">
+      </div>
+    </div>
+
+
+    <div id="driveBox" style="display:none; margin-top:20px;">
+
+      <strong>Documents</strong>
+
+      <br>
+
+      <a
+        id="driveLink"
+        class="drive-link"
+        target="_blank">
+        Open Documents
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
 
 
 <script>
 
   /*
-   * =====================================================
-   * IMPORTANT
-   * =====================================================
-   *
-   * Replace this with your deployed Apps Script Web App
-   * URL.
+   * Replace this with the SAME Apps Script
+   * Web App URL used in retailer.html.
    */
 
   const API_URL =
-    "https://script.google.com/macros/s/AKfycbz63RSk792vqgmV-9M5gp3b_2-sW8r1N_1A3rvZGIiFKZ1_jZo2iXuc1y8G-KTe9kDI/exec";
+    "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
 
-  /* =====================================================
-     HELPERS
-  ===================================================== */
+  async function trackApplication() {
 
-  function escapeHtml(value) {
-
-    return String(value || "")
-      .replace(
-        /&/g,
-        "&amp;"
-      )
-      .replace(
-        /</g,
-        "&lt;"
-      )
-      .replace(
-        />/g,
-        "&gt;"
-      )
-      .replace(
-        /"/g,
-        "&quot;"
-      )
-      .replace(
-        /'/g,
-        "&#039;"
-      );
-
-  }
+    const tr =
+      document
+        .getElementById("trNumber")
+        .value
+        .trim();
 
 
-  function showMessage(
-    message,
-    type
-  ) {
+    if (!tr) {
 
-    const element =
-      document.getElementById(
-        "message"
-      );
-
-
-    element.className =
-      "message " +
-      type;
-
-
-    element.textContent =
-      message || "";
-
-  }
-
-
-  function clearMessage() {
-
-    const element =
-      document.getElementById(
-        "message"
-      );
-
-
-    element.className =
-      "message";
-
-
-    element.textContent =
-      "";
-
-  }
-
-
-  function ensureApiConfigured() {
-
-    if (
-      !API_URL ||
-      API_URL.indexOf(
-        "PASTE_YOUR"
-      ) >= 0
-    ) {
-
-      showMessage(
-        "Please set your Apps Script Web App URL in API_URL.",
+      showStatus(
+        "TR Number required.",
         "error"
       );
-
-      return false;
-
-    }
-
-    return true;
-
-  }
-
-
-  /* =====================================================
-     TRACK APPLICATION
-  ===================================================== */
-
-  async function trackApplication(
-    trNumber
-  ) {
-
-    clearMessage();
-
-
-    if (
-      !trNumber
-    ) {
-
-      showMessage(
-        "Please enter your TR Number.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    if (
-      !ensureApiConfigured()
-    ) {
 
       return;
 
@@ -871,24 +374,16 @@
 
     const button =
       document.getElementById(
-        "trackButton"
+        "trackBtn"
       );
 
 
-    button.disabled =
-      true;
-
-
+    button.disabled = true;
     button.textContent =
       "Searching...";
 
 
-    document
-      .getElementById(
-        "resultSection"
-      )
-      .classList
-      .add("hidden");
+    hideResult();
 
 
     try {
@@ -896,106 +391,67 @@
       const url =
         API_URL +
         "?action=track&trNumber=" +
-        encodeURIComponent(
-          trNumber
-        );
+        encodeURIComponent(tr);
 
 
       const response =
-        await fetch(
-          url,
-          {
-            method:
-              "GET"
-          }
-        );
+        await fetch(url);
 
 
-      const text =
-        await response.text();
+      const data =
+        await response.json();
 
 
-      let data;
+      if (!data.success) {
 
-
-      try {
-
-        data =
-          JSON.parse(
-            text
-          );
-
-      } catch (err) {
-
-        throw new Error(
-          "Invalid API response."
-        );
-
-      }
-
-
-      if (
-        !data.success
-      ) {
-
-        throw new Error(
+        showStatus(
           data.message ||
-          "Application not found."
+          "Application not found.",
+          "error"
         );
+
+        return;
 
       }
 
 
-      displayResult(
-        data
-      );
+      displayResult(data);
 
 
-    } catch (err) {
+    } catch (error) {
 
-      showMessage(
-        err.message ||
-          "Unable to track application.",
+      showStatus(
+        "Tracking API error: " +
+        error.message,
         "error"
       );
 
     } finally {
 
-      button.disabled =
-        false;
-
-
+      button.disabled = false;
       button.textContent =
-        "Track";
+        "Track Application";
 
     }
 
   }
 
 
-  /* =====================================================
-     DISPLAY RESULT
-  ===================================================== */
+  function displayResult(data) {
 
-  function displayResult(
-    data
-  ) {
-
-    document
-      .getElementById(
-        "resultSection"
-      )
-      .classList
-      .remove("hidden");
+    document.getElementById(
+      "result"
+    ).style.display =
+      "block";
 
 
-    setText(
-      "resultTr",
+    document.getElementById(
+      "resultTr"
+    ).textContent =
       data.trNumber ||
       data.tr_number ||
       data.applicationId ||
-      "-"
-    );
+      "";
 
 
     setText(
@@ -1006,22 +462,31 @@
 
 
     setText(
-      "applicantName",
-      data.applicantName ||
-      "-"
+      "paymentStatus",
+      data.paymentStatus ||
+      "Pending"
     );
 
 
     setText(
       "serviceName",
       data.serviceName ||
+      data.serviceCode ||
       "-"
     );
 
 
     setText(
-      "serviceCode",
-      data.serviceCode ||
+      "applicantName",
+      data.applicantName ||
+      data.englishName ||
+      "-"
+    );
+
+
+    setText(
+      "customerMobile",
+      data.customerMobile ||
       "-"
     );
 
@@ -1035,349 +500,107 @@
 
 
     setText(
-      "paymentStatus",
-      data.paymentStatus ||
-      "Pending"
-    );
-
-
-    setText(
-      "customerMobile",
-      data.customerMobile ||
-      "-"
-    );
-
-
-    setText(
-      "retailerId",
-      data.retailerId ||
-      "-"
-    );
-
-
-    setText(
-      "createdAt",
-      formatDate(
-        data.createdAt
-      )
-    );
-
-
-    setText(
-      "englishName",
-      data.englishName ||
-      "-"
-    );
-
-
-    setText(
-      "gujaratiName",
-      data.gujaratiName ||
-      "-"
-    );
-
-
-    setText(
       "utrNumber",
       data.utrNumber ||
       "-"
     );
 
 
-    renderFiles(
-      data.files
+    setText(
+      "createdAt",
+      data.createdAt ||
+      "-"
     );
 
 
-    document
-      .getElementById(
-        "resultSection"
-      )
-      .scrollIntoView({
-        behavior:
-          "smooth"
-      });
-
-  }
+    const drive =
+      data.driveFolder;
 
 
-  /* =====================================================
-     SET TEXT
-  ===================================================== */
+    if (drive) {
 
-  function setText(
-    id,
-    value
-  ) {
-
-    const element =
       document.getElementById(
-        id
-      );
+        "driveBox"
+      ).style.display =
+        "block";
 
 
-    if (!element) {
-      return;
-    }
-
-
-    element.textContent =
-      value === null ||
-      value === undefined ||
-      value === ""
-        ? "-"
-        : String(value);
-
-  }
-
-
-  /* =====================================================
-     FORMAT DATE
-  ===================================================== */
-
-  function formatDate(
-    value
-  ) {
-
-    if (
-      !value
-    ) {
-
-      return "-";
-
-    }
-
-
-    try {
-
-      const date =
-        new Date(
-          value
-        );
-
-
-      if (
-        isNaN(
-          date.getTime()
-        )
-      ) {
-
-        return String(
-          value
-        );
-
-      }
-
-
-      return date.toLocaleString(
-        "en-IN",
-        {
-          dateStyle:
-            "medium",
-
-          timeStyle:
-            "short"
-        }
-      );
-
-    } catch (err) {
-
-      return String(
-        value
-      );
-
-    }
-
-  }
-
-
-  /* =====================================================
-     FILES
-  ===================================================== */
-
-  function renderFiles(
-    files
-  ) {
-
-    const container =
       document.getElementById(
-        "filesList"
-      );
-
-
-    if (
-      !files ||
-      typeof files !==
-        "object"
-    ) {
-
-      container.innerHTML =
-        "<div style='color:#64748b'>No files uploaded.</div>";
-
-      return;
+        "driveLink"
+      ).href =
+        drive;
 
     }
 
 
-    const keys =
-      Object.keys(
-        files
-      );
-
-
-    if (
-      !keys.length
-    ) {
-
-      container.innerHTML =
-        "<div style='color:#64748b'>No files uploaded.</div>";
-
-      return;
-
-    }
-
-
-    container.innerHTML =
-      keys.map(
-        function(key) {
-
-          const file =
-            files[key] ||
-            {};
-
-
-          const name =
-            file.name ||
-            key;
-
-
-          const url =
-            file.url ||
-            "";
-
-
-          if (url) {
-
-            return `
-              <div class="file">
-
-                <span>
-                  ${escapeHtml(name)}
-                </span>
-
-                <a
-                  href="${escapeHtml(url)}"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  View File
-                </a>
-
-              </div>
-            `;
-
-          }
-
-
-          return `
-            <div class="file">
-
-              <span>
-                ${escapeHtml(name)}
-              </span>
-
-              <span>
-                Uploaded
-              </span>
-
-            </div>
-          `;
-
-        }
-      ).join("");
+    showStatus(
+      "Application found successfully.",
+      "success"
+    );
 
   }
 
 
-  /* =====================================================
-     FORM
-  ===================================================== */
+  function setText(id, value) {
+
+    document.getElementById(id)
+      .textContent =
+      value || "-";
+
+  }
+
+
+  function hideResult() {
+
+    document.getElementById(
+      "result"
+    ).style.display =
+      "none";
+
+    document.getElementById(
+      "driveBox"
+    ).style.display =
+      "none";
+
+  }
+
+
+  function showStatus(
+    message,
+    type
+  ) {
+
+    const el =
+      document.getElementById(
+        "status"
+      );
+
+    el.className =
+      "status " +
+      type;
+
+    el.textContent =
+      message;
+
+  }
+
 
   document
-    .getElementById(
-      "trackingForm"
-    )
+    .getElementById("trNumber")
     .addEventListener(
-      "submit",
+      "keydown",
       function(event) {
 
-        event.preventDefault();
+        if (
+          event.key === "Enter"
+        ) {
 
+          trackApplication();
 
-        const tr =
-          document
-            .getElementById(
-              "trNumber"
-            )
-            .value
-            .trim();
-
-
-        trackApplication(
-          tr
-        );
+        }
 
       }
     );
-
-
-  /* =====================================================
-     URL PARAMETER
-  ===================================================== */
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-      const params =
-        new URLSearchParams(
-          window.location.search
-        );
-
-
-      const tr =
-        params.get(
-          "trNumber"
-        ) ||
-        params.get(
-          "tr_number"
-        ) ||
-        params.get(
-          "tr"
-        ) ||
-        params.get(
-          "applicationId"
-        );
-
-
-      if (tr) {
-
-        document
-          .getElementById(
-            "trNumber"
-          )
-          .value =
-          tr;
-
-
-        trackApplication(
-          tr
-        );
-
-      }
-
-    }
-  );
 
 </script>
 
