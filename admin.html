@@ -1,628 +1,783 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>AllInOneStop - Admin</title>
+<title>AllInOneStop Admin Panel</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top left, #dbeafe, transparent 35%),
-        radial-gradient(circle at bottom right, #cffafe, transparent 35%),
-        #f5f7fb;
-      color: #172033;
-    }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, #7c5cff20, transparent 30%),
+    radial-gradient(circle at 90% 15%, #00d2ff18, transparent 30%),
+    linear-gradient(135deg, #eef2ff, #f8fbff 45%, #ecfeff);
+  color: #172033;
+  min-height: 100vh;
+}
 
-    button,
-    input {
-      font: inherit;
-    }
+button,
+input,
+select {
+  font: inherit;
+}
 
-    .container {
-      width: min(1100px, 94%);
-      margin: 30px auto;
-    }
+button {
+  border: 0;
+  cursor: pointer;
+}
 
-    .card {
-      background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-radius: 20px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
-    }
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-    .hidden {
-      display: none !important;
-    }
+.wrap {
+  width: min(1200px, calc(100% - 30px));
+  margin: 25px auto;
+}
 
-    h1,
-    h2 {
-      margin-top: 0;
-    }
+.box {
+  background: rgba(255,255,255,0.96);
+  border-radius: 22px;
+  padding: 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 15px 45px rgba(38,48,80,0.10);
+  border: 1px solid #ffffff;
+}
 
-    h1 {
-      color: #4f46e5;
-    }
+.hidden {
+  display: none !important;
+}
 
-    p {
-      color: #667085;
-    }
+h1 {
+  margin: 0;
+  color: #4f46e5;
+}
 
-    label {
-      display: block;
-      margin-bottom: 7px;
-      font-size: 14px;
-      font-weight: 700;
-      color: #344054;
-    }
+h2 {
+  margin-top: 0;
+  color: #172033;
+}
 
-    input {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1px solid #d0d5dd;
-      border-radius: 11px;
-      outline: none;
-      background: #fff;
-      margin-bottom: 15px;
-    }
+p {
+  color: #667085;
+}
 
-    input:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
-    }
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #475467;
+  margin-bottom: 6px;
+}
 
-    input[readonly] {
-      background: #f8fafc;
-      color: #4f46e5;
-      font-weight: 800;
-    }
+input,
+select {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d9deea;
+  border-radius: 11px;
+  background: white;
+  margin-bottom: 15px;
+}
 
-    button {
-      border: 0;
-      border-radius: 11px;
-      padding: 12px 18px;
-      background: linear-gradient(135deg, #4f46e5, #2563eb);
-      color: white;
-      font-weight: 800;
-      cursor: pointer;
-    }
+input:focus,
+select:focus {
+  outline: 2px solid #c7d2fe;
+  border-color: #6366f1;
+}
 
-    button:hover {
-      opacity: 0.92;
-    }
+button,
+.btn {
+  padding: 11px 16px;
+  border-radius: 11px;
+  color: white;
+  font-weight: 800;
+  background: linear-gradient(135deg,#5b5cf0,#287cff);
+  text-decoration: none;
+  display: inline-block;
+}
 
-    button:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
+button:hover,
+.btn:hover {
+  box-shadow: 0 8px 20px rgba(54,88,255,0.20);
+}
 
-    .btn-gray {
-      background: #475467;
-    }
+.logout {
+  background: #475467;
+}
 
-    .btn-red {
-      background: #dc2626;
-    }
+.delete-btn {
+  background: linear-gradient(135deg,#dc2626,#ef4444);
+}
 
-    .btn-purple {
-      background: #7c3aed;
-    }
+.password-btn {
+  background: linear-gradient(135deg,#7c3aed,#4f46e5);
+}
 
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
+.small-btn {
+  padding: 7px 10px;
+  font-size: 12px;
+}
 
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
 
-    .login-card {
-      max-width: 500px;
-      margin: 80px auto;
-    }
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
 
-    .login-icon {
-      width: 65px;
-      height: 65px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, #6366f1, #06b6d4);
-      color: white;
-      font-size: 30px;
-      margin-bottom: 18px;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
+.divider {
+  height: 1px;
+  background: #eaecf0;
+  margin: 22px 0;
+}
 
-    .message {
-      margin-top: 15px;
-      padding: 13px;
-      border-radius: 11px;
-      white-space: pre-wrap;
-      word-break: break-word;
-      font-weight: 700;
-      font-size: 14px;
-    }
+.hint {
+  font-size: 12px;
+  color: #667085;
+}
 
-    .success {
-      background: #ecfdf3;
-      color: #067647;
-      border: 1px solid #abefc6;
-    }
+.badge,
+.online {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
 
-    .error {
-      background: #fef3f2;
-      color: #b42318;
-      border: 1px solid #fecdca;
-    }
+.badge {
+  background: #eef2ff;
+  color: #4f46e5;
+}
 
-    .info {
-      background: #eff8ff;
-      color: #175cd3;
-      border: 1px solid #b2ddff;
-    }
+.online {
+  background: #ecfdf3;
+  color: #087443;
+}
 
-    .id-box {
-      margin-top: 5px;
-      padding: 15px;
-      background: #f8fafc;
-      border: 1px solid #e4e7ec;
-      border-radius: 13px;
-    }
+.msg {
+  padding: 13px;
+  border-radius: 11px;
+  margin-top: 14px;
+  background: #ecfdf3;
+  color: #087443;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 
-    .badge {
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      background: #ecfdf3;
-      color: #067647;
-    }
+.msg.error {
+  background: #fef2f2;
+  color: #b42318;
+}
 
-    .hint {
-      font-size: 12px;
-      color: #667085;
-      margin-top: -8px;
-      margin-bottom: 15px;
-    }
+.msg.warning {
+  background: #fffbeb;
+  color: #92400e;
+}
 
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid #eaecf0;
-      border-radius: 13px;
-      margin-top: 15px;
-    }
+.id-box {
+  background: #f8fafc;
+  border: 1px solid #e4e7ec;
+  border-radius: 13px;
+  padding: 13px;
+  margin-top: 5px;
+}
 
-    table {
-      width: 100%;
-      min-width: 700px;
-      border-collapse: collapse;
-    }
+.id-box input {
+  margin-bottom: 5px;
+  background: #f8fafc;
+  color: #4f46e5;
+  font-weight: 900;
+  font-size: 18px;
+}
 
-    th,
-    td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #eaecf0;
-      font-size: 13px;
-    }
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
 
-    th {
-      background: #f8fafc;
-      color: #475467;
-    }
+.stat {
+  background: white;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(38,48,80,0.08);
+  border: 1px solid #eef0f5;
+}
 
-    .loading {
-      text-align: center;
-      padding: 25px;
-      color: #667085;
-    }
+.stat-icon {
+  font-size: 27px;
+}
 
-    .small-btn {
-      padding: 8px 11px;
-      font-size: 12px;
-    }
+.stat-number {
+  font-size: 30px;
+  font-weight: 900;
+  margin-top: 8px;
+  color: #4f46e5;
+}
 
-    .result-box {
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 14px;
-      background: #f8fafc;
-      border: 1px solid #e4e7ec;
-    }
+.stat-title {
+  color: #667085;
+  font-size: 13px;
+  font-weight: 700;
+}
 
-    .result-row {
-      margin-bottom: 8px;
-    }
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid #eaecf0;
+  border-radius: 14px;
+  margin-top: 12px;
+}
 
-    .result-row strong {
-      color: #344054;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
 
-    @media (max-width: 700px) {
-      .container {
-        width: 95%;
-        margin: 15px auto;
-      }
+th,
+td {
+  padding: 11px;
+  border-bottom: 1px solid #eaecf0;
+  text-align: left;
+  font-size: 13px;
+  vertical-align: middle;
+}
 
-      .card {
-        padding: 18px;
-      }
+th {
+  background: #f8fafc;
+  color: #475467;
+}
 
-      .grid {
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
+.loading {
+  text-align: center;
+  padding: 25px;
+  color: #667085;
+}
 
-      .login-card {
-        margin: 25px auto;
-      }
-    }
-  </style>
+.login-box {
+  max-width: 550px;
+  margin: 70px auto;
+}
+
+.login-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg,#6366f1,#06b6d4);
+  color: white;
+  font-size: 34px;
+  margin-bottom: 18px;
+}
+
+@media(max-width:800px) {
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media(max-width:700px) {
+  .wrap {
+    width: min(100% - 20px, 1200px);
+    margin: 10px auto;
+  }
+
+  .box {
+    padding: 18px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .login-box {
+    margin: 25px auto;
+  }
+}
+</style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="wrap">
 
-  <!-- ================= LOGIN ================= -->
+<!-- ================= LOGIN ================= -->
 
-  <div id="loginBox" class="card login-card">
+<div class="box login-box" id="loginBox">
 
-    <div class="login-icon">🔐</div>
+  <div class="login-icon">🔐</div>
 
-    <h1>Admin Login</h1>
+  <h1>Admin Login</h1>
 
-    <p>
-      AllInOneStop Admin Management
-    </p>
+  <p>AllInOneStop management portal</p>
 
-    <label for="adminEmail">
-      Admin Email
-    </label>
+  <label for="email">Admin Email</label>
 
-    <input
-      id="adminEmail"
-      type="email"
-      autocomplete="username"
-      placeholder="Enter admin email"
+  <input
+    id="email"
+    type="email"
+    placeholder="Enter admin email"
+    autocomplete="username"
+  >
+
+  <label for="password">Admin Password</label>
+
+  <input
+    id="password"
+    type="password"
+    placeholder="Enter admin password"
+    autocomplete="current-password"
+  >
+
+  <div class="actions">
+
+    <button
+      id="loginBtn"
+      type="button"
+      onclick="login()"
     >
+      🔐 Login
+    </button>
 
-    <label for="adminPassword">
-      Admin Password
-    </label>
-
-    <input
-      id="adminPassword"
-      type="password"
-      autocomplete="current-password"
-      placeholder="Enter admin password"
+    <a
+      class="btn logout"
+      href="index.html"
     >
-
-    <div class="actions">
-
-      <button
-        id="loginButton"
-        type="button"
-        onclick="adminLogin()"
-      >
-        🔐 Login
-      </button>
-
-      <button
-        type="button"
-        class="btn-gray"
-        onclick="goHome()"
-      >
-        🏠 Home
-      </button>
-
-    </div>
-
-    <div id="loginMessage"></div>
+      🏠 Home
+    </a>
 
   </div>
 
+  <div id="loginMessage"></div>
 
-  <!-- ================= ADMIN PANEL ================= -->
+</div>
 
-  <div id="adminPanel" class="hidden">
 
-    <!-- HEADER -->
+<!-- ================= ADMIN PANEL ================= -->
 
-    <div class="card">
+<div id="adminPanel" class="hidden">
 
-      <div class="topbar">
+  <!-- HEADER -->
 
-        <div>
+  <div class="box">
 
-          <h1>🛠️ Admin Panel</h1>
+    <div class="top">
 
-          <span class="badge">
+      <div>
+
+        <h1>🛠️ Admin Panel</h1>
+
+        <div style="margin-top:8px">
+
+          <span class="online">
             ● Admin Online
           </span>
 
           <span
             id="adminName"
             class="badge"
-            style="margin-left:6px;"
-          ></span>
-
-        </div>
-
-        <div class="actions">
-
-          <button
-            type="button"
-            class="btn-gray"
-            onclick="goHome()"
           >
-            🏠 Home
-          </button>
-
-          <button
-            type="button"
-            class="btn-gray"
-            onclick="adminLogout()"
-          >
-            🚪 Logout
-          </button>
+            Admin
+          </span>
 
         </div>
 
       </div>
 
-    </div>
+      <div class="actions">
 
-
-    <!-- ================= CREATE RETAILER ================= -->
-
-    <div class="card">
-
-      <h2>➕ Create New Retailer</h2>
-
-      <p>
-        Retailer account इसी panel से create होगा।
-      </p>
-
-      <div class="grid">
-
-        <div>
-
-          <label for="retailerName">
-            Retailer Full Name
-          </label>
-
-          <input
-            id="retailerName"
-            type="text"
-            placeholder="Enter retailer full name"
-          >
-
-        </div>
-
-
-        <div>
-
-          <label for="retailerMobile">
-            Mobile Number
-          </label>
-
-          <input
-            id="retailerMobile"
-            type="tel"
-            maxlength="10"
-            inputmode="numeric"
-            placeholder="10 digit mobile number"
-            oninput="onlyDigits(this)"
-          >
-
-        </div>
-
-
-        <div>
-
-          <label for="retailerNumber">
-            Retailer Number
-          </label>
-
-          <input
-            id="retailerNumber"
-            type="text"
-            placeholder="Optional"
-          >
-
-          <div class="hint">
-            खाली छोड़ने पर Retailer ID ही Retailer Number बनेगा।
-          </div>
-
-        </div>
-
-
-        <div>
-
-          <label for="retailerPassword">
-            Retailer Password
-          </label>
-
-          <input
-            id="retailerPassword"
-            type="password"
-            placeholder="Minimum 6 characters"
-          >
-
-        </div>
-
-      </div>
-
-
-      <!-- AUTO ID -->
-
-      <div class="id-box">
-
-        <label for="retailerUsername">
-          Auto Generated Retailer ID
-        </label>
-
-        <input
-          id="retailerUsername"
-          type="text"
-          readonly
+        <a
+          class="btn logout"
+          href="index.html"
         >
-
-        <div class="hint">
-          यह ID backend में username के रूप में भेजी जाएगी।
-        </div>
-
-      </div>
-
-
-      <div class="actions" style="margin-top:15px;">
+          🏠 Home
+        </a>
 
         <button
           type="button"
-          onclick="generateRetailerId()"
+          class="logout"
+          onclick="logout()"
         >
-          🔄 Generate ID
+          🚪 Logout
         </button>
-
-        <button
-          id="createRetailerButton"
-          type="button"
-          onclick="createRetailer()"
-        >
-          👤 Create Retailer
-        </button>
-
-      </div>
-
-
-      <div id="createMessage"></div>
-
-
-      <!-- SUCCESS RESULT -->
-
-      <div
-        id="createdResult"
-        class="result-box hidden"
-      >
-
-        <h3>
-          ✅ Retailer Created
-        </h3>
-
-        <div class="result-row">
-          <strong>Retailer ID:</strong>
-          <span id="resultUsername"></span>
-        </div>
-
-        <div class="result-row">
-          <strong>Retailer Number:</strong>
-          <span id="resultRetailerNumber"></span>
-        </div>
-
-        <div class="result-row">
-          <strong>Password:</strong>
-          <span id="resultPassword"></span>
-        </div>
-
-        <p class="hint">
-          Password केवल इसी screen पर दिखाया गया है।
-          इसे retailer को सुरक्षित तरीके से दें।
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <!-- ================= RETAILERS ================= -->
-
-    <div class="card">
-
-      <div class="topbar">
-
-        <div>
-
-          <h2>👥 Retailers</h2>
-
-          <p>
-            Registered retailer profiles
-          </p>
-
-        </div>
-
-        <button
-          type="button"
-          onclick="loadRetailers()"
-        >
-          🔄 Refresh
-        </button>
-
-      </div>
-
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-
-            <tr>
-              <th>Retailer ID</th>
-              <th>Name</th>
-              <th>Mobile</th>
-              <th>Retailer Number</th>
-            </tr>
-
-          </thead>
-
-          <tbody id="retailerRows">
-
-            <tr>
-
-              <td
-                colspan="4"
-                class="loading"
-              >
-                Loading...
-              </td>
-
-            </tr>
-
-          </tbody>
-
-        </table>
 
       </div>
 
     </div>
 
   </div>
+
+
+  <!-- ================= STATS ================= -->
+
+  <div class="stats">
+
+    <div class="stat">
+
+      <div class="stat-icon">👥</div>
+
+      <div
+        class="stat-number"
+        id="totalRetailers"
+      >
+        0
+      </div>
+
+      <div class="stat-title">
+        Total Retailers
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-icon">📋</div>
+
+      <div
+        class="stat-number"
+        id="totalApplications"
+      >
+        0
+      </div>
+
+      <div class="stat-title">
+        Total Applications
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-icon">💰</div>
+
+      <div
+        class="stat-number"
+        id="paidApplications"
+      >
+        0
+      </div>
+
+      <div class="stat-title">
+        Paid Applications
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-icon">⏳</div>
+
+      <div
+        class="stat-number"
+        id="pendingApplications"
+      >
+        0
+      </div>
+
+      <div class="stat-title">
+        Pending Applications
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= CREATE RETAILER ================= -->
+
+  <div class="box">
+
+    <h2>➕ Create New Retailer</h2>
+
+    <p>
+      Retailer account इसी panel से create होगा।
+    </p>
+
+    <div class="divider"></div>
+
+
+    <div class="grid">
+
+      <div>
+
+        <label for="retailerName">
+          Retailer Full Name
+        </label>
+
+        <input
+          id="retailerName"
+          type="text"
+          placeholder="Retailer full name"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="retailerMobile">
+          Mobile Number
+        </label>
+
+        <input
+          id="retailerMobile"
+          type="tel"
+          maxlength="10"
+          inputmode="numeric"
+          placeholder="10 digit mobile number"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="retailerNumber">
+          Retailer Number
+        </label>
+
+        <input
+          id="retailerNumber"
+          type="text"
+          placeholder="Optional"
+        >
+
+        <div class="hint">
+          खाली छोड़ने पर Auto Generated ID ही Retailer Number बनेगा।
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <label for="retailerPassword">
+          Retailer Password
+        </label>
+
+        <input
+          id="retailerPassword"
+          type="password"
+          placeholder="Enter password manually"
+        >
+
+        <div class="hint">
+          Minimum 6 characters
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="id-box">
+
+      <label for="retailerUsername">
+        Auto Generated Retailer ID
+      </label>
+
+      <input
+        id="retailerUsername"
+        type="text"
+        readonly
+      >
+
+      <div class="hint">
+        यही username Edge Function को भेजा जाएगा।
+      </div>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        type="button"
+        onclick="generateRetailerId()"
+      >
+        🔄 Generate ID
+      </button>
+
+      <button
+        type="button"
+        id="createRetailerBtn"
+        onclick="createRetailer()"
+      >
+        👤 Create Retailer
+      </button>
+
+    </div>
+
+
+    <div id="createMessage"></div>
+
+  </div>
+
+
+  <!-- ================= RETAILERS ================= -->
+
+  <div class="box">
+
+    <div class="top">
+
+      <div>
+
+        <h2>👥 Retailer History</h2>
+
+        <p class="hint">
+          सभी registered retailers
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        onclick="loadRetailers()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Retailer ID</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Retailer No.</th>
+            <th>Actions</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="retailerRows">
+
+          <tr>
+            <td
+              colspan="5"
+              class="loading"
+            >
+              Loading retailers...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= APPLICATIONS ================= -->
+
+  <div class="box">
+
+    <div class="top">
+
+      <div>
+
+        <h2>📋 Applications</h2>
+
+        <p class="hint">
+          Payment और application status
+        </p>
+
+      </div>
+
+      <button
+        type="button"
+        onclick="loadApplications()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>TR Number</th>
+            <th>Service</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Remark</th>
+            <th>Save</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="applicationRows">
+
+          <tr>
+            <td
+              colspan="7"
+              class="loading"
+            >
+              Loading applications...
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
 
 </div>
 
@@ -639,6 +794,7 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_Z5T2Fbbr0RPMZds67p7-9Q_Yw2-jMVn";
 
+
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
@@ -647,65 +803,57 @@ const supabaseClient =
 
 
 /* =========================================================
-   HELPERS
+   IMPORTANT EDGE FUNCTION NAME
 ========================================================= */
 
-function $(id) {
-  return document.getElementById(id);
-}
+const RETAILER_FUNCTION =
+  "admin-create-retailer";
 
+
+/* =========================================================
+   HELPERS
+========================================================= */
 
 function escapeHtml(value) {
 
   return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/[&<>"']/g, function(char) {
+
+      const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      };
+
+      return map[char];
+
+    });
+
 }
 
 
 function showMessage(
   elementId,
   text,
-  type = "info"
+  isError = false
 ) {
 
-  const element = $(elementId);
+  const element =
+    document.getElementById(elementId);
 
   if (!element) {
     return;
   }
 
-  element.innerHTML = `
-    <div class="message ${type}">
-      ${escapeHtml(text)}
-    </div>
-  `;
-}
+  element.innerHTML =
+    '<div class="msg ' +
+    (isError ? "error" : "") +
+    '">' +
+    escapeHtml(text) +
+    '</div>';
 
-
-function clearMessage(elementId) {
-
-  const element = $(elementId);
-
-  if (element) {
-    element.innerHTML = "";
-  }
-}
-
-
-function onlyDigits(input) {
-
-  input.value =
-    input.value.replace(/\D/g, "");
-}
-
-
-function goHome() {
-
-  window.location.href = "index.html";
 }
 
 
@@ -732,26 +880,32 @@ function randomRetailerCode() {
   }
 
   return result;
+
 }
 
 
 function generateRetailerId() {
 
-  const id =
-    "RET-" +
-    randomRetailerCode();
+  const username =
+    "RET-" + randomRetailerCode();
 
-  $("retailerUsername").value = id;
+  document
+    .getElementById("retailerUsername")
+    .value = username;
+
 
   const numberInput =
-    $("retailerNumber");
+    document.getElementById(
+      "retailerNumber"
+    );
+
 
   if (
-    numberInput &&
     !numberInput.value.trim()
   ) {
 
-    numberInput.value = id;
+    numberInput.value =
+      username;
 
   }
 
@@ -759,7 +913,7 @@ function generateRetailerId() {
 
 
 /* =========================================================
-   SESSION
+   CURRENT SESSION
 ========================================================= */
 
 async function getSession() {
@@ -770,14 +924,16 @@ async function getSession() {
   } =
     await supabaseClient.auth.getSession();
 
+
   if (error) {
 
     throw new Error(
-      "Session check failed: " +
+      "Session error: " +
       error.message
     );
 
   }
+
 
   if (
     !data ||
@@ -791,52 +947,9 @@ async function getSession() {
 
   }
 
+
   return data.session;
-}
 
-
-/* =========================================================
-   VERIFY ADMIN
-========================================================= */
-
-async function getAdminProfile(userId) {
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("profiles")
-      .select("id,full_name,role")
-      .eq("id", userId)
-      .maybeSingle();
-
-  if (error) {
-
-    throw new Error(
-      "Could not check admin profile: " +
-      error.message
-    );
-
-  }
-
-  if (!data) {
-
-    throw new Error(
-      "Admin profile not found."
-    );
-
-  }
-
-  if (data.role !== "admin") {
-
-    throw new Error(
-      "This account does not have admin access."
-    );
-
-  }
-
-  return data;
 }
 
 
@@ -844,22 +957,19 @@ async function getAdminProfile(userId) {
    LOGIN
 ========================================================= */
 
-async function adminLogin() {
+async function login() {
 
   const email =
-    $("adminEmail")
+    document
+      .getElementById("email")
       .value
       .trim();
 
+
   const password =
-    $("adminPassword")
+    document
+      .getElementById("password")
       .value;
-
-  const button =
-    $("loginButton");
-
-
-  clearMessage("loginMessage");
 
 
   if (!email) {
@@ -867,10 +977,11 @@ async function adminLogin() {
     showMessage(
       "loginMessage",
       "Please enter admin email.",
-      "error"
+      true
     );
 
     return;
+
   }
 
 
@@ -879,11 +990,18 @@ async function adminLogin() {
     showMessage(
       "loginMessage",
       "Please enter admin password.",
-      "error"
+      true
     );
 
     return;
+
   }
+
+
+  const button =
+    document.getElementById(
+      "loginBtn"
+    );
 
 
   button.disabled = true;
@@ -899,8 +1017,11 @@ async function adminLogin() {
     } =
       await supabaseClient.auth
         .signInWithPassword({
+
           email: email,
+
           password: password
+
         });
 
 
@@ -913,32 +1034,70 @@ async function adminLogin() {
     }
 
 
-    if (!data || !data.user) {
+    if (
+      !data ||
+      !data.user
+    ) {
 
       throw new Error(
-        "Login failed. User not found."
+        "Login failed."
       );
 
     }
 
 
-    const profile =
-      await getAdminProfile(
-        data.user.id
+    const {
+      data: profile,
+      error: profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "full_name,role"
+        )
+        .eq(
+          "id",
+          data.user.id
+        )
+        .maybeSingle();
+
+
+    if (profileError) {
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "Admin profile check failed: " +
+        profileError.message
       );
 
+    }
 
-    openAdminPanel(
+
+    if (
+      !profile ||
+      profile.role !== "admin"
+    ) {
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "This account is not an admin account."
+      );
+
+    }
+
+
+    await openAdminPanel(
       profile,
       data.user
     );
-
 
   }
   catch (error) {
 
     console.error(
-      "ADMIN LOGIN ERROR:",
+      "LOGIN ERROR:",
       error
     );
 
@@ -946,7 +1105,7 @@ async function adminLogin() {
       "loginMessage",
       error.message ||
       "Login failed.",
-      "error"
+      true
     );
 
   }
@@ -970,52 +1129,51 @@ async function openAdminPanel(
   user
 ) {
 
-  $("loginBox")
-    .classList
-    .add("hidden");
-
-  $("adminPanel")
-    .classList
-    .remove("hidden");
+  document
+    .getElementById("loginBox")
+    .classList.add("hidden");
 
 
-  $("adminName").textContent =
-    "👤 " +
-    (
-      profile.full_name ||
-      user.email ||
-      "Admin"
-    );
+  document
+    .getElementById("adminPanel")
+    .classList.remove("hidden");
 
 
-  await loadRetailers();
+  document
+    .getElementById("adminName")
+    .textContent =
+      "👤 " +
+      (
+        profile.full_name ||
+        user.email ||
+        "Admin"
+      );
+
+
+  await refreshDashboard();
 
 }
 
 
 /* =========================================================
-   RESTORE SESSION
+   RESTORE LOGIN
 ========================================================= */
 
-async function restoreAdminSession() {
+async function restoreSession() {
 
   try {
 
     const {
-      data,
-      error
+      data
     } =
       await supabaseClient.auth
         .getSession();
 
 
     if (
-      error ||
       !data ||
       !data.session
     ) {
-
-      generateRetailerId();
 
       return;
 
@@ -1026,29 +1184,42 @@ async function restoreAdminSession() {
       data.session.user;
 
 
-    const profile =
-      await getAdminProfile(
-        user.id
+    const {
+      data: profile,
+      error
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "full_name,role"
+        )
+        .eq(
+          "id",
+          user.id
+        )
+        .maybeSingle();
+
+
+    if (
+      !error &&
+      profile &&
+      profile.role === "admin"
+    ) {
+
+      await openAdminPanel(
+        profile,
+        user
       );
 
-
-    openAdminPanel(
-      profile,
-      user
-    );
-
+    }
 
   }
   catch (error) {
 
-    console.log(
-      "No active admin session:",
-      error.message
+    console.error(
+      "RESTORE SESSION ERROR:",
+      error
     );
-
-    await supabaseClient.auth.signOut();
-
-    generateRetailerId();
 
   }
 
@@ -1059,21 +1230,9 @@ async function restoreAdminSession() {
    LOGOUT
 ========================================================= */
 
-async function adminLogout() {
+async function logout() {
 
-  try {
-
-    await supabaseClient.auth.signOut();
-
-  }
-  catch (error) {
-
-    console.error(
-      "LOGOUT ERROR:",
-      error
-    );
-
-  }
+  await supabaseClient.auth.signOut();
 
   window.location.href =
     "admin.html";
@@ -1082,14 +1241,360 @@ async function adminLogout() {
 
 
 /* =========================================================
-   EDGE FUNCTION ERROR
+   CREATE RETAILER
 ========================================================= */
 
-async function readEdgeFunctionError(error) {
+async function createRetailer() {
+
+  const button =
+    document.getElementById(
+      "createRetailerBtn"
+    );
+
+
+  const fullName =
+    document
+      .getElementById("retailerName")
+      .value
+      .trim();
+
+
+  const mobile =
+    document
+      .getElementById("retailerMobile")
+      .value
+      .trim();
+
+
+  let username =
+    document
+      .getElementById("retailerUsername")
+      .value
+      .trim();
+
+
+  let retailerNumber =
+    document
+      .getElementById("retailerNumber")
+      .value
+      .trim();
+
+
+  const password =
+    document
+      .getElementById("retailerPassword")
+      .value;
+
+
+  /* ================= VALIDATION ================= */
+
+  if (!fullName) {
+
+    showMessage(
+      "createMessage",
+      "Retailer full name is required.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (!/^\d{10}$/.test(mobile)) {
+
+    showMessage(
+      "createMessage",
+      "Mobile number must be exactly 10 digits.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (!username) {
+
+    generateRetailerId();
+
+    username =
+      document
+        .getElementById(
+          "retailerUsername"
+        )
+        .value
+        .trim();
+
+  }
+
+
+  if (!retailerNumber) {
+
+    retailerNumber =
+      username;
+
+  }
+
+
+  if (!password) {
+
+    showMessage(
+      "createMessage",
+      "Please enter retailer password.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (password.length < 6) {
+
+    showMessage(
+      "createMessage",
+      "Password must be at least 6 characters.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  button.disabled = true;
+  button.textContent =
+    "⏳ Creating...";
+
+
+  try {
+
+    /* ============================================
+       CHECK ADMIN SESSION
+    ============================================ */
+
+    const session =
+      await getSession();
+
+
+    console.log(
+      "ADMIN SESSION FOUND:",
+      !!session
+    );
+
+
+    /* ============================================
+       EXACT BODY FOR NEW FUNCTION
+
+       Function:
+       admin-create-retailer
+
+       Action:
+       create
+    ============================================ */
+
+    const requestBody = {
+
+      action: "create",
+
+      full_name: fullName,
+
+      mobile: mobile,
+
+      username: username,
+
+      retailer_number: retailerNumber,
+
+      password: password
+
+    };
+
+
+    console.log(
+      "FUNCTION:",
+      RETAILER_FUNCTION
+    );
+
+
+    console.log(
+      "REQUEST BODY:",
+      requestBody
+    );
+
+
+    /* ============================================
+       CALL EDGE FUNCTION
+    ============================================ */
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.functions.invoke(
+        RETAILER_FUNCTION,
+        {
+          body: requestBody
+        }
+      );
+
+
+    console.log(
+      "FUNCTION DATA:",
+      data
+    );
+
+
+    console.log(
+      "FUNCTION ERROR:",
+      error
+    );
+
+
+    /* ============================================
+       ERROR
+    ============================================ */
+
+    if (error) {
+
+      const functionError =
+        await readFunctionError(
+          error
+        );
+
+      throw new Error(
+        functionError
+      );
+
+    }
+
+
+    if (!data) {
+
+      throw new Error(
+        "Edge Function returned empty response."
+      );
+
+    }
+
+
+    if (data.error) {
+
+      throw new Error(
+        data.error +
+        (
+          data.details
+            ? "\nDetails: " +
+              data.details
+            : ""
+        )
+      );
+
+    }
+
+
+    /* ============================================
+       SUCCESS
+    ============================================ */
+
+    showMessage(
+      "createMessage",
+
+      "Retailer created successfully.\n\n" +
+
+      "Retailer ID: " +
+      (
+        data.username ||
+        username
+      ) +
+
+      "\nRetailer Number: " +
+      (
+        data.retailer_number ||
+        retailerNumber
+      ),
+
+      false
+    );
+
+
+    /* CLEAR FORM */
+
+    document
+      .getElementById(
+        "retailerName"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "retailerMobile"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "retailerNumber"
+      )
+      .value = "";
+
+
+    document
+      .getElementById(
+        "retailerPassword"
+      )
+      .value = "";
+
+
+    generateRetailerId();
+
+
+    await refreshDashboard();
+
+  }
+  catch (error) {
+
+    console.error(
+      "CREATE RETAILER ERROR:",
+      error
+    );
+
+
+    showMessage(
+      "createMessage",
+
+      error.message ||
+      "Failed to create retailer.",
+
+      true
+    );
+
+  }
+  finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "👤 Create Retailer";
+
+  }
+
+}
+
+
+/* =========================================================
+   READ EDGE FUNCTION ERROR
+========================================================= */
+
+async function readFunctionError(
+  error
+) {
 
   let message =
     error?.message ||
-    "Failed to send request to Edge Function.";
+    "Edge Function request failed.";
 
 
   try {
@@ -1112,7 +1617,9 @@ async function readEdgeFunctionError(error) {
         if (body.error) {
 
           message =
-            String(body.error);
+            String(
+              body.error
+            );
 
         }
 
@@ -1120,7 +1627,9 @@ async function readEdgeFunctionError(error) {
 
           message +=
             "\nDetails: " +
-            String(body.details);
+            String(
+              body.details
+            );
 
         }
 
@@ -1128,7 +1637,9 @@ async function readEdgeFunctionError(error) {
 
           message +=
             "\nMessage: " +
-            String(body.message);
+            String(
+              body.message
+            );
 
         }
 
@@ -1137,318 +1648,271 @@ async function readEdgeFunctionError(error) {
     }
 
   }
-  catch (readError) {
+  catch (readerError) {
 
     console.warn(
       "Could not read Edge Function error:",
-      readError
+      readerError
     );
 
   }
 
 
   return message;
+
 }
 
 
 /* =========================================================
-   CREATE RETAILER
+   ADMIN RETAILER ACTION
 ========================================================= */
 
-async function createRetailer() {
+async function callRetailerFunction(
+  action,
+  userId,
+  password = ""
+) {
 
-  const button =
-    $("createRetailerButton");
+  await getSession();
 
 
-  clearMessage(
-    "createMessage"
+  const body = {
+
+    action: action,
+
+    user_id: userId
+
+  };
+
+
+  if (
+    action ===
+    "reset_password"
+  ) {
+
+    body.password =
+      password;
+
+  }
+
+
+  console.log(
+    "CALLING FUNCTION:",
+    RETAILER_FUNCTION
   );
 
 
-  $("createdResult")
-    .classList
-    .add("hidden");
+  console.log(
+    "ACTION BODY:",
+    body
+  );
 
 
-  const fullName =
-    $("retailerName")
-      .value
-      .trim();
-
-  const mobile =
-    $("retailerMobile")
-      .value
-      .trim();
-
-  let username =
-    $("retailerUsername")
-      .value
-      .trim();
-
-  let retailerNumber =
-    $("retailerNumber")
-      .value
-      .trim();
-
-  const password =
-    $("retailerPassword")
-      .value;
-
-
-  /* =========================
-     VALIDATION
-  ========================= */
-
-  if (!fullName) {
-
-    showMessage(
-      "createMessage",
-      "Retailer full name is required.",
-      "error"
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.functions.invoke(
+      RETAILER_FUNCTION,
+      {
+        body: body
+      }
     );
 
+
+  if (error) {
+
+    throw new Error(
+      await readFunctionError(
+        error
+      )
+    );
+
+  }
+
+
+  if (!data) {
+
+    throw new Error(
+      "Edge Function returned empty response."
+    );
+
+  }
+
+
+  if (data.error) {
+
+    throw new Error(
+      data.error +
+      (
+        data.details
+          ? "\nDetails: " +
+            data.details
+          : ""
+      )
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================================
+   RESET PASSWORD
+========================================================= */
+
+async function resetRetailerPassword(
+  userId,
+  retailerId
+) {
+
+  const newPassword =
+    prompt(
+      "Retailer: " +
+      retailerId +
+      "\n\nEnter NEW password:"
+    );
+
+
+  if (newPassword === null) {
     return;
   }
 
 
-  if (!/^\d{10}$/.test(mobile)) {
+  if (
+    !newPassword.trim()
+  ) {
 
-    showMessage(
-      "createMessage",
-      "Mobile number must be exactly 10 digits.",
-      "error"
+    alert(
+      "Password cannot be empty."
     );
 
     return;
-  }
-
-
-  if (!username) {
-
-    generateRetailerId();
-
-    username =
-      $("retailerUsername")
-        .value
-        .trim();
 
   }
 
 
-  if (!retailerNumber) {
+  if (
+    newPassword.length < 6
+  ) {
 
-    retailerNumber =
-      username;
-
-  }
-
-
-  if (!password) {
-
-    showMessage(
-      "createMessage",
-      "Please enter retailer password.",
-      "error"
+    alert(
+      "Password must be at least 6 characters."
     );
 
     return;
+
   }
 
 
-  if (password.length < 6) {
-
-    showMessage(
-      "createMessage",
-      "Password must be at least 6 characters.",
-      "error"
+  const confirmed =
+    confirm(
+      "Reset password for " +
+      retailerId +
+      "?"
     );
 
+
+  if (!confirmed) {
     return;
   }
-
-
-  /* =========================
-     BUTTON LOCK
-  ========================= */
-
-  button.disabled = true;
-
-  button.textContent =
-    "⏳ Creating...";
 
 
   try {
 
-    /* Check admin session */
-
-    await getSession();
-
-
-    /*
-      IMPORTANT:
-
-      New Edge Function name:
-      admin-create-retailer
-    */
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.functions.invoke(
-        "admin-create-retailer",
-        {
-          body: {
-            full_name: fullName,
-            mobile: mobile,
-            username: username,
-            retailer_number: retailerNumber,
-            password: password
-          }
-        }
-      );
-
-
-    console.log(
-      "ADMIN CREATE RESPONSE:",
-      data
-    );
-
-    console.log(
-      "ADMIN CREATE ERROR:",
-      error
+    await callRetailerFunction(
+      "reset_password",
+      userId,
+      newPassword
     );
 
 
-    if (error) {
-
-      const errorText =
-        await readEdgeFunctionError(
-          error
-        );
-
-      throw new Error(
-        errorText
-      );
-
-    }
-
-
-    if (!data) {
-
-      throw new Error(
-        "Edge Function returned an empty response."
-      );
-
-    }
-
-
-    if (data.error) {
-
-      throw new Error(
-        data.error +
-        (
-          data.details
-            ? "\n" + data.details
-            : ""
-        )
-      );
-
-    }
-
-
-    if (
-      data.success !== true
-    ) {
-
-      throw new Error(
-        data.message ||
-        "Retailer creation failed."
-      );
-
-    }
-
-
-    /* =========================
-       SUCCESS
-    ========================= */
-
-    const finalUsername =
-      data.username ||
-      username;
-
-    const finalRetailerNumber =
-      data.retailer_number ||
-      retailerNumber;
-
-
-    showMessage(
-      "createMessage",
-      "Retailer created successfully.",
-      "success"
+    alert(
+      "Password updated successfully.\n\n" +
+      "Retailer ID: " +
+      retailerId +
+      "\n\n" +
+      "New Password: " +
+      newPassword
     );
-
-
-    $("resultUsername")
-      .textContent =
-      finalUsername;
-
-
-    $("resultRetailerNumber")
-      .textContent =
-      finalRetailerNumber;
-
-
-    $("resultPassword")
-      .textContent =
-      data.password ||
-      password;
-
-
-    $("createdResult")
-      .classList
-      .remove("hidden");
-
-
-    /* Clear form */
-
-    $("retailerName").value = "";
-    $("retailerMobile").value = "";
-    $("retailerNumber").value = "";
-    $("retailerPassword").value = "";
-
-
-    generateRetailerId();
-
-
-    /* Reload retailer list */
-
-    await loadRetailers();
 
   }
   catch (error) {
 
     console.error(
-      "CREATE RETAILER ERROR:",
+      "RESET PASSWORD ERROR:",
       error
     );
 
 
-    showMessage(
-      "createMessage",
+    alert(
       error.message ||
-      "Failed to create retailer.",
-      "error"
+      "Password reset failed."
     );
 
   }
-  finally {
 
-    button.disabled = false;
+}
 
-    button.textContent =
-      "👤 Create Retailer";
+
+/* =========================================================
+   DELETE RETAILER
+========================================================= */
+
+async function deleteRetailer(
+  userId,
+  retailerId
+) {
+
+  const confirmation =
+    prompt(
+      "Delete retailer " +
+      retailerId +
+      "?\n\nType DELETE to confirm."
+    );
+
+
+  if (
+    confirmation !==
+    "DELETE"
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    await callRetailerFunction(
+      "delete",
+      userId
+    );
+
+
+    alert(
+      "Retailer deleted successfully."
+    );
+
+
+    await refreshDashboard();
+
+  }
+  catch (error) {
+
+    console.error(
+      "DELETE RETAILER ERROR:",
+      error
+    );
+
+
+    alert(
+      error.message ||
+      "Retailer deletion failed."
+    );
 
   }
 
@@ -1462,12 +1926,14 @@ async function createRetailer() {
 async function loadRetailers() {
 
   const rows =
-    $("retailerRows");
+    document.getElementById(
+      "retailerRows"
+    );
 
 
   rows.innerHTML = `
     <tr>
-      <td colspan="4" class="loading">
+      <td colspan="5" class="loading">
         Loading retailers...
       </td>
     </tr>
@@ -1516,55 +1982,99 @@ async function loadRetailers() {
 
       rows.innerHTML = `
         <tr>
-          <td colspan="4" class="loading">
+          <td colspan="5" class="loading">
             No retailers found.
           </td>
         </tr>
       `;
 
       return;
+
     }
 
 
     rows.innerHTML =
-      data.map(function(retailer) {
+      data.map(
+        function(retailer) {
 
-        return `
-          <tr>
+          const retailerId =
+            retailer.retailer_number ||
+            "RET";
 
-            <td>
-              <strong>
+
+          const userId =
+            escapeHtml(
+              retailer.id
+            );
+
+
+          const safeRetailerId =
+            escapeHtml(
+              retailerId
+            );
+
+
+          return `
+            <tr>
+
+              <td>
+                <strong>
+                  ${safeRetailerId}
+                </strong>
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  retailer.full_name
+                )}
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  retailer.mobile
+                )}
+              </td>
+
+              <td>
                 ${escapeHtml(
                   retailer.retailer_number ||
-                  "N/A"
+                  retailerId
                 )}
-              </strong>
-            </td>
+              </td>
 
-            <td>
-              ${escapeHtml(
-                retailer.full_name
-              )}
-            </td>
+              <td>
 
-            <td>
-              ${escapeHtml(
-                retailer.mobile
-              )}
-            </td>
+                <div class="actions">
 
-            <td>
-              ${escapeHtml(
-                retailer.retailer_number ||
-                "N/A"
-              )}
-            </td>
+                  <button
+                    type="button"
+                    class="small-btn password-btn"
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    onclick="resetFromButton(this)"
+                  >
+                    🔑 Reset Password
+                  </button>
 
-          </tr>
-        `;
+                  <button
+                    type="button"
+                    class="small-btn delete-btn"
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    onclick="deleteFromButton(this)"
+                  >
+                    🗑️ Delete
+                  </button>
 
-      }).join("");
+                </div>
 
+              </td>
+
+            </tr>
+          `;
+
+        }
+      ).join("");
 
   }
   catch (error) {
@@ -1577,13 +2087,284 @@ async function loadRetailers() {
 
     rows.innerHTML = `
       <tr>
-        <td
-          colspan="4"
-          class="loading"
-        >
+        <td colspan="5" class="loading">
           ${escapeHtml(
-            error.message ||
-            "Could not load retailers."
+            error.message
+          )}
+        </td>
+      </tr>
+    `;
+
+  }
+
+}
+
+
+function resetFromButton(
+  button
+) {
+
+  resetRetailerPassword(
+    button.dataset.userId,
+    button.dataset.retailerId
+  );
+
+}
+
+
+function deleteFromButton(
+  button
+) {
+
+  deleteRetailer(
+    button.dataset.userId,
+    button.dataset.retailerId
+  );
+
+}
+
+
+/* =========================================================
+   LOAD APPLICATIONS
+========================================================= */
+
+async function loadApplications() {
+
+  const rows =
+    document.getElementById(
+      "applicationRows"
+    );
+
+
+  rows.innerHTML = `
+    <tr>
+      <td colspan="7" class="loading">
+        Loading applications...
+      </td>
+    </tr>
+  `;
+
+
+  try {
+
+    await getSession();
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("applications")
+        .select(
+          "tr_number,service_name,amount,payment_status,application_status,remark"
+        )
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
+
+
+    if (error) {
+
+      throw new Error(
+        error.message
+      );
+
+    }
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      rows.innerHTML = `
+        <tr>
+          <td colspan="7" class="loading">
+            No applications yet.
+          </td>
+        </tr>
+      `;
+
+      return;
+
+    }
+
+
+    rows.innerHTML =
+      data.map(
+        function(app) {
+
+          const tr =
+            String(
+              app.tr_number || ""
+            );
+
+
+          const key =
+            tr.replace(
+              /[^a-zA-Z0-9_-]/g,
+              "_"
+            );
+
+
+          const payment =
+            app.payment_status ||
+            "Pending";
+
+
+          const status =
+            app.application_status ||
+            "Received";
+
+
+          return `
+            <tr>
+
+              <td>
+                <strong>
+                  ${escapeHtml(tr)}
+                </strong>
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  app.service_name
+                )}
+              </td>
+
+              <td>
+                ₹${escapeHtml(
+                  app.amount
+                )}
+              </td>
+
+              <td>
+
+                <select
+                  id="payment-${key}"
+                >
+
+                  <option
+                    value="Pending"
+                    ${payment === "Pending" ? "selected" : ""}
+                  >
+                    Pending
+                  </option>
+
+                  <option
+                    value="Paid"
+                    ${payment === "Paid" ? "selected" : ""}
+                  >
+                    Paid
+                  </option>
+
+                  <option
+                    value="Failed"
+                    ${payment === "Failed" ? "selected" : ""}
+                  >
+                    Failed
+                  </option>
+
+                </select>
+
+              </td>
+
+              <td>
+
+                <select
+                  id="status-${key}"
+                >
+
+                  <option
+                    value="Received"
+                    ${status === "Received" ? "selected" : ""}
+                  >
+                    Received
+                  </option>
+
+                  <option
+                    value="Verification"
+                    ${status === "Verification" ? "selected" : ""}
+                  >
+                    Verification
+                  </option>
+
+                  <option
+                    value="Processing"
+                    ${status === "Processing" ? "selected" : ""}
+                  >
+                    Processing
+                  </option>
+
+                  <option
+                    value="Completed"
+                    ${status === "Completed" ? "selected" : ""}
+                  >
+                    Completed
+                  </option>
+
+                  <option
+                    value="Rejected"
+                    ${status === "Rejected" ? "selected" : ""}
+                  >
+                    Rejected
+                  </option>
+
+                </select>
+
+              </td>
+
+              <td>
+
+                <input
+                  id="remark-${key}"
+                  value="${escapeHtml(
+                    app.remark || ""
+                  )}"
+                  placeholder="Remark"
+                >
+
+              </td>
+
+              <td>
+
+                <button
+                  type="button"
+                  class="small-btn"
+                  onclick="saveApplication(
+                    '${escapeHtml(tr)}',
+                    '${key}'
+                  )"
+                >
+                  💾 Save
+                </button>
+
+              </td>
+
+            </tr>
+          `;
+
+        }
+      ).join("");
+
+  }
+  catch (error) {
+
+    console.error(
+      "LOAD APPLICATIONS ERROR:",
+      error
+    );
+
+
+    rows.innerHTML = `
+      <tr>
+        <td colspan="7" class="loading">
+          ${escapeHtml(
+            error.message
           )}
         </td>
       </tr>
@@ -1595,14 +2376,241 @@ async function loadRetailers() {
 
 
 /* =========================================================
-   AUTH STATE
+   SAVE APPLICATION
+========================================================= */
+
+async function saveApplication(
+  trNumber,
+  key
+) {
+
+  try {
+
+    await getSession();
+
+
+    const payment =
+      document.getElementById(
+        "payment-" + key
+      ).value;
+
+
+    const status =
+      document.getElementById(
+        "status-" + key
+      ).value;
+
+
+    const remark =
+      document.getElementById(
+        "remark-" + key
+      ).value;
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("applications")
+        .update({
+
+          payment_status:
+            payment,
+
+          application_status:
+            status,
+
+          remark:
+            remark
+
+        })
+        .eq(
+          "tr_number",
+          trNumber
+        );
+
+
+    if (error) {
+
+      throw new Error(
+        error.message
+      );
+
+    }
+
+
+    alert(
+      "Application status updated successfully."
+    );
+
+
+    await refreshDashboard();
+
+  }
+  catch (error) {
+
+    console.error(
+      "SAVE APPLICATION ERROR:",
+      error
+    );
+
+
+    alert(
+      error.message ||
+      "Status update failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD STATS
+========================================================= */
+
+async function loadStats() {
+
+  try {
+
+    await getSession();
+
+
+    const {
+      count,
+      error: retailerError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id",
+          {
+            count: "exact",
+            head: true
+          }
+        )
+        .eq(
+          "role",
+          "retailer"
+        );
+
+
+    if (retailerError) {
+
+      throw retailerError;
+
+    }
+
+
+    document
+      .getElementById(
+        "totalRetailers"
+      )
+      .textContent =
+        count || 0;
+
+
+    const {
+      data: applications,
+      error: applicationError
+    } =
+      await supabaseClient
+        .from("applications")
+        .select(
+          "payment_status"
+        );
+
+
+    if (applicationError) {
+
+      throw applicationError;
+
+    }
+
+
+    const list =
+      applications || [];
+
+
+    document
+      .getElementById(
+        "totalApplications"
+      )
+      .textContent =
+        list.length;
+
+
+    document
+      .getElementById(
+        "paidApplications"
+      )
+      .textContent =
+        list.filter(
+          function(item) {
+
+            return (
+              item.payment_status ===
+              "Paid"
+            );
+
+          }
+        ).length;
+
+
+    document
+      .getElementById(
+        "pendingApplications"
+      )
+      .textContent =
+        list.filter(
+          function(item) {
+
+            return (
+              !item.payment_status ||
+              item.payment_status ===
+              "Pending"
+            );
+
+          }
+        ).length;
+
+  }
+  catch (error) {
+
+    console.error(
+      "LOAD STATS ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   REFRESH DASHBOARD
+========================================================= */
+
+async function refreshDashboard() {
+
+  await Promise.all([
+    loadRetailers(),
+    loadApplications(),
+    loadStats()
+  ]);
+
+}
+
+
+/* =========================================================
+   AUTH LISTENER
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-  function(event, session) {
+  function(event) {
 
     console.log(
-      "Supabase Auth:",
+      "AUTH EVENT:",
       event
     );
 
@@ -1611,14 +2619,15 @@ supabaseClient.auth.onAuthStateChange(
 
 
 /* =========================================================
-   START
+   INITIALIZE
 ========================================================= */
 
 generateRetailerId();
 
-restoreAdminSession();
+restoreSession();
 
 </script>
 
 </body>
 </html>
+```
