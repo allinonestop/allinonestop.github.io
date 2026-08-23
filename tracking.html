@@ -1,1 +1,1385 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AllInOneStop Tracking</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{font-family:Arial,sans-serif;background:#f5f7fb;margin:0}.wrap{max-width:800px;margin:45px auto;padding:18px}.box{background:#fff;padding:25px;border-radius:16px;box-shadow:0 8px 30px #0001}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}input{width:100%;box-sizing:border-box;padding:13px;border:1px solid #d0d5dd;border-radius:8px;margin:10px 0}button,.btn{background:#1769e0;color:#fff;border:0;padding:13px 18px;border-radius:8px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}.result{margin-top:20px}.row{padding:12px;background:#f8fafc;margin:8px 0;border-radius:8px}.status{font-weight:800}.err{color:#b42318}</style></head><body><div class="wrap"><div class="box"><div class="top"><h1>Track Application</h1><a class="btn" href="index.html">Home</a></div><p>TR Number enter karein.</p><input id="tr" placeholder="AIO-260823-123456"><button onclick="track()">Track</button><div id="out"></div></div></div><script>const SUPABASE_URL="https://dixsmucrgnyuvudhymdj.supabase.co";const SUPABASE_PUBLISHABLE_KEY="sb_publishable_Pdfqt8QfkhprpEtyQJ8jLA_G_-V9D58";const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}async function track(){const out=document.getElementById('out'),trn=document.getElementById('tr').value.trim().toUpperCase();if(!trn){out.innerHTML='<p class="err">TR Number enter karein.</p>';return}out.textContent='Searching...';const{data,error}=await supabaseClient.functions.invoke('track-application',{body:{tr_number:trn}});if(error||!data||data.error){out.innerHTML='<p class="err">'+esc(data?.error||error?.message||'TR Number not found.')+'</p>';return}out.innerHTML='<div class="result"><div class="row"><b>TR Number:</b> '+esc(data.tr_number)+'</div><div class="row"><b>Customer:</b> '+esc(data.customer_name_en)+'</div><div class="row"><b>Mobile:</b> '+esc(data.mobile||'—')+'</div><div class="row"><b>Service:</b> '+esc(data.service_name)+'</div><div class="row"><b>Amount:</b> ₹'+esc(data.amount)+'</div><div class="row"><b>Payment:</b> '+esc(data.payment_status)+'</div><div class="row"><b>Status:</b> <span class="status">'+esc(data.application_status)+'</span></div><div class="row"><b>Remark:</b> '+esc(data.remark||'No remark')+'</div></div>'} </script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Track Application - AllInOneStop
+  </title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      background:
+        linear-gradient(
+          135deg,
+          #eef2ff,
+          #f8fafc
+        );
+
+      min-height: 100vh;
+      color: #172033;
+    }
+
+    .header {
+      background: #111827;
+      color: white;
+
+      padding:
+        16px 20px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      color: white;
+      text-decoration: none;
+
+      background: #2563eb;
+
+      padding:
+        9px 14px;
+
+      border-radius: 8px;
+
+      font-size: 14px;
+    }
+
+    .container {
+      width:
+        min(
+          850px,
+          calc(100% - 30px)
+        );
+
+      margin:
+        35px auto;
+    }
+
+    .card {
+      background: white;
+
+      border-radius: 18px;
+
+      padding: 25px;
+
+      box-shadow:
+        0 10px 35px
+        rgba(
+          15,
+          23,
+          42,
+          0.10
+        );
+
+      margin-bottom: 20px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    .subtitle {
+      color: #64748b;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-box input {
+      flex: 1;
+    }
+
+    input {
+      width: 100%;
+
+      padding:
+        13px 14px;
+
+      border:
+        1px solid #cbd5e1;
+
+      border-radius: 9px;
+
+      font-size: 16px;
+
+      outline: none;
+    }
+
+    input:focus {
+      border-color:
+        #2563eb;
+
+      box-shadow:
+        0 0 0 3px
+        rgba(
+          37,
+          99,
+          235,
+          0.10
+        );
+    }
+
+    button {
+      border: 0;
+
+      border-radius: 9px;
+
+      padding:
+        13px 20px;
+
+      cursor: pointer;
+
+      font-size: 15px;
+
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      background:
+        #2563eb;
+
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background:
+        #1d4ed8;
+    }
+
+    .btn-secondary {
+      background:
+        #475569;
+
+      color: white;
+    }
+
+    .message {
+      padding: 13px;
+
+      border-radius: 9px;
+
+      margin-top: 15px;
+
+      display: none;
+
+      line-height: 1.5;
+    }
+
+    .message.error {
+      display: block;
+
+      background:
+        #fee2e2;
+
+      color:
+        #991b1b;
+    }
+
+    .message.success {
+      display: block;
+
+      background:
+        #dcfce7;
+
+      color:
+        #166534;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .result {
+      margin-top: 25px;
+    }
+
+    .status-header {
+      padding: 20px;
+
+      border-radius: 12px;
+
+      background:
+        #eff6ff;
+
+      border:
+        1px solid #bfdbfe;
+
+      margin-bottom: 20px;
+    }
+
+    .tr {
+      font-size: 25px;
+
+      font-weight: 800;
+
+      color:
+        #1d4ed8;
+
+      word-break:
+        break-word;
+    }
+
+    .status {
+      display: inline-block;
+
+      margin-top: 10px;
+
+      padding:
+        8px 14px;
+
+      border-radius: 30px;
+
+      background:
+        #dbeafe;
+
+      color:
+        #1e40af;
+
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(
+            0,
+            1fr
+          )
+        );
+
+      gap: 15px;
+    }
+
+    .item {
+      background:
+        #f8fafc;
+
+      padding:
+        15px;
+
+      border-radius:
+        10px;
+    }
+
+    .item-label {
+      display: block;
+
+      font-size: 13px;
+
+      color:
+        #64748b;
+
+      margin-bottom:
+        6px;
+    }
+
+    .item-value {
+      font-weight:
+        700;
+
+      word-break:
+        break-word;
+    }
+
+    .files {
+      margin-top:
+        20px;
+    }
+
+    .file {
+      background:
+        #f8fafc;
+
+      border:
+        1px solid #e2e8f0;
+
+      border-radius:
+        10px;
+
+      padding:
+        12px 14px;
+
+      margin-top:
+        8px;
+
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      align-items:
+        center;
+
+      gap: 10px;
+
+      flex-wrap:
+        wrap;
+    }
+
+    .file a {
+      color:
+        #2563eb;
+
+      font-weight:
+        600;
+
+      text-decoration:
+        none;
+    }
+
+    .loading {
+      text-align:
+        center;
+
+      padding:
+        20px;
+
+      color:
+        #64748b;
+    }
+
+    @media (max-width: 650px) {
+
+      .search-box {
+        flex-direction:
+          column;
+      }
+
+      .search-box button {
+        width:
+          100%;
+      }
+
+      .grid {
+        grid-template-columns:
+          1fr;
+      }
+
+      .container {
+        width:
+          calc(100% - 20px);
+
+        margin:
+          20px auto;
+      }
+
+      .card {
+        padding:
+          18px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+
+    <div class="brand">
+      AllInOneStop
+    </div>
+
+    <div class="nav">
+
+      <a href="index.html">
+        Home
+      </a>
+
+      <a href="retailer.html">
+        Retailer Login
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <main class="container">
+
+    <section class="card">
+
+      <h1>
+        Track Your Application
+      </h1>
+
+      <div class="subtitle">
+        Enter your TR Number to check
+        application status, payment status
+        and application details.
+      </div>
+
+
+      <form id="trackingForm">
+
+        <div class="search-box">
+
+          <input
+            type="text"
+            id="trNumber"
+            placeholder="Example: TR-20260823-123456-123"
+            autocomplete="off"
+            required
+          >
+
+          <button
+            type="submit"
+            class="btn-primary"
+            id="trackButton"
+          >
+            Track
+          </button>
+
+        </div>
+
+      </form>
+
+
+      <div
+        id="message"
+        class="message"
+      ></div>
+
+    </section>
+
+
+    <section
+      id="resultSection"
+      class="card result hidden"
+    >
+
+      <div class="status-header">
+
+        <div>
+          TR Number
+        </div>
+
+        <div
+          id="resultTr"
+          class="tr"
+        >
+          -
+        </div>
+
+        <div
+          id="applicationStatus"
+          class="status"
+        >
+          Received
+        </div>
+
+      </div>
+
+
+      <h2>
+        Application Details
+      </h2>
+
+
+      <div class="grid">
+
+        <div class="item">
+
+          <span class="item-label">
+            Applicant Name
+          </span>
+
+          <span
+            id="applicantName"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            Service
+          </span>
+
+          <span
+            id="serviceName"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            Service Code
+          </span>
+
+          <span
+            id="serviceCode"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            Amount
+          </span>
+
+          <span
+            id="amount"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            Payment Status
+          </span>
+
+          <span
+            id="paymentStatus"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            Customer Mobile
+          </span>
+
+          <span
+            id="customerMobile"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            Retailer ID
+          </span>
+
+          <span
+            id="retailerId"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            Created At
+          </span>
+
+          <span
+            id="createdAt"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            English Name
+          </span>
+
+          <span
+            id="englishName"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            Gujarati Name
+          </span>
+
+          <span
+            id="gujaratiName"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+
+        <div class="item">
+
+          <span class="item-label">
+            UTR Number
+          </span>
+
+          <span
+            id="utrNumber"
+            class="item-value"
+          >
+            -
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="files">
+
+        <h3>
+          Uploaded Documents
+        </h3>
+
+        <div id="filesList">
+          No files.
+        </div>
+
+      </div>
+
+
+      <div style="margin-top:20px;">
+
+        <button
+          class="btn-secondary"
+          onclick="window.location.href='retailer.html'"
+        >
+          Retailer Login
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+<script>
+
+  /*
+   * =====================================================
+   * IMPORTANT
+   * =====================================================
+   *
+   * Replace this with your deployed Apps Script Web App
+   * URL.
+   */
+
+  const API_URL =
+    "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+
+  /* =====================================================
+     HELPERS
+  ===================================================== */
+
+  function escapeHtml(value) {
+
+    return String(value || "")
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  function showMessage(
+    message,
+    type
+  ) {
+
+    const element =
+      document.getElementById(
+        "message"
+      );
+
+
+    element.className =
+      "message " +
+      type;
+
+
+    element.textContent =
+      message || "";
+
+  }
+
+
+  function clearMessage() {
+
+    const element =
+      document.getElementById(
+        "message"
+      );
+
+
+    element.className =
+      "message";
+
+
+    element.textContent =
+      "";
+
+  }
+
+
+  function ensureApiConfigured() {
+
+    if (
+      !API_URL ||
+      API_URL.indexOf(
+        "PASTE_YOUR"
+      ) >= 0
+    ) {
+
+      showMessage(
+        "Please set your Apps Script Web App URL in API_URL.",
+        "error"
+      );
+
+      return false;
+
+    }
+
+    return true;
+
+  }
+
+
+  /* =====================================================
+     TRACK APPLICATION
+  ===================================================== */
+
+  async function trackApplication(
+    trNumber
+  ) {
+
+    clearMessage();
+
+
+    if (
+      !trNumber
+    ) {
+
+      showMessage(
+        "Please enter your TR Number.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !ensureApiConfigured()
+    ) {
+
+      return;
+
+    }
+
+
+    const button =
+      document.getElementById(
+        "trackButton"
+      );
+
+
+    button.disabled =
+      true;
+
+
+    button.textContent =
+      "Searching...";
+
+
+    document
+      .getElementById(
+        "resultSection"
+      )
+      .classList
+      .add("hidden");
+
+
+    try {
+
+      const url =
+        API_URL +
+        "?action=track&trNumber=" +
+        encodeURIComponent(
+          trNumber
+        );
+
+
+      const response =
+        await fetch(
+          url,
+          {
+            method:
+              "GET"
+          }
+        );
+
+
+      const text =
+        await response.text();
+
+
+      let data;
+
+
+      try {
+
+        data =
+          JSON.parse(
+            text
+          );
+
+      } catch (err) {
+
+        throw new Error(
+          "Invalid API response."
+        );
+
+      }
+
+
+      if (
+        !data.success
+      ) {
+
+        throw new Error(
+          data.message ||
+          "Application not found."
+        );
+
+      }
+
+
+      displayResult(
+        data
+      );
+
+
+    } catch (err) {
+
+      showMessage(
+        err.message ||
+          "Unable to track application.",
+        "error"
+      );
+
+    } finally {
+
+      button.disabled =
+        false;
+
+
+      button.textContent =
+        "Track";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     DISPLAY RESULT
+  ===================================================== */
+
+  function displayResult(
+    data
+  ) {
+
+    document
+      .getElementById(
+        "resultSection"
+      )
+      .classList
+      .remove("hidden");
+
+
+    setText(
+      "resultTr",
+      data.trNumber ||
+      data.tr_number ||
+      data.applicationId ||
+      "-"
+    );
+
+
+    setText(
+      "applicationStatus",
+      data.applicationStatus ||
+      "Received"
+    );
+
+
+    setText(
+      "applicantName",
+      data.applicantName ||
+      "-"
+    );
+
+
+    setText(
+      "serviceName",
+      data.serviceName ||
+      "-"
+    );
+
+
+    setText(
+      "serviceCode",
+      data.serviceCode ||
+      "-"
+    );
+
+
+    setText(
+      "amount",
+      data.amount
+        ? "₹" + data.amount
+        : "-"
+    );
+
+
+    setText(
+      "paymentStatus",
+      data.paymentStatus ||
+      "Pending"
+    );
+
+
+    setText(
+      "customerMobile",
+      data.customerMobile ||
+      "-"
+    );
+
+
+    setText(
+      "retailerId",
+      data.retailerId ||
+      "-"
+    );
+
+
+    setText(
+      "createdAt",
+      formatDate(
+        data.createdAt
+      )
+    );
+
+
+    setText(
+      "englishName",
+      data.englishName ||
+      "-"
+    );
+
+
+    setText(
+      "gujaratiName",
+      data.gujaratiName ||
+      "-"
+    );
+
+
+    setText(
+      "utrNumber",
+      data.utrNumber ||
+      "-"
+    );
+
+
+    renderFiles(
+      data.files
+    );
+
+
+    document
+      .getElementById(
+        "resultSection"
+      )
+      .scrollIntoView({
+        behavior:
+          "smooth"
+      });
+
+  }
+
+
+  /* =====================================================
+     SET TEXT
+  ===================================================== */
+
+  function setText(
+    id,
+    value
+  ) {
+
+    const element =
+      document.getElementById(
+        id
+      );
+
+
+    if (!element) {
+      return;
+    }
+
+
+    element.textContent =
+      value === null ||
+      value === undefined ||
+      value === ""
+        ? "-"
+        : String(value);
+
+  }
+
+
+  /* =====================================================
+     FORMAT DATE
+  ===================================================== */
+
+  function formatDate(
+    value
+  ) {
+
+    if (
+      !value
+    ) {
+
+      return "-";
+
+    }
+
+
+    try {
+
+      const date =
+        new Date(
+          value
+        );
+
+
+      if (
+        isNaN(
+          date.getTime()
+        )
+      ) {
+
+        return String(
+          value
+        );
+
+      }
+
+
+      return date.toLocaleString(
+        "en-IN",
+        {
+          dateStyle:
+            "medium",
+
+          timeStyle:
+            "short"
+        }
+      );
+
+    } catch (err) {
+
+      return String(
+        value
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     FILES
+  ===================================================== */
+
+  function renderFiles(
+    files
+  ) {
+
+    const container =
+      document.getElementById(
+        "filesList"
+      );
+
+
+    if (
+      !files ||
+      typeof files !==
+        "object"
+    ) {
+
+      container.innerHTML =
+        "<div style='color:#64748b'>No files uploaded.</div>";
+
+      return;
+
+    }
+
+
+    const keys =
+      Object.keys(
+        files
+      );
+
+
+    if (
+      !keys.length
+    ) {
+
+      container.innerHTML =
+        "<div style='color:#64748b'>No files uploaded.</div>";
+
+      return;
+
+    }
+
+
+    container.innerHTML =
+      keys.map(
+        function(key) {
+
+          const file =
+            files[key] ||
+            {};
+
+
+          const name =
+            file.name ||
+            key;
+
+
+          const url =
+            file.url ||
+            "";
+
+
+          if (url) {
+
+            return `
+              <div class="file">
+
+                <span>
+                  ${escapeHtml(name)}
+                </span>
+
+                <a
+                  href="${escapeHtml(url)}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  View File
+                </a>
+
+              </div>
+            `;
+
+          }
+
+
+          return `
+            <div class="file">
+
+              <span>
+                ${escapeHtml(name)}
+              </span>
+
+              <span>
+                Uploaded
+              </span>
+
+            </div>
+          `;
+
+        }
+      ).join("");
+
+  }
+
+
+  /* =====================================================
+     FORM
+  ===================================================== */
+
+  document
+    .getElementById(
+      "trackingForm"
+    )
+    .addEventListener(
+      "submit",
+      function(event) {
+
+        event.preventDefault();
+
+
+        const tr =
+          document
+            .getElementById(
+              "trNumber"
+            )
+            .value
+            .trim();
+
+
+        trackApplication(
+          tr
+        );
+
+      }
+    );
+
+
+  /* =====================================================
+     URL PARAMETER
+  ===================================================== */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+
+      const tr =
+        params.get(
+          "trNumber"
+        ) ||
+        params.get(
+          "tr_number"
+        ) ||
+        params.get(
+          "tr"
+        ) ||
+        params.get(
+          "applicationId"
+        );
+
+
+      if (tr) {
+
+        document
+          .getElementById(
+            "trNumber"
+          )
+          .value =
+          tr;
+
+
+        trackApplication(
+          tr
+        );
+
+      }
+
+    }
+  );
+
+</script>
+
+</body>
+</html>
