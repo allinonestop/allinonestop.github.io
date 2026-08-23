@@ -8,13 +8,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
-html{
-  scroll-behavior:smooth;
-}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
@@ -27,14 +23,9 @@ body{
   min-height:100vh;
 }
 
-button,
-input,
-select{
-  font:inherit;
-}
+button,input,select{font:inherit}
 
-button,
-.btn{
+button,.btn{
   padding:11px 16px;
   background:linear-gradient(135deg,#5b5cf0,#287cff);
   color:#fff;
@@ -47,8 +38,7 @@ button,
   transition:.2s;
 }
 
-button:hover,
-.btn:hover{
+button:hover,.btn:hover{
   transform:translateY(-1px);
   box-shadow:0 8px 20px #3658ff30;
 }
@@ -106,8 +96,7 @@ label{
   color:#475467;
 }
 
-input,
-select{
+input,select{
   width:100%;
   padding:12px;
   margin:6px 0 13px;
@@ -117,8 +106,7 @@ select{
   background:#fff;
 }
 
-input:focus,
-select:focus{
+input:focus,select:focus{
   outline:2px solid #c7d2fe;
   border-color:#6366f1;
 }
@@ -224,8 +212,7 @@ table{
   min-width:850px;
 }
 
-td,
-th{
+td,th{
   padding:10px;
   border-bottom:1px solid #eaecf0;
   text-align:left;
@@ -287,7 +274,6 @@ footer{
 }
 
 @media(max-width:700px){
-
   .wrap{
     margin:10px auto;
     padding:10px;
@@ -314,19 +300,1623 @@ footer{
 
 <div class="wrap">
 
-  <!-- =========================
-       ADMIN LOGIN
-  ========================== -->
-  <div class="box login-box" id="login">
+<!-- =========================
+     ADMIN LOGIN
+========================= -->
 
-    <div class="login-icon">
-      🔐
+<div class="box login-box" id="login">
+
+  <div class="login-icon">
+    🔐
+  </div>
+
+  <h1>Admin Login</h1>
+
+  <p>
+    AllInOneStop management portal
+  </p>
+
+  <label for="email">Admin Email</label>
+  <input
+    id="email"
+    type="email"
+    placeholder="Enter admin email"
+    autocomplete="username"
+  >
+
+  <label for="pass">Admin Password</label>
+  <input
+    id="pass"
+    type="password"
+    placeholder="Enter admin password"
+    autocomplete="current-password"
+  >
+
+  <button
+    id="loginBtn"
+    type="button"
+    onclick="login()"
+  >
+    🔐 Login
+  </button>
+
+  <a
+    class="btn logout"
+    href="index.html"
+    style="margin-left:8px"
+  >
+    🏠 Home
+  </a>
+
+  <div id="lm"></div>
+
+</div>
+
+
+<!-- =========================
+     ADMIN PANEL
+========================= -->
+
+<div id="panel" class="hidden">
+
+  <!-- HEADER -->
+
+  <div class="box">
+
+    <div class="top">
+
+      <div>
+        <h1>🛠️ Admin Panel</h1>
+
+        <div style="margin-top:8px">
+          <span class="status-online">
+            ● Admin Online
+          </span>
+
+          <span
+            id="who"
+            class="badge"
+            style="margin-left:6px"
+          ></span>
+        </div>
+      </div>
+
+      <div class="actions">
+
+        <a
+          class="btn logout"
+          href="index.html"
+        >
+          🏠 Home
+        </a>
+
+        <button
+          type="button"
+          class="logout"
+          onclick="logout()"
+        >
+          🚪 Logout
+        </button>
+
+      </div>
+
     </div>
 
-    <h1>Admin Login</h1>
+  </div>
 
-    <p>
-      AllInOneStop management portal
+
+  <!-- =========================
+       CREATE RETAILER
+  ========================== -->
+
+  <div class="box">
+
+    <h2>➕ Create New Retailer</h2>
+
+    <p class="hint">
+      Retailer ID और strong password automatically generate होंगे।
+      Account Supabase Auth में बनेगा और retailer की details
+      profiles table में save होंगी। Password database में plain-text
+      save नहीं किया जाएगा।
     </p>
 
-    <div class="
+    <div class="divider"></div>
+
+
+    <div class="grid">
+
+      <div>
+
+        <label for="rn">
+          Retailer Full Name
+        </label>
+
+        <input
+          id="rn"
+          type="text"
+          placeholder="Retailer full name"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="rm">
+          Mobile Number
+        </label>
+
+        <input
+          id="rm"
+          type="tel"
+          maxlength="10"
+          inputmode="numeric"
+          placeholder="10 digit mobile number"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="re">
+          Retailer Email
+        </label>
+
+        <input
+          id="re"
+          type="email"
+          placeholder="retailer@gmail.com"
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label for="rr">
+          Retailer Number
+        </label>
+
+        <input
+          id="rr"
+          type="text"
+          placeholder="Optional - auto generated"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div class="divider"></div>
+
+
+    <div class="grid">
+
+      <div>
+
+        <label for="ru">
+          Auto Generated Retailer ID
+        </label>
+
+        <input
+          id="ru"
+          type="text"
+          readonly
+        >
+
+        <div class="hint">
+          Example: RET-8F3K2A
+        </div>
+
+      </div>
+
+
+      <div>
+
+        <label for="rp">
+          Auto Generated Password
+        </label>
+
+        <input
+          id="rp"
+          type="text"
+          readonly
+        >
+
+        <div class="hint">
+          Strong temporary password
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="actions">
+
+      <button
+        type="button"
+        onclick="generateCredentials()"
+      >
+        🔄 Generate ID & Password
+      </button>
+
+
+      <button
+        type="button"
+        id="createBtn"
+        onclick="createRetailer()"
+      >
+        👤 Create Retailer & Send Email
+      </button>
+
+    </div>
+
+
+    <div id="cm"></div>
+
+
+    <!-- CREATED CREDENTIALS -->
+
+    <div
+      id="credentialBox"
+      class="credential hidden"
+    >
+
+      <strong>
+        ✅ Retailer Created Successfully
+      </strong>
+
+      <p style="font-size:12px">
+        ये credentials retailer को email द्वारा भी भेजे जाने चाहिए।
+      </p>
+
+
+      <div
+        class="credential-grid"
+        style="margin-top:10px"
+      >
+
+        <div class="cred">
+
+          <small>
+            Retailer ID / Username
+          </small>
+
+          <strong id="showUser"></strong>
+
+        </div>
+
+
+        <div class="cred">
+
+          <small>
+            Temporary Password
+          </small>
+
+          <strong id="showPass"></strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          type="button"
+          onclick="copyCredentials()"
+        >
+          📋 Copy Credentials
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       APPLICATIONS
+  ========================== -->
+
+  <div class="box">
+
+    <div class="top">
+
+      <h2>📋 Applications</h2>
+
+      <button
+        type="button"
+        onclick="loadApps()"
+      >
+        🔄 Refresh
+      </button>
+
+    </div>
+
+
+    <div class="table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>TR Number</th>
+            <th>Service</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Remark</th>
+            <th>Save</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="rows">
+
+          <tr>
+            <td
+              colspan="7"
+              class="loading"
+            >
+              Login to load applications.
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+
+<footer>
+© <span id="year"></span>
+AllInOneStop • All Online Services in One Place
+</footer>
+
+
+<script>
+
+/* =========================================
+   SUPABASE CONFIG
+========================================= */
+
+const SUPABASE_URL =
+"https://dixsmucrgnyuvudhymdj.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_Pdfqt8QfkhprpEtyQJ8jLA_G_-V9D58";
+
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================================
+   BASIC HELPERS
+========================================= */
+
+document.getElementById("year").textContent =
+new Date().getFullYear();
+
+
+function esc(value){
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g, function(c){
+
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[c];
+
+    });
+
+}
+
+
+function msg(element,text,isError=false){
+
+  element.innerHTML =
+    '<div class="msg ' +
+    (isError ? "error" : "") +
+    '">' +
+    esc(text) +
+    '</div>';
+
+}
+
+
+/* =========================================
+   RANDOM CREDENTIAL GENERATOR
+========================================= */
+
+function randomString(
+  length,
+  chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+){
+
+  let result="";
+
+  for(let i=0;i<length;i++){
+
+    result +=
+      chars[
+        Math.floor(
+          Math.random()*chars.length
+        )
+      ];
+
+  }
+
+  return result;
+
+}
+
+
+function generateCredentials(){
+
+  const username =
+    "RET-" +
+    randomString(6);
+
+
+  const password =
+    randomString(5) +
+    "@" +
+    randomString(
+      4,
+      "abcdefghijkmnopqrstuvwxyz"
+    ) +
+    "9!";
+
+
+  document.getElementById("ru").value =
+    username;
+
+
+  document.getElementById("rp").value =
+    password;
+
+
+  const retailerNumber =
+    document.getElementById("rr");
+
+
+  if(!retailerNumber.value.trim()){
+
+    retailerNumber.value =
+      username;
+
+  }
+
+}
+
+
+/* =========================================
+   ADMIN LOGIN
+========================================= */
+
+async function login(){
+
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("pass")
+      .value;
+
+  const loginMessage =
+    document.getElementById("lm");
+
+  const loginButton =
+    document.getElementById("loginBtn");
+
+
+  if(!email){
+
+    msg(
+      loginMessage,
+      "Please enter admin email.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if(!password){
+
+    msg(
+      loginMessage,
+      "Please enter admin password.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  loginButton.disabled=true;
+
+  loginButton.textContent =
+    "⏳ Logging in...";
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email:email,
+
+      password:password
+
+    });
+
+
+    if(error){
+
+      msg(
+        loginMessage,
+        error.message,
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(!data || !data.user){
+
+      msg(
+        loginMessage,
+        "Login failed. User session was not created.",
+        true
+      );
+
+      return;
+
+    }
+
+
+    /* GET PROFILE */
+
+    const {
+      data:profile,
+      error:profileError
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select("full_name,role")
+      .eq("id",data.user.id)
+      .maybeSingle();
+
+
+    if(profileError){
+
+      await supabaseClient.auth.signOut();
+
+      msg(
+        loginMessage,
+        "Profile check failed: " +
+        profileError.message,
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(
+      !profile ||
+      profile.role !== "admin"
+    ){
+
+      await supabaseClient.auth.signOut();
+
+      msg(
+        loginMessage,
+        "This account is not an admin account.",
+        true
+      );
+
+      return;
+
+    }
+
+
+    openPanel(
+      profile,
+      data.user
+    );
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    msg(
+      loginMessage,
+      "Login error: " +
+      (error.message || error),
+      true
+    );
+
+  }
+
+  finally{
+
+    loginButton.disabled=false;
+
+    loginButton.textContent =
+      "🔐 Login";
+
+  }
+
+}
+
+
+/* =========================================
+   OPEN ADMIN PANEL
+========================================= */
+
+async function openPanel(
+  profile,
+  user
+){
+
+  document
+    .getElementById("login")
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById("panel")
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById("who")
+    .textContent =
+      "Logged in: " +
+      (
+        profile.full_name ||
+        user.email ||
+        "Admin"
+      );
+
+
+  await loadApps();
+
+}
+
+
+/* =========================================
+   RESTORE EXISTING SESSION
+========================================= */
+
+async function restore(){
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient.auth.getSession();
+
+
+    if(error){
+
+      console.error(
+        "Session error:",
+        error
+      );
+
+      return;
+
+    }
+
+
+    if(!data || !data.session){
+
+      return;
+
+    }
+
+
+    const user =
+      data.session.user;
+
+
+    const {
+      data:profile,
+      error:profileError
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select("full_name,role")
+      .eq("id",user.id)
+      .maybeSingle();
+
+
+    if(
+      !profileError &&
+      profile &&
+      profile.role === "admin"
+    ){
+
+      await openPanel(
+        profile,
+        user
+      );
+
+    }
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Restore error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   LOGOUT
+========================================= */
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  window.location.href =
+    "admin.html";
+
+}
+
+
+/* =========================================
+   CREATE RETAILER
+========================================= */
+
+async function createRetailer(){
+
+  const message =
+    document.getElementById("cm");
+
+  const createButton =
+    document.getElementById("createBtn");
+
+
+  const full_name =
+    document
+      .getElementById("rn")
+      .value
+      .trim();
+
+
+  const mobile =
+    document
+      .getElementById("rm")
+      .value
+      .trim();
+
+
+  const email =
+    document
+      .getElementById("re")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const retailer_number =
+    document
+      .getElementById("rr")
+      .value
+      .trim();
+
+
+  let username =
+    document
+      .getElementById("ru")
+      .value
+      .trim();
+
+
+  let password =
+    document
+      .getElementById("rp")
+      .value;
+
+
+  /* VALIDATION */
+
+  if(!full_name){
+
+    msg(
+      message,
+      "Retailer full name is required.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if(!mobile){
+
+    msg(
+      message,
+      "Mobile number is required.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if(!/^\d{10}$/.test(mobile)){
+
+    msg(
+      message,
+      "Mobile number must be exactly 10 digits.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if(!email){
+
+    msg(
+      message,
+      "Retailer email is required.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  ){
+
+    msg(
+      message,
+      "Please enter a valid email address.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  /* GENERATE IF EMPTY */
+
+  if(!username || !password){
+
+    generateCredentials();
+
+    username =
+      document
+        .getElementById("ru")
+        .value
+        .trim();
+
+    password =
+      document
+        .getElementById("rp")
+        .value;
+
+  }
+
+
+  /* CHECK ADMIN SESSION */
+
+  const {
+    data:sessionData,
+    error:sessionError
+  } =
+  await supabaseClient.auth.getSession();
+
+
+  if(
+    sessionError ||
+    !sessionData ||
+    !sessionData.session
+  ){
+
+    msg(
+      message,
+      "Admin session expired. Please login again.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  createButton.disabled=true;
+
+  createButton.textContent =
+    "⏳ Creating Retailer...";
+
+
+  try{
+
+    const body={
+
+      full_name:full_name,
+
+      mobile:mobile,
+
+      email:email,
+
+      retailer_number:
+        retailer_number || username,
+
+      username:username,
+
+      password:password
+
+    };
+
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient.functions.invoke(
+      "admin-create-retailer",
+      {
+        body:body
+      }
+    );
+
+
+    console.log(
+      "Create retailer response:",
+      data,
+      error
+    );
+
+
+    if(error){
+
+      let errorText =
+        error.message ||
+        "Retailer creation failed.";
+
+
+      if(
+        error.context &&
+        typeof error.context.json === "function"
+      ){
+
+        try{
+
+          const serverData =
+            await error.context.json();
+
+          if(serverData?.error){
+
+            errorText =
+              serverData.error;
+
+          }
+
+        }
+
+        catch(e){}
+
+      }
+
+
+      msg(
+        message,
+        errorText,
+        true
+      );
+
+      return;
+
+    }
+
+
+    if(data?.error){
+
+      msg(
+        message,
+        data.error,
+        true
+      );
+
+      return;
+
+    }
+
+
+    /* SHOW RESULT */
+
+    document
+      .getElementById("showUser")
+      .textContent =
+        data?.username || username;
+
+
+    document
+      .getElementById("showPass")
+      .textContent =
+        data?.password || password;
+
+
+    document
+      .getElementById("credentialBox")
+      .classList
+      .remove("hidden");
+
+
+    msg(
+      message,
+      "Retailer created successfully. Credentials email process completed."
+    );
+
+
+    /* CLEAR FORM */
+
+    document
+      .getElementById("rn")
+      .value="";
+
+
+    document
+      .getElementById("rm")
+      .value="";
+
+
+    document
+      .getElementById("re")
+      .value="";
+
+
+    document
+      .getElementById("rr")
+      .value="";
+
+
+    generateCredentials();
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Create retailer error:",
+      error
+    );
+
+
+    msg(
+      message,
+      error.message ||
+      "Retailer creation failed.",
+      true
+    );
+
+  }
+
+  finally{
+
+    createButton.disabled=false;
+
+    createButton.textContent =
+      "👤 Create Retailer & Send Email";
+
+  }
+
+}
+
+
+/* =========================================
+   COPY CREDENTIALS
+========================================= */
+
+async function copyCredentials(){
+
+  const username =
+    document
+      .getElementById("showUser")
+      .textContent;
+
+
+  const password =
+    document
+      .getElementById("showPass")
+      .textContent;
+
+
+  const text =
+`AllInOneStop Retailer Login
+
+Retailer ID: ${username}
+
+Password: ${password}
+
+Login: ${window.location.origin}/retailer.html`;
+
+
+  try{
+
+    await navigator.clipboard.writeText(text);
+
+    alert(
+      "Retailer credentials copied."
+    );
+
+  }
+
+  catch(error){
+
+    alert(text);
+
+  }
+
+}
+
+
+/* =========================================
+   LOAD APPLICATIONS
+========================================= */
+
+async function loadApps(){
+
+  const rows =
+    document.getElementById("rows");
+
+
+  rows.innerHTML =
+    `
+    <tr>
+      <td colspan="7" class="loading">
+        Loading applications...
+      </td>
+    </tr>
+    `;
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("applications")
+      .select(
+        "tr_number,service_name,amount,payment_status,application_status,remark"
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+
+    if(error){
+
+      rows.innerHTML =
+        `
+        <tr>
+          <td colspan="7" class="loading">
+            ${esc(error.message)}
+          </td>
+        </tr>
+        `;
+
+      return;
+
+    }
+
+
+    if(!data || !data.length){
+
+      rows.innerHTML =
+        `
+        <tr>
+          <td colspan="7" class="loading">
+            No applications yet.
+          </td>
+        </tr>
+        `;
+
+      return;
+
+    }
+
+
+    rows.innerHTML =
+      data.map(
+        function(application){
+
+          const tr =
+            esc(application.tr_number);
+
+
+          const payment =
+            application.payment_status ||
+            "Pending";
+
+
+          const status =
+            application.application_status ||
+            "Received";
+
+
+          return `
+          <tr>
+
+            <td>
+              <strong>${tr}</strong>
+            </td>
+
+            <td>
+              ${esc(application.service_name)}
+            </td>
+
+            <td>
+              ₹${esc(application.amount)}
+            </td>
+
+            <td>
+
+              <select
+                id="p-${tr}"
+              >
+
+                <option
+                  value="Pending"
+                  ${payment==="Pending"?"selected":""}
+                >
+                  Pending
+                </option>
+
+                <option
+                  value="Paid"
+                  ${payment==="Paid"?"selected":""}
+                >
+                  Paid
+                </option>
+
+                <option
+                  value="Failed"
+                  ${payment==="Failed"?"selected":""}
+                >
+                  Failed
+                </option>
+
+              </select>
+
+            </td>
+
+            <td>
+
+              <select
+                id="s-${tr}"
+              >
+
+                <option
+                  value="Received"
+                  ${status==="Received"?"selected":""}
+                >
+                  Received
+                </option>
+
+                <option
+                  value="Verification"
+                  ${status==="Verification"?"selected":""}
+                >
+                  Verification
+                </option>
+
+                <option
+                  value="Processing"
+                  ${status==="Processing"?"selected":""}
+                >
+                  Processing
+                </option>
+
+                <option
+                  value="Completed"
+                  ${status==="Completed"?"selected":""}
+                >
+                  Completed
+                </option>
+
+                <option
+                  value="Rejected"
+                  ${status==="Rejected"?"selected":""}
+                >
+                  Rejected
+                </option>
+
+              </select>
+
+            </td>
+
+            <td>
+
+              <input
+                id="r-${tr}"
+                value="${esc(application.remark || "")}"
+                placeholder="Remark"
+              >
+
+            </td>
+
+            <td>
+
+              <button
+                type="button"
+                class="small-btn saveBtn"
+                data-tr="${tr}"
+              >
+                💾 Save
+              </button>
+
+            </td>
+
+          </tr>
+          `;
+
+        }
+      ).join("");
+
+  }
+
+  catch(error){
+
+    rows.innerHTML =
+      `
+      <tr>
+        <td colspan="7" class="loading">
+          ${esc(error.message)}
+        </td>
+      </tr>
+      `;
+
+  }
+
+}
+
+
+/* =========================================
+   SAVE APPLICATION STATUS
+========================================= */
+
+document.addEventListener(
+  "click",
+  function(event){
+
+    const button =
+      event.target.closest(".saveBtn");
+
+
+    if(button){
+
+      saveStatus(
+        button.dataset.tr
+      );
+
+    }
+
+  }
+);
+
+
+async function saveStatus(trNumber){
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient.auth.getSession();
+
+
+  if(
+    error ||
+    !data ||
+    !data.session
+  ){
+
+    alert(
+      "Admin session expired. Please login again."
+    );
+
+    return;
+
+  }
+
+
+  const paymentElement =
+    document.getElementById(
+      "p-" + trNumber
+    );
+
+
+  const statusElement =
+    document.getElementById(
+      "s-" + trNumber
+    );
+
+
+  const remarkElement =
+    document.getElementById(
+      "r-" + trNumber
+    );
+
+
+  if(
+    !paymentElement ||
+    !statusElement ||
+    !remarkElement
+  ){
+
+    alert(
+      "Application row not found."
+    );
+
+    return;
+
+  }
+
+
+  const body={
+
+    tr_number:trNumber,
+
+    payment_status:
+      paymentElement.value,
+
+    application_status:
+      statusElement.value,
+
+    remark:
+      remarkElement.value
+
+  };
+
+
+  try{
+
+    const {
+      data:result,
+      error:functionError
+    } =
+    await supabaseClient.functions.invoke(
+      "send-status-email",
+      {
+        body:body
+      }
+    );
+
+
+    if(functionError){
+
+      alert(
+        functionError.message ||
+        "Status update failed."
+      );
+
+      return;
+
+    }
+
+
+    if(result?.error){
+
+      alert(result.error);
+
+      return;
+
+    }
+
+
+    alert(
+      "Application status updated successfully."
+    );
+
+
+    await loadApps();
+
+  }
+
+  catch(error){
+
+    alert(
+      error.message ||
+      "Status update failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   AUTH STATE CHANGE
+========================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  function(event,session){
+
+    console.log(
+      "Auth event:",
+      event
+    );
+
+  }
+);
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
+
+generateCredentials();
+
+restore();
+
+</script>
+
+</body>
+</html>
