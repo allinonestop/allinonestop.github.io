@@ -1,1 +1,1623 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AllInOneStop Retailer</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>body{font-family:Arial,sans-serif;background:#f5f7fb;margin:0;color:#172033}.wrap{max-width:950px;margin:35px auto;padding:18px}.box{background:#fff;border-radius:16px;padding:25px;box-shadow:0 8px 30px #0001;margin-bottom:18px}input,select{width:100%;box-sizing:border-box;padding:12px;margin:7px 0 14px;border:1px solid #d0d5dd;border-radius:8px}button,.btn{padding:12px 18px;background:#1769e0;color:#fff;border:0;border-radius:8px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}.logout{background:#475467}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hidden{display:none}.msg{padding:12px;border-radius:8px;background:#eef5ff;margin-top:12px}.error{background:#fef3f2;color:#b42318}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}@media(max-width:650px){.grid{grid-template-columns:1fr}}</style></head><body><div class="wrap"><div class="box" id="login"><div class="top"><h1>Retailer Login</h1><a class="btn logout" href="index.html">Home</a></div><input id="email" type="text" placeholder="Email / Username" autocomplete="username"><input id="pass" type="password" placeholder="Password" autocomplete="current-password"><button onclick="login()">Login</button><div id="loginMsg"></div></div><div class="box hidden" id="app"><div class="top"><div><h1>New Application</h1><div id="who"></div></div><button class="logout" onclick="logout()">Logout</button></div><div class="grid"><div><label>Name as per Aadhaar (English)</label><input id="nameEn"></div><div><label>આધાર મુજબ નામ (ગુજરાતી)</label><input id="nameGu"></div><div><label>DOB</label><input id="dob" type="date"></div><div><label>Mobile</label><input id="mobile" maxlength="10"></div><div><label>Service</label><select id="service" onchange="price()"><option value="">Select service</option><option value="Ration Card - Name Add|70">Ration Card - Name Add</option><option value="Ration Card - Name Add Without Ration Card|100">Name Add Without Ration Card</option><option value="Ration Card - Name Delete|100">Name Delete</option><option value="Ration Card - Name Delete Without Ration Card|200">Name Delete Without Ration Card</option><option value="Name Correction|350">Name Correction</option><option value="Name Correction Without Ration Card|500">Name Correction Without Ration Card</option><option value="Father Name to Husband Name Update|350">Father Name to Husband Name Update</option><option value="Father Name to Husband Name Update Without Ration Card|500">Father Name to Husband Name Update Without Ration Card</option><option value="PAN Card PDF|70">PAN Card PDF</option><option value="New PAN Card|500">New PAN Card</option><option value="PAN Card Correction|500">PAN Card Correction</option><option value="DL PDF|250">DL PDF</option><option value="RC PDF|300">RC PDF</option><option value="Election Card|500">Election Card</option><option value="Election Card Update|500">Election Card Update</option><option value="Vibhajan|2500">Vibhajan</option><option value="Bandh Card Chalu|3500">Bandh Card Chalu</option><option value="LMS Certificate|1500">LMS Certificate</option></select></div><div><label>Amount</label><input id="amount" readonly></div><div><label>Ration Card PDF</label><input id="ration" type="file" accept=".pdf"></div><div><label>Aadhaar Card PDF</label><input id="aadhaar" type="file" accept=".pdf"></div></div><button onclick="submitApp()">Submit Application</button><div id="msg"></div></div></div><script>const SUPABASE_URL="https://dixsmucrgnyuvudhymdj.supabase.co";const SUPABASE_PUBLISHABLE_KEY="sb_publishable_Z5T2Fbbr0RPMZds67p7-9Q_Yw2-jMVn";const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);let user=null;function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}function msg(el,t,e=false){el.innerHTML='<div class="msg '+(e?'error':'')+'">'+esc(t)+'</div>'}async function login(){const v=email.value.trim(),p=pass.value;if(!v||!p){msg(loginMsg,'Email/username and password are required.',true);return}const{data,error}=await supabaseClient.auth.signInWithPassword({email:v,password:p});if(error){msg(loginMsg,error.message,true);return}const{data:profile,error:pe}=await supabaseClient.from('profiles').select('full_name,role,retailer_number').eq('id',data.user.id).maybeSingle();if(pe||!profile||profile.role!=='retailer'){await supabaseClient.auth.signOut();msg(loginMsg,'This account is not a retailer account.',true);return}user=data.user;openApp(profile)}function openApp(profile){login.classList.add('hidden');app.classList.remove('hidden');who.textContent=(profile.full_name||user.email)+(profile.retailer_number?' • '+profile.retailer_number:'')}async function restore(){const{data}=await supabaseClient.auth.getSession();if(!data.session)return;const{data:p}=await supabaseClient.from('profiles').select('full_name,role,retailer_number').eq('id',data.session.user.id).maybeSingle();if(p?.role==='retailer'){user=data.session.user;openApp(p)}}async function logout(){await supabaseClient.auth.signOut();location.reload()}function price(){amount.value=service.value?service.value.split('|')[1]:''}function tr(){const d=new Date();return'AIO-'+d.toISOString().slice(2,10).replaceAll('-','')+'-'+Math.floor(100000+Math.random()*900000)}async function upload(file,path){if(!file)return null;if(file.type!=='application/pdf')throw Error('Only PDF files are allowed.');if(file.size>5*1024*1024)throw Error('PDF must be 5 MB or smaller.');const{error}=await supabaseClient.storage.from('documents').upload(path,file,{upsert:false});if(error)throw error;return path}async function submitApp(){try{if(!user)throw Error('Login required.');if(!nameEn.value.trim()||!mobile.value.trim()||!service.value)throw Error('Fill Name, Mobile and Service.');const s=service.value.split('|'),id=tr();const rpath=await upload(ration.files[0],`${user.id}/${id}-ration.pdf`),apath=await upload(aadhaar.files[0],`${user.id}/${id}-aadhaar.pdf`);const{error}=await supabaseClient.from('applications').insert({tr_number:id,retailer_id:user.id,customer_name_en:nameEn.value.trim(),customer_name_gu:nameGu.value.trim(),dob:dob.value||null,mobile:mobile.value.trim(),service_name:s[0],amount:Number(s[1]),ration_pdf_path:rpath,aadhaar_pdf_path:apath});if(error)throw error;msg(document.getElementById('msg'),'Application submitted successfully. TR Number: '+id)}catch(e){msg(document.getElementById('msg'),e.message||'Application submission failed.',true)}}restore();</script></body></html>
+# AllInOneStop Retailer — `retailer.html`
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>AllInOneStop Retailer</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    *{
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:Arial,Segoe UI,sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%,#7c5cff18,transparent 30%),
+        radial-gradient(circle at 90% 15%,#00c2ff18,transparent 30%),
+        linear-gradient(135deg,#eef4ff,#f8fbff,#ecfeff);
+      margin:0;
+      color:#172033;
+      min-height:100vh;
+    }
+
+    .wrap{
+      max-width:1000px;
+      margin:35px auto;
+      padding:18px;
+    }
+
+    .box{
+      background:#ffffffee;
+      border-radius:20px;
+      padding:25px;
+      box-shadow:0 12px 40px #00000012;
+      margin-bottom:18px;
+      border:1px solid #ffffff;
+    }
+
+    h1{
+      margin:0;
+      color:#172b4d;
+    }
+
+    h2{
+      margin-top:0;
+    }
+
+    label{
+      display:block;
+      font-size:13px;
+      font-weight:800;
+      color:#344054;
+      margin-top:4px;
+    }
+
+    input,
+    select{
+      width:100%;
+      padding:12px;
+      margin:7px 0 14px;
+      border:1px solid #d0d5dd;
+      border-radius:10px;
+      background:#fff;
+      font-size:14px;
+    }
+
+    input:focus,
+    select:focus{
+      outline:2px solid #c7d7fe;
+      border-color:#2563eb;
+    }
+
+    button,
+    .btn{
+      padding:12px 18px;
+      background:linear-gradient(135deg,#2563eb,#1769e0);
+      color:#fff;
+      border:0;
+      border-radius:10px;
+      font-weight:800;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-block;
+    }
+
+    button:hover,
+    .btn:hover{
+      box-shadow:0 8px 20px #1769e033;
+    }
+
+    button:disabled{
+      opacity:.6;
+      cursor:not-allowed;
+    }
+
+    .logout{
+      background:#475467;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .hidden{
+      display:none !important;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .msg{
+      padding:13px;
+      border-radius:10px;
+      background:#ecfdf3;
+      color:#087443;
+      margin-top:14px;
+      font-size:14px;
+      font-weight:600;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .error{
+      background:#fef2f2;
+      color:#b42318;
+    }
+
+    .info{
+      background:#eff6ff;
+      color:#1d4ed8;
+    }
+
+    .user-badge{
+      display:inline-block;
+      margin-top:8px;
+      padding:7px 12px;
+      background:#ecfdf3;
+      color:#087443;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .service-box{
+      background:#f8fafc;
+      border:1px solid #e4e7ec;
+      padding:14px;
+      border-radius:12px;
+      margin-bottom:5px;
+    }
+
+    .amount-box{
+      background:#eef4ff;
+      border:1px solid #c7d7fe;
+      border-radius:12px;
+      padding:12px;
+      margin-bottom:14px;
+    }
+
+    .amount-label{
+      font-size:12px;
+      color:#667085;
+      font-weight:700;
+    }
+
+    .amount-value{
+      font-size:24px;
+      font-weight:900;
+      color:#2563eb;
+      margin-top:3px;
+    }
+
+    .login-help{
+      font-size:12px;
+      color:#667085;
+      margin-top:-7px;
+      margin-bottom:15px;
+    }
+
+    .tr-box{
+      background:#f0fdf4;
+      border:1px solid #bbf7d0;
+      padding:14px;
+      border-radius:12px;
+      margin-top:14px;
+      color:#166534;
+      font-weight:800;
+    }
+
+    .file-note{
+      font-size:12px;
+      color:#667085;
+      margin-top:-8px;
+      margin-bottom:12px;
+    }
+
+    @media(max-width:650px){
+
+      .wrap{
+        margin:10px auto;
+        padding:10px;
+      }
+
+      .box{
+        padding:18px;
+      }
+
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      button,
+      .btn{
+        width:100%;
+        text-align:center;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <!-- ================================
+       RETAILER LOGIN
+  ================================= -->
+
+  <div class="box" id="loginBox">
+
+    <div class="top">
+
+      <div>
+        <h1>Retailer Login</h1>
+
+        <div class="login-help">
+          Retailer ID और password से login करें।
+        </div>
+      </div>
+
+      <a
+        class="btn logout"
+        href="index.html"
+      >
+        🏠 Home
+      </a>
+
+    </div>
+
+
+    <label>
+      Retailer ID
+    </label>
+
+    <input
+      id="retailerId"
+      type="text"
+      placeholder="Example: RET-35BA6N"
+      autocomplete="username"
+      autocapitalize="characters"
+    >
+
+
+    <label>
+      Password
+    </label>
+
+    <input
+      id="retailerPassword"
+      type="password"
+      placeholder="Enter retailer password"
+      autocomplete="current-password"
+    >
+
+
+    <button
+      id="loginButton"
+      type="button"
+      onclick="login()"
+    >
+      🔐 Login
+    </button>
+
+
+    <div id="loginMsg"></div>
+
+  </div>
+
+
+  <!-- ================================
+       RETAILER APPLICATION PANEL
+  ================================= -->
+
+  <div
+    class="box hidden"
+    id="appBox"
+  >
+
+    <div class="top">
+
+      <div>
+
+        <h1>
+          New Application
+        </h1>
+
+        <div
+          id="who"
+          class="user-badge"
+        ></div>
+
+      </div>
+
+      <button
+        type="button"
+        class="logout"
+        onclick="logout()"
+      >
+        🚪 Logout
+      </button>
+
+    </div>
+
+
+    <hr style="border:0;border-top:1px solid #eaecf0;margin:20px 0">
+
+
+    <!-- CUSTOMER DETAILS -->
+
+    <h2>
+      👤 Customer Details
+    </h2>
+
+    <div class="grid">
+
+      <div>
+
+        <label>
+          Name as per Aadhaar (English)
+        </label>
+
+        <input
+          id="nameEn"
+          type="text"
+          placeholder="Enter customer name"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          આધાર મુજબ નામ (ગુજરાતી)
+        </label>
+
+        <input
+          id="nameGu"
+          type="text"
+          placeholder="ગ્રાહકનું નામ"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Date of Birth
+        </label>
+
+        <input
+          id="dob"
+          type="date"
+        >
+
+      </div>
+
+
+      <div>
+
+        <label>
+          Mobile Number
+        </label>
+
+        <input
+          id="mobile"
+          type="tel"
+          maxlength="10"
+          inputmode="numeric"
+          placeholder="10 digit mobile"
+        >
+
+      </div>
+
+    </div>
+
+
+    <!-- SERVICE -->
+
+    <h2 style="margin-top:20px">
+      📋 Select Service
+    </h2>
+
+    <div class="service-box">
+
+      <label>
+        Service
+      </label>
+
+      <select
+        id="service"
+        onchange="updatePrice()"
+      >
+
+        <option value="">
+          Select service
+        </option>
+
+        <option value="Ration Card - Name Add|70">
+          Ration Card - Name Add
+        </option>
+
+        <option value="Ration Card - Name Add Without Ration Card|100">
+          Name Add Without Ration Card
+        </option>
+
+        <option value="Ration Card - Name Delete|100">
+          Name Delete
+        </option>
+
+        <option value="Ration Card - Name Delete Without Ration Card|200">
+          Name Delete Without Ration Card
+        </option>
+
+        <option value="Name Correction|350">
+          Name Correction
+        </option>
+
+        <option value="Name Correction Without Ration Card|500">
+          Name Correction Without Ration Card
+        </option>
+
+        <option value="Father Name to Husband Name Update|350">
+          Father Name to Husband Name Update
+        </option>
+
+        <option value="Father Name to Husband Name Update Without Ration Card|500">
+          Father Name to Husband Name Update Without Ration Card
+        </option>
+
+        <option value="PAN Card PDF|70">
+          PAN Card PDF
+        </option>
+
+        <option value="New PAN Card|500">
+          New PAN Card
+        </option>
+
+        <option value="PAN Card Correction|500">
+          PAN Card Correction
+        </option>
+
+        <option value="DL PDF|250">
+          DL PDF
+        </option>
+
+        <option value="RC PDF|300">
+          RC PDF
+        </option>
+
+        <option value="Election Card|500">
+          Election Card
+        </option>
+
+        <option value="Election Card Update|500">
+          Election Card Update
+        </option>
+
+        <option value="Vibhajan|2500">
+          Vibhajan
+        </option>
+
+        <option value="Bandh Card Chalu|3500">
+          Bandh Card Chalu
+        </option>
+
+        <option value="LMS Certificate|1500">
+          LMS Certificate
+        </option>
+
+      </select>
+
+
+      <div class="amount-box">
+
+        <div class="amount-label">
+          Application Amount
+        </div>
+
+        <div
+          class="amount-value"
+          id="amountDisplay"
+        >
+          ₹0
+        </div>
+
+      </div>
+
+      <input
+        id="amount"
+        type="hidden"
+      >
+
+    </div>
+
+
+    <!-- DOCUMENTS -->
+
+    <h2 style="margin-top:20px">
+      📎 Documents
+    </h2>
+
+
+    <label>
+      Ration Card PDF
+    </label>
+
+    <input
+      id="ration"
+      type="file"
+      accept=".pdf,application/pdf"
+    >
+
+    <div class="file-note">
+      PDF only, maximum 5 MB.
+    </div>
+
+
+    <label>
+      Aadhaar Card PDF
+    </label>
+
+    <input
+      id="aadhaar"
+      type="file"
+      accept=".pdf,application/pdf"
+    >
+
+    <div class="file-note">
+      PDF only, maximum 5 MB.
+    </div>
+
+
+    <!-- SUBMIT -->
+
+    <button
+      id="submitButton"
+      type="button"
+      onclick="submitApplication()"
+    >
+      📤 Submit Application
+    </button>
+
+
+    <div id="appMsg"></div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE CONFIG
+========================================================= */
+
+const SUPABASE_URL =
+  "https://dixsmucrgnyuvudhymdj.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_Z5T2Fbbr0RPMZds67p7-9Q_Yw2-jMVn";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* =========================================================
+   GLOBAL USER
+========================================================= */
+
+let currentUser = null;
+
+
+/* =========================================================
+   DOM HELPER
+========================================================= */
+
+function $(id){
+
+  return document.getElementById(id);
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g, function(char){
+
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[char];
+
+    });
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(
+  element,
+  text,
+  isError = false
+){
+
+  if(!element){
+    return;
+  }
+
+  element.innerHTML =
+    '<div class="msg ' +
+    (isError ? "error" : "") +
+    '">' +
+    escapeHtml(text) +
+    '</div>';
+
+}
+
+
+/* =========================================================
+   NORMALIZE RETAILER ID
+========================================================= */
+
+function normalizeRetailerId(value){
+
+  return String(value || "")
+    .trim()
+    .toUpperCase();
+
+}
+
+
+/* =========================================================
+   IMPORTANT:
+   RETAILER ID -> INTERNAL SUPABASE EMAIL
+========================================================= */
+
+function retailerIdToEmail(retailerId){
+
+  const id =
+    normalizeRetailerId(retailerId);
+
+  return (
+    id.toLowerCase() +
+    "@retailer.allinonestop.local"
+  );
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function login(){
+
+  const retailerId =
+    normalizeRetailerId(
+      $("retailerId").value
+    );
+
+  const password =
+    $("retailerPassword").value;
+
+
+  const message =
+    $("loginMsg");
+
+  const button =
+    $("loginButton");
+
+
+  if(!retailerId){
+
+    showMessage(
+      message,
+      "Please enter Retailer ID.",
+      true
+    );
+
+    return;
+  }
+
+
+  if(!password){
+
+    showMessage(
+      message,
+      "Please enter password.",
+      true
+    );
+
+    return;
+  }
+
+
+  if(!/^RET-[A-Z0-9]{6}$/.test(retailerId)){
+
+    showMessage(
+      message,
+      "Invalid Retailer ID format. Example: RET-35BA6N",
+      true
+    );
+
+    return;
+  }
+
+
+  button.disabled = true;
+
+  button.textContent =
+    "⏳ Logging in...";
+
+
+  try{
+
+    /*
+      IMPORTANT FIX
+
+      Admin function creates Auth user with:
+
+      RET-ID@retailer.allinonestop.local
+
+      Retailer enters only:
+
+      RET-ID
+
+      So we convert it here.
+    */
+
+    const internalEmail =
+      retailerIdToEmail(
+        retailerId
+      );
+
+
+    console.log(
+      "Retailer ID:",
+      retailerId
+    );
+
+    console.log(
+      "Auth email:",
+      internalEmail
+    );
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth
+        .signInWithPassword({
+
+          email:
+            internalEmail,
+
+          password:
+            password
+
+        });
+
+
+    if(error){
+
+      console.error(
+        "SUPABASE LOGIN ERROR:",
+        error
+      );
+
+      throw new Error(
+        "Login failed: " +
+        error.message
+      );
+
+    }
+
+
+    if(
+      !data ||
+      !data.user
+    ){
+
+      throw new Error(
+        "Login failed. User was not returned."
+      );
+
+    }
+
+
+    /*
+      Check retailer profile
+    */
+
+    const {
+      data:profile,
+      error:profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id,full_name,role,retailer_number,mobile"
+        )
+        .eq(
+          "id",
+          data.user.id
+        )
+        .maybeSingle();
+
+
+    if(profileError){
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "Profile check failed: " +
+        profileError.message
+      );
+
+    }
+
+
+    if(!profile){
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "Retailer profile not found."
+      );
+
+    }
+
+
+    if(
+      profile.role !==
+      "retailer"
+    ){
+
+      await supabaseClient.auth.signOut();
+
+      throw new Error(
+        "This account is not a retailer account."
+      );
+
+    }
+
+
+    /*
+      Successful login
+    */
+
+    currentUser =
+      data.user;
+
+
+    openRetailerPanel(
+      profile
+    );
+
+
+  }
+  catch(error){
+
+    console.error(
+      "RETAILER LOGIN ERROR:",
+      error
+    );
+
+    showMessage(
+      message,
+      error.message ||
+      "Login failed.",
+      true
+    );
+
+  }
+  finally{
+
+    button.disabled = false;
+
+    button.textContent =
+      "🔐 Login";
+
+  }
+
+}
+
+
+/* =========================================================
+   OPEN RETAILER PANEL
+========================================================= */
+
+function openRetailerPanel(
+  profile
+){
+
+  $("loginBox")
+    .classList
+    .add("hidden");
+
+
+  $("appBox")
+    .classList
+    .remove("hidden");
+
+
+  const retailerNumber =
+    profile.retailer_number ||
+    "Retailer";
+
+
+  const name =
+    profile.full_name ||
+    "Retailer";
+
+
+  $("who").textContent =
+    "👤 " +
+    name +
+    " • " +
+    retailerNumber;
+
+}
+
+
+/* =========================================================
+   RESTORE SESSION
+========================================================= */
+
+async function restoreSession(){
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth
+        .getSession();
+
+
+    if(error){
+
+      console.error(
+        "SESSION ERROR:",
+        error
+      );
+
+      return;
+
+    }
+
+
+    if(
+      !data ||
+      !data.session
+    ){
+
+      return;
+
+    }
+
+
+    const user =
+      data.session.user;
+
+
+    const {
+      data:profile,
+      error:profileError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id,full_name,role,retailer_number,mobile"
+        )
+        .eq(
+          "id",
+          user.id
+        )
+        .maybeSingle();
+
+
+    if(
+      profileError ||
+      !profile
+    ){
+
+      await supabaseClient.auth.signOut();
+
+      return;
+
+    }
+
+
+    if(
+      profile.role !==
+      "retailer"
+    ){
+
+      await supabaseClient.auth.signOut();
+
+      return;
+
+    }
+
+
+    currentUser =
+      user;
+
+
+    openRetailerPanel(
+      profile
+    );
+
+  }
+  catch(error){
+
+    console.error(
+      "RESTORE ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout(){
+
+  try{
+
+    await supabaseClient.auth.signOut();
+
+  }
+  catch(error){
+
+    console.error(
+      "LOGOUT ERROR:",
+      error
+    );
+
+  }
+
+
+  currentUser =
+    null;
+
+
+  $("appBox")
+    .classList
+    .add("hidden");
+
+
+  $("loginBox")
+    .classList
+    .remove("hidden");
+
+
+  $("retailerPassword")
+    .value = "";
+
+
+  $("loginMsg")
+    .innerHTML = "";
+
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+function updatePrice(){
+
+  const value =
+    $("service").value;
+
+
+  if(!value){
+
+    $("amount").value =
+      "";
+
+    $("amountDisplay").textContent =
+      "₹0";
+
+    return;
+
+  }
+
+
+  const parts =
+    value.split("|");
+
+
+  const serviceAmount =
+    Number(parts[1] || 0);
+
+
+  $("amount").value =
+    serviceAmount;
+
+
+  $("amountDisplay").textContent =
+    "₹" +
+    serviceAmount;
+
+}
+
+
+/* =========================================================
+   GENERATE TR NUMBER
+========================================================= */
+
+function generateTRNumber(){
+
+  const now =
+    new Date();
+
+
+  const date =
+    now.toISOString()
+      .slice(2,10)
+      .replaceAll("-","");
+
+
+  const random =
+    Math.floor(
+      100000 +
+      Math.random() * 900000
+    );
+
+
+  return (
+    "AIO-" +
+    date +
+    "-" +
+    random
+  );
+
+}
+
+
+/* =========================================================
+   PDF UPLOAD
+========================================================= */
+
+async function uploadPDF(
+  file,
+  path
+){
+
+  if(!file){
+
+    return null;
+
+  }
+
+
+  if(
+    file.type !==
+    "application/pdf"
+  ){
+
+    throw new Error(
+      "Only PDF files are allowed."
+    );
+
+  }
+
+
+  if(
+    file.size >
+    5 * 1024 * 1024
+  ){
+
+    throw new Error(
+      "PDF must be 5 MB or smaller."
+    );
+
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient.storage
+      .from("documents")
+      .upload(
+        path,
+        file,
+        {
+          upsert:false,
+          contentType:"application/pdf"
+        }
+      );
+
+
+  if(error){
+
+    throw error;
+
+  }
+
+
+  return path;
+
+}
+
+
+/* =========================================================
+   SUBMIT APPLICATION
+========================================================= */
+
+async function submitApplication(){
+
+  const message =
+    $("appMsg");
+
+  const button =
+    $("submitButton");
+
+
+  try{
+
+    if(!currentUser){
+
+      throw new Error(
+        "Login required."
+      );
+
+    }
+
+
+    const nameEn =
+      $("nameEn")
+        .value
+        .trim();
+
+
+    const nameGu =
+      $("nameGu")
+        .value
+        .trim();
+
+
+    const dob =
+      $("dob")
+        .value;
+
+
+    const mobile =
+      $("mobile")
+        .value
+        .trim();
+
+
+    const serviceValue =
+      $("service")
+        .value;
+
+
+    const rationFile =
+      $("ration")
+        .files[0];
+
+
+    const aadhaarFile =
+      $("aadhaar")
+        .files[0];
+
+
+    /* =========================
+       VALIDATION
+    ========================= */
+
+    if(!nameEn){
+
+      throw new Error(
+        "Name as per Aadhaar is required."
+      );
+
+    }
+
+
+    if(!/^\d{10}$/.test(mobile)){
+
+      throw new Error(
+        "Mobile number must be exactly 10 digits."
+      );
+
+    }
+
+
+    if(!serviceValue){
+
+      throw new Error(
+        "Please select a service."
+      );
+
+    }
+
+
+    const parts =
+      serviceValue.split("|");
+
+
+    const serviceName =
+      parts[0];
+
+
+    const serviceAmount =
+      Number(parts[1] || 0);
+
+
+    if(!serviceName){
+
+      throw new Error(
+        "Invalid service selected."
+      );
+
+    }
+
+
+    /* =========================
+       BUTTON
+    ========================= */
+
+    button.disabled = true;
+
+    button.textContent =
+      "⏳ Submitting...";
+
+
+    showMessage(
+      message,
+      "Uploading documents and creating application..."
+    );
+
+
+    /* =========================
+       TR NUMBER
+    ========================= */
+
+    const trNumber =
+      generateTRNumber();
+
+
+    /* =========================
+       PDF PATHS
+    ========================= */
+
+    let rationPath =
+      null;
+
+    let aadhaarPath =
+      null;
+
+
+    if(rationFile){
+
+      rationPath =
+        await uploadPDF(
+          rationFile,
+          currentUser.id +
+          "/" +
+          trNumber +
+          "-ration.pdf"
+        );
+
+    }
+
+
+    if(aadhaarFile){
+
+      aadhaarPath =
+        await uploadPDF(
+          aadhaarFile,
+          currentUser.id +
+          "/" +
+          trNumber +
+          "-aadhaar.pdf"
+        );
+
+    }
+
+
+    /* =========================
+       INSERT APPLICATION
+    ========================= */
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("applications")
+        .insert({
+
+          tr_number:
+            trNumber,
+
+          retailer_id:
+            currentUser.id,
+
+          customer_name_en:
+            nameEn,
+
+          customer_name_gu:
+            nameGu || null,
+
+          dob:
+            dob || null,
+
+          mobile:
+            mobile,
+
+          service_name:
+            serviceName,
+
+          amount:
+            serviceAmount,
+
+          ration_pdf_path:
+            rationPath,
+
+          aadhaar_pdf_path:
+            aadhaarPath
+
+        })
+        .select()
+        .single();
+
+
+    if(error){
+
+      throw error;
+
+    }
+
+
+    console.log(
+      "APPLICATION CREATED:",
+      data
+    );
+
+
+    /* =========================
+       SUCCESS
+    ========================= */
+
+    showMessage(
+      message,
+      "Application submitted successfully.\n\nTR Number: " +
+      trNumber,
+      false
+    );
+
+
+    /* =========================
+       RESET FORM
+    ========================= */
+
+    $("nameEn").value =
+      "";
+
+    $("nameGu").value =
+      "";
+
+    $("dob").value =
+      "";
+
+    $("mobile").value =
+      "";
+
+    $("service").value =
+      "";
+
+    $("amount").value =
+      "";
+
+    $("amountDisplay").textContent =
+      "₹0";
+
+    $("ration").value =
+      "";
+
+    $("aadhaar").value =
+      "";
+
+
+    message.innerHTML +=
+      '<div class="tr-box">' +
+      '✅ Application Created<br>' +
+      'TR Number: ' +
+      escapeHtml(trNumber) +
+      '</div>';
+
+
+  }
+  catch(error){
+
+    console.error(
+      "APPLICATION ERROR:",
+      error
+    );
+
+
+    showMessage(
+      message,
+      error.message ||
+      "Application submission failed.",
+      true
+    );
+
+  }
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "📤 Submit Application";
+
+  }
+
+}
+
+
+/* =========================================================
+   AUTH STATE
+========================================================= */
+
+supabaseClient.auth
+  .onAuthStateChange(
+    function(event,session){
+
+      console.log(
+        "Auth event:",
+        event
+      );
+
+      if(
+        event ===
+        "SIGNED_OUT"
+      ){
+
+        currentUser =
+          null;
+
+      }
+
+    }
+  );
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+restoreSession();
+
+</script>
+
+</body>
+</html>
+```
