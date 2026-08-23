@@ -1,585 +1,936 @@
-# AllInOneStop Retailer — `retailer.html`
-
 ```html
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AllInOneStop Retailer</title>
 
-  <title>AllInOneStop Retailer</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}
 
-  <style>
-    *{
-      box-sizing:border-box;
-    }
+body{
+  margin:0;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%,#6366f125,transparent 30%),
+    radial-gradient(circle at 90% 10%,#06b6d420,transparent 30%),
+    linear-gradient(135deg,#eef2ff,#f8fbff,#ecfeff);
+  color:#172033;
+}
 
-    body{
-      font-family:Arial,Segoe UI,sans-serif;
-      background:
-        radial-gradient(circle at 10% 10%,#7c5cff18,transparent 30%),
-        radial-gradient(circle at 90% 15%,#00c2ff18,transparent 30%),
-        linear-gradient(135deg,#eef4ff,#f8fbff,#ecfeff);
-      margin:0;
-      color:#172033;
-      min-height:100vh;
-    }
+.wrap{
+  max-width:1100px;
+  margin:25px auto;
+  padding:15px;
+}
 
-    .wrap{
-      max-width:1000px;
-      margin:35px auto;
-      padding:18px;
-    }
+.box{
+  background:#ffffffee;
+  border:1px solid #fff;
+  border-radius:20px;
+  padding:25px;
+  margin-bottom:20px;
+  box-shadow:0 12px 40px #26305018;
+}
 
-    .box{
-      background:#ffffffee;
-      border-radius:20px;
-      padding:25px;
-      box-shadow:0 12px 40px #00000012;
-      margin-bottom:18px;
-      border:1px solid #ffffff;
-    }
+.hidden{display:none!important}
 
-    h1{
-      margin:0;
-      color:#172b4d;
-    }
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
 
-    h2{
-      margin-top:0;
-    }
+h1{
+  margin:0;
+  color:#4f46e5;
+}
 
-    label{
-      display:block;
-      font-size:13px;
-      font-weight:800;
-      color:#344054;
-      margin-top:4px;
-    }
+h2{
+  margin-top:0;
+  color:#344054;
+}
 
-    input,
-    select{
-      width:100%;
-      padding:12px;
-      margin:7px 0 14px;
-      border:1px solid #d0d5dd;
-      border-radius:10px;
-      background:#fff;
-      font-size:14px;
-    }
+h3{
+  color:#4f46e5;
+  margin-top:0;
+}
 
-    input:focus,
-    select:focus{
-      outline:2px solid #c7d7fe;
-      border-color:#2563eb;
-    }
+label{
+  display:block;
+  font-size:13px;
+  font-weight:800;
+  color:#475467;
+  margin-top:5px;
+}
 
-    button,
-    .btn{
-      padding:12px 18px;
-      background:linear-gradient(135deg,#2563eb,#1769e0);
-      color:#fff;
-      border:0;
-      border-radius:10px;
-      font-weight:800;
-      cursor:pointer;
-      text-decoration:none;
-      display:inline-block;
-    }
+input,select{
+  width:100%;
+  padding:12px;
+  margin:7px 0 15px;
+  border:1px solid #d0d5dd;
+  border-radius:10px;
+  background:#fff;
+  font-size:14px;
+}
 
-    button:hover,
-    .btn:hover{
-      box-shadow:0 8px 20px #1769e033;
-    }
+input:focus,
+select:focus{
+  outline:2px solid #c7d2fe;
+  border-color:#6366f1;
+}
 
-    button:disabled{
-      opacity:.6;
-      cursor:not-allowed;
-    }
+button,.btn{
+  border:0;
+  border-radius:10px;
+  padding:12px 18px;
+  background:linear-gradient(135deg,#5b5cf0,#287cff);
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
+}
 
-    .logout{
-      background:#475467;
-    }
+button:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
+.logout{
+  background:#475467;
+}
 
-    .hidden{
-      display:none !important;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
 
-    .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-    }
+.full{
+  grid-column:1/-1;
+}
 
-    .msg{
-      padding:13px;
-      border-radius:10px;
-      background:#ecfdf3;
-      color:#087443;
-      margin-top:14px;
-      font-size:14px;
-      font-weight:600;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
+.section{
+  margin-top:25px;
+  padding-top:20px;
+  border-top:1px solid #eaecf0;
+}
 
-    .error{
-      background:#fef2f2;
-      color:#b42318;
-    }
+.required{
+  color:#dc2626;
+}
 
-    .info{
-      background:#eff6ff;
-      color:#1d4ed8;
-    }
+.msg{
+  margin-top:15px;
+  padding:13px;
+  border-radius:10px;
+  background:#ecfdf3;
+  color:#087443;
+  font-weight:700;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
 
-    .user-badge{
-      display:inline-block;
-      margin-top:8px;
-      padding:7px 12px;
-      background:#ecfdf3;
-      color:#087443;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:800;
-    }
+.error{
+  background:#fef2f2;
+  color:#b42318;
+}
 
-    .service-box{
-      background:#f8fafc;
-      border:1px solid #e4e7ec;
-      padding:14px;
-      border-radius:12px;
-      margin-bottom:5px;
-    }
+.warning{
+  background:#fffbeb;
+  color:#92400e;
+}
 
-    .amount-box{
-      background:#eef4ff;
-      border:1px solid #c7d7fe;
-      border-radius:12px;
-      padding:12px;
-      margin-bottom:14px;
-    }
+.info{
+  background:#eff6ff;
+  color:#1d4ed8;
+}
 
-    .amount-label{
-      font-size:12px;
-      color:#667085;
-      font-weight:700;
-    }
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#eef2ff;
+  color:#4f46e5;
+  font-size:12px;
+  font-weight:800;
+}
 
-    .amount-value{
-      font-size:24px;
-      font-weight:900;
-      color:#2563eb;
-      margin-top:3px;
-    }
+.login-box{
+  max-width:520px;
+  margin:70px auto;
+}
 
-    .login-help{
-      font-size:12px;
-      color:#667085;
-      margin-top:-7px;
-      margin-bottom:15px;
-    }
+.login-icon{
+  width:65px;
+  height:65px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#6366f1,#06b6d4);
+  color:#fff;
+  border-radius:18px;
+  font-size:30px;
+  margin-bottom:18px;
+}
 
-    .tr-box{
-      background:#f0fdf4;
-      border:1px solid #bbf7d0;
-      padding:14px;
-      border-radius:12px;
-      margin-top:14px;
-      color:#166534;
-      font-weight:800;
-    }
+.help{
+  color:#667085;
+  font-size:12px;
+  margin-top:-8px;
+  margin-bottom:12px;
+}
 
-    .file-note{
-      font-size:12px;
-      color:#667085;
-      margin-top:-8px;
-      margin-bottom:12px;
-    }
+.file-box{
+  padding:14px;
+  border:1px dashed #aab2c0;
+  border-radius:12px;
+  background:#f8fafc;
+}
 
-    @media(max-width:650px){
+.submit-area{
+  margin-top:25px;
+  padding-top:20px;
+  border-top:1px solid #eaecf0;
+}
 
-      .wrap{
-        margin:10px auto;
-        padding:10px;
-      }
+.big-btn{
+  width:100%;
+  padding:15px;
+  font-size:16px;
+}
 
-      .box{
-        padding:18px;
-      }
+@media(max-width:750px){
+  .grid{
+    grid-template-columns:1fr;
+  }
 
-      .grid{
-        grid-template-columns:1fr;
-      }
+  .full{
+    grid-column:auto;
+  }
 
-      button,
-      .btn{
-        width:100%;
-        text-align:center;
-      }
+  .box{
+    padding:18px;
+  }
 
-    }
-  </style>
+  .login-box{
+    margin:25px auto;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="wrap">
 
-  <!-- ================================
-       RETAILER LOGIN
-  ================================= -->
+<!-- ================= LOGIN ================= -->
 
-  <div class="box" id="loginBox">
+<div class="box login-box" id="loginBox">
 
-    <div class="top">
+  <div class="login-icon">🔐</div>
 
-      <div>
-        <h1>Retailer Login</h1>
+  <h1>Retailer Login</h1>
 
-        <div class="login-help">
-          Retailer ID और password से login करें।
-        </div>
-      </div>
+  <p>
+    AllInOneStop Retailer Portal
+  </p>
 
-      <a
-        class="btn logout"
-        href="index.html"
-      >
-        🏠 Home
-      </a>
+  <label>
+    Retailer ID / Username
+  </label>
 
-    </div>
+  <input
+    id="loginId"
+    type="text"
+    placeholder="RET-XXXXXX or Email"
+    autocomplete="username"
+  >
 
+  <label>
+    Password
+  </label>
 
-    <label>
-      Retailer ID
-    </label>
+  <input
+    id="loginPassword"
+    type="password"
+    placeholder="Enter password"
+    autocomplete="current-password"
+  >
 
-    <input
-      id="retailerId"
-      type="text"
-      placeholder="Example: RET-35BA6N"
-      autocomplete="username"
-      autocapitalize="characters"
-    >
-
-
-    <label>
-      Password
-    </label>
-
-    <input
-      id="retailerPassword"
-      type="password"
-      placeholder="Enter retailer password"
-      autocomplete="current-password"
-    >
-
+  <div class="top">
 
     <button
       id="loginButton"
       type="button"
-      onclick="login()"
+      onclick="retailerLogin()"
     >
       🔐 Login
     </button>
 
-
-    <div id="loginMsg"></div>
+    <a
+      class="btn logout"
+      href="index.html"
+    >
+      🏠 Home
+    </a>
 
   </div>
 
+  <div id="loginMessage"></div>
 
-  <!-- ================================
-       RETAILER APPLICATION PANEL
-  ================================= -->
+</div>
 
-  <div
-    class="box hidden"
-    id="appBox"
-  >
+
+<!-- ================= RETAILER APP ================= -->
+
+<div id="retailerApp" class="hidden">
+
+  <!-- HEADER -->
+
+  <div class="box">
 
     <div class="top">
 
       <div>
 
-        <h1>
-          New Application
-        </h1>
+        <h1>👤 Retailer Panel</h1>
 
-        <div
-          id="who"
-          class="user-badge"
-        ></div>
+        <div style="margin-top:8px">
 
-      </div>
+          <span
+            id="retailerName"
+            class="badge"
+          ></span>
 
-      <button
-        type="button"
-        class="logout"
-        onclick="logout()"
-      >
-        🚪 Logout
-      </button>
+          <span
+            id="retailerNumber"
+            class="badge"
+          ></span>
 
-    </div>
-
-
-    <hr style="border:0;border-top:1px solid #eaecf0;margin:20px 0">
-
-
-    <!-- CUSTOMER DETAILS -->
-
-    <h2>
-      👤 Customer Details
-    </h2>
-
-    <div class="grid">
-
-      <div>
-
-        <label>
-          Name as per Aadhaar (English)
-        </label>
-
-        <input
-          id="nameEn"
-          type="text"
-          placeholder="Enter customer name"
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          આધાર મુજબ નામ (ગુજરાતી)
-        </label>
-
-        <input
-          id="nameGu"
-          type="text"
-          placeholder="ગ્રાહકનું નામ"
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Date of Birth
-        </label>
-
-        <input
-          id="dob"
-          type="date"
-        >
-
-      </div>
-
-
-      <div>
-
-        <label>
-          Mobile Number
-        </label>
-
-        <input
-          id="mobile"
-          type="tel"
-          maxlength="10"
-          inputmode="numeric"
-          placeholder="10 digit mobile"
-        >
-
-      </div>
-
-    </div>
-
-
-    <!-- SERVICE -->
-
-    <h2 style="margin-top:20px">
-      📋 Select Service
-    </h2>
-
-    <div class="service-box">
-
-      <label>
-        Service
-      </label>
-
-      <select
-        id="service"
-        onchange="updatePrice()"
-      >
-
-        <option value="">
-          Select service
-        </option>
-
-        <option value="Ration Card - Name Add|70">
-          Ration Card - Name Add
-        </option>
-
-        <option value="Ration Card - Name Add Without Ration Card|100">
-          Name Add Without Ration Card
-        </option>
-
-        <option value="Ration Card - Name Delete|100">
-          Name Delete
-        </option>
-
-        <option value="Ration Card - Name Delete Without Ration Card|200">
-          Name Delete Without Ration Card
-        </option>
-
-        <option value="Name Correction|350">
-          Name Correction
-        </option>
-
-        <option value="Name Correction Without Ration Card|500">
-          Name Correction Without Ration Card
-        </option>
-
-        <option value="Father Name to Husband Name Update|350">
-          Father Name to Husband Name Update
-        </option>
-
-        <option value="Father Name to Husband Name Update Without Ration Card|500">
-          Father Name to Husband Name Update Without Ration Card
-        </option>
-
-        <option value="PAN Card PDF|70">
-          PAN Card PDF
-        </option>
-
-        <option value="New PAN Card|500">
-          New PAN Card
-        </option>
-
-        <option value="PAN Card Correction|500">
-          PAN Card Correction
-        </option>
-
-        <option value="DL PDF|250">
-          DL PDF
-        </option>
-
-        <option value="RC PDF|300">
-          RC PDF
-        </option>
-
-        <option value="Election Card|500">
-          Election Card
-        </option>
-
-        <option value="Election Card Update|500">
-          Election Card Update
-        </option>
-
-        <option value="Vibhajan|2500">
-          Vibhajan
-        </option>
-
-        <option value="Bandh Card Chalu|3500">
-          Bandh Card Chalu
-        </option>
-
-        <option value="LMS Certificate|1500">
-          LMS Certificate
-        </option>
-
-      </select>
-
-
-      <div class="amount-box">
-
-        <div class="amount-label">
-          Application Amount
-        </div>
-
-        <div
-          class="amount-value"
-          id="amountDisplay"
-        >
-          ₹0
         </div>
 
       </div>
 
-      <input
-        id="amount"
-        type="hidden"
-      >
+      <div>
+
+        <button
+          type="button"
+          class="logout"
+          onclick="retailerLogout()"
+        >
+          🚪 Logout
+        </button>
+
+      </div>
 
     </div>
-
-
-    <!-- DOCUMENTS -->
-
-    <h2 style="margin-top:20px">
-      📎 Documents
-    </h2>
-
-
-    <label>
-      Ration Card PDF
-    </label>
-
-    <input
-      id="ration"
-      type="file"
-      accept=".pdf,application/pdf"
-    >
-
-    <div class="file-note">
-      PDF only, maximum 5 MB.
-    </div>
-
-
-    <label>
-      Aadhaar Card PDF
-    </label>
-
-    <input
-      id="aadhaar"
-      type="file"
-      accept=".pdf,application/pdf"
-    >
-
-    <div class="file-note">
-      PDF only, maximum 5 MB.
-    </div>
-
-
-    <!-- SUBMIT -->
-
-    <button
-      id="submitButton"
-      type="button"
-      onclick="submitApplication()"
-    >
-      📤 Submit Application
-    </button>
-
-
-    <div id="appMsg"></div>
 
   </div>
+
+
+  <!-- ================= APPLICATION ================= -->
+
+  <div class="box">
+
+    <h2>📝 New Application</h2>
+
+    <p>
+      Customer की जानकारी और संबंधित documents भरें।
+    </p>
+
+
+    <!-- BASIC CUSTOMER INFORMATION -->
+
+    <div class="section">
+
+      <h3>👤 Customer Information</h3>
+
+      <div class="grid">
+
+        <!-- ENGLISH NAME -->
+
+        <div>
+
+          <label>
+            Name as per Aadhaar - English
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="nameEnglish"
+            type="text"
+            placeholder="Enter name in English"
+          >
+
+        </div>
+
+
+        <!-- GUJARATI NAME -->
+
+        <div>
+
+          <label>
+            આધાર મુજબ નામ - ગુજરાતી
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="nameGujarati"
+            type="text"
+            placeholder="ગુજરાતીમાં નામ લખો"
+          >
+
+        </div>
+
+
+        <!-- FATHER/HUSBAND -->
+
+        <div>
+
+          <label>
+            Father / Husband Name
+          </label>
+
+          <input
+            id="fatherHusbandName"
+            type="text"
+            placeholder="Father or Husband name"
+          >
+
+        </div>
+
+
+        <!-- RELATION -->
+
+        <div>
+
+          <label>
+            Relation
+          </label>
+
+          <select id="relation">
+
+            <option value="">
+              Select Relation
+            </option>
+
+            <option value="Father">
+              Father
+            </option>
+
+            <option value="Husband">
+              Husband
+            </option>
+
+            <option value="Mother">
+              Mother
+            </option>
+
+            <option value="Wife">
+              Wife
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- MOBILE -->
+
+        <div>
+
+          <label>
+            Mobile Number
+            <span class="required">*</span>
+          </label>
+
+          <input
+            id="mobile"
+            type="tel"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="10 digit mobile number"
+          >
+
+        </div>
+
+
+        <!-- DOB -->
+
+        <div>
+
+          <label>
+            Date of Birth
+          </label>
+
+          <input
+            id="dob"
+            type="date"
+          >
+
+        </div>
+
+
+        <!-- DOB YEAR -->
+
+        <div>
+
+          <label>
+            Birth Year
+          </label>
+
+          <input
+            id="dobYear"
+            type="number"
+            min="1900"
+            max="2100"
+            placeholder="YYYY"
+          >
+
+        </div>
+
+
+        <!-- AADHAAR -->
+
+        <div>
+
+          <label>
+            Aadhaar Number
+          </label>
+
+          <input
+            id="aadhaarNumber"
+            type="text"
+            maxlength="12"
+            inputmode="numeric"
+            placeholder="12 digit Aadhaar number"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= RATION CARD ================= -->
+
+    <div class="section">
+
+      <h3>🪪 Ration Card Work</h3>
+
+      <div class="grid">
+
+        <div>
+
+          <label>
+            Ration Card Number
+          </label>
+
+          <input
+            id="rationCardNumber"
+            type="text"
+            placeholder="Ration Card Number"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label>
+            Ration Card Work
+            <span class="required">*</span>
+          </label>
+
+          <select id="rationWork">
+
+            <option value="">
+              Select Ration Card Work
+            </option>
+
+            <option value="Name Add">
+              Name Add
+            </option>
+
+            <option value="Name Add Without Ration Card">
+              Name Add Without Ration Card
+            </option>
+
+            <option value="Name Delete">
+              Name Delete
+            </option>
+
+            <option value="Name Delete Without Ration Card">
+              Name Delete Without Ration Card
+            </option>
+
+            <option value="Name Correction">
+              Name Correction
+            </option>
+
+            <option value="Name Correction Without Ration Card">
+              Name Correction Without Ration Card
+            </option>
+
+            <option value="Father Name to Husband Name Update">
+              Father Name to Husband Name Update
+            </option>
+
+            <option value="Father Name to Husband Name Update Without Ration Card">
+              Father Name to Husband Name Update Without Ration Card
+            </option>
+
+            <option value="Vibhajan">
+              Vibhajan
+            </option>
+
+            <option value="Bandh Card Chalu">
+              Bandh Card Chalu
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            Ration Card PDF
+          </label>
+
+          <input
+            id="rationPdf"
+            type="file"
+            accept="application/pdf,.pdf"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= PAN CARD ================= -->
+
+    <div class="section">
+
+      <h3>💳 PAN Card Work</h3>
+
+      <div class="grid">
+
+        <div>
+
+          <label>
+            PAN Card Work
+          </label>
+
+          <select id="panWork">
+
+            <option value="">
+              Select PAN Work
+            </option>
+
+            <option value="PAN Card PDF">
+              PAN Card PDF
+            </option>
+
+            <option value="New PAN Card">
+              New PAN Card
+            </option>
+
+            <option value="PAN Card Correction">
+              PAN Card Correction
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            PAN Card PDF
+          </label>
+
+          <input
+            id="panPdf"
+            type="file"
+            accept="application/pdf,.pdf"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= ELECTION CARD ================= -->
+
+    <div class="section">
+
+      <h3>🗳️ Election Card Work</h3>
+
+      <div class="grid">
+
+        <div>
+
+          <label>
+            Election Card Available?
+            <span class="required">*</span>
+          </label>
+
+          <select id="electionAvailable">
+
+            <option value="">
+              Select
+            </option>
+
+            <option value="Yes">
+              Yes
+            </option>
+
+            <option value="No">
+              No
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label>
+            Election Card Work
+          </label>
+
+          <select id="electionWork">
+
+            <option value="">
+              Select Election Work
+            </option>
+
+            <option value="New Election Card">
+              New Election Card
+            </option>
+
+            <option value="Election Card Update">
+              Election Card Update
+            </option>
+
+            <option value="Election Card Correction">
+              Election Card Correction
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            Election Card PDF
+          </label>
+
+          <input
+            id="electionPdf"
+            type="file"
+            accept="application/pdf,.pdf"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= LC / CERTIFICATE ================= -->
+
+    <div class="section">
+
+      <h3>📄 LC / Certificate Work</h3>
+
+      <div class="grid">
+
+        <div>
+
+          <label>
+            LC / Certificate Work
+          </label>
+
+          <select id="lcWork">
+
+            <option value="">
+              Select Work
+            </option>
+
+            <option value="LMS Certificate">
+              LMS Certificate
+            </option>
+
+            <option value="LC">
+              LC
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= PHOTOS ================= -->
+
+    <div class="section">
+
+      <h3>📸 Photos & Documents</h3>
+
+      <div class="grid">
+
+        <div class="file-box">
+
+          <label>
+            Single Photo
+          </label>
+
+          <input
+            id="singlePhoto"
+            type="file"
+            accept="image/*"
+          >
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            Aadhaar Card PDF
+          </label>
+
+          <input
+            id="aadhaarPdf"
+            type="file"
+            accept="application/pdf,.pdf"
+          >
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            Aadhaar Card Photo
+          </label>
+
+          <input
+            id="aadhaarPhoto"
+            type="file"
+            accept="image/*"
+          >
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            PAN Card Photo
+          </label>
+
+          <input
+            id="panPhoto"
+            type="file"
+            accept="image/*"
+          >
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            Election Card Photo
+          </label>
+
+          <input
+            id="electionPhoto"
+            type="file"
+            accept="image/*"
+          >
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            LC Photo
+          </label>
+
+          <input
+            id="lcPhoto"
+            type="file"
+            accept="image/*"
+          >
+
+        </div>
+
+
+        <div class="file-box">
+
+          <label>
+            Father Photo
+          </label>
+
+          <input
+            id="fatherPhoto"
+            type="file"
+            accept="image/*"
+          >
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= SUBMIT ================= -->
+
+    <div class="submit-area">
+
+      <button
+        id="submitButton"
+        type="button"
+        class="big-btn"
+        onclick="submitApplication()"
+      >
+        📤 Submit Application
+      </button>
+
+      <div id="applicationMessage"></div>
+
+    </div>
+
+  </div>
+
+</div>
 
 </div>
 
@@ -587,7 +938,7 @@
 <script>
 
 /* =========================================================
-   SUPABASE CONFIG
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
@@ -595,7 +946,6 @@ const SUPABASE_URL =
 
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_Z5T2Fbbr0RPMZds67p7-9Q_Yw2-jMVn";
-
 
 const supabaseClient =
   window.supabase.createClient(
@@ -609,58 +959,18 @@ const supabaseClient =
 ========================================================= */
 
 let currentUser = null;
+let currentProfile = null;
 
 
 /* =========================================================
-   DOM HELPER
+   HELPERS
 ========================================================= */
 
-function $(id){
-
-  return document.getElementById(id);
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replace(/[&<>"']/g, function(char){
-
-      return {
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#039;"
-      }[char];
-
-    });
-
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-function showMessage(
-  element,
-  text,
-  isError = false
-){
-
-  if(!element){
-    return;
-  }
+function showMessage(element,text,error=false){
 
   element.innerHTML =
     '<div class="msg ' +
-    (isError ? "error" : "") +
+    (error ? "error" : "") +
     '">' +
     escapeHtml(text) +
     '</div>';
@@ -668,64 +978,80 @@ function showMessage(
 }
 
 
-/* =========================================================
-   NORMALIZE RETAILER ID
-========================================================= */
+function escapeHtml(value){
 
-function normalizeRetailerId(value){
+  return String(value ?? "")
+    .replace(/[&<>"']/g,function(c){
 
-  return String(value || "")
-    .trim()
-    .toUpperCase();
+      return {
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+      }[c];
 
-}
-
-
-/* =========================================================
-   IMPORTANT:
-   RETAILER ID -> INTERNAL SUPABASE EMAIL
-========================================================= */
-
-function retailerIdToEmail(retailerId){
-
-  const id =
-    normalizeRetailerId(retailerId);
-
-  return (
-    id.toLowerCase() +
-    "@retailer.allinonestop.local"
-  );
+    });
 
 }
 
 
 /* =========================================================
-   LOGIN
+   IMPORTANT LOGIN FIX
+   RETAILER ID -> INTERNAL EMAIL
 ========================================================= */
 
-async function login(){
+function getLoginEmail(value){
 
-  const retailerId =
-    normalizeRetailerId(
-      $("retailerId").value
-    );
+  value = value.trim();
+
+  /*
+    अगर actual email है तो वही use होगा.
+  */
+
+  if(value.includes("@")){
+    return value;
+  }
+
+  /*
+    Admin Edge Function retailer बनाते समय
+    यही internal email बनाता है:
+
+    username@retailer.allinonestop.local
+  */
+
+  return value.toLowerCase() +
+    "@retailer.allinonestop.local";
+}
+
+
+/* =========================================================
+   RETAILER LOGIN
+========================================================= */
+
+async function retailerLogin(){
+
+  const loginId =
+    document.getElementById("loginId")
+      .value
+      .trim();
 
   const password =
-    $("retailerPassword").value;
-
+    document.getElementById("loginPassword")
+      .value;
 
   const message =
-    $("loginMsg");
+    document.getElementById("loginMessage");
 
   const button =
-    $("loginButton");
+    document.getElementById("loginButton");
 
 
-  if(!retailerId){
+  if(!loginId){
 
     showMessage(
       message,
-      "Please enter Retailer ID.",
+      "Retailer ID / Username डालें.",
       true
     );
 
@@ -737,19 +1063,7 @@ async function login(){
 
     showMessage(
       message,
-      "Please enter password.",
-      true
-    );
-
-    return;
-  }
-
-
-  if(!/^RET-[A-Z0-9]{6}$/.test(retailerId)){
-
-    showMessage(
-      message,
-      "Invalid Retailer ID format. Example: RET-35BA6N",
+      "Password डालें.",
       true
     );
 
@@ -758,43 +1072,20 @@ async function login(){
 
 
   button.disabled = true;
-
   button.textContent =
     "⏳ Logging in...";
 
 
   try{
 
+    const email =
+      getLoginEmail(loginId);
+
+
     /*
-      IMPORTANT FIX
-
-      Admin function creates Auth user with:
-
-      RET-ID@retailer.allinonestop.local
-
-      Retailer enters only:
-
-      RET-ID
-
-      So we convert it here.
+      Supabase Auth हमेशा email/password
+      से login करेगा.
     */
-
-    const internalEmail =
-      retailerIdToEmail(
-        retailerId
-      );
-
-
-    console.log(
-      "Retailer ID:",
-      retailerId
-    );
-
-    console.log(
-      "Auth email:",
-      internalEmail
-    );
-
 
     const {
       data,
@@ -803,21 +1094,14 @@ async function login(){
       await supabaseClient.auth
         .signInWithPassword({
 
-          email:
-            internalEmail,
+          email:email,
 
-          password:
-            password
+          password:password
 
         });
 
 
     if(error){
-
-      console.error(
-        "SUPABASE LOGIN ERROR:",
-        error
-      );
 
       throw new Error(
         "Login failed: " +
@@ -833,14 +1117,14 @@ async function login(){
     ){
 
       throw new Error(
-        "Login failed. User was not returned."
+        "Login failed. User not found."
       );
 
     }
 
 
     /*
-      Check retailer profile
+      Profile check
     */
 
     const {
@@ -864,50 +1148,35 @@ async function login(){
       await supabaseClient.auth.signOut();
 
       throw new Error(
-        "Profile check failed: " +
+        "Retailer profile check failed: " +
         profileError.message
       );
 
     }
 
 
-    if(!profile){
-
-      await supabaseClient.auth.signOut();
-
-      throw new Error(
-        "Retailer profile not found."
-      );
-
-    }
-
-
     if(
-      profile.role !==
-      "retailer"
+      !profile ||
+      profile.role !== "retailer"
     ){
 
       await supabaseClient.auth.signOut();
 
       throw new Error(
-        "This account is not a retailer account."
+        "यह retailer account नहीं है."
       );
 
     }
 
 
-    /*
-      Successful login
-    */
-
     currentUser =
       data.user;
 
+    currentProfile =
+      profile;
 
-    openRetailerPanel(
-      profile
-    );
 
+    openRetailerPanel();
 
   }
   catch(error){
@@ -920,7 +1189,7 @@ async function login(){
     showMessage(
       message,
       error.message ||
-      "Login failed.",
+      "Invalid login credentials.",
       true
     );
 
@@ -938,44 +1207,38 @@ async function login(){
 
 
 /* =========================================================
-   OPEN RETAILER PANEL
+   OPEN PANEL
 ========================================================= */
 
-function openRetailerPanel(
-  profile
-){
+function openRetailerPanel(){
 
-  $("loginBox")
-    .classList
-    .add("hidden");
+  document
+    .getElementById("loginBox")
+    .classList.add("hidden");
 
-
-  $("appBox")
-    .classList
-    .remove("hidden");
+  document
+    .getElementById("retailerApp")
+    .classList.remove("hidden");
 
 
-  const retailerNumber =
-    profile.retailer_number ||
-    "Retailer";
+  document
+    .getElementById("retailerName")
+    .textContent =
+      currentProfile.full_name ||
+      "Retailer";
 
 
-  const name =
-    profile.full_name ||
-    "Retailer";
-
-
-  $("who").textContent =
-    "👤 " +
-    name +
-    " • " +
-    retailerNumber;
+  document
+    .getElementById("retailerNumber")
+    .textContent =
+      currentProfile.retailer_number ||
+      "";
 
 }
 
 
 /* =========================================================
-   RESTORE SESSION
+   RESTORE LOGIN
 ========================================================= */
 
 async function restoreSession(){
@@ -992,13 +1255,9 @@ async function restoreSession(){
 
     if(error){
 
-      console.error(
-        "SESSION ERROR:",
-        error
-      );
+      console.error(error);
 
       return;
-
     }
 
 
@@ -1008,7 +1267,6 @@ async function restoreSession(){
     ){
 
       return;
-
     }
 
 
@@ -1033,42 +1291,25 @@ async function restoreSession(){
 
 
     if(
-      profileError ||
-      !profile
+      !profileError &&
+      profile &&
+      profile.role === "retailer"
     ){
 
-      await supabaseClient.auth.signOut();
+      currentUser = user;
 
-      return;
+      currentProfile =
+        profile;
 
-    }
-
-
-    if(
-      profile.role !==
-      "retailer"
-    ){
-
-      await supabaseClient.auth.signOut();
-
-      return;
+      openRetailerPanel();
 
     }
-
-
-    currentUser =
-      user;
-
-
-    openRetailerPanel(
-      profile
-    );
 
   }
   catch(error){
 
     console.error(
-      "RESTORE ERROR:",
+      "RESTORE SESSION ERROR:",
       error
     );
 
@@ -1081,130 +1322,102 @@ async function restoreSession(){
    LOGOUT
 ========================================================= */
 
-async function logout(){
+async function retailerLogout(){
 
-  try{
+  await supabaseClient.auth.signOut();
 
-    await supabaseClient.auth.signOut();
+  currentUser = null;
+  currentProfile = null;
 
-  }
-  catch(error){
-
-    console.error(
-      "LOGOUT ERROR:",
-      error
-    );
-
-  }
-
-
-  currentUser =
-    null;
-
-
-  $("appBox")
-    .classList
-    .add("hidden");
-
-
-  $("loginBox")
-    .classList
-    .remove("hidden");
-
-
-  $("retailerPassword")
-    .value = "";
-
-
-  $("loginMsg")
-    .innerHTML = "";
+  location.reload();
 
 }
 
 
 /* =========================================================
-   PRICE
+   FILE VALIDATION
 ========================================================= */
 
-function updatePrice(){
+function validateFile(
+  file,
+  type,
+  required=false
+){
 
-  const value =
-    $("service").value;
+  if(!file){
 
+    if(required){
 
-  if(!value){
+      throw new Error(
+        "Required document upload करें."
+      );
 
-    $("amount").value =
-      "";
-
-    $("amountDisplay").textContent =
-      "₹0";
+    }
 
     return;
+  }
+
+
+  if(
+    type === "pdf" &&
+    file.type !== "application/pdf"
+  ){
+
+    throw new Error(
+      file.name +
+      " केवल PDF होना चाहिए."
+    );
 
   }
 
 
-  const parts =
-    value.split("|");
+  if(
+    type === "image" &&
+    !file.type.startsWith("image/")
+  ){
 
-
-  const serviceAmount =
-    Number(parts[1] || 0);
-
-
-  $("amount").value =
-    serviceAmount;
-
-
-  $("amountDisplay").textContent =
-    "₹" +
-    serviceAmount;
-
-}
-
-
-/* =========================================================
-   GENERATE TR NUMBER
-========================================================= */
-
-function generateTRNumber(){
-
-  const now =
-    new Date();
-
-
-  const date =
-    now.toISOString()
-      .slice(2,10)
-      .replaceAll("-","");
-
-
-  const random =
-    Math.floor(
-      100000 +
-      Math.random() * 900000
+    throw new Error(
+      file.name +
+      " केवल image होना चाहिए."
     );
 
+  }
 
-  return (
-    "AIO-" +
-    date +
-    "-" +
-    random
-  );
+
+  /*
+    10 MB maximum
+  */
+
+  if(file.size > 10 * 1024 * 1024){
+
+    throw new Error(
+      file.name +
+      " 10 MB से बड़ा है."
+    );
+
+  }
 
 }
 
 
 /* =========================================================
-   PDF UPLOAD
+   STORAGE UPLOAD
 ========================================================= */
 
-async function uploadPDF(
+async function uploadFile(
   file,
-  path
+  folder,
+  fileName,
+  type,
+  required=false
 ){
+
+  validateFile(
+    file,
+    type,
+    required
+  );
+
 
   if(!file){
 
@@ -1213,28 +1426,14 @@ async function uploadPDF(
   }
 
 
-  if(
-    file.type !==
-    "application/pdf"
-  ){
-
-    throw new Error(
-      "Only PDF files are allowed."
-    );
-
-  }
-
-
-  if(
-    file.size >
-    5 * 1024 * 1024
-  ){
-
-    throw new Error(
-      "PDF must be 5 MB or smaller."
-    );
-
-  }
+  const path =
+    currentUser.id +
+    "/" +
+    folder +
+    "/" +
+    Date.now() +
+    "-" +
+    fileName;
 
 
   const {
@@ -1247,19 +1446,58 @@ async function uploadPDF(
         file,
         {
           upsert:false,
-          contentType:"application/pdf"
+          contentType:file.type
         }
       );
 
 
   if(error){
 
-    throw error;
+    throw new Error(
+      "File upload failed (" +
+      file.name +
+      "): " +
+      error.message
+    );
 
   }
 
 
   return path;
+
+}
+
+
+/* =========================================================
+   TR NUMBER
+========================================================= */
+
+function generateTR(){
+
+  const now =
+    new Date();
+
+  const date =
+    now.getFullYear().toString().slice(-2) +
+    String(
+      now.getMonth()+1
+    ).padStart(2,"0") +
+    String(
+      now.getDate()
+    ).padStart(2,"0");
+
+
+  const random =
+    Math.floor(
+      100000 +
+      Math.random()*900000
+    );
+
+
+  return "AIO-" +
+    date +
+    "-" +
+    random;
 
 }
 
@@ -1271,10 +1509,14 @@ async function uploadPDF(
 async function submitApplication(){
 
   const message =
-    $("appMsg");
+    document.getElementById(
+      "applicationMessage"
+    );
 
   const button =
-    $("submitButton");
+    document.getElementById(
+      "submitButton"
+    );
 
 
   try{
@@ -1282,58 +1524,75 @@ async function submitApplication(){
     if(!currentUser){
 
       throw new Error(
-        "Login required."
+        "पहले retailer login करें."
       );
 
     }
 
 
-    const nameEn =
-      $("nameEn")
-        .value
-        .trim();
+    /* ================= BASIC ================= */
+
+    const nameEnglish =
+      document.getElementById(
+        "nameEnglish"
+      ).value.trim();
 
 
-    const nameGu =
-      $("nameGu")
-        .value
-        .trim();
+    const nameGujarati =
+      document.getElementById(
+        "nameGujarati"
+      ).value.trim();
 
 
-    const dob =
-      $("dob")
-        .value;
+    const fatherHusbandName =
+      document.getElementById(
+        "fatherHusbandName"
+      ).value.trim();
+
+
+    const relation =
+      document.getElementById(
+        "relation"
+      ).value;
 
 
     const mobile =
-      $("mobile")
-        .value
-        .trim();
+      document.getElementById(
+        "mobile"
+      ).value.trim();
 
 
-    const serviceValue =
-      $("service")
-        .value;
+    const dob =
+      document.getElementById(
+        "dob"
+      ).value || null;
 
 
-    const rationFile =
-      $("ration")
-        .files[0];
+    const dobYear =
+      document.getElementById(
+        "dobYear"
+      ).value.trim();
 
 
-    const aadhaarFile =
-      $("aadhaar")
-        .files[0];
+    const aadhaarNumber =
+      document.getElementById(
+        "aadhaarNumber"
+      ).value.trim();
 
 
-    /* =========================
-       VALIDATION
-    ========================= */
-
-    if(!nameEn){
+    if(!nameEnglish){
 
       throw new Error(
-        "Name as per Aadhaar is required."
+        "Name as per Aadhaar English required."
+      );
+
+    }
+
+
+    if(!nameGujarati){
+
+      throw new Error(
+        "ગુજરાતી નામ required."
       );
 
     }
@@ -1342,215 +1601,450 @@ async function submitApplication(){
     if(!/^\d{10}$/.test(mobile)){
 
       throw new Error(
-        "Mobile number must be exactly 10 digits."
+        "Mobile number exactly 10 digits होना चाहिए."
       );
 
     }
 
 
-    if(!serviceValue){
+    if(
+      aadhaarNumber &&
+      !/^\d{12}$/.test(aadhaarNumber)
+    ){
 
       throw new Error(
-        "Please select a service."
+        "Aadhaar number 12 digits होना चाहिए."
       );
 
     }
 
 
-    const parts =
-      serviceValue.split("|");
+    /* ================= RATION ================= */
+
+    const rationCardNumber =
+      document.getElementById(
+        "rationCardNumber"
+      ).value.trim();
 
 
-    const serviceName =
-      parts[0];
+    const rationWork =
+      document.getElementById(
+        "rationWork"
+      ).value;
 
 
-    const serviceAmount =
-      Number(parts[1] || 0);
+    /* ================= PAN ================= */
+
+    const panWork =
+      document.getElementById(
+        "panWork"
+      ).value;
 
 
-    if(!serviceName){
+    /* ================= ELECTION ================= */
 
-      throw new Error(
-        "Invalid service selected."
+    const electionAvailable =
+      document.getElementById(
+        "electionAvailable"
+      ).value;
+
+
+    const electionWork =
+      document.getElementById(
+        "electionWork"
+      ).value;
+
+
+    /* ================= LC ================= */
+
+    const lcWork =
+      document.getElementById(
+        "lcWork"
+      ).value;
+
+
+    /* ================= FILES ================= */
+
+    const rationPdf =
+      document.getElementById(
+        "rationPdf"
+      ).files[0];
+
+
+    const panPdf =
+      document.getElementById(
+        "panPdf"
+      ).files[0];
+
+
+    const electionPdf =
+      document.getElementById(
+        "electionPdf"
+      ).files[0];
+
+
+    const aadhaarPdf =
+      document.getElementById(
+        "aadhaarPdf"
+      ).files[0];
+
+
+    const singlePhoto =
+      document.getElementById(
+        "singlePhoto"
+      ).files[0];
+
+
+    const aadhaarPhoto =
+      document.getElementById(
+        "aadhaarPhoto"
+      ).files[0];
+
+
+    const panPhoto =
+      document.getElementById(
+        "panPhoto"
+      ).files[0];
+
+
+    const electionPhoto =
+      document.getElementById(
+        "electionPhoto"
+      ).files[0];
+
+
+    const lcPhoto =
+      document.getElementById(
+        "lcPhoto"
+      ).files[0];
+
+
+    const fatherPhoto =
+      document.getElementById(
+        "fatherPhoto"
+      ).files[0];
+
+
+    /* ================= VALIDATE ================= */
+
+    if(rationWork){
+
+      validateFile(
+        rationPdf,
+        "pdf",
+        false
       );
 
     }
 
 
-    /* =========================
-       BUTTON
-    ========================= */
+    if(panWork){
+
+      validateFile(
+        panPdf,
+        "pdf",
+        false
+      );
+
+    }
+
+
+    if(electionAvailable){
+
+      /*
+        Election Card अगर available है,
+        तो PDF optional रखा गया है.
+      */
+
+      validateFile(
+        electionPdf,
+        "pdf",
+        false
+      );
+
+    }
+
+
+    validateFile(
+      aadhaarPdf,
+      "pdf",
+      false
+    );
+
+
+    validateFile(
+      singlePhoto,
+      "image",
+      false
+    );
+
+
+    validateFile(
+      aadhaarPhoto,
+      "image",
+      false
+    );
+
+
+    validateFile(
+      panPhoto,
+      "image",
+      false
+    );
+
+
+    validateFile(
+      electionPhoto,
+      "image",
+      false
+    );
+
+
+    validateFile(
+      lcPhoto,
+      "image",
+      false
+    );
+
+
+    validateFile(
+      fatherPhoto,
+      "image",
+      false
+    );
+
 
     button.disabled = true;
 
     button.textContent =
-      "⏳ Submitting...";
+      "⏳ Uploading & Submitting...";
 
 
-    showMessage(
-      message,
-      "Uploading documents and creating application..."
-    );
-
-
-    /* =========================
-       TR NUMBER
-    ========================= */
+    /* ================= TR ================= */
 
     const trNumber =
-      generateTRNumber();
+      generateTR();
 
 
-    /* =========================
-       PDF PATHS
-    ========================= */
+    /* ================= UPLOAD ================= */
 
-    let rationPath =
-      null;
-
-    let aadhaarPath =
-      null;
-
-
-    if(rationFile){
-
-      rationPath =
-        await uploadPDF(
-          rationFile,
-          currentUser.id +
-          "/" +
-          trNumber +
-          "-ration.pdf"
-        );
-
-    }
+    const rationPath =
+      await uploadFile(
+        rationPdf,
+        "ration",
+        "ration-card.pdf",
+        "pdf"
+      );
 
 
-    if(aadhaarFile){
-
-      aadhaarPath =
-        await uploadPDF(
-          aadhaarFile,
-          currentUser.id +
-          "/" +
-          trNumber +
-          "-aadhaar.pdf"
-        );
-
-    }
+    const panPath =
+      await uploadFile(
+        panPdf,
+        "pan",
+        "pan-card.pdf",
+        "pdf"
+      );
 
 
-    /* =========================
-       INSERT APPLICATION
-    ========================= */
+    const electionPath =
+      await uploadFile(
+        electionPdf,
+        "election",
+        "election-card.pdf",
+        "pdf"
+      );
+
+
+    const aadhaarPath =
+      await uploadFile(
+        aadhaarPdf,
+        "aadhaar",
+        "aadhaar-card.pdf",
+        "pdf"
+      );
+
+
+    const singlePhotoPath =
+      await uploadFile(
+        singlePhoto,
+        "photos",
+        "single-photo",
+        "image"
+      );
+
+
+    const aadhaarPhotoPath =
+      await uploadFile(
+        aadhaarPhoto,
+        "photos",
+        "aadhaar-photo",
+        "image"
+      );
+
+
+    const panPhotoPath =
+      await uploadFile(
+        panPhoto,
+        "photos",
+        "pan-photo",
+        "image"
+      );
+
+
+    const electionPhotoPath =
+      await uploadFile(
+        electionPhoto,
+        "photos",
+        "election-photo",
+        "image"
+      );
+
+
+    const lcPhotoPath =
+      await uploadFile(
+        lcPhoto,
+        "photos",
+        "lc-photo",
+        "image"
+      );
+
+
+    const fatherPhotoPath =
+      await uploadFile(
+        fatherPhoto,
+        "photos",
+        "father-photo",
+        "image"
+      );
+
+
+    /* ================= DATABASE ================= */
+
+    /*
+      ये fields applications table में
+      होने चाहिए.
+
+      अगर आपकी table में अभी ये columns नहीं हैं,
+      तो database migration भी करना होगा.
+    */
+
+    const application = {
+
+      tr_number:trNumber,
+
+      retailer_id:currentUser.id,
+
+      customer_name_en:nameEnglish,
+
+      customer_name_gu:nameGujarati,
+
+      father_husband_name:
+        fatherHusbandName || null,
+
+      relation:
+        relation || null,
+
+      mobile:mobile,
+
+      dob:dob,
+
+      dob_year:
+        dobYear
+          ? Number(dobYear)
+          : null,
+
+      aadhaar_number:
+        aadhaarNumber || null,
+
+      ration_card_number:
+        rationCardNumber || null,
+
+      ration_work:
+        rationWork || null,
+
+      pan_work:
+        panWork || null,
+
+      election_card_available:
+        electionAvailable || null,
+
+      election_work:
+        electionWork || null,
+
+      lc_work:
+        lcWork || null,
+
+      ration_pdf_path:
+        rationPath,
+
+      pan_pdf_path:
+        panPath,
+
+      election_pdf_path:
+        electionPath,
+
+      aadhaar_pdf_path:
+        aadhaarPath,
+
+      single_photo_path:
+        singlePhotoPath,
+
+      aadhaar_photo_path:
+        aadhaarPhotoPath,
+
+      pan_photo_path:
+        panPhotoPath,
+
+      election_photo_path:
+        electionPhotoPath,
+
+      lc_photo_path:
+        lcPhotoPath,
+
+      father_photo_path:
+        fatherPhotoPath,
+
+      payment_status:
+        "Pending",
+
+      application_status:
+        "Received"
+
+    };
+
 
     const {
-      data,
       error
     } =
       await supabaseClient
         .from("applications")
-        .insert({
-
-          tr_number:
-            trNumber,
-
-          retailer_id:
-            currentUser.id,
-
-          customer_name_en:
-            nameEn,
-
-          customer_name_gu:
-            nameGu || null,
-
-          dob:
-            dob || null,
-
-          mobile:
-            mobile,
-
-          service_name:
-            serviceName,
-
-          amount:
-            serviceAmount,
-
-          ration_pdf_path:
-            rationPath,
-
-          aadhaar_pdf_path:
-            aadhaarPath
-
-        })
-        .select()
-        .single();
+        .insert(
+          application
+        );
 
 
     if(error){
 
-      throw error;
+      throw new Error(
+        "Application database save failed: " +
+        error.message
+      );
 
     }
 
 
-    console.log(
-      "APPLICATION CREATED:",
-      data
-    );
-
-
-    /* =========================
-       SUCCESS
-    ========================= */
+    /* ================= SUCCESS ================= */
 
     showMessage(
       message,
-      "Application submitted successfully.\n\nTR Number: " +
+      "Application submitted successfully.\n\n" +
+      "TR Number: " +
       trNumber,
       false
     );
 
 
-    /* =========================
-       RESET FORM
-    ========================= */
-
-    $("nameEn").value =
-      "";
-
-    $("nameGu").value =
-      "";
-
-    $("dob").value =
-      "";
-
-    $("mobile").value =
-      "";
-
-    $("service").value =
-      "";
-
-    $("amount").value =
-      "";
-
-    $("amountDisplay").textContent =
-      "₹0";
-
-    $("ration").value =
-      "";
-
-    $("aadhaar").value =
-      "";
-
-
-    message.innerHTML +=
-      '<div class="tr-box">' +
-      '✅ Application Created<br>' +
-      'TR Number: ' +
-      escapeHtml(trNumber) +
-      '</div>';
+    clearApplicationForm();
 
 
   }
@@ -1572,8 +2066,7 @@ async function submitApplication(){
   }
   finally{
 
-    button.disabled =
-      false;
+    button.disabled = false;
 
     button.textContent =
       "📤 Submit Application";
@@ -1584,34 +2077,97 @@ async function submitApplication(){
 
 
 /* =========================================================
-   AUTH STATE
+   CLEAR FORM
 ========================================================= */
 
-supabaseClient.auth
-  .onAuthStateChange(
-    function(event,session){
+function clearApplicationForm(){
 
-      console.log(
-        "Auth event:",
-        event
-      );
+  const ids = [
 
-      if(
-        event ===
-        "SIGNED_OUT"
-      ){
+    "nameEnglish",
+    "nameGujarati",
+    "fatherHusbandName",
+    "mobile",
+    "dob",
+    "dobYear",
+    "aadhaarNumber",
 
-        currentUser =
-          null;
+    "rationCardNumber"
 
-      }
+  ];
+
+
+  ids.forEach(function(id){
+
+    const el =
+      document.getElementById(id);
+
+    if(el){
+
+      el.value = "";
 
     }
-  );
+
+  });
+
+
+  const selects = [
+
+    "relation",
+    "rationWork",
+    "panWork",
+    "electionAvailable",
+    "electionWork",
+    "lcWork"
+
+  ];
+
+
+  selects.forEach(function(id){
+
+    const el =
+      document.getElementById(id);
+
+    if(el){
+
+      el.selectedIndex = 0;
+
+    }
+
+  });
+
+
+  document
+    .querySelectorAll(
+      'input[type="file"]'
+    )
+    .forEach(function(input){
+
+      input.value = "";
+
+    });
+
+}
 
 
 /* =========================================================
-   INITIALIZE
+   AUTH LISTENER
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  function(event,session){
+
+    console.log(
+      "Auth event:",
+      event
+    );
+
+  }
+);
+
+
+/* =========================================================
+   START
 ========================================================= */
 
 restoreSession();
