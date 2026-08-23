@@ -46,7 +46,9 @@ button:disabled{
   cursor:not-allowed;
 }
 
-.logout{background:#475467}
+.logout{
+  background:#475467;
+}
 
 .wrap{
   max-width:1200px;
@@ -77,9 +79,13 @@ h1{
   color:#4f46e5;
 }
 
-h2{margin-top:0}
+h2{
+  margin-top:0;
+}
 
-p{color:#667085}
+p{
+  color:#667085;
+}
 
 label{
   font-size:13px;
@@ -108,7 +114,9 @@ input:focus,select:focus{
   gap:15px;
 }
 
-.hidden{display:none!important}
+.hidden{
+  display:none!important;
+}
 
 .actions{
   display:flex;
@@ -480,7 +488,7 @@ th{
           autocomplete="off"
         >
         <div class="hint">
-          Email optional है। Login के लिए Auth account में email रखा जाएगा।
+          Email optional है। Login के लिए internal Auth email इस्तेमाल होगा।
         </div>
       </div>
 
@@ -694,26 +702,26 @@ th{
 
 <script>
 
-/* ================================
+/* =====================================================
    SUPABASE CONFIG
-================================ */
+===================================================== */
 
 const SUPABASE_URL =
-"https://dixsmucrgnyuvudhymdj.supabase.co";
+  "https://dixsmucrgnyuvudhymdj.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_Pdfqt8QfkhprpEtyQJ8jLA_G_-V9D58";
+  "sb_publishable_Pdfqt8QfkhprpEtyQJ8jLA_G_-V9D58";
 
 const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
 
-/* ================================
+/* =====================================================
    HELPERS
-================================ */
+===================================================== */
 
 function esc(value){
   return String(value ?? "")
@@ -740,9 +748,9 @@ function msg(element,text,isError=false){
 }
 
 
-/* ================================
+/* =====================================================
    CREDENTIAL GENERATOR
-================================ */
+===================================================== */
 
 function randomString(
   length,
@@ -795,9 +803,9 @@ function generateCredentials(){
 }
 
 
-/* ================================
+/* =====================================================
    ADMIN LOGIN
-================================ */
+===================================================== */
 
 async function login(){
 
@@ -842,10 +850,10 @@ async function login(){
       data,
       error
     } =
-    await supabaseClient.auth.signInWithPassword({
-      email:email,
-      password:password
-    });
+      await supabaseClient.auth.signInWithPassword({
+        email:email,
+        password:password
+      });
 
     if(error){
       msg(
@@ -869,11 +877,11 @@ async function login(){
       data:profile,
       error:profileError
     } =
-    await supabaseClient
-      .from("profiles")
-      .select("full_name,role")
-      .eq("id",data.user.id)
-      .maybeSingle();
+      await supabaseClient
+        .from("profiles")
+        .select("full_name,role")
+        .eq("id",data.user.id)
+        .maybeSingle();
 
     if(profileError){
 
@@ -925,9 +933,9 @@ async function login(){
 }
 
 
-/* ================================
+/* =====================================================
    OPEN PANEL
-================================ */
+===================================================== */
 
 async function openPanel(profile,user){
 
@@ -953,9 +961,9 @@ async function openPanel(profile,user){
 }
 
 
-/* ================================
+/* =====================================================
    RESTORE SESSION
-================================ */
+===================================================== */
 
 async function restore(){
 
@@ -965,7 +973,7 @@ async function restore(){
       data,
       error
     } =
-    await supabaseClient.auth.getSession();
+      await supabaseClient.auth.getSession();
 
     if(error || !data.session){
       return;
@@ -978,11 +986,11 @@ async function restore(){
       data:profile,
       error:profileError
     } =
-    await supabaseClient
-      .from("profiles")
-      .select("full_name,role")
-      .eq("id",user.id)
-      .maybeSingle();
+      await supabaseClient
+        .from("profiles")
+        .select("full_name,role")
+        .eq("id",user.id)
+        .maybeSingle();
 
     if(
       !profileError &&
@@ -1009,9 +1017,9 @@ async function restore(){
 }
 
 
-/* ================================
+/* =====================================================
    LOGOUT
-================================ */
+===================================================== */
 
 async function logout(){
 
@@ -1021,9 +1029,9 @@ async function logout(){
 }
 
 
-/* ================================
+/* =====================================================
    CREATE RETAILER
-================================ */
+===================================================== */
 
 async function createRetailer(){
 
@@ -1059,23 +1067,37 @@ async function createRetailer(){
       .value;
 
   if(!full_name){
-    msg(message,"Retailer full name is required.",true);
+    msg(
+      message,
+      "Retailer full name is required.",
+      true
+    );
     return;
   }
 
-  if(!mobile || !/^\d{10}$/.test(mobile)){
-    msg(message,"Mobile number must be exactly 10 digits.",true);
+  if(
+    !mobile ||
+    !/^\d{10}$/.test(mobile)
+  ){
+    msg(
+      message,
+      "Mobile number must be exactly 10 digits.",
+      true
+    );
     return;
   }
 
   if(!username || !password){
+
     generateCredentials();
 
     username =
-      document.getElementById("ru").value.trim();
+      document.getElementById("ru")
+        .value.trim();
 
     password =
-      document.getElementById("rp").value;
+      document.getElementById("rp")
+        .value;
   }
 
   if(!retailer_number){
@@ -1086,7 +1108,7 @@ async function createRetailer(){
     data:sessionData,
     error:sessionError
   } =
-  await supabaseClient.auth.getSession();
+    await supabaseClient.auth.getSession();
 
   if(
     sessionError ||
@@ -1121,10 +1143,17 @@ async function createRetailer(){
       data,
       error
     } =
-    await supabaseClient.functions.invoke(
-      "admin-create-retailer",
-      {body:body}
-    );
+      await supabaseClient.functions.invoke(
+        "admin-create-retailer",
+        {
+          body:body,
+          headers:{
+            Authorization:
+              "Bearer " +
+              sessionData.session.access_token
+          }
+        }
+      );
 
     console.log(
       "Retailer response:",
@@ -1149,19 +1178,37 @@ async function createRetailer(){
             await error.context.json();
 
           if(server?.error){
-            text=server.error;
+            text =
+              server.error +
+              (
+                server.details
+                  ? "\n" +
+                    server.details
+                  : ""
+              );
           }
 
         }catch(e){}
 
       }
 
-      msg(message,text,true);
+      msg(
+        message,
+        text,
+        true
+      );
+
       return;
     }
 
     if(data?.error){
-      msg(message,data.error,true);
+
+      msg(
+        message,
+        data.error,
+        true
+      );
+
       return;
     }
 
@@ -1214,9 +1261,9 @@ async function createRetailer(){
 }
 
 
-/* ================================
+/* =====================================================
    COPY CREDENTIALS
-================================ */
+===================================================== */
 
 async function copyCredentials(){
 
@@ -1254,9 +1301,9 @@ Login: ${window.location.origin}/retailer.html`;
 }
 
 
-/* ================================
+/* =====================================================
    LOAD RETAILERS
-================================ */
+===================================================== */
 
 async function loadRetailers(){
 
@@ -1280,16 +1327,16 @@ async function loadRetailers(){
       data,
       error
     } =
-    await supabaseClient
-      .from("profiles")
-      .select(
-        "id,full_name,mobile,retailer_number,role"
-      )
-      .eq("role","retailer")
-      .order(
-        "full_name",
-        {ascending:true}
-      );
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id,full_name,mobile,retailer_number,role"
+        )
+        .eq("role","retailer")
+        .order(
+          "full_name",
+          {ascending:true}
+        );
 
     if(error){
 
@@ -1356,7 +1403,10 @@ async function loadRetailers(){
               <button
                 type="button"
                 class="small-btn password-btn"
-                onclick="resetRetailerPassword('${esc(r.id)}','${esc(retailerId)}')"
+                onclick="resetRetailerPassword(
+                  '${esc(r.id)}',
+                  '${esc(retailerId)}'
+                )"
               >
                 🔑 Reset Password
               </button>
@@ -1364,7 +1414,10 @@ async function loadRetailers(){
               <button
                 type="button"
                 class="small-btn delete-btn"
-                onclick="deleteRetailer('${esc(r.id)}','${esc(retailerId)}')"
+                onclick="deleteRetailer(
+                  '${esc(r.id)}',
+                  '${esc(retailerId)}'
+                )"
               >
                 🗑️ Delete
               </button>
@@ -1394,9 +1447,44 @@ async function loadRetailers(){
 }
 
 
-/* ================================
+/* =====================================================
+   GET CURRENT ADMIN ACCESS TOKEN
+   IMPORTANT FOR EDGE FUNCTIONS
+===================================================== */
+
+async function getAdminAccessToken(){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.getSession();
+
+  if(error){
+    throw new Error(
+      "Could not read admin session: " +
+      error.message
+    );
+  }
+
+  if(
+    !data ||
+    !data.session ||
+    !data.session.access_token
+  ){
+
+    throw new Error(
+      "Admin session expired. Please login again."
+    );
+  }
+
+  return data.session.access_token;
+}
+
+
+/* =====================================================
    RESET RETAILER PASSWORD
-================================ */
+===================================================== */
 
 async function resetRetailerPassword(
   userId,
@@ -1416,19 +1504,27 @@ async function resetRetailerPassword(
 
   try{
 
+    const accessToken =
+      await getAdminAccessToken();
+
     const {
       data,
       error
     } =
-    await supabaseClient.functions.invoke(
-      "admin-retailer-action",
-      {
-        body:{
-          action:"reset_password",
-          user_id:userId
+      await supabaseClient.functions.invoke(
+        "admin-retailer-action",
+        {
+          body:{
+            action:"reset_password",
+            user_id:userId
+          },
+          headers:{
+            Authorization:
+              "Bearer " +
+              accessToken
+          }
         }
-      }
-    );
+      );
 
     console.log(
       "Reset password:",
@@ -1438,17 +1534,54 @@ async function resetRetailerPassword(
 
     if(error){
 
-      alert(
+      let text =
         error.message ||
-        "Password reset failed."
-      );
+        "Password reset failed.";
+
+      if(
+        error.context &&
+        typeof error.context.json === "function"
+      ){
+
+        try{
+
+          const server =
+            await error.context.json();
+
+          if(server?.error){
+
+            text =
+              server.error +
+              (
+                server.details
+                  ? "\n\n" +
+                    server.details
+                  : ""
+              );
+          }
+
+        }
+        catch(e){}
+
+      }
+
+      alert(text);
 
       return;
     }
 
     if(data?.error){
 
-      alert(data.error);
+      alert(
+        data.error +
+        (
+          data.details
+            ? "\n\n" +
+              data.details
+            : ""
+        )
+      );
+
       return;
     }
 
@@ -1460,13 +1593,20 @@ async function resetRetailerPassword(
       "Password reset successfully.\n\n" +
       "Retailer ID: " +
       retailerId +
-      "\n\nNew Password: " +
+      "\n\n" +
+      "New Password: " +
       newPassword +
-      "\n\nPlease save/give this password to the retailer."
+      "\n\n" +
+      "Please save/give this password to the retailer."
     );
 
   }
   catch(error){
+
+    console.error(
+      "Password reset error:",
+      error
+    );
 
     alert(
       error.message ||
@@ -1477,9 +1617,10 @@ async function resetRetailerPassword(
 }
 
 
-/* ================================
+/* =====================================================
    DELETE RETAILER
-================================ */
+   FIXED VERSION
+===================================================== */
 
 async function deleteRetailer(
   userId,
@@ -1500,50 +1641,156 @@ async function deleteRetailer(
 
   try{
 
+    /*
+      IMPORTANT:
+      Current logged-in ADMIN access token
+      explicitly retrieve kar rahe hain.
+    */
+
+    const accessToken =
+      await getAdminAccessToken();
+
+    console.log(
+      "Delete request starting..."
+    );
+
+    console.log(
+      "User ID:",
+      userId
+    );
+
+    console.log(
+      "Access token exists:",
+      !!accessToken
+    );
+
     const {
       data,
       error
     } =
-    await supabaseClient.functions.invoke(
-      "admin-retailer-action",
-      {
-        body:{
-          action:"delete",
-          user_id:userId
+      await supabaseClient.functions.invoke(
+        "admin-retailer-action",
+        {
+          body:{
+            action:"delete",
+            user_id:userId
+          },
+
+          /*
+            IMPORTANT FIX:
+            Edge Function ko admin JWT explicitly bhejna.
+          */
+
+          headers:{
+            Authorization:
+              "Bearer " +
+              accessToken
+          }
         }
-      }
-    );
+      );
 
     console.log(
-      "Delete retailer:",
+      "Delete retailer response:",
       data,
       error
     );
 
     if(error){
 
-      alert(
+      let text =
         error.message ||
-        "Retailer deletion failed."
-      );
+        "Retailer deletion failed.";
+
+      /*
+        Server ka actual JSON error
+        read karne ki koshish.
+      */
+
+      if(
+        error.context &&
+        typeof error.context.json === "function"
+      ){
+
+        try{
+
+          const server =
+            await error.context.json();
+
+          console.error(
+            "Server delete error:",
+            server
+          );
+
+          if(server?.error){
+
+            text =
+              server.error +
+              (
+                server.details
+                  ? "\n\n" +
+                    server.details
+                  : ""
+              );
+          }
+
+        }
+        catch(e){
+
+          console.error(
+            "Could not read server error:",
+            e
+          );
+
+        }
+
+      }
+
+      alert(text);
 
       return;
     }
 
     if(data?.error){
 
-      alert(data.error);
+      alert(
+        data.error +
+        (
+          data.details
+            ? "\n\n" +
+              data.details
+            : ""
+        )
+      );
+
+      return;
+    }
+
+    if(data?.success){
+
+      alert(
+        "Retailer deleted successfully."
+      );
+
+      /*
+        Dashboard + retailer table refresh
+      */
+
+      await refreshDashboard();
+
       return;
     }
 
     alert(
-      "Retailer deleted successfully."
+      "Unexpected response from server."
     );
-
-    await refreshDashboard();
 
   }
   catch(error){
+
+    console.error(
+      "DELETE ERROR:",
+      error
+    );
 
     alert(
       error.message ||
@@ -1554,9 +1801,9 @@ async function deleteRetailer(
 }
 
 
-/* ================================
+/* =====================================================
    LOAD APPLICATIONS
-================================ */
+===================================================== */
 
 async function loadApps(){
 
@@ -1578,15 +1825,15 @@ async function loadApps(){
       data,
       error
     } =
-    await supabaseClient
-      .from("applications")
-      .select(
-        "tr_number,service_name,amount,payment_status,application_status,remark"
-      )
-      .order(
-        "created_at",
-        {ascending:false}
-      );
+      await supabaseClient
+        .from("applications")
+        .select(
+          "tr_number,service_name,amount,payment_status,application_status,remark"
+        )
+        .order(
+          "created_at",
+          {ascending:false}
+        );
 
     if(error){
 
@@ -1621,13 +1868,18 @@ async function loadApps(){
 
         const safeTr =
           String(a.tr_number || "")
-            .replace(/[^a-zA-Z0-9_-]/g,"_");
+            .replace(
+              /[^a-zA-Z0-9_-]/g,
+              "_"
+            );
 
         const payment =
-          a.payment_status || "Pending";
+          a.payment_status ||
+          "Pending";
 
         const status =
-          a.application_status || "Received";
+          a.application_status ||
+          "Received";
 
         return `
         <tr>
@@ -1762,10 +2014,9 @@ async function loadApps(){
 }
 
 
-/* ================================
+/* =====================================================
    SAVE APPLICATION STATUS
-   NO EMAIL
-================================ */
+===================================================== */
 
 document.addEventListener(
   "click",
@@ -1826,25 +2077,25 @@ async function saveStatus(
       data,
       error
     } =
-    await supabaseClient
-      .from("applications")
-      .update({
+      await supabaseClient
+        .from("applications")
+        .update({
 
-        payment_status:
-          paymentElement.value,
+          payment_status:
+            paymentElement.value,
 
-        application_status:
-          statusElement.value,
+          application_status:
+            statusElement.value,
 
-        remark:
-          remarkElement.value
+          remark:
+            remarkElement.value
 
-      })
-      .eq(
-        "tr_number",
-        trNumber
-      )
-      .select();
+        })
+        .eq(
+          "tr_number",
+          trNumber
+        )
+        .select();
 
     if(error){
 
@@ -1874,9 +2125,9 @@ async function saveStatus(
 }
 
 
-/* ================================
+/* =====================================================
    DASHBOARD
-================================ */
+===================================================== */
 
 async function refreshDashboard(){
 
@@ -1889,9 +2140,9 @@ async function refreshDashboard(){
 }
 
 
-/* ================================
+/* =====================================================
    LOAD STATS
-================================ */
+===================================================== */
 
 async function loadStats(){
 
@@ -1900,16 +2151,19 @@ async function loadStats(){
     const {
       count:retailerCount
     } =
-    await supabaseClient
-      .from("profiles")
-      .select(
-        "id",
-        {
-          count:"exact",
-          head:true
-        }
-      )
-      .eq("role","retailer");
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id",
+          {
+            count:"exact",
+            head:true
+          }
+        )
+        .eq(
+          "role",
+          "retailer"
+        );
 
     document.getElementById(
       "totalRetailers"
@@ -1920,11 +2174,11 @@ async function loadStats(){
     const {
       data:applications
     } =
-    await supabaseClient
-      .from("applications")
-      .select(
-        "payment_status"
-      );
+      await supabaseClient
+        .from("applications")
+        .select(
+          "payment_status"
+        );
 
     const list =
       applications || [];
@@ -1938,7 +2192,8 @@ async function loadStats(){
       "paidApplications"
     ).textContent =
       list.filter(
-        x => x.payment_status === "Paid"
+        x =>
+          x.payment_status === "Paid"
       ).length;
 
     document.getElementById(
@@ -1962,27 +2217,30 @@ async function loadStats(){
 }
 
 
-/* ================================
+/* =====================================================
    AUTH STATE
-================================ */
+===================================================== */
 
 supabaseClient.auth.onAuthStateChange(
   function(event,session){
 
     console.log(
       "Auth event:",
-      event
+      event,
+      "Session:",
+      !!session
     );
 
   }
 );
 
 
-/* ================================
+/* =====================================================
    INITIALIZE
-================================ */
+===================================================== */
 
 generateCredentials();
+
 restore();
 
 </script>
