@@ -3,29 +3,40 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>AllInOneStop Admin Panel</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
 
-html{scroll-behavior:smooth}
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
   font-family:Inter,Segoe UI,Arial,sans-serif;
   background:
-    radial-gradient(circle at 10% 10%,#7c5cff20,transparent 30%),
-    radial-gradient(circle at 90% 15%,#00d2ff18,transparent 30%),
+    radial-gradient(circle at 5% 5%,#6366f125,transparent 28%),
+    radial-gradient(circle at 95% 10%,#06b6d420,transparent 28%),
     linear-gradient(135deg,#eef2ff,#f8fbff 45%,#ecfeff);
   color:#172033;
   min-height:100vh;
 }
 
-button,input,select{font:inherit}
+button,
+input,
+select{
+  font:inherit;
+}
 
-button,.btn{
+button,
+.btn{
   padding:11px 16px;
   background:linear-gradient(135deg,#5b5cf0,#287cff);
   color:#fff;
@@ -38,7 +49,8 @@ button,.btn{
   transition:.2s;
 }
 
-button:hover,.btn:hover{
+button:hover,
+.btn:hover{
   transform:translateY(-1px);
   box-shadow:0 8px 20px #3658ff30;
 }
@@ -53,8 +65,20 @@ button:disabled{
   background:#475467;
 }
 
+.danger{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+.success{
+  background:linear-gradient(135deg,#10b981,#059669);
+}
+
+.secondary{
+  background:#667085;
+}
+
 .wrap{
-  max-width:1150px;
+  max-width:1250px;
   margin:25px auto;
   padding:15px;
 }
@@ -96,7 +120,8 @@ label{
   color:#475467;
 }
 
-input,select{
+input,
+select{
   width:100%;
   padding:12px;
   margin:6px 0 13px;
@@ -106,7 +131,8 @@ input,select{
   background:#fff;
 }
 
-input:focus,select:focus{
+input:focus,
+select:focus{
   outline:2px solid #c7d2fe;
   border-color:#6366f1;
 }
@@ -141,6 +167,163 @@ input:focus,select:focus{
   color:#92400e;
 }
 
+.hint{
+  font-size:12px;
+  color:#667085;
+  margin:-5px 0 10px;
+}
+
+.divider{
+  height:1px;
+  background:#eaecf0;
+  margin:22px 0;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+/* ===============================
+   LOGIN
+================================ */
+
+.login-box{
+  max-width:550px;
+  margin:70px auto;
+}
+
+.login-icon{
+  width:70px;
+  height:70px;
+  border-radius:20px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#6366f1,#06b6d4);
+  color:white;
+  font-size:34px;
+  margin-bottom:18px;
+}
+
+/* ===============================
+   HEADER
+================================ */
+
+.admin-header{
+  background:
+    linear-gradient(135deg,#4f46e5,#2563eb 55%,#0891b2);
+  color:white;
+  padding:28px;
+  border-radius:24px;
+  box-shadow:0 18px 45px #3143a440;
+  margin-bottom:20px;
+}
+
+.admin-header h1{
+  color:white;
+}
+
+.admin-header p{
+  color:#e0e7ff;
+  margin-bottom:0;
+}
+
+.header-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.header-actions .btn,
+.header-actions button{
+  background:#ffffff20;
+  border:1px solid #ffffff35;
+}
+
+/* ===============================
+   DASHBOARD CARDS
+================================ */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.stat-card{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 10px 30px #26305012;
+  transition:.2s;
+}
+
+.stat-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 35px #26305020;
+}
+
+.stat-icon{
+  width:45px;
+  height:45px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:#eef2ff;
+  font-size:23px;
+  margin-bottom:13px;
+}
+
+.stat-title{
+  color:#667085;
+  font-size:13px;
+  font-weight:700;
+}
+
+.stat-number{
+  font-size:30px;
+  font-weight:900;
+  color:#172033;
+  margin-top:5px;
+}
+
+/* ===============================
+   QUICK NAV
+================================ */
+
+.quick-nav{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.quick-btn{
+  padding:17px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  color:#344054;
+  text-decoration:none;
+  font-weight:800;
+  text-align:center;
+  transition:.2s;
+}
+
+.quick-btn:hover{
+  transform:translateY(-2px);
+  border-color:#a5b4fc;
+  color:#4f46e5;
+}
+
+/* ===============================
+   CREDENTIAL
+================================ */
+
 .credential{
   background:linear-gradient(135deg,#f5f3ff,#eff6ff);
   border:1px solid #dfe3ff;
@@ -174,19 +357,6 @@ input:focus,select:focus{
   word-break:break-all;
 }
 
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.hint{
-  font-size:12px;
-  color:#667085;
-  margin:-5px 0 10px;
-}
-
 .badge{
   display:inline-block;
   padding:6px 10px;
@@ -206,14 +376,26 @@ input:focus,select:focus{
   font-weight:800;
 }
 
+/* ===============================
+   TABLE
+================================ */
+
+.table-wrap{
+  overflow:auto;
+  margin-top:12px;
+  border:1px solid #eaecf0;
+  border-radius:14px;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
-  min-width:850px;
+  min-width:900px;
 }
 
-td,th{
-  padding:10px;
+td,
+th{
+  padding:12px;
   border-bottom:1px solid #eaecf0;
   text-align:left;
   font-size:13px;
@@ -223,13 +405,11 @@ td,th{
 th{
   color:#475467;
   background:#f8fafc;
+  font-weight:900;
 }
 
-.table-wrap{
-  overflow:auto;
-  margin-top:12px;
-  border:1px solid #eaecf0;
-  border-radius:14px;
+tr:hover td{
+  background:#fafbff;
 }
 
 .small-btn{
@@ -237,34 +417,69 @@ th{
   font-size:12px;
 }
 
+/* ===============================
+   STATUS
+================================ */
+
+.status-badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.pending{
+  background:#fff7ed;
+  color:#c2410c;
+}
+
+.paid{
+  background:#ecfdf3;
+  color:#047857;
+}
+
+.processing{
+  background:#eff6ff;
+  color:#1d4ed8;
+}
+
+.completed{
+  background:#ecfdf3;
+  color:#047857;
+}
+
+.rejected{
+  background:#fef2f2;
+  color:#b42318;
+}
+
+.received{
+  background:#f5f3ff;
+  color:#6d28d9;
+}
+
+/* ===============================
+   LOADING
+================================ */
+
 .loading{
   text-align:center;
   padding:25px;
   color:#667085;
 }
 
-.login-box{
-  max-width:550px;
-  margin:70px auto;
+/* ===============================
+   SEARCH
+================================ */
+
+.search-box{
+  max-width:350px;
 }
 
-.login-icon{
-  width:70px;
-  height:70px;
-  border-radius:20px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,#6366f1,#06b6d4);
-  color:white;
-  font-size:34px;
-  margin-bottom:18px;
-}
-
-.divider{
-  height:1px;
-  background:#eaecf0;
-  margin:22px 0;
-}
+/* ===============================
+   FOOTER
+================================ */
 
 footer{
   text-align:center;
@@ -273,7 +488,24 @@ footer{
   padding:20px;
 }
 
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media(max-width:900px){
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .quick-nav{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
 @media(max-width:700px){
+
   .wrap{
     margin:10px auto;
     padding:10px;
@@ -289,10 +521,21 @@ footer{
     grid-template-columns:1fr;
   }
 
+  .stats,
+  .quick-nav{
+    grid-template-columns:1fr;
+  }
+
   .login-box{
     margin:25px auto;
   }
+
+  .admin-header{
+    padding:20px;
+  }
+
 }
+
 </style>
 </head>
 
@@ -300,9 +543,9 @@ footer{
 
 <div class="wrap">
 
-<!-- =========================
-     ADMIN LOGIN
-========================= -->
+<!-- ==================================================
+     LOGIN
+================================================== -->
 
 <div class="box login-box" id="login">
 
@@ -316,7 +559,8 @@ footer{
     AllInOneStop management portal
   </p>
 
-  <label for="email">Admin Email</label>
+  <label>Admin Email</label>
+
   <input
     id="email"
     type="email"
@@ -324,7 +568,8 @@ footer{
     autocomplete="username"
   >
 
-  <label for="pass">Admin Password</label>
+  <label>Admin Password</label>
+
   <input
     id="pass"
     type="password"
@@ -353,51 +598,289 @@ footer{
 </div>
 
 
-<!-- =========================
+<!-- ==================================================
      ADMIN PANEL
-========================= -->
+================================================== -->
 
 <div id="panel" class="hidden">
 
-  <!-- HEADER -->
 
-  <div class="box">
+<!-- HEADER -->
 
-    <div class="top">
+<div class="admin-header">
 
-      <div>
-        <h1>🛠️ Admin Panel</h1>
+  <div class="top">
 
-        <div style="margin-top:8px">
-          <span class="status-online">
-            ● Admin Online
-          </span>
+    <div>
 
-          <span
-            id="who"
-            class="badge"
-            style="margin-left:6px"
-          ></span>
-        </div>
+      <h1>
+        🛠️ AllInOneStop Admin
+      </h1>
+
+      <p>
+        Manage retailers, applications & payments
+      </p>
+
+      <div style="margin-top:12px">
+
+        <span class="status-online">
+          ● Admin Online
+        </span>
+
+        <span
+          id="who"
+          class="badge"
+          style="margin-left:6px"
+        ></span>
+
       </div>
 
-      <div class="actions">
+    </div>
 
-        <a
-          class="btn logout"
-          href="index.html"
-        >
-          🏠 Home
-        </a>
+    <div class="header-actions">
 
-        <button
-          type="button"
-          class="logout"
-          onclick="logout()"
-        >
-          🚪 Logout
-        </button>
+      <a
+        class="btn"
+        href="index.html"
+      >
+        🏠 Home
+      </a>
 
+      <button
+        type="button"
+        onclick="logout()"
+      >
+        🚪 Logout
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     DASHBOARD STATISTICS
+================================================== -->
+
+<div class="stats">
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+      👥
+    </div>
+
+    <div class="stat-title">
+      Total Retailers
+    </div>
+
+    <div
+      class="stat-number"
+      id="totalRetailers"
+    >
+      0
+    </div>
+
+  </div>
+
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+      📋
+    </div>
+
+    <div class="stat-title">
+      Total Applications
+    </div>
+
+    <div
+      class="stat-number"
+      id="totalApplications"
+    >
+      0
+    </div>
+
+  </div>
+
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+      💰
+    </div>
+
+    <div class="stat-title">
+      Pending Payments
+    </div>
+
+    <div
+      class="stat-number"
+      id="pendingPayments"
+    >
+      0
+    </div>
+
+  </div>
+
+
+  <div class="stat-card">
+
+    <div class="stat-icon">
+      ✅
+    </div>
+
+    <div class="stat-title">
+      Completed
+    </div>
+
+    <div
+      class="stat-number"
+      id="completedApplications"
+    >
+      0
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     QUICK NAVIGATION
+================================================== -->
+
+<div class="quick-nav">
+
+  <a
+    href="#createRetailer"
+    class="quick-btn"
+  >
+    ➕ Create Retailer
+  </a>
+
+  <a
+    href="#retailerHistory"
+    class="quick-btn"
+  >
+    👥 Retailer History
+  </a>
+
+  <a
+    href="#applications"
+    class="quick-btn"
+  >
+    📋 Applications
+  </a>
+
+  <a
+    href="#payments"
+    class="quick-btn"
+  >
+    💰 Payment Status
+  </a>
+
+</div>
+
+
+<!-- ==================================================
+     CREATE RETAILER
+================================================== -->
+
+<div
+  class="box"
+  id="createRetailer"
+>
+
+  <div class="top">
+
+    <div>
+
+      <h2>
+        ➕ Create New Retailer
+      </h2>
+
+      <p class="hint">
+        Retailer ID और password automatically generate होंगे।
+        Email sending का कोई option नहीं है।
+      </p>
+
+    </div>
+
+    <span class="badge">
+      Retailer Management
+    </span>
+
+  </div>
+
+  <div class="divider"></div>
+
+
+  <div class="grid">
+
+    <div>
+
+      <label>
+        Retailer Full Name
+      </label>
+
+      <input
+        id="rn"
+        type="text"
+        placeholder="Retailer full name"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>
+        Mobile Number
+      </label>
+
+      <input
+        id="rm"
+        type="tel"
+        maxlength="10"
+        inputmode="numeric"
+        placeholder="10 digit mobile number"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>
+        Retailer Number
+      </label>
+
+      <input
+        id="rr"
+        type="text"
+        placeholder="Auto generated"
+      >
+
+    </div>
+
+
+    <div>
+
+      <label>
+        Retailer ID
+      </label>
+
+      <input
+        id="ru"
+        type="text"
+        readonly
+      >
+
+      <div class="hint">
+        Example: RET-8F3K2A
       </div>
 
     </div>
@@ -405,130 +888,103 @@ footer{
   </div>
 
 
-  <!-- =========================
-       CREATE RETAILER
-  ========================== -->
+  <div class="grid">
 
-  <div class="box">
+    <div>
 
-    <h2>➕ Create New Retailer</h2>
+      <label>
+        Generated Password
+      </label>
 
-    <p class="hint">
-      Retailer ID और strong password automatically generate होंगे।
-      Account Supabase Auth में बनेगा और retailer की details
-      profiles table में save होंगी। Password database में plain-text
-      save नहीं किया जाएगा।
-    </p>
+      <input
+        id="rp"
+        type="text"
+        readonly
+      >
 
-    <div class="divider"></div>
-
-
-    <div class="grid">
-
-      <div>
-
-        <label for="rn">
-          Retailer Full Name
-        </label>
-
-        <input
-          id="rn"
-          type="text"
-          placeholder="Retailer full name"
-        >
-
-      </div>
-
-
-      <div>
-
-        <label for="rm">
-          Mobile Number
-        </label>
-
-        <input
-          id="rm"
-          type="tel"
-          maxlength="10"
-          inputmode="numeric"
-          placeholder="10 digit mobile number"
-        >
-
-      </div>
-
-
-      <div>
-
-        <label for="re">
-          Retailer Email
-        </label>
-
-        <input
-          id="re"
-          type="email"
-          placeholder="retailer@gmail.com"
-          autocomplete="off"
-        >
-
-      </div>
-
-
-      <div>
-
-        <label for="rr">
-          Retailer Number
-        </label>
-
-        <input
-          id="rr"
-          type="text"
-          placeholder="Optional - auto generated"
-        >
-
+      <div class="hint">
+        Strong temporary password
       </div>
 
     </div>
 
+    <div>
 
-    <div class="divider"></div>
+      <label>
+        Account Type
+      </label>
+
+      <input
+        value="Retailer"
+        readonly
+      >
+
+    </div>
+
+  </div>
 
 
-    <div class="grid">
+  <div class="actions">
 
-      <div>
+    <button
+      type="button"
+      onclick="generateCredentials()"
+    >
+      🔄 Generate ID & Password
+    </button>
 
-        <label for="ru">
-          Auto Generated Retailer ID
-        </label>
 
-        <input
-          id="ru"
-          type="text"
-          readonly
-        >
+    <button
+      type="button"
+      id="createBtn"
+      onclick="createRetailer()"
+      class="success"
+    >
+      👤 Create Retailer
+    </button>
 
-        <div class="hint">
-          Example: RET-8F3K2A
-        </div>
+  </div>
+
+
+  <div id="cm"></div>
+
+
+  <!-- CREDENTIAL RESULT -->
+
+  <div
+    id="credentialBox"
+    class="credential hidden"
+  >
+
+    <strong>
+      ✅ Retailer Created Successfully
+    </strong>
+
+    <p style="font-size:12px">
+      नीचे दिए गए credentials को admin manually retailer को दे सकता है।
+    </p>
+
+
+    <div class="credential-grid">
+
+      <div class="cred">
+
+        <small>
+          Retailer ID / Username
+        </small>
+
+        <strong id="showUser"></strong>
 
       </div>
 
 
-      <div>
+      <div class="cred">
 
-        <label for="rp">
-          Auto Generated Password
-        </label>
+        <small>
+          Password
+        </small>
 
-        <input
-          id="rp"
-          type="text"
-          readonly
-        >
-
-        <div class="hint">
-          Strong temporary password
-        </div>
+        <strong id="showPass"></strong>
 
       </div>
 
@@ -539,143 +995,315 @@ footer{
 
       <button
         type="button"
-        onclick="generateCredentials()"
+        onclick="copyCredentials()"
       >
-        🔄 Generate ID & Password
-      </button>
-
-
-      <button
-        type="button"
-        id="createBtn"
-        onclick="createRetailer()"
-      >
-        👤 Create Retailer & Send Email
+        📋 Copy Credentials
       </button>
 
     </div>
 
+  </div>
 
-    <div id="cm"></div>
+</div>
 
 
-    <!-- CREATED CREDENTIALS -->
+<!-- ==================================================
+     RETAILER HISTORY
+================================================== -->
 
-    <div
-      id="credentialBox"
-      class="credential hidden"
-    >
+<div
+  class="box"
+  id="retailerHistory"
+>
 
-      <strong>
-        ✅ Retailer Created Successfully
-      </strong>
+  <div class="top">
 
-      <p style="font-size:12px">
-        ये credentials retailer को email द्वारा भी भेजे जाने चाहिए।
+    <div>
+
+      <h2>
+        👥 Retailer History
+      </h2>
+
+      <p class="hint">
+        सभी registered retailers यहाँ दिखाई देंगे।
       </p>
 
+    </div>
+
+    <button
+      type="button"
+      onclick="loadRetailers()"
+    >
+      🔄 Refresh
+    </button>
+
+  </div>
+
+
+  <div style="margin-top:10px">
+
+    <input
+      id="retailerSearch"
+      class="search-box"
+      type="search"
+      placeholder="🔎 Search retailer..."
+      oninput="filterRetailers()"
+    >
+
+  </div>
+
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+          <th>#</th>
+          <th>Retailer ID</th>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>Retailer Number</th>
+          <th>Role</th>
+        </tr>
+
+      </thead>
+
+      <tbody id="retailerRows">
+
+        <tr>
+          <td
+            colspan="6"
+            class="loading"
+          >
+            Loading retailers...
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     APPLICATIONS
+================================================== -->
+
+<div
+  class="box"
+  id="applications"
+>
+
+  <div class="top">
+
+    <div>
+
+      <h2>
+        📋 Applications
+      </h2>
+
+      <p class="hint">
+        Application status और payment status यहाँ manage करें।
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      onclick="loadApps()"
+    >
+      🔄 Refresh
+    </button>
+
+  </div>
+
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            TR Number
+          </th>
+
+          <th>
+            Service
+          </th>
+
+          <th>
+            Amount
+          </th>
+
+          <th>
+            Payment
+          </th>
+
+          <th>
+            Application
+          </th>
+
+          <th>
+            Remark
+          </th>
+
+          <th>
+            Save
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody id="rows">
+
+        <tr>
+
+          <td
+            colspan="7"
+            class="loading"
+          >
+            Loading applications...
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     PAYMENT STATUS
+================================================== -->
+
+<div
+  class="box"
+  id="payments"
+>
+
+  <div class="top">
+
+    <div>
+
+      <h2>
+        💰 Payment Status
+      </h2>
+
+      <p class="hint">
+        Payment summary और application status overview।
+      </p>
+
+    </div>
+
+    <button
+      type="button"
+      onclick="loadApps()"
+    >
+      🔄 Update
+    </button>
+
+  </div>
+
+
+  <div class="stats">
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ⏳
+      </div>
+
+      <div class="stat-title">
+        Pending
+      </div>
 
       <div
-        class="credential-grid"
-        style="margin-top:10px"
+        class="stat-number"
+        id="paymentPending2"
       >
-
-        <div class="cred">
-
-          <small>
-            Retailer ID / Username
-          </small>
-
-          <strong id="showUser"></strong>
-
-        </div>
-
-
-        <div class="cred">
-
-          <small>
-            Temporary Password
-          </small>
-
-          <strong id="showPass"></strong>
-
-        </div>
-
+        0
       </div>
 
+    </div>
 
-      <div class="actions">
 
-        <button
-          type="button"
-          onclick="copyCredentials()"
-        >
-          📋 Copy Credentials
-        </button>
+    <div class="stat-card">
 
+      <div class="stat-icon">
+        💵
+      </div>
+
+      <div class="stat-title">
+        Paid
+      </div>
+
+      <div
+        class="stat-number"
+        id="paymentPaid2"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ❌
+      </div>
+
+      <div class="stat-title">
+        Failed
+      </div>
+
+      <div
+        class="stat-number"
+        id="paymentFailed2"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ⚙️
+      </div>
+
+      <div class="stat-title">
+        Processing
+      </div>
+
+      <div
+        class="stat-number"
+        id="processingApplications2"
+      >
+        0
       </div>
 
     </div>
 
   </div>
 
+</div>
 
-  <!-- =========================
-       APPLICATIONS
-  ========================== -->
-
-  <div class="box">
-
-    <div class="top">
-
-      <h2>📋 Applications</h2>
-
-      <button
-        type="button"
-        onclick="loadApps()"
-      >
-        🔄 Refresh
-      </button>
-
-    </div>
-
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-
-          <tr>
-            <th>TR Number</th>
-            <th>Service</th>
-            <th>Amount</th>
-            <th>Payment</th>
-            <th>Status</th>
-            <th>Remark</th>
-            <th>Save</th>
-          </tr>
-
-        </thead>
-
-        <tbody id="rows">
-
-          <tr>
-            <td
-              colspan="7"
-              class="loading"
-            >
-              Login to load applications.
-            </td>
-          </tr>
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  </div>
 
 </div>
 
@@ -683,23 +1311,24 @@ footer{
 
 
 <footer>
+
 © <span id="year"></span>
 AllInOneStop • All Online Services in One Place
+
 </footer>
 
 
 <script>
 
-/* =========================================
-   SUPABASE CONFIG
-========================================= */
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 const SUPABASE_URL =
 "https://dixsmucrgnyuvudhymdj.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_Pdfqt8QfkhprpEtyQJ8jLA_G_-V9D58";
-
 
 const supabaseClient =
 window.supabase.createClient(
@@ -708,9 +1337,17 @@ window.supabase.createClient(
 );
 
 
-/* =========================================
-   BASIC HELPERS
-========================================= */
+/* =====================================================
+   GLOBAL DATA
+===================================================== */
+
+let retailerData = [];
+let applicationData = [];
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
 
 document.getElementById("year").textContent =
 new Date().getFullYear();
@@ -719,7 +1356,7 @@ new Date().getFullYear();
 function esc(value){
 
   return String(value ?? "")
-    .replace(/[&<>"']/g, function(c){
+    .replace(/[&<>"']/g,function(c){
 
       return {
         "&":"&amp;",
@@ -746,9 +1383,9 @@ function msg(element,text,isError=false){
 }
 
 
-/* =========================================
-   RANDOM CREDENTIAL GENERATOR
-========================================= */
+/* =====================================================
+   RANDOM CREDENTIALS
+===================================================== */
 
 function randomString(
   length,
@@ -798,13 +1435,13 @@ function generateCredentials(){
     password;
 
 
-  const retailerNumber =
+  const rr =
     document.getElementById("rr");
 
 
-  if(!retailerNumber.value.trim()){
+  if(!rr.value.trim()){
 
-    retailerNumber.value =
+    rr.value =
       username;
 
   }
@@ -812,9 +1449,9 @@ function generateCredentials(){
 }
 
 
-/* =========================================
-   ADMIN LOGIN
-========================================= */
+/* =====================================================
+   LOGIN
+===================================================== */
 
 async function login(){
 
@@ -829,17 +1466,17 @@ async function login(){
       .getElementById("pass")
       .value;
 
-  const loginMessage =
+  const message =
     document.getElementById("lm");
 
-  const loginButton =
+  const button =
     document.getElementById("loginBtn");
 
 
   if(!email){
 
     msg(
-      loginMessage,
+      message,
       "Please enter admin email.",
       true
     );
@@ -852,7 +1489,7 @@ async function login(){
   if(!password){
 
     msg(
-      loginMessage,
+      message,
       "Please enter admin password.",
       true
     );
@@ -862,9 +1499,9 @@ async function login(){
   }
 
 
-  loginButton.disabled=true;
+  button.disabled=true;
 
-  loginButton.textContent =
+  button.textContent =
     "⏳ Logging in...";
 
 
@@ -886,7 +1523,7 @@ async function login(){
     if(error){
 
       msg(
-        loginMessage,
+        message,
         error.message,
         true
       );
@@ -896,11 +1533,11 @@ async function login(){
     }
 
 
-    if(!data || !data.user){
+    if(!data?.user){
 
       msg(
-        loginMessage,
-        "Login failed. User session was not created.",
+        message,
+        "Login failed.",
         true
       );
 
@@ -908,8 +1545,6 @@ async function login(){
 
     }
 
-
-    /* GET PROFILE */
 
     const {
       data:profile,
@@ -927,8 +1562,7 @@ async function login(){
       await supabaseClient.auth.signOut();
 
       msg(
-        loginMessage,
-        "Profile check failed: " +
+        message,
         profileError.message,
         true
       );
@@ -946,7 +1580,7 @@ async function login(){
       await supabaseClient.auth.signOut();
 
       msg(
-        loginMessage,
+        message,
         "This account is not an admin account.",
         true
       );
@@ -956,7 +1590,7 @@ async function login(){
     }
 
 
-    openPanel(
+    await openPanel(
       profile,
       data.user
     );
@@ -968,9 +1602,9 @@ async function login(){
     console.error(error);
 
     msg(
-      loginMessage,
-      "Login error: " +
-      (error.message || error),
+      message,
+      error.message ||
+      "Login error.",
       true
     );
 
@@ -978,9 +1612,9 @@ async function login(){
 
   finally{
 
-    loginButton.disabled=false;
+    button.disabled=false;
 
-    loginButton.textContent =
+    button.textContent =
       "🔐 Login";
 
   }
@@ -988,9 +1622,9 @@ async function login(){
 }
 
 
-/* =========================================
-   OPEN ADMIN PANEL
-========================================= */
+/* =====================================================
+   OPEN PANEL
+===================================================== */
 
 async function openPanel(
   profile,
@@ -1020,14 +1654,18 @@ async function openPanel(
       );
 
 
-  await loadApps();
+  await Promise.all([
+    loadDashboard(),
+    loadApps(),
+    loadRetailers()
+  ]);
 
 }
 
 
-/* =========================================
-   RESTORE EXISTING SESSION
-========================================= */
+/* =====================================================
+   RESTORE SESSION
+===================================================== */
 
 async function restore(){
 
@@ -1042,17 +1680,14 @@ async function restore(){
 
     if(error){
 
-      console.error(
-        "Session error:",
-        error
-      );
+      console.error(error);
 
       return;
 
     }
 
 
-    if(!data || !data.session){
+    if(!data?.session){
 
       return;
 
@@ -1076,8 +1711,7 @@ async function restore(){
 
     if(
       !profileError &&
-      profile &&
-      profile.role === "admin"
+      profile?.role === "admin"
     ){
 
       await openPanel(
@@ -1101,9 +1735,9 @@ async function restore(){
 }
 
 
-/* =========================================
+/* =====================================================
    LOGOUT
-========================================= */
+===================================================== */
 
 async function logout(){
 
@@ -1115,16 +1749,16 @@ async function logout(){
 }
 
 
-/* =========================================
+/* =====================================================
    CREATE RETAILER
-========================================= */
+===================================================== */
 
 async function createRetailer(){
 
   const message =
     document.getElementById("cm");
 
-  const createButton =
+  const button =
     document.getElementById("createBtn");
 
 
@@ -1140,14 +1774,6 @@ async function createRetailer(){
       .getElementById("rm")
       .value
       .trim();
-
-
-  const email =
-    document
-      .getElementById("re")
-      .value
-      .trim()
-      .toLowerCase();
 
 
   const retailer_number =
@@ -1170,26 +1796,11 @@ async function createRetailer(){
       .value;
 
 
-  /* VALIDATION */
-
   if(!full_name){
 
     msg(
       message,
       "Retailer full name is required.",
-      true
-    );
-
-    return;
-
-  }
-
-
-  if(!mobile){
-
-    msg(
-      message,
-      "Mobile number is required.",
       true
     );
 
@@ -1211,36 +1822,6 @@ async function createRetailer(){
   }
 
 
-  if(!email){
-
-    msg(
-      message,
-      "Retailer email is required.",
-      true
-    );
-
-    return;
-
-  }
-
-
-  if(
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  ){
-
-    msg(
-      message,
-      "Please enter a valid email address.",
-      true
-    );
-
-    return;
-
-  }
-
-
-  /* GENERATE IF EMPTY */
-
   if(!username || !password){
 
     generateCredentials();
@@ -1259,8 +1840,6 @@ async function createRetailer(){
   }
 
 
-  /* CHECK ADMIN SESSION */
-
   const {
     data:sessionData,
     error:sessionError
@@ -1270,8 +1849,7 @@ async function createRetailer(){
 
   if(
     sessionError ||
-    !sessionData ||
-    !sessionData.session
+    !sessionData?.session
   ){
 
     msg(
@@ -1285,21 +1863,28 @@ async function createRetailer(){
   }
 
 
-  createButton.disabled=true;
+  button.disabled=true;
 
-  createButton.textContent =
-    "⏳ Creating Retailer...";
+  button.textContent =
+    "⏳ Creating...";
 
 
   try{
+
+    /*
+      IMPORTANT:
+
+      Email intentionally removed from UI.
+
+      The Edge Function should create the
+      internal Auth identity itself.
+    */
 
     const body={
 
       full_name:full_name,
 
       mobile:mobile,
-
-      email:email,
 
       retailer_number:
         retailer_number || username,
@@ -1324,7 +1909,7 @@ async function createRetailer(){
 
 
     console.log(
-      "Create retailer response:",
+      "Retailer response:",
       data,
       error
     );
@@ -1385,18 +1970,18 @@ async function createRetailer(){
     }
 
 
-    /* SHOW RESULT */
-
     document
       .getElementById("showUser")
       .textContent =
-        data?.username || username;
+        data?.username ||
+        username;
 
 
     document
       .getElementById("showPass")
       .textContent =
-        data?.password || password;
+        data?.password ||
+        password;
 
 
     document
@@ -1407,11 +1992,9 @@ async function createRetailer(){
 
     msg(
       message,
-      "Retailer created successfully. Credentials email process completed."
+      "Retailer created successfully."
     );
 
-
-    /* CLEAR FORM */
 
     document
       .getElementById("rn")
@@ -1424,26 +2007,22 @@ async function createRetailer(){
 
 
     document
-      .getElementById("re")
-      .value="";
-
-
-    document
       .getElementById("rr")
       .value="";
 
 
     generateCredentials();
 
+
+    await loadDashboard();
+
+    await loadRetailers();
+
   }
 
   catch(error){
 
-    console.error(
-      "Create retailer error:",
-      error
-    );
-
+    console.error(error);
 
     msg(
       message,
@@ -1456,19 +2035,19 @@ async function createRetailer(){
 
   finally{
 
-    createButton.disabled=false;
+    button.disabled=false;
 
-    createButton.textContent =
-      "👤 Create Retailer & Send Email";
+    button.textContent =
+      "👤 Create Retailer";
 
   }
 
 }
 
 
-/* =========================================
+/* =====================================================
    COPY CREDENTIALS
-========================================= */
+===================================================== */
 
 async function copyCredentials(){
 
@@ -1513,24 +2092,435 @@ Login: ${window.location.origin}/retailer.html`;
 }
 
 
-/* =========================================
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
+
+async function loadDashboard(){
+
+  try{
+
+    const {
+      count:retailerCount,
+      error:retailerError
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select("id",{count:"exact",head:true})
+      .eq("role","retailer");
+
+
+    if(!retailerError){
+
+      document
+        .getElementById("totalRetailers")
+        .textContent =
+          retailerCount || 0;
+
+    }
+
+
+    const {
+      data:apps,
+      error:appsError
+    } =
+    await supabaseClient
+      .from("applications")
+      .select(
+        "payment_status,application_status"
+      );
+
+
+    if(appsError){
+
+      console.error(
+        appsError
+      );
+
+      return;
+
+    }
+
+
+    const list =
+      apps || [];
+
+
+    const total =
+      list.length;
+
+
+    const pending =
+      list.filter(
+        x =>
+          String(
+            x.payment_status ||
+            "Pending"
+          ).toLowerCase()
+          === "pending"
+      ).length;
+
+
+    const completed =
+      list.filter(
+        x =>
+          String(
+            x.application_status ||
+            ""
+          ).toLowerCase()
+          === "completed"
+      ).length;
+
+
+    const paid =
+      list.filter(
+        x =>
+          String(
+            x.payment_status ||
+            ""
+          ).toLowerCase()
+          === "paid"
+      ).length;
+
+
+    const failed =
+      list.filter(
+        x =>
+          String(
+            x.payment_status ||
+            ""
+          ).toLowerCase()
+          === "failed"
+      ).length;
+
+
+    const processing =
+      list.filter(
+        x =>
+          String(
+            x.application_status ||
+            ""
+          ).toLowerCase()
+          === "processing"
+      ).length;
+
+
+    document
+      .getElementById("totalApplications")
+      .textContent =
+        total;
+
+
+    document
+      .getElementById("pendingPayments")
+      .textContent =
+        pending;
+
+
+    document
+      .getElementById("completedApplications")
+      .textContent =
+        completed;
+
+
+    document
+      .getElementById("paymentPending2")
+      .textContent =
+        pending;
+
+
+    document
+      .getElementById("paymentPaid2")
+      .textContent =
+        paid;
+
+
+    document
+      .getElementById("paymentFailed2")
+      .textContent =
+        failed;
+
+
+    document
+      .getElementById("processingApplications2")
+      .textContent =
+        processing;
+
+  }
+
+  catch(error){
+
+    console.error(
+      "Dashboard error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   LOAD RETAILERS
+===================================================== */
+
+async function loadRetailers(){
+
+  const rows =
+    document.getElementById(
+      "retailerRows"
+    );
+
+
+  rows.innerHTML =
+`
+<tr>
+  <td colspan="6" class="loading">
+    Loading retailer history...
+  </td>
+</tr>
+`;
+
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "id,full_name,mobile,retailer_number,role"
+      )
+      .eq(
+        "role",
+        "retailer"
+      )
+      .order(
+        "full_name",
+        {
+          ascending:true
+        }
+      );
+
+
+    if(error){
+
+      rows.innerHTML =
+`
+<tr>
+  <td colspan="6" class="loading">
+    ${esc(error.message)}
+  </td>
+</tr>
+`;
+
+      return;
+
+    }
+
+
+    retailerData =
+      data || [];
+
+
+    renderRetailers(
+      retailerData
+    );
+
+  }
+
+  catch(error){
+
+    rows.innerHTML =
+`
+<tr>
+  <td colspan="6" class="loading">
+    ${esc(error.message)}
+  </td>
+</tr>
+`;
+
+  }
+
+}
+
+
+/* =====================================================
+   RENDER RETAILERS
+===================================================== */
+
+function renderRetailers(list){
+
+  const rows =
+    document.getElementById(
+      "retailerRows"
+    );
+
+
+  if(!list.length){
+
+    rows.innerHTML =
+`
+<tr>
+  <td colspan="6" class="loading">
+    No retailers found.
+  </td>
+</tr>
+`;
+
+    return;
+
+  }
+
+
+  rows.innerHTML =
+    list.map(
+      function(retailer,index){
+
+        return `
+<tr>
+
+  <td>
+    <strong>${index+1}</strong>
+  </td>
+
+  <td>
+    <span class="badge">
+      ${esc(
+        retailer.retailer_number ||
+        retailer.id
+      )}
+    </span>
+  </td>
+
+  <td>
+    <strong>
+      ${esc(
+        retailer.full_name ||
+        "-"
+      )}
+    </strong>
+  </td>
+
+  <td>
+    ${esc(
+      retailer.mobile ||
+      "-"
+    )}
+  </td>
+
+  <td>
+    ${esc(
+      retailer.retailer_number ||
+      "-"
+    )}
+  </td>
+
+  <td>
+    <span class="status-badge completed">
+      RETAILER
+    </span>
+  </td>
+
+</tr>
+`;
+
+      }
+    ).join("");
+
+}
+
+
+/* =====================================================
+   FILTER RETAILERS
+===================================================== */
+
+function filterRetailers(){
+
+  const search =
+    document
+      .getElementById(
+        "retailerSearch"
+      )
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  if(!search){
+
+    renderRetailers(
+      retailerData
+    );
+
+    return;
+
+  }
+
+
+  const filtered =
+    retailerData.filter(
+      function(item){
+
+        return (
+
+          String(
+            item.full_name || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+          ||
+
+          String(
+            item.mobile || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+          ||
+
+          String(
+            item.retailer_number || ""
+          )
+          .toLowerCase()
+          .includes(search)
+
+        );
+
+      }
+    );
+
+
+  renderRetailers(
+    filtered
+  );
+
+}
+
+
+/* =====================================================
    LOAD APPLICATIONS
-========================================= */
+===================================================== */
 
 async function loadApps(){
 
   const rows =
-    document.getElementById("rows");
+    document.getElementById(
+      "rows"
+    );
 
 
   rows.innerHTML =
-    `
-    <tr>
-      <td colspan="7" class="loading">
-        Loading applications...
-      </td>
-    </tr>
-    `;
+`
+<tr>
+  <td colspan="7" class="loading">
+    Loading applications...
+  </td>
+</tr>
+`;
 
 
   try{
@@ -1555,29 +2545,38 @@ async function loadApps(){
     if(error){
 
       rows.innerHTML =
-        `
-        <tr>
-          <td colspan="7" class="loading">
-            ${esc(error.message)}
-          </td>
-        </tr>
-        `;
+`
+<tr>
+  <td colspan="7" class="loading">
+    ${esc(error.message)}
+  </td>
+</tr>
+`;
 
       return;
 
     }
 
 
-    if(!data || !data.length){
+    applicationData =
+      data || [];
+
+
+    updatePaymentCards(
+      applicationData
+    );
+
+
+    if(!applicationData.length){
 
       rows.innerHTML =
-        `
-        <tr>
-          <td colspan="7" class="loading">
-            No applications yet.
-          </td>
-        </tr>
-        `;
+`
+<tr>
+  <td colspan="7" class="loading">
+    No applications yet.
+  </td>
+</tr>
+`;
 
       return;
 
@@ -1585,11 +2584,21 @@ async function loadApps(){
 
 
     rows.innerHTML =
-      data.map(
+      applicationData.map(
         function(application){
 
           const tr =
-            esc(application.tr_number);
+            String(
+              application.tr_number ||
+              ""
+            );
+
+
+          const safeTr =
+            tr.replace(
+              /[^a-zA-Z0-9_-]/g,
+              "_"
+            );
 
 
           const payment =
@@ -1603,120 +2612,131 @@ async function loadApps(){
 
 
           return `
-          <tr>
+<tr>
 
-            <td>
-              <strong>${tr}</strong>
-            </td>
+  <td>
+    <strong>
+      ${esc(tr)}
+    </strong>
+  </td>
 
-            <td>
-              ${esc(application.service_name)}
-            </td>
+  <td>
+    ${esc(
+      application.service_name ||
+      "-"
+    )}
+  </td>
 
-            <td>
-              ₹${esc(application.amount)}
-            </td>
+  <td>
+    ₹${esc(
+      application.amount ||
+      "0"
+    )}
+  </td>
 
-            <td>
+  <td>
 
-              <select
-                id="p-${tr}"
-              >
+    <select
+      id="p-${safeTr}"
+    >
 
-                <option
-                  value="Pending"
-                  ${payment==="Pending"?"selected":""}
-                >
-                  Pending
-                </option>
+      <option
+        value="Pending"
+        ${payment==="Pending"?"selected":""}
+      >
+        Pending
+      </option>
 
-                <option
-                  value="Paid"
-                  ${payment==="Paid"?"selected":""}
-                >
-                  Paid
-                </option>
+      <option
+        value="Paid"
+        ${payment==="Paid"?"selected":""}
+      >
+        Paid
+      </option>
 
-                <option
-                  value="Failed"
-                  ${payment==="Failed"?"selected":""}
-                >
-                  Failed
-                </option>
+      <option
+        value="Failed"
+        ${payment==="Failed"?"selected":""}
+      >
+        Failed
+      </option>
 
-              </select>
+    </select>
 
-            </td>
+  </td>
 
-            <td>
+  <td>
 
-              <select
-                id="s-${tr}"
-              >
+    <select
+      id="s-${safeTr}"
+    >
 
-                <option
-                  value="Received"
-                  ${status==="Received"?"selected":""}
-                >
-                  Received
-                </option>
+      <option
+        value="Received"
+        ${status==="Received"?"selected":""}
+      >
+        Received
+      </option>
 
-                <option
-                  value="Verification"
-                  ${status==="Verification"?"selected":""}
-                >
-                  Verification
-                </option>
+      <option
+        value="Verification"
+        ${status==="Verification"?"selected":""}
+      >
+        Verification
+      </option>
 
-                <option
-                  value="Processing"
-                  ${status==="Processing"?"selected":""}
-                >
-                  Processing
-                </option>
+      <option
+        value="Processing"
+        ${status==="Processing"?"selected":""}
+      >
+        Processing
+      </option>
 
-                <option
-                  value="Completed"
-                  ${status==="Completed"?"selected":""}
-                >
-                  Completed
-                </option>
+      <option
+        value="Completed"
+        ${status==="Completed"?"selected":""}
+      >
+        Completed
+      </option>
 
-                <option
-                  value="Rejected"
-                  ${status==="Rejected"?"selected":""}
-                >
-                  Rejected
-                </option>
+      <option
+        value="Rejected"
+        ${status==="Rejected"?"selected":""}
+      >
+        Rejected
+      </option>
 
-              </select>
+    </select>
 
-            </td>
+  </td>
 
-            <td>
+  <td>
 
-              <input
-                id="r-${tr}"
-                value="${esc(application.remark || "")}"
-                placeholder="Remark"
-              >
+    <input
+      id="r-${safeTr}"
+      value="${esc(
+        application.remark || ""
+      )}"
+      placeholder="Remark"
+    >
 
-            </td>
+  </td>
 
-            <td>
+  <td>
 
-              <button
-                type="button"
-                class="small-btn saveBtn"
-                data-tr="${tr}"
-              >
-                💾 Save
-              </button>
+    <button
+      type="button"
+      class="small-btn saveBtn"
+      data-tr="${esc(tr)}"
+      data-safe="${safeTr}"
+    >
+      💾 Save
+    </button>
 
-            </td>
+  </td>
 
-          </tr>
-          `;
+</tr>
+`;
 
         }
       ).join("");
@@ -1726,35 +2746,153 @@ async function loadApps(){
   catch(error){
 
     rows.innerHTML =
-      `
-      <tr>
-        <td colspan="7" class="loading">
-          ${esc(error.message)}
-        </td>
-      </tr>
-      `;
+`
+<tr>
+  <td colspan="7" class="loading">
+    ${esc(error.message)}
+  </td>
+</tr>
+`;
 
   }
 
 }
 
 
-/* =========================================
-   SAVE APPLICATION STATUS
-========================================= */
+/* =====================================================
+   PAYMENT CARDS
+===================================================== */
+
+function updatePaymentCards(list){
+
+  const pending =
+    list.filter(
+      x =>
+        String(
+          x.payment_status ||
+          "Pending"
+        ).toLowerCase()
+        === "pending"
+    ).length;
+
+
+  const paid =
+    list.filter(
+      x =>
+        String(
+          x.payment_status ||
+          ""
+        ).toLowerCase()
+        === "paid"
+    ).length;
+
+
+  const failed =
+    list.filter(
+      x =>
+        String(
+          x.payment_status ||
+          ""
+        ).toLowerCase()
+        === "failed"
+    ).length;
+
+
+  const processing =
+    list.filter(
+      x =>
+        String(
+          x.application_status ||
+          ""
+        ).toLowerCase()
+        === "processing"
+    ).length;
+
+
+  document
+    .getElementById(
+      "paymentPending2"
+    )
+    .textContent =
+      pending;
+
+
+  document
+    .getElementById(
+      "paymentPaid2"
+    )
+    .textContent =
+      paid;
+
+
+  document
+    .getElementById(
+      "paymentFailed2"
+    )
+    .textContent =
+      failed;
+
+
+  document
+    .getElementById(
+      "processingApplications2"
+    )
+    .textContent =
+      processing;
+
+
+  document
+    .getElementById(
+      "pendingPayments"
+    )
+    .textContent =
+      pending;
+
+
+  document
+    .getElementById(
+      "completedApplications"
+    )
+    .textContent =
+      list.filter(
+        x =>
+          String(
+            x.application_status ||
+            ""
+          ).toLowerCase()
+          === "completed"
+      ).length;
+
+
+  document
+    .getElementById(
+      "totalApplications"
+    )
+    .textContent =
+      list.length;
+
+}
+
+
+/* =====================================================
+   SAVE STATUS
+===================================================== */
 
 document.addEventListener(
   "click",
   function(event){
 
     const button =
-      event.target.closest(".saveBtn");
+      event.target.closest(
+        ".saveBtn"
+      );
 
 
     if(button){
 
       saveStatus(
-        button.dataset.tr
+        button.dataset.tr,
+        button.dataset.safe
       );
 
     }
@@ -1763,7 +2901,10 @@ document.addEventListener(
 );
 
 
-async function saveStatus(trNumber){
+async function saveStatus(
+  trNumber,
+  safeTr
+){
 
   const {
     data,
@@ -1774,8 +2915,7 @@ async function saveStatus(trNumber){
 
   if(
     error ||
-    !data ||
-    !data.session
+    !data?.session
   ){
 
     alert(
@@ -1789,19 +2929,19 @@ async function saveStatus(trNumber){
 
   const paymentElement =
     document.getElementById(
-      "p-" + trNumber
+      "p-" + safeTr
     );
 
 
   const statusElement =
     document.getElementById(
-      "s-" + trNumber
+      "s-" + safeTr
     );
 
 
   const remarkElement =
     document.getElementById(
-      "r-" + trNumber
+      "r-" + safeTr
     );
 
 
@@ -1822,7 +2962,8 @@ async function saveStatus(trNumber){
 
   const body={
 
-    tr_number:trNumber,
+    tr_number:
+      trNumber,
 
     payment_status:
       paymentElement.value,
@@ -1838,33 +2979,42 @@ async function saveStatus(trNumber){
 
   try{
 
+    /*
+      Email/status Edge Function is no longer
+      required for this Admin panel.
+
+      Direct update is attempted first.
+    */
+
     const {
-      data:result,
-      error:functionError
+      error:updateError
     } =
-    await supabaseClient.functions.invoke(
-      "send-status-email",
-      {
-        body:body
-      }
-    );
+    await supabaseClient
+      .from("applications")
+      .update({
 
+        payment_status:
+          body.payment_status,
 
-    if(functionError){
+        application_status:
+          body.application_status,
 
-      alert(
-        functionError.message ||
-        "Status update failed."
+        remark:
+          body.remark
+
+      })
+      .eq(
+        "tr_number",
+        body.tr_number
       );
 
-      return;
 
-    }
+    if(updateError){
 
-
-    if(result?.error){
-
-      alert(result.error);
+      alert(
+        "Status update failed: " +
+        updateError.message
+      );
 
       return;
 
@@ -1875,6 +3025,8 @@ async function saveStatus(trNumber){
       "Application status updated successfully."
     );
 
+
+    await loadDashboard();
 
     await loadApps();
 
@@ -1892,12 +3044,12 @@ async function saveStatus(trNumber){
 }
 
 
-/* =========================================
-   AUTH STATE CHANGE
-========================================= */
+/* =====================================================
+   AUTH STATE
+===================================================== */
 
 supabaseClient.auth.onAuthStateChange(
-  function(event,session){
+  function(event){
 
     console.log(
       "Auth event:",
@@ -1908,9 +3060,9 @@ supabaseClient.auth.onAuthStateChange(
 );
 
 
-/* =========================================
-   INITIALIZE
-========================================= */
+/* =====================================================
+   START
+===================================================== */
 
 generateCredentials();
 
