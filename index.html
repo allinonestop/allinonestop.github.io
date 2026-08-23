@@ -1,47 +1,103 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AllInOneStop | Online Services</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AllInOneStop | All Online Services in One Place</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#eef2ff,#e0f2fe,#ecfdf5);min-height:100vh;color:#172033}
-header{text-align:center;padding:58px 20px 28px}h1{font-size:48px;margin:0 0 10px;background:linear-gradient(90deg,#4f46e5,#0891b2,#059669);-webkit-background-clip:text;color:transparent}header p{font-size:19px;color:#475467}
-.grid{max-width:1050px;margin:20px auto 70px;padding:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-.card{background:#fff;border-radius:24px;padding:30px 24px;text-align:center;box-shadow:0 15px 45px #17203318;border:1px solid #ffffff;transition:.2s}
-.card:hover{transform:translateY(-6px);box-shadow:0 20px 55px #17203325}.icon{font-size:50px}.card h2{margin:12px 0 8px}.card p{color:#667085;min-height:44px}
-a.btn{display:inline-block;margin-top:15px;padding:13px 22px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#2563eb);color:#fff;text-decoration:none;font-weight:800}
-.admin{background:linear-gradient(135deg,#7c3aed,#2563eb)}.ret{background:linear-gradient(135deg,#059669,#0ea5e9)}.track{background:linear-gradient(135deg,#ea580c,#db2777)}
-footer{text-align:center;color:#667085;padding:20px}
-@media(max-width:800px){.grid{grid-template-columns:1fr}h1{font-size:38px}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:#172033;background:radial-gradient(circle at 10% 10%,#7c5cff25,transparent 30%),radial-gradient(circle at 90% 20%,#00d2ff20,transparent 30%),radial-gradient(circle at 50% 90%,#ff5d8f18,transparent 35%),#f7f9ff;min-height:100vh}
+a{text-decoration:none}.container{width:min(1180px,92%);margin:auto}
+.navbar{position:sticky;top:12px;z-index:20;margin:14px auto 0;width:min(1180px,92%);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#ffffffd1;border:1px solid #fff;box-shadow:0 15px 45px #262d501f;backdrop-filter:blur(18px);border-radius:22px}
+.brand{display:flex;align-items:center;gap:11px;color:#111827}.logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:24px;color:#fff;background:linear-gradient(135deg,#6d5dfc,#00b8ff);box-shadow:0 9px 24px #4669ff52}
+.brand strong{font-size:20px}.brand small{display:block;color:#697386;font-size:11px;margin-top:2px}
+.navlinks{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.navlinks a,.logout{border:0;cursor:pointer;padding:10px 14px;border-radius:12px;font-weight:700;font-size:13px;color:#334155;background:#f1f4fa;transition:.2s}
+.navlinks a:hover,.logout:hover{transform:translateY(-2px);background:#e8edfa}.navlinks .primary{color:#fff;background:linear-gradient(135deg,#635bff,#397cff);box-shadow:0 7px 18px #4b5bff38}.logout{display:none;background:#fff0f2;color:#d63355}
+.hero{position:relative;text-align:center;padding:82px 0 62px;overflow:hidden}.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;z-index:-1}.hero:before{width:280px;height:280px;background:#7b61ff22;left:-80px;top:50px}.hero:after{width:250px;height:250px;background:#00c6ff1e;right:-50px;top:0}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;background:#fff;border:1px solid #e8eaf3;color:#5b52c8;font-size:13px;font-weight:800;box-shadow:0 8px 25px #232a5014}
+.hero h1{margin:20px 0 12px;font-size:clamp(42px,7vw,76px);line-height:1;letter-spacing:-3px;background:linear-gradient(90deg,#4b43df,#7b4dff,#00aeea,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h2{margin:0;color:#1e293b;font-size:clamp(20px,3vw,30px)}.hero p{max-width:680px;margin:18px auto 28px;color:#657188;font-size:17px;line-height:1.7}
+.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.big-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:14px;font-weight:800;color:#fff;background:linear-gradient(135deg,#6259ff,#287cff);box-shadow:0 12px 28px #4358ff40;transition:.2s;cursor:pointer}
+.big-btn:hover{transform:translateY(-3px);box-shadow:0 16px 32px #4358ff4d}.big-btn.light{color:#334155;background:#fff;border:1px solid #e6e9f1;box-shadow:0 10px 25px #232a5014}
+.section-title{text-align:center;margin:10px 0 30px}.section-title .mini{color:#6558d9;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:1.8px}.section-title h2{margin:8px 0;font-size:32px}.section-title p{color:#778197;margin:0}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.card{position:relative;overflow:hidden;min-height:330px;padding:28px;border-radius:25px;background:#ffffffe0;border:1px solid #fff;box-shadow:0 18px 45px #2d365f1c;transition:.25s}.card:hover{transform:translateY(-8px);box-shadow:0 25px 55px #2d365f29}
+.icon{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font-size:31px;margin-bottom:20px}.retailer .icon{background:#dcfce7}.admin .icon{background:#ede9fe}.tracking .icon{background:#cffafe}.card h3{font-size:24px;margin:0 0 10px}.card p{color:#68748a;line-height:1.65;min-height:78px}
+.card-btn{display:inline-flex;align-items:center;gap:7px;padding:11px 15px;border-radius:12px;color:#fff;font-weight:800;cursor:pointer}.retailer .card-btn{background:linear-gradient(135deg,#16a34a,#22c55e)}.admin .card-btn{background:linear-gradient(135deg,#6d28d9,#8b5cf6)}.tracking .card-btn{background:linear-gradient(135deg,#0891b2,#06b6d4)}
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:65px 0}.feature{background:#fff;border:1px solid #edf0f6;border-radius:18px;padding:20px;box-shadow:0 10px 28px #28305012}.feature b{display:block;margin:8px 0 5px}.feature span{font-size:13px;color:#7a8498;line-height:1.5}.feature-icon{font-size:25px}
+.status{display:none;margin:0 auto 28px;max-width:620px;padding:12px 16px;border-radius:14px;background:#ecfdf5;color:#087443;border:1px solid #b7f0d0;font-size:13px;font-weight:700}
+footer{margin-top:55px;padding:28px 0;color:#7b8496;font-size:13px;text-align:center;border-top:1px solid #96a0b52e}
+@media(max-width:900px){.cards{grid-template-columns:1fr}.features{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.navbar{position:relative;top:0;flex-direction:column;align-items:flex-start}.hero{padding:55px 0 45px}.hero h1{letter-spacing:-2px}.features{grid-template-columns:1fr}.navlinks{justify-content:flex-start}}
 </style>
 </head>
 <body>
-<header>
-<h1>AllInOneStop</h1>
-<p>All Online Services in One Place</p>
+<header class="navbar">
+<a class="brand" href="index.html"><div class="logo">🌐</div><div><strong>AllInOneStop</strong><small>All Online Services in One Place</small></div></a>
+<nav class="navlinks">
+<a href="index.html">🏠 Home</a>
+<a href="retailer.html">🏪 Retailer</a>
+<a href="admin.html">🔐 Admin</a>
+<a class="primary" href="tracking.html">🔎 Track Application</a>
+<button id="logoutBtn" class="logout" onclick="logout()">Logout</button>
+</nav>
 </header>
 
-<main class="grid">
-<section class="card">
-<div class="icon">🏪</div><h2>Retailer Portal</h2>
-<p>Retailer login, applications and services.</p>
-<a class="btn ret" href="retailer.html">Retailer Login</a>
+<main class="container">
+<section class="hero">
+<div class="badge">✨ Fast • Secure • Simple</div>
+<h1>AllInOneStop</h1>
+<h2>All Online Services in One Place</h2>
+<p>Manage retailer applications, admin work and application tracking from one simple and modern portal.</p>
+<div id="sessionStatus" class="status"></div>
+<div class="hero-actions">
+<a class="big-btn" href="retailer.html">🏪 Retailer Login</a>
+<a class="big-btn light" href="admin.html">🔐 Admin Login</a>
+<a class="big-btn light" href="tracking.html">🔎 Track Application</a>
+</div>
 </section>
 
-<section class="card">
-<div class="icon">🔐</div><h2>Admin Panel</h2>
-<p>Manage retailers, applications and payments.</p>
-<a class="btn admin" href="admin.html">Admin Login</a>
+<section>
+<div class="section-title"><div class="mini">Our Portal</div><h2>Choose Your Service</h2><p>Everything you need is just one click away.</p></div>
+<div class="cards">
+<article class="card retailer"><div class="icon">🏪</div><h3>Retailer Portal</h3><p>Retailers can securely login, submit applications, upload required documents and check their application progress.</p><a class="card-btn" href="retailer.html">Open Retailer Portal →</a></article>
+<article class="card admin"><div class="icon">🔐</div><h3>Admin Panel</h3><p>Admin can manage retailers, applications, documents, payments and application status from the dashboard.</p><a class="card-btn" href="admin.html">Open Admin Panel →</a></article>
+<article class="card tracking"><div class="icon">🔎</div><h3>Application Tracking</h3><p>Enter your TR number and quickly check the current status and progress of your application.</p><a class="card-btn" href="tracking.html">Track Application →</a></article>
+</div>
 </section>
 
-<section class="card">
-<div class="icon">🔎</div><h2>Application Tracking</h2>
-<p>Track your application using TR number.</p>
-<a class="btn track" href="tracking.html">Track Application</a>
+<section class="features">
+<div class="feature"><div class="feature-icon">🔒</div><b>Secure Login</b><span>Supabase authentication keeps accounts protected.</span></div>
+<div class="feature"><div class="feature-icon">⚡</div><b>Fast Access</b><span>Simple pages designed for quick everyday use.</span></div>
+<div class="feature"><div class="feature-icon">📱</div><b>Mobile Friendly</b><span>Works smoothly on phone, tablet and desktop.</span></div>
+<div class="feature"><div class="feature-icon">📍</div><b>Easy Tracking</b><span>Track an application using its TR number.</span></div>
 </section>
 </main>
+<footer>© <span id="year"></span> AllInOneStop • All Online Services in One Place</footer>
 
-<footer>© 2026 AllInOneStop • Secure Online Services</footer>
+<script>
+document.getElementById("year").textContent=new Date().getFullYear();
+const SUPABASE_URL="https://dixsmucrgnyuvudhymdj.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_Pdfqt8QfkhprpEtyQJ8jLA_G_-V9D58";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+async function showSession(){
+ try{
+  const {data}=await supabaseClient.auth.getSession();
+  if(data.session?.user){
+   document.getElementById("sessionStatus").textContent="✅ Logged in as "+(data.session.user.email||"Logged-in user");
+   document.getElementById("sessionStatus").style.display="block";
+   document.getElementById("logoutBtn").style.display="inline-block";
+  }
+ }catch(e){console.error(e)}
+}
+async function logout(){await supabaseClient.auth.signOut();location.reload()}
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+ const box=document.getElementById("sessionStatus"),btn=document.getElementById("logoutBtn");
+ if(session?.user){box.textContent="✅ Logged in as "+(session.user.email||"Logged-in user");box.style.display="block";btn.style.display="inline-block"}
+ else{box.style.display="none";btn.style.display="none"}
+});
+showSession();
+</script>
 </body>
 </html>
