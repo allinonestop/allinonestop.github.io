@@ -1,604 +1,1628 @@
+# AllInOneStop Retailer Portal — `retailer.html`
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Retailer Login - AllInOneStop</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<title>AllInOneStop - Retailer Portal</title>
 
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #eef2ff, #f8fafc);
-      min-height: 100vh;
-      color: #172033;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
-    .header {
-      background: #111827;
-      color: white;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f3f6fb;
+  color:#172033;
+}
 
-    .brand {
-      font-size: 22px;
-      font-weight: 700;
-    }
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
 
-    .header a {
-      color: white;
-      text-decoration: none;
-      background: #2563eb;
-      padding: 9px 15px;
-      border-radius: 8px;
-      font-size: 14px;
-    }
+.hidden{
+  display:none !important;
+}
 
-    .container {
-      width: min(1100px, calc(100% - 30px));
-      margin: 30px auto;
-    }
+/* ==============================
+   LOGIN
+============================== */
 
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 25px;
-      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.10);
-      margin-bottom: 20px;
-    }
+.login-page{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  background:
+    linear-gradient(
+      135deg,
+      #0f172a,
+      #1d4ed8
+    );
+}
 
-    .login-card {
-      max-width: 500px;
-      margin: 50px auto;
-    }
+.login-box{
+  width:100%;
+  max-width:430px;
+  background:#fff;
+  border-radius:20px;
+  padding:32px;
+  box-shadow:0 25px 70px rgba(0,0,0,.25);
+}
 
-    h1,
-    h2,
-    h3 {
-      margin-top: 0;
-    }
+.logo{
+  text-align:center;
+  margin-bottom:25px;
+}
 
-    .subtitle {
-      color: #64748b;
-      margin-bottom: 25px;
-    }
+.logo-icon{
+  width:70px;
+  height:70px;
+  border-radius:18px;
+  background:#2563eb;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:0 auto 15px;
+  font-size:30px;
+  font-weight:800;
+}
 
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 7px;
-    }
+.logo h1{
+  font-size:25px;
+  color:#111827;
+}
 
-    input,
-    select,
-    textarea {
-      width: 100%;
-      padding: 12px 13px;
-      border: 1px solid #cbd5e1;
-      border-radius: 9px;
-      outline: none;
-      font-size: 15px;
-      background: white;
-    }
+.logo p{
+  margin-top:7px;
+  color:#64748b;
+  font-size:14px;
+}
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
-    }
+.form-group{
+  margin-bottom:16px;
+}
 
-    .field {
-      margin-bottom: 17px;
-    }
+.form-group label{
+  display:block;
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:7px;
+  color:#334155;
+}
 
-    button {
-      border: 0;
-      border-radius: 9px;
-      padding: 12px 18px;
-      cursor: pointer;
-      font-size: 15px;
-      font-weight: 600;
-    }
+.form-group input,
+.form-group select,
+.form-group textarea{
+  width:100%;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  padding:12px 13px;
+  outline:none;
+  background:#fff;
+  transition:.2s;
+}
 
-    .btn-primary {
-      background: #2563eb;
-      color: white;
-      width: 100%;
-    }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
 
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
+.password-wrap{
+  position:relative;
+}
 
-    .btn-danger {
-      background: #dc2626;
-      color: white;
-    }
+.password-wrap input{
+  padding-right:48px;
+}
 
-    .btn-secondary {
-      background: #475569;
-      color: white;
-    }
+.password-toggle{
+  position:absolute;
+  right:8px;
+  top:50%;
+  transform:translateY(-50%);
+  border:0;
+  background:none;
+  cursor:pointer;
+  padding:8px;
+}
 
-    .message {
-      padding: 12px;
-      border-radius: 9px;
-      margin-top: 15px;
-      display: none;
-      line-height: 1.5;
-    }
+.btn{
+  border:0;
+  border-radius:10px;
+  padding:12px 18px;
+  cursor:pointer;
+  font-weight:700;
+  transition:.2s;
+}
 
-    .message.error {
-      display: block;
-      background: #fee2e2;
-      color: #991b1b;
-    }
+.btn:hover{
+  transform:translateY(-1px);
+}
 
-    .message.success {
-      display: block;
-      background: #dcfce7;
-      color: #166534;
-    }
+.btn-primary{
+  background:#2563eb;
+  color:#fff;
+}
 
-    .hidden {
-      display: none !important;
-    }
+.btn-primary:hover{
+  background:#1d4ed8;
+}
 
-    .profile-grid,
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-    }
+.btn-success{
+  background:#16a34a;
+  color:#fff;
+}
 
-    .profile-item {
-      background: #f8fafc;
-      padding: 15px;
-      border-radius: 10px;
-    }
+.btn-danger{
+  background:#dc2626;
+  color:#fff;
+}
 
-    .profile-item small {
-      display: block;
-      color: #64748b;
-      margin-bottom: 5px;
-    }
+.btn-secondary{
+  background:#e2e8f0;
+  color:#0f172a;
+}
 
-    .profile-item strong {
-      display: block;
-      word-break: break-word;
-    }
+.btn-full{
+  width:100%;
+}
 
-    .service-card {
-      border: 1px solid #e2e8f0;
-      padding: 18px;
-      border-radius: 12px;
-      margin-top: 12px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+.message{
+  padding:12px 14px;
+  border-radius:10px;
+  margin-bottom:16px;
+  font-size:14px;
+  display:none;
+}
 
-    .service-card:hover {
-      border-color: #2563eb;
-      transform: translateY(-1px);
-    }
+.message.show{
+  display:block;
+}
 
-    .service-card.selected {
-      border: 2px solid #2563eb;
-      background: #eff6ff;
-    }
+.message.error{
+  background:#fee2e2;
+  color:#991b1b;
+  border:1px solid #fecaca;
+}
 
-    .service-name {
-      font-weight: 700;
-      margin-bottom: 7px;
-    }
+.message.success{
+  background:#dcfce7;
+  color:#166534;
+  border:1px solid #bbf7d0;
+}
 
-    .service-price {
-      color: #2563eb;
-      font-weight: 700;
-    }
+.message.info{
+  background:#dbeafe;
+  color:#1e40af;
+  border:1px solid #bfdbfe;
+}
 
-    .upload-list {
-      display: grid;
-      gap: 12px;
-    }
+/* ==============================
+   APP
+============================== */
 
-    .upload-box {
-      padding: 15px;
-      background: #f8fafc;
-      border-radius: 10px;
-      border: 1px dashed #94a3b8;
-    }
+.app{
+  min-height:100vh;
+}
 
-    .result-box {
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 12px;
-      padding: 18px;
-      margin-top: 20px;
-    }
+.topbar{
+  background:#0f172a;
+  color:#fff;
+  padding:13px 20px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+}
 
-    .tr-number {
-      font-size: 23px;
-      font-weight: 800;
-      color: #1d4ed8;
-      word-break: break-word;
-    }
+.topbar-inner{
+  max-width:1250px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+}
 
-    .loading {
-      opacity: 0.7;
-      pointer-events: none;
-    }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-    .top-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-    }
+.brand-icon{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  background:#2563eb;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:800;
+}
 
-    @media (max-width: 700px) {
-      .profile-grid,
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
+.brand-text h2{
+  font-size:18px;
+}
 
-      .container {
-        width: min(100% - 20px, 1100px);
-        margin: 20px auto;
-      }
+.brand-text span{
+  font-size:12px;
+  color:#cbd5e1;
+}
 
-      .card {
-        padding: 18px;
-      }
-    }
-  </style>
+.user-area{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.user-info{
+  text-align:right;
+}
+
+.user-info strong{
+  display:block;
+  font-size:14px;
+}
+
+.user-info span{
+  font-size:11px;
+  color:#cbd5e1;
+}
+
+.logout-btn{
+  border:1px solid #475569;
+  background:#1e293b;
+  color:#fff;
+  padding:9px 13px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.container{
+  max-width:1250px;
+  margin:25px auto;
+  padding:0 18px;
+}
+
+/* ==============================
+   DASHBOARD
+============================== */
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(3,1fr);
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.stat-card{
+  background:#fff;
+  border-radius:14px;
+  padding:20px;
+  border:1px solid #e2e8f0;
+}
+
+.stat-card .label{
+  color:#64748b;
+  font-size:13px;
+  margin-bottom:7px;
+}
+
+.stat-card .value{
+  font-size:22px;
+  font-weight:800;
+}
+
+.card{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:16px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 3px 12px rgba(15,23,42,.04);
+}
+
+.card-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.card-title h3{
+  font-size:20px;
+}
+
+.card-title p{
+  color:#64748b;
+  font-size:13px;
+  margin-top:4px;
+}
+
+/* ==============================
+   FORM GRID
+============================== */
+
+.form-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(2,minmax(0,1fr));
+  gap:15px;
+}
+
+.form-grid .full{
+  grid-column:1 / -1;
+}
+
+.required{
+  color:#dc2626;
+}
+
+.help-text{
+  font-size:11px;
+  color:#64748b;
+  margin-top:5px;
+}
+
+/* ==============================
+   SERVICE
+============================== */
+
+.service-box{
+  display:grid;
+  grid-template-columns:
+    1fr 180px;
+  gap:15px;
+  align-items:end;
+}
+
+.amount-box{
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  border-radius:12px;
+  padding:12px;
+}
+
+.amount-box .small{
+  font-size:11px;
+  color:#64748b;
+}
+
+.amount-box .amount{
+  font-size:25px;
+  font-weight:800;
+  color:#1d4ed8;
+  margin-top:3px;
+}
+
+/* ==============================
+   CHECKBOX
+============================== */
+
+.checkbox-row{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  background:#f8fafc;
+  padding:12px;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+}
+
+.checkbox-row input{
+  width:18px;
+  height:18px;
+}
+
+/* ==============================
+   FILES
+============================== */
+
+.file-box{
+  border:1px dashed #94a3b8;
+  background:#f8fafc;
+  border-radius:10px;
+  padding:12px;
+}
+
+.file-box input{
+  padding:7px;
+}
+
+.file-name{
+  margin-top:6px;
+  font-size:11px;
+  color:#475569;
+}
+
+/* ==============================
+   PAYMENT
+============================== */
+
+.payment-box{
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:14px;
+  padding:18px;
+}
+
+.upi-box{
+  background:#fff;
+  border:1px solid #cbd5e1;
+  border-radius:12px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+.upi-label{
+  font-size:12px;
+  color:#64748b;
+}
+
+.upi-id{
+  font-size:18px;
+  font-weight:800;
+  color:#111827;
+  margin:5px 0;
+  word-break:break-all;
+}
+
+.upi-name{
+  font-size:13px;
+  color:#475569;
+}
+
+.copy-btn{
+  margin-top:10px;
+}
+
+/* ==============================
+   SUBMIT
+============================== */
+
+.submit-area{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin-top:20px;
+}
+
+.loading{
+  opacity:.65;
+  pointer-events:none;
+}
+
+/* ==============================
+   SUCCESS
+============================== */
+
+.success-card{
+  background:
+    linear-gradient(
+      135deg,
+      #ecfdf5,
+      #f0fdf4
+    );
+  border:1px solid #86efac;
+}
+
+.tr-number{
+  background:#fff;
+  border:2px dashed #16a34a;
+  border-radius:12px;
+  padding:18px;
+  text-align:center;
+  margin:15px 0;
+}
+
+.tr-number .label{
+  font-size:12px;
+  color:#64748b;
+}
+
+.tr-number strong{
+  display:block;
+  font-size:27px;
+  color:#15803d;
+  margin:5px 0;
+  word-break:break-all;
+}
+
+.status-pill{
+  display:inline-block;
+  padding:6px 11px;
+  border-radius:999px;
+  background:#dbeafe;
+  color:#1e40af;
+  font-size:12px;
+  font-weight:700;
+}
+
+/* ==============================
+   TRACKING
+============================== */
+
+.tracking-grid{
+  display:grid;
+  grid-template-columns:
+    1fr 170px;
+  gap:10px;
+}
+
+.tracking-result{
+  margin-top:18px;
+}
+
+.result-grid{
+  display:grid;
+  grid-template-columns:
+    repeat(2,1fr);
+  gap:10px;
+}
+
+.result-item{
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  padding:12px;
+}
+
+.result-item .label{
+  font-size:11px;
+  color:#64748b;
+  margin-bottom:4px;
+}
+
+.result-item .value{
+  font-weight:700;
+  word-break:break-word;
+}
+
+.file-list{
+  margin-top:15px;
+}
+
+.file-item{
+  padding:10px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+  margin-bottom:7px;
+}
+
+.file-item a{
+  color:#2563eb;
+  text-decoration:none;
+  font-weight:700;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+
+@media(max-width:800px){
+
+  .dashboard-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid .full{
+    grid-column:auto;
+  }
+
+  .service-box{
+    grid-template-columns:1fr;
+  }
+
+  .tracking-grid{
+    grid-template-columns:1fr;
+  }
+
+  .result-grid{
+    grid-template-columns:1fr;
+  }
+
+  .topbar-inner{
+    align-items:flex-start;
+  }
+
+  .user-area{
+    flex-direction:column;
+    align-items:flex-end;
+  }
+
+}
+
+@media(max-width:550px){
+
+  .login-box{
+    padding:22px;
+  }
+
+  .container{
+    padding:0 10px;
+  }
+
+  .card{
+    padding:15px;
+  }
+
+  .brand-text{
+    display:none;
+  }
+
+  .user-info{
+    display:none;
+  }
+
+  .submit-area{
+    flex-direction:column;
+  }
+
+  .submit-area button{
+    width:100%;
+  }
+
+}
+</style>
 </head>
 
 <body>
 
-  <header class="header">
-    <div class="brand">AllInOneStop</div>
+<!-- =====================================================
+     LOGIN PAGE
+===================================================== -->
 
-    <div>
-      <a href="index.html">Home</a>
+<section id="loginPage" class="login-page">
+
+  <div class="login-box">
+
+    <div class="logo">
+
+      <div class="logo-icon">
+        AIO
+      </div>
+
+      <h1>AllInOneStop</h1>
+
+      <p>Retailer Login Portal</p>
+
     </div>
+
+    <div
+      id="loginMessage"
+      class="message">
+    </div>
+
+    <form id="loginForm">
+
+      <div class="form-group">
+
+        <label>
+          Retailer ID / Username
+        </label>
+
+        <input
+          id="loginUsername"
+          type="text"
+          autocomplete="username"
+          placeholder="Enter Retailer ID"
+          required
+        >
+
+      </div>
+
+      <div class="form-group">
+
+        <label>
+          Password
+        </label>
+
+        <div class="password-wrap">
+
+          <input
+            id="loginPassword"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter Password"
+            required
+          >
+
+          <button
+            type="button"
+            class="password-toggle"
+            onclick="togglePassword()">
+            👁
+          </button>
+
+        </div>
+
+      </div>
+
+      <button
+        id="loginBtn"
+        type="submit"
+        class="btn btn-primary btn-full">
+
+        Login
+
+      </button>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     MAIN APP
+===================================================== -->
+
+<section
+  id="appPage"
+  class="app hidden">
+
+  <!-- TOP BAR -->
+
+  <header class="topbar">
+
+    <div class="topbar-inner">
+
+      <div class="brand">
+
+        <div class="brand-icon">
+          AIO
+        </div>
+
+        <div class="brand-text">
+
+          <h2>
+            AllInOneStop
+          </h2>
+
+          <span>
+            Retailer Portal
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="user-area">
+
+        <div class="user-info">
+
+          <strong id="retailerName">
+            Retailer
+          </strong>
+
+          <span id="retailerIdText">
+            -
+          </span>
+
+        </div>
+
+        <button
+          class="logout-btn"
+          onclick="logout()">
+
+          Logout
+
+        </button>
+
+      </div>
+
+    </div>
+
   </header>
 
 
-  <!-- LOGIN -->
-  <main id="loginSection" class="container">
+  <main class="container">
 
-    <div class="card login-card">
+    <!-- DASHBOARD -->
 
-      <h1>Retailer Login</h1>
+    <div class="dashboard-grid">
 
-      <div class="subtitle">
-        Login using your Retailer ID / Username and password.
+      <div class="stat-card">
+
+        <div class="label">
+          Retailer ID
+        </div>
+
+        <div
+          id="dashboardRetailerId"
+          class="value">
+          -
+        </div>
+
       </div>
 
-      <form id="loginForm">
+      <div class="stat-card">
 
-        <div class="field">
-          <label for="username">
-            Retailer ID / Username
-          </label>
-
-          <input
-            type="text"
-            id="username"
-            autocomplete="username"
-            required
-            placeholder="RET-K4CFYQ"
-          >
+        <div class="label">
+          Retailer Mobile
         </div>
 
-        <div class="field">
-          <label for="password">
-            Password
+        <div
+          id="dashboardMobile"
+          class="value">
+          -
+        </div>
+
+      </div>
+
+      <div class="stat-card">
+
+        <div class="label">
+          Portal Status
+        </div>
+
+        <div
+          class="value"
+          style="color:#16a34a;">
+          Active
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- GLOBAL MESSAGE -->
+
+    <div
+      id="appMessage"
+      class="message">
+    </div>
+
+
+    <!-- =================================================
+         APPLICATION FORM
+    ================================================== -->
+
+    <form
+      id="applicationForm">
+
+      <!-- SERVICE -->
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <div>
+
+            <h3>
+              New Application
+            </h3>
+
+            <p>
+              Service select karke customer details bharein.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="service-box">
+
+          <div class="form-group">
+
+            <label>
+              Select Service
+              <span class="required">*</span>
+            </label>
+
+            <select
+              id="serviceSelect"
+              required>
+
+              <option value="">
+                Loading services...
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="amount-box">
+
+            <div class="small">
+              Application Amount
+            </div>
+
+            <div
+              id="amountDisplay"
+              class="amount">
+
+              ₹0
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div
+          id="rationOption"
+          class="hidden"
+          style="margin-top:15px;">
+
+          <label class="checkbox-row">
+
+            <input
+              id="withoutRation"
+              type="checkbox">
+
+            <span>
+              Customer ke paas Ration Card nahi hai
+            </span>
+
           </label>
 
-          <input
-            type="password"
-            id="password"
-            autocomplete="current-password"
-            required
-            placeholder="Enter password"
-          >
         </div>
+
+      </div>
+
+
+      <!-- CUSTOMER -->
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <div>
+
+            <h3>
+              Customer Details
+            </h3>
+
+            <p>
+              Customer ka basic contact information.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label>
+              Customer Mobile
+              <span class="required">*</span>
+            </label>
+
+            <input
+              id="customerMobile"
+              type="tel"
+              maxlength="10"
+              inputmode="numeric"
+              placeholder="10 digit mobile"
+              required>
+
+          </div>
+
+          <div class="form-group">
+
+            <label>
+              Customer Email
+            </label>
+
+            <input
+              id="customerEmail"
+              type="email"
+              placeholder="customer@example.com">
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- DYNAMIC FIELDS -->
+
+      <div
+        id="dynamicFields"
+        class="card hidden">
+
+        <div class="card-title">
+
+          <div>
+
+            <h3>
+              Application Details
+            </h3>
+
+            <p>
+              Selected service ke required details.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div
+          id="fieldsContainer"
+          class="form-grid">
+        </div>
+
+      </div>
+
+
+      <!-- PAYMENT -->
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <div>
+
+            <h3>
+              Payment Details
+            </h3>
+
+            <p>
+              Payment karne ke baad UTR number enter karein.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="payment-box">
+
+          <div class="upi-box">
+
+            <div class="upi-label">
+              UPI ID
+            </div>
+
+            <div
+              id="upiId"
+              class="upi-id">
+
+              gujrat.nsfa@ybl
+
+            </div>
+
+            <div
+              id="upiName"
+              class="upi-name">
+
+              RAJKUMAR RATIONCARD SERVICES
+
+            </div>
+
+            <button
+              type="button"
+              class="btn btn-secondary copy-btn"
+              onclick="copyUPI()">
+
+              Copy UPI ID
+
+            </button>
+
+          </div>
+
+          <div class="form-grid">
+
+            <div class="form-group full">
+
+              <label>
+                UTR / Transaction Number
+                <span class="required">*</span>
+              </label>
+
+              <input
+                id="utrNumber"
+                type="text"
+                placeholder="Enter payment UTR / transaction number"
+                required>
+
+              <div class="help-text">
+                Payment successful hone ke baad bank/UPI ka UTR number enter karein.
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- FILES -->
+
+      <div
+        id="filesCard"
+        class="card hidden">
+
+        <div class="card-title">
+
+          <div>
+
+            <h3>
+              Document Upload
+            </h3>
+
+            <p>
+              Required documents upload karein.
+            </p>
+
+          </div>
+
+        </div>
+
+        <div
+          id="filesContainer"
+          class="form-grid">
+        </div>
+
+      </div>
+
+
+      <!-- SUBMIT -->
+
+      <div class="card">
+
+        <div class="submit-area">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="resetApplicationForm()">
+
+            Reset
+
+          </button>
+
+          <button
+            id="submitBtn"
+            type="submit"
+            class="btn btn-success">
+
+            Submit Application
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </form>
+
+
+    <!-- =================================================
+         SUCCESS / TR NUMBER
+    ================================================== -->
+
+    <div
+      id="successCard"
+      class="card success-card hidden">
+
+      <div class="card-title">
+
+        <div>
+
+          <h3>
+            Application Submitted
+          </h3>
+
+          <p>
+            Application successfully receive ho gayi hai.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="tr-number">
+
+        <div class="label">
+          Your Tracking / TR Number
+        </div>
+
+        <strong id="successTR">
+          -
+        </strong>
+
+        <span class="status-pill">
+          Received
+        </span>
+
+      </div>
+
+      <div
+        class="message success show">
+
+        Is TR Number ko customer ko zaroor dein.
+        Isi number se application track ki ja sakti hai.
+
+      </div>
+
+      <div class="submit-area">
 
         <button
-          type="submit"
-          class="btn-primary"
-          id="loginButton"
-        >
-          Login
+          type="button"
+          class="btn btn-primary"
+          onclick="trackSuccessTR()">
+
+          Track Application
+
         </button>
 
-        <div id="loginMessage" class="message"></div>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="newApplication()">
 
-      </form>
+          New Application
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         TRACKING
+    ================================================== -->
+
+    <div class="card">
+
+      <div class="card-title">
+
+        <div>
+
+          <h3>
+            Application Tracking
+          </h3>
+
+          <p>
+            TR Number enter karke application status dekhein.
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="tracking-grid">
+
+        <input
+          id="trackingTR"
+          type="text"
+          placeholder="Example: TR-20260823-123456-123">
+
+        <button
+          id="trackingBtn"
+          type="button"
+          class="btn btn-primary"
+          onclick="trackApplication()">
+
+          Track
+
+        </button>
+
+      </div>
+
+      <div
+        id="trackingMessage"
+        class="message">
+      </div>
+
+      <div
+        id="trackingResult"
+        class="tracking-result hidden">
+
+        <div
+          class="result-grid"
+          id="trackingGrid">
+        </div>
+
+        <div
+          id="trackedFiles"
+          class="file-list">
+        </div>
+
+      </div>
 
     </div>
 
   </main>
 
-
-  <!-- RETAILER DASHBOARD -->
-  <main id="dashboardSection" class="container hidden">
-
-    <!-- PROFILE -->
-    <section class="card">
-
-      <div class="top-actions">
-        <button
-          class="btn-secondary"
-          onclick="openTracking()"
-        >
-          Track Application
-        </button>
-
-        <button
-          class="btn-danger"
-          onclick="logout()"
-        >
-          Logout
-        </button>
-      </div>
-
-      <h2>Retailer Dashboard</h2>
-
-      <div class="profile-grid">
-
-        <div class="profile-item">
-          <small>Retailer ID</small>
-          <strong id="profileRetailerId">-</strong>
-        </div>
-
-        <div class="profile-item">
-          <small>Username</small>
-          <strong id="profileUsername">-</strong>
-        </div>
-
-        <div class="profile-item">
-          <small>Retailer Name</small>
-          <strong id="profileName">-</strong>
-        </div>
-
-        <div class="profile-item">
-          <small>Mobile</small>
-          <strong id="profileMobile">-</strong>
-        </div>
-
-        <div class="profile-item">
-          <small>Email</small>
-          <strong id="profileEmail">-</strong>
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- APPLICATION -->
-    <section class="card">
-
-      <h2>New Application</h2>
-
-      <div id="applicationMessage" class="message"></div>
-
-      <div class="field">
-
-        <label>
-          Select Service
-        </label>
-
-        <div id="servicesList">
-          Loading services...
-        </div>
-
-      </div>
-
-
-      <div id="applicationForm" class="hidden">
-
-        <div class="form-grid">
-
-          <div class="field">
-            <label>Customer Mobile *</label>
-
-            <input
-              type="tel"
-              id="customerMobile"
-              maxlength="15"
-              placeholder="Customer mobile number"
-            >
-          </div>
-
-          <div class="field">
-            <label>Customer Email</label>
-
-            <input
-              type="email"
-              id="customerEmail"
-              placeholder="Email"
-            >
-          </div>
-
-        </div>
-
-
-        <div id="dynamicFields"></div>
-
-
-        <div class="field">
-
-          <label>
-            UTR / Transaction Number *
-          </label>
-
-          <input
-            type="text"
-            id="utrNumber"
-            placeholder="Enter payment UTR number"
-          >
-
-        </div>
-
-
-        <div class="field">
-
-          <label>
-            Payment Amount
-          </label>
-
-          <input
-            type="number"
-            id="amount"
-            min="1"
-          >
-
-        </div>
-
-
-        <div id="uploadSection">
-
-          <h3>Documents</h3>
-
-          <div id="fileInputs" class="upload-list"></div>
-
-        </div>
-
-
-        <button
-          type="button"
-          class="btn-primary"
-          id="submitButton"
-          onclick="submitApplication()"
-        >
-          Submit Application
-        </button>
-
-        <div id="submitResult"></div>
-
-      </div>
-
-    </section>
-
-  </main>
+</section>
 
 
 <script>
-  /*
-   * =====================================================
-   * IMPORTANT
-   * =====================================================
-   *
-   * Replace this URL with your deployed Google Apps Script
-   * Web App URL.
-   *
-   * Example:
-   *
-   * https://script.google.com/macros/s/XXXXXXXX/exec
-   *
-   */
 
-  const API_URL =
-    "https://script.google.com/macros/s/AKfycbxhnoLmKisxVxU0XV5f7qy-9VylLmxxDkS86evmwLA6LoH0ou0nu0GGqs5f0FJUK4--Dg/exec";
+/* =====================================================
+   CONFIGURATION
+===================================================== */
 
+/*
+ * IMPORTANT:
+ *
+ * Yahan apna Google Apps Script Web App ka LIVE /exec URL
+ * paste karein.
+ *
+ * Example:
+ *
+ * https://script.google.com/macros/s/XXXXXXXXXXXX/exec
+ *
+ * /dev URL use mat karein.
+ */
 
-  let currentRetailer = null;
-  let services = [];
-  let selectedService = null;
-
-
-  /* =====================================================
-     HELPERS
-  ===================================================== */
-
-  function showMessage(elementId, message, type) {
-
-    const element =
-      document.getElementById(elementId);
-
-    if (!element) return;
-
-    element.className =
-      "message " + type;
-
-    element.textContent =
-      message || "";
-
-  }
+const API_URL =
+  "PASTE_YOUR_GOOGLE_APPS_SCRIPT_EXEC_URL_HERE";
 
 
-  function clearMessage(elementId) {
+/* =====================================================
+   CONSTANTS
+===================================================== */
 
-    const element =
-      document.getElementById(elementId);
-
-    if (!element) return;
-
-    element.className =
-      "message";
-
-    element.textContent =
-      "";
-
-  }
+const MAX_FILE_SIZE =
+  10 * 1024 * 1024;
 
 
-  function escapeHtml(value) {
-
-    return String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-
-  }
+const UPI_ID =
+  "gujrat.nsfa@ybl";
 
 
-  function getStoredRetailer() {
+const UPI_NAME =
+  "RAJKUMAR RATIONCARD SERVICES";
 
-    try {
 
-      return JSON.parse(
-        localStorage.getItem(
-          "allinone_retailer"
-        ) || "null"
+let services = [];
+
+let loggedRetailer = null;
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    document.getElementById(
+      "upiId"
+    ).textContent =
+      UPI_ID;
+
+    document.getElementById(
+      "upiName"
+    ).textContent =
+      UPI_NAME;
+
+
+    if (
+      API_URL.indexOf(
+        "PASTE_YOUR"
+      ) >= 0
+    ){
+
+      showLoginMessage(
+        "API URL set nahi hai. retailer.html me API_URL me apna Apps Script /exec URL paste karein.",
+        "error"
       );
 
-    } catch (err) {
+      return;
 
-      return null;
+    }
+
+
+    loadSavedLogin();
+
+  }
+);
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+document.getElementById(
+  "loginForm"
+).addEventListener(
+  "submit",
+  async function(e){
+
+    e.preventDefault();
+
+    const username =
+      document.getElementById(
+        "loginUsername"
+      ).value.trim();
+
+    const password =
+      document.getElementById(
+        "loginPassword"
+      ).value;
+
+
+    if(!username || !password){
+
+      showLoginMessage(
+        "Retailer ID aur password required hai.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const btn =
+      document.getElementById(
+        "loginBtn"
+      );
+
+
+    btn.disabled = true;
+
+    btn.textContent =
+      "Logging in...";
+
+
+    try{
+
+      const result =
+        await postAPI({
+
+          action:
+            "retailerLogin",
+
+          username:
+            username,
+
+          password:
+            password
+
+        });
+
+
+      if(
+        !result ||
+        result.success !== true
+      ){
+
+        throw new Error(
+          result &&
+          result.message
+            ? result.message
+            : "Login failed."
+        );
+
+      }
+
+
+      loggedRetailer =
+        result;
+
+
+      localStorage.setItem(
+        "allinone_retailer",
+        JSON.stringify(result)
+      );
+
+
+      showApp();
+
+      await loadServices();
+
+    }
+    catch(error){
+
+      showLoginMessage(
+        error.message ||
+        "Login failed.",
+        "error"
+      );
+
+    }
+    finally{
+
+      btn.disabled = false;
+
+      btn.textContent =
+        "Login";
 
     }
 
   }
+);
 
 
-  function saveRetailer(data) {
+/* =====================================================
+   PASSWORD
+===================================================== */
 
-    localStorage.setItem(
-      "allinone_retailer",
-      JSON.stringify(data)
+function togglePassword(){
+
+  const input =
+    document.getElementById(
+      "loginPassword"
     );
 
+  input.type =
+    input.type === "password"
+      ? "text"
+      : "password";
+
+}
+
+
+/* =====================================================
+   LOAD SAVED LOGIN
+===================================================== */
+
+async function loadSavedLogin(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(
+        "allinone_retailer"
+      );
+
+
+    if(!saved){
+      return;
+    }
+
+
+    const data =
+      JSON.parse(saved);
+
+
+    if(
+      !data ||
+      !data.success ||
+      !data.retailerId
+    ){
+
+      return;
+
+    }
+
+
+    loggedRetailer =
+      data;
+
+
+    showApp();
+
+    await loadServices();
+
   }
-
-
-  function clearRetailer() {
+  catch(error){
 
     localStorage.removeItem(
       "allinone_retailer"
@@ -606,780 +1630,982 @@
 
   }
 
+}
 
-  function ensureApiConfigured() {
 
-    if (
-      !API_URL ||
-      API_URL.indexOf(
-        "PASTE_YOUR"
-      ) >= 0
-    ) {
+/* =====================================================
+   SHOW APP
+===================================================== */
 
-      alert(
-        "Please set your Apps Script Web App URL in API_URL."
+function showApp(){
+
+  document.getElementById(
+    "loginPage"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "appPage"
+  ).classList.remove(
+    "hidden"
+  );
+
+
+  const name =
+    loggedRetailer.retailerName ||
+    loggedRetailer.username ||
+    "Retailer";
+
+
+  const id =
+    loggedRetailer.retailerId ||
+    loggedRetailer.username ||
+    "-";
+
+
+  document.getElementById(
+    "retailerName"
+  ).textContent =
+    name;
+
+
+  document.getElementById(
+    "retailerIdText"
+  ).textContent =
+    id;
+
+
+  document.getElementById(
+    "dashboardRetailerId"
+  ).textContent =
+    id;
+
+
+  document.getElementById(
+    "dashboardMobile"
+  ).textContent =
+    loggedRetailer.mobile ||
+    "-";
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout(){
+
+  localStorage.removeItem(
+    "allinone_retailer"
+  );
+
+  loggedRetailer =
+    null;
+
+  services = [];
+
+  document.getElementById(
+    "appPage"
+  ).classList.add(
+    "hidden"
+  );
+
+  document.getElementById(
+    "loginPage"
+  ).classList.remove(
+    "hidden"
+  );
+
+  document.getElementById(
+    "loginPassword"
+  ).value = "";
+
+}
+
+
+/* =====================================================
+   LOAD SERVICES
+===================================================== */
+
+async function loadServices(){
+
+  const select =
+    document.getElementById(
+      "serviceSelect"
+    );
+
+
+  select.innerHTML =
+    "<option value=''>Loading services...</option>";
+
+
+  try{
+
+    const result =
+      await getAPI(
+        "action=services"
       );
 
-      return false;
 
-    }
+    if(
+      !result ||
+      result.success !== true
+    ){
 
-    return true;
-
-  }
-
-
-  /* =====================================================
-     API GET
-  ===================================================== */
-
-  async function apiGet(params) {
-
-    if (!ensureApiConfigured()) {
       throw new Error(
-        "API URL not configured."
-      );
-    }
-
-    const query =
-      new URLSearchParams(params);
-
-    const response =
-      await fetch(
-        API_URL +
-        "?" +
-        query.toString()
-      );
-
-    const text =
-      await response.text();
-
-    let data;
-
-    try {
-
-      data =
-        JSON.parse(text);
-
-    } catch (err) {
-
-      throw new Error(
-        "Invalid API response: " +
-        text.substring(0, 300)
+        result &&
+        result.message
+          ? result.message
+          : "Services load failed."
       );
 
     }
 
-    return data;
 
-  }
-
-
-  /* =====================================================
-     API POST
-  ===================================================== */
-
-  async function apiPost(data) {
-
-    if (!ensureApiConfigured()) {
-      throw new Error(
-        "API URL not configured."
-      );
-    }
-
-    const response =
-      await fetch(
-        API_URL,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "text/plain;charset=utf-8"
-          },
-          body:
-            JSON.stringify(data)
-        }
-      );
-
-    const text =
-      await response.text();
-
-    let result;
-
-    try {
-
-      result =
-        JSON.parse(text);
-
-    } catch (err) {
-
-      throw new Error(
-        "Invalid API response: " +
-        text.substring(0, 300)
-      );
-
-    }
-
-    return result;
-
-  }
+    services =
+      Array.isArray(
+        result.services
+      )
+        ? result.services
+        : [];
 
 
-  /* =====================================================
-     LOGIN
-  ===================================================== */
+    select.innerHTML =
+      "<option value=''>Select Service</option>";
 
-  document
-    .getElementById("loginForm")
-    .addEventListener(
-      "submit",
-      async function(event) {
 
-        event.preventDefault();
+    services.forEach(
+      function(service){
 
-        clearMessage(
-          "loginMessage"
+        const option =
+          document.createElement(
+            "option"
+          );
+
+        option.value =
+          service.id;
+
+        option.textContent =
+          service.name +
+          " - ₹" +
+          Number(
+            service.amount || 0
+          ).toLocaleString(
+            "en-IN"
+          );
+
+        select.appendChild(
+          option
         );
-
-        const button =
-          document.getElementById(
-            "loginButton"
-          );
-
-        button.disabled = true;
-        button.textContent =
-          "Logging in...";
-
-        try {
-
-          const username =
-            document
-              .getElementById("username")
-              .value
-              .trim();
-
-          const password =
-            document
-              .getElementById("password")
-              .value;
-
-          const result =
-            await apiPost({
-
-              action:
-                "retailerlogin",
-
-              username:
-                username,
-
-              password:
-                password
-
-            });
-
-
-          if (
-            !result.success
-          ) {
-
-            throw new Error(
-              result.message ||
-              "Login failed."
-            );
-
-          }
-
-
-          currentRetailer =
-            result;
-
-          saveRetailer(
-            result
-          );
-
-          showDashboard();
-
-        } catch (err) {
-
-          showMessage(
-            "loginMessage",
-            err.message ||
-              "Login failed.",
-            "error"
-          );
-
-        } finally {
-
-          button.disabled = false;
-
-          button.textContent =
-            "Login";
-
-        }
 
       }
     );
 
+  }
+  catch(error){
 
-  /* =====================================================
-     SHOW DASHBOARD
-  ===================================================== */
+    select.innerHTML =
+      "<option value=''>Unable to load services</option>";
 
-  function showDashboard() {
-
-    document
-      .getElementById(
-        "loginSection"
-      )
-      .classList
-      .add("hidden");
-
-
-    document
-      .getElementById(
-        "dashboardSection"
-      )
-      .classList
-      .remove("hidden");
-
-
-    renderProfile();
-
-    loadServices();
+    showAppMessage(
+      error.message,
+      "error"
+    );
 
   }
 
-
-  /* =====================================================
-     PROFILE
-  ===================================================== */
-
-  function renderProfile() {
-
-    const data =
-      currentRetailer || {};
+}
 
 
-    document
-      .getElementById(
-        "profileRetailerId"
-      )
-      .textContent =
-      data.retailerId || "-";
+/* =====================================================
+   SERVICE CHANGE
+===================================================== */
 
+document.getElementById(
+  "serviceSelect"
+).addEventListener(
+  "change",
+  function(){
 
-    document
-      .getElementById(
-        "profileUsername"
-      )
-      .textContent =
-      data.username || "-";
-
-
-    document
-      .getElementById(
-        "profileName"
-      )
-      .textContent =
-      data.retailerName || "-";
-
-
-    document
-      .getElementById(
-        "profileMobile"
-      )
-      .textContent =
-      data.mobile || "-";
-
-
-    document
-      .getElementById(
-        "profileEmail"
-      )
-      .textContent =
-      data.email || "-";
+    renderServiceFields(
+      this.value
+    );
 
   }
+);
 
 
-  /* =====================================================
-     LOAD SERVICES
-  ===================================================== */
+/* =====================================================
+   WITHOUT RATION CHANGE
+===================================================== */
 
-  async function loadServices() {
+document.getElementById(
+  "withoutRation"
+).addEventListener(
+  "change",
+  function(){
 
-    const container =
-      document.getElementById(
-        "servicesList"
-      );
+    updateAmount();
 
-    container.innerHTML =
-      "Loading services...";
-
-
-    try {
-
-      const result =
-        await apiGet({
-          action: "services"
-        });
+  }
+);
 
 
-      if (
-        !result.success
-      ) {
+/* =====================================================
+   GET SELECTED SERVICE
+===================================================== */
 
-        throw new Error(
-          result.message ||
-          "Unable to load services."
-        );
+function getSelectedService(){
 
+  const id =
+    document.getElementById(
+      "serviceSelect"
+    ).value;
+
+
+  return services.find(
+    function(service){
+
+      return service.id === id;
+
+    }
+  ) || null;
+
+}
+
+
+/* =====================================================
+   RENDER SERVICE FIELDS
+===================================================== */
+
+function renderServiceFields(
+  serviceId
+){
+
+  const service =
+    services.find(
+      function(s){
+        return s.id === serviceId;
       }
+    );
 
 
-      services =
-        result.services || [];
+  const fieldsContainer =
+    document.getElementById(
+      "fieldsContainer"
+    );
 
 
-      renderServices();
-
-    } catch (err) {
-
-      container.innerHTML =
-        "<div class='message error' style='display:block'>" +
-        escapeHtml(
-          err.message
-        ) +
-        "</div>";
-
-    }
-
-  }
+  const filesContainer =
+    document.getElementById(
+      "filesContainer"
+    );
 
 
-  /* =====================================================
-     RENDER SERVICES
-  ===================================================== */
+  fieldsContainer.innerHTML =
+    "";
 
-  function renderServices() {
-
-    const container =
-      document.getElementById(
-        "servicesList"
-      );
+  filesContainer.innerHTML =
+    "";
 
 
-    if (
-      !services.length
-    ) {
-
-      container.innerHTML =
-        "No services available.";
-
-      return;
-
-    }
+  document.getElementById(
+    "dynamicFields"
+  ).classList.add(
+    "hidden"
+  );
 
 
-    container.innerHTML =
-      services.map(
-        function(service) {
+  document.getElementById(
+    "filesCard"
+  ).classList.add(
+    "hidden"
+  );
 
-          return `
-            <div
-              class="service-card"
-              data-service-id="${escapeHtml(service.id)}"
-              onclick="selectService('${escapeHtml(service.id)}')"
-            >
 
-              <div class="service-name">
-                ${escapeHtml(service.name)}
-              </div>
+  document.getElementById(
+    "rationOption"
+  ).classList.add(
+    "hidden"
+  );
 
-              <div class="service-price">
-                ₹${Number(service.amount || 0)}
-              </div>
 
-            </div>
-          `;
+  if(!service){
 
-        }
-      ).join("");
+    updateAmount();
+
+    return;
 
   }
 
 
-  /* =====================================================
-     SELECT SERVICE
-  ===================================================== */
+  if(
+    service.without_ration_amount
+  ){
 
-  function selectService(serviceId) {
-
-    selectedService =
-      services.find(
-        function(service) {
-
-          return service.id ===
-            serviceId;
-
-        }
-      );
-
-
-    if (!selectedService) {
-      return;
-    }
-
-
-    document
-      .querySelectorAll(
-        ".service-card"
-      )
-      .forEach(
-        function(card) {
-
-          card.classList.toggle(
-            "selected",
-            card.dataset.serviceId ===
-              serviceId
-          );
-
-        }
-      );
-
-
-    document
-      .getElementById(
-        "applicationForm"
-      )
-      .classList
-      .remove("hidden");
-
-
-    document
-      .getElementById(
-        "amount"
-      )
-      .value =
-      selectedService.amount || "";
-
-
-    renderDynamicFields(
-      selectedService
+    document.getElementById(
+      "rationOption"
+    ).classList.remove(
+      "hidden"
     );
 
   }
 
 
-  /* =====================================================
-     DYNAMIC FIELDS
-  ===================================================== */
+  const normalFields = [];
 
-  const FIELD_LABELS = {
-
-    name_english:
-      "Name (English)",
-
-    name_gujarati:
-      "Name (Gujarati)",
-
-    father_name:
-      "Father Name",
-
-    mother_name:
-      "Mother Name",
-
-    husband_name:
-      "Husband Name",
-
-    correct_name:
-      "Correct Name",
-
-    dob:
-      "Date of Birth",
-
-    dob_year:
-      "Birth Year",
-
-    ration_card_number:
-      "Ration Card Number",
-
-    pan_number:
-      "PAN Number",
-
-    dl_number:
-      "DL Number",
-
-    rc_number:
-      "RC Number",
-
-    vehicle_number:
-      "Vehicle Number",
-
-    election_number:
-      "Election Number",
-
-    aadhaar_number:
-      "Aadhaar Number",
-
-    correction_type:
-      "Correction Type",
-
-    state:
-      "State",
-
-    district:
-      "District"
-
-  };
+  const fileFields = [];
 
 
-  function renderDynamicFields(service) {
+  (service.fields || [])
+    .forEach(
+      function(field){
 
-    const container =
-      document.getElementById(
-        "dynamicFields"
-      );
+        if(
+          isFileField(field)
+        ){
 
-
-    const fields =
-      service.fields || [];
-
-
-    const normalFields =
-      fields.filter(
-        function(field) {
-
-          return (
-            field.indexOf("_pdf") < 0 &&
-            field !== "photo" &&
-            field !== "signature" &&
-            field !== "without_ration_card" &&
-            field !== "mobile" &&
-            field !== "email"
-          );
-
-        }
-      );
-
-
-    container.innerHTML =
-      normalFields.map(
-        function(field) {
-
-          const label =
-            FIELD_LABELS[field] ||
+          fileFields.push(
             field
-              .replace(/_/g, " ")
-              .replace(
-                /\b\w/g,
-                function(char) {
-                  return char.toUpperCase();
-                }
-              );
-
-
-          const type =
-            field === "dob"
-              ? "date"
-              : field === "dob_year"
-              ? "number"
-              : "text";
-
-
-          return `
-            <div class="field">
-              <label>
-                ${escapeHtml(label)}
-              </label>
-
-              <input
-                type="${type}"
-                id="field_${escapeHtml(field)}"
-                data-field="${escapeHtml(field)}"
-                placeholder="${escapeHtml(label)}"
-              >
-            </div>
-          `;
+          );
 
         }
-      ).join("");
+        else if(
+          field !==
+          "without_ration_card"
+        ){
+
+          normalFields.push(
+            field
+          );
+
+        }
+
+      }
+    );
 
 
-    if (
-      fields.includes(
-        "without_ration_card"
-      )
-    ) {
+  normalFields.forEach(
+    function(field){
 
-      container.innerHTML += `
-        <div class="field">
-          <label>
-            Ration Card Status
-          </label>
-
-          <select
-            id="field_without_ration_card"
-            data-field="without_ration_card"
-          >
-            <option value="false">
-              With Ration Card
-            </option>
-
-            <option value="true">
-              Without Ration Card
-            </option>
-          </select>
-        </div>
-      `;
+      fieldsContainer.appendChild(
+        createField(field)
+      );
 
     }
+  );
 
 
-    renderFileInputs(
-      fields
+  fileFields.forEach(
+    function(field){
+
+      filesContainer.appendChild(
+        createFileField(field)
+      );
+
+    }
+  );
+
+
+  if(
+    normalFields.length
+  ){
+
+    document.getElementById(
+      "dynamicFields"
+    ).classList.remove(
+      "hidden"
     );
 
   }
 
 
-  /* =====================================================
-     FILE INPUTS
-  ===================================================== */
+  if(
+    fileFields.length
+  ){
 
-  function renderFileInputs(fields) {
+    document.getElementById(
+      "filesCard"
+    ).classList.remove(
+      "hidden"
+    );
 
-    const container =
+  }
+
+
+  updateAmount();
+
+}
+
+
+/* =====================================================
+   FIELD LABELS
+===================================================== */
+
+const FIELD_LABELS = {
+
+  name_english:
+    "Name (English)",
+
+  name_gujarati:
+    "Name (Gujarati)",
+
+  father_name:
+    "Father Name",
+
+  mother_name:
+    "Mother Name",
+
+  husband_name:
+    "Husband Name",
+
+  correct_name:
+    "Correct Name",
+
+  dob:
+    "Date of Birth",
+
+  dob_year:
+    "Birth Year",
+
+  ration_card_number:
+    "Ration Card Number",
+
+  pan_number:
+    "PAN Number",
+
+  dl_number:
+    "DL Number",
+
+  rc_number:
+    "RC Number",
+
+  vehicle_number:
+    "Vehicle Number",
+
+  election_number:
+    "Election Number",
+
+  aadhaar_number:
+    "Aadhaar Number",
+
+  correction_type:
+    "Correction Type",
+
+  mobile:
+    "Mobile Number",
+
+  email:
+    "Email",
+
+  state:
+    "State",
+
+  district:
+    "District"
+
+};
+
+
+const FILE_LABELS = {
+
+  aadhaar_pdf:
+    "Aadhaar Card PDF",
+
+  ration_card_pdf:
+    "Ration Card PDF",
+
+  pancard_pdf:
+    "PAN Card PDF",
+
+  lc_pdf:
+    "Leaving Certificate PDF",
+
+  photo:
+    "Passport Photo",
+
+  signature:
+    "Signature"
+
+};
+
+
+/* =====================================================
+   CREATE NORMAL FIELD
+===================================================== */
+
+function createField(
+  field
+){
+
+  const wrapper =
+    document.createElement(
+      "div"
+    );
+
+  wrapper.className =
+    "form-group";
+
+
+  const label =
+    document.createElement(
+      "label"
+    );
+
+
+  label.textContent =
+    FIELD_LABELS[field] ||
+    field.replace(
+      /_/g,
+      " "
+    );
+
+
+  const required =
+    document.createElement(
+      "span"
+    );
+
+  required.className =
+    "required";
+
+  required.textContent =
+    " *";
+
+
+  label.appendChild(
+    required
+  );
+
+
+  let input;
+
+
+  if(
+    field === "correction_type"
+  ){
+
+    input =
+      document.createElement(
+        "select"
+      );
+
+
+    input.innerHTML = `
+
+      <option value="">
+        Select Correction Type
+      </option>
+
+      <option value="Name">
+        Name
+      </option>
+
+      <option value="Date of Birth">
+        Date of Birth
+      </option>
+
+      <option value="Father Name">
+        Father Name
+      </option>
+
+      <option value="Address">
+        Address
+      </option>
+
+      <option value="Other">
+        Other
+      </option>
+
+    `;
+
+  }
+  else{
+
+    input =
+      document.createElement(
+        "input"
+      );
+
+
+    if(
+      field === "dob"
+    ){
+
+      input.type =
+        "date";
+
+    }
+    else if(
+      field === "email"
+    ){
+
+      input.type =
+        "email";
+
+    }
+    else if(
+      field === "mobile"
+    ){
+
+      input.type =
+        "tel";
+
+      input.inputMode =
+        "numeric";
+
+      input.maxLength =
+        10;
+
+    }
+    else if(
+      field === "dob_year"
+    ){
+
+      input.type =
+        "number";
+
+      input.min =
+        "1900";
+
+      input.max =
+        "2100";
+
+    }
+    else{
+
+      input.type =
+        "text";
+
+    }
+
+  }
+
+
+  input.id =
+    "field_" +
+    field;
+
+  input.dataset.field =
+    field;
+
+  input.required =
+    true;
+
+  input.placeholder =
+    FIELD_LABELS[field] ||
+    field.replace(
+      /_/g,
+      " "
+    );
+
+
+  wrapper.appendChild(
+    label
+  );
+
+  wrapper.appendChild(
+    input
+  );
+
+
+  return wrapper;
+
+}
+
+
+/* =====================================================
+   CREATE FILE FIELD
+===================================================== */
+
+function createFileField(
+  field
+){
+
+  const wrapper =
+    document.createElement(
+      "div"
+    );
+
+  wrapper.className =
+    "form-group";
+
+
+  const box =
+    document.createElement(
+      "div"
+    );
+
+  box.className =
+    "file-box";
+
+
+  const label =
+    document.createElement(
+      "label"
+    );
+
+
+  label.textContent =
+    FILE_LABELS[field] ||
+    field.replace(
+      /_/g,
+      " "
+    );
+
+
+  const required =
+    document.createElement(
+      "span"
+    );
+
+  required.className =
+    "required";
+
+  required.textContent =
+    " *";
+
+
+  label.appendChild(
+    required
+  );
+
+
+  const input =
+    document.createElement(
+      "input"
+    );
+
+
+  input.type =
+    "file";
+
+
+  input.id =
+    "file_" +
+    field;
+
+
+  input.dataset.file =
+    field;
+
+
+  input.required =
+    true;
+
+
+  if(
+    field === "photo" ||
+    field === "signature"
+  ){
+
+    input.accept =
+      "image/*";
+
+  }
+  else{
+
+    input.accept =
+      ".pdf,image/*";
+
+  }
+
+
+  const name =
+    document.createElement(
+      "div"
+    );
+
+  name.className =
+    "file-name";
+
+  name.id =
+    "fileName_" +
+    field;
+
+  name.textContent =
+    "No file selected";
+
+
+  input.addEventListener(
+    "change",
+    function(){
+
+      const file =
+        this.files[0];
+
+
+      if(!file){
+
+        name.textContent =
+          "No file selected";
+
+        return;
+
+      }
+
+
+      if(
+        file.size >
+        MAX_FILE_SIZE
+      ){
+
+        alert(
+          "File size 10 MB se kam honi chahiye."
+        );
+
+        this.value =
+          "";
+
+        name.textContent =
+          "No file selected";
+
+        return;
+
+      }
+
+
+      name.textContent =
+        file.name +
+        " (" +
+        formatBytes(file.size) +
+        ")";
+
+    }
+  );
+
+
+  box.appendChild(
+    label
+  );
+
+  box.appendChild(
+    input
+  );
+
+  box.appendChild(
+    name
+  );
+
+
+  wrapper.appendChild(
+    box
+  );
+
+
+  return wrapper;
+
+}
+
+
+/* =====================================================
+   FILE FIELD CHECK
+===================================================== */
+
+function isFileField(
+  field
+){
+
+  return [
+
+    "aadhaar_pdf",
+    "ration_card_pdf",
+    "pancard_pdf",
+    "lc_pdf",
+    "photo",
+    "signature"
+
+  ].indexOf(
+    field
+  ) >= 0;
+
+}
+
+
+/* =====================================================
+   AMOUNT
+===================================================== */
+
+function updateAmount(){
+
+  const service =
+    getSelectedService();
+
+
+  let amount = 0;
+
+
+  if(service){
+
+    amount =
+      Number(
+        service.amount || 0
+      );
+
+
+    if(
+      service.without_ration_amount &&
       document.getElementById(
-        "fileInputs"
+        "withoutRation"
+      ).checked
+    ){
+
+      amount =
+        Number(
+          service.without_ration_amount
+        );
+
+    }
+
+  }
+
+
+  document.getElementById(
+    "amountDisplay"
+  ).textContent =
+    "₹" +
+    amount.toLocaleString(
+      "en-IN"
+    );
+
+}
+
+
+/* =====================================================
+   SUBMIT APPLICATION
+===================================================== */
+
+document.getElementById(
+  "applicationForm"
+).addEventListener(
+  "submit",
+  async function(e){
+
+    e.preventDefault();
+
+
+    if(!loggedRetailer){
+
+      showAppMessage(
+        "Please login again.",
+        "error"
       );
-
-
-    const fileFields =
-      fields.filter(
-        function(field) {
-
-          return (
-            field.endsWith("_pdf") ||
-            field === "photo" ||
-            field === "signature"
-          );
-
-        }
-      );
-
-
-    if (
-      !fileFields.length
-    ) {
-
-      container.innerHTML =
-        "<div style='color:#64748b'>No documents required.</div>";
 
       return;
 
     }
 
 
-    container.innerHTML =
-      fileFields.map(
-        function(field) {
-
-          const label =
-            FIELD_LABELS[field] ||
-            field
-              .replace(/_/g, " ")
-              .replace(
-                /\b\w/g,
-                function(char) {
-                  return char.toUpperCase();
-                }
-              );
+    const service =
+      getSelectedService();
 
 
-          return `
-            <div class="upload-box">
+    if(!service){
 
-              <label>
-                ${escapeHtml(label)}
-              </label>
-
-              <input
-                type="file"
-                id="file_${escapeHtml(field)}"
-                data-file-field="${escapeHtml(field)}"
-                accept=".pdf,image/*"
-              >
-
-            </div>
-          `;
-
-        }
-      ).join("");
-
-  }
-
-
-  /* =====================================================
-     READ FILE AS BASE64
-  ===================================================== */
-
-  function readFileAsBase64(file) {
-
-    return new Promise(
-      function(resolve, reject) {
-
-        const reader =
-          new FileReader();
-
-
-        reader.onload =
-          function() {
-
-            resolve(
-              reader.result
-            );
-
-          };
-
-
-        reader.onerror =
-          function() {
-
-            reject(
-              new Error(
-                "Unable to read file."
-              )
-            );
-
-          };
-
-
-        reader.readAsDataURL(
-          file
-        );
-
-      }
-    );
-
-  }
-
-
-  /* =====================================================
-     SUBMIT APPLICATION
-  ===================================================== */
-
-  async function submitApplication() {
-
-    clearMessage(
-      "applicationMessage"
-    );
-
-
-    if (!selectedService) {
-
-      showMessage(
-        "applicationMessage",
+      showAppMessage(
         "Please select a service.",
         "error"
       );
@@ -1390,394 +2616,1249 @@
 
 
     const customerMobile =
-      document
-        .getElementById(
-          "customerMobile"
-        )
-        .value
-        .trim();
-
-
-    if (!customerMobile) {
-
-      showMessage(
-        "applicationMessage",
-        "Customer mobile is required.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const utrNumber =
-      document
-        .getElementById(
-          "utrNumber"
-        )
-        .value
-        .trim();
-
-
-    if (!utrNumber) {
-
-      showMessage(
-        "applicationMessage",
-        "UTR / Transaction Number is required.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    const button =
       document.getElementById(
-        "submitButton"
+        "customerMobile"
+      ).value.trim();
+
+
+    if(
+      !/^[0-9]{10}$/.test(
+        customerMobile
+      )
+    ){
+
+      showAppMessage(
+        "Customer mobile 10 digit hona chahiye.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const utr =
+      document.getElementById(
+        "utrNumber"
+      ).value.trim();
+
+
+    if(!utr){
+
+      showAppMessage(
+        "UTR / Transaction Number required hai.",
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    const fields = {};
+
+
+    const fieldInputs =
+      document.querySelectorAll(
+        "#fieldsContainer [data-field]"
       );
 
 
-    button.disabled = true;
-    button.textContent =
+    for(
+      const input of fieldInputs
+    ){
+
+      const value =
+        input.value.trim();
+
+
+      if(
+        input.required &&
+        !value
+      ){
+
+        input.focus();
+
+        showAppMessage(
+          (FIELD_LABELS[
+            input.dataset.field
+          ] ||
+          input.dataset.field) +
+          " required hai.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      fields[
+        input.dataset.field
+      ] =
+        value;
+
+    }
+
+
+    const files = {};
+
+
+    const fileInputs =
+      document.querySelectorAll(
+        "#filesContainer [data-file]"
+      );
+
+
+    for(
+      const input of fileInputs
+    ){
+
+      const field =
+        input.dataset.file;
+
+
+      const file =
+        input.files[0];
+
+
+      if(
+        input.required &&
+        !file
+      ){
+
+        input.focus();
+
+        showAppMessage(
+          (FILE_LABELS[field] ||
+          field) +
+          " upload karein.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      if(!file){
+        continue;
+      }
+
+
+      if(
+        file.size >
+        MAX_FILE_SIZE
+      ){
+
+        showAppMessage(
+          file.name +
+          " 10 MB se bada hai.",
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      try{
+
+        files[field] =
+          await fileToBase64(
+            file
+          );
+
+      }
+      catch(error){
+
+        showAppMessage(
+          "File read failed: " +
+          file.name,
+          "error"
+        );
+
+        return;
+
+      }
+
+    }
+
+
+    const amount =
+      getCurrentAmount();
+
+
+    const submitBtn =
+      document.getElementById(
+        "submitBtn"
+      );
+
+
+    submitBtn.disabled =
+      true;
+
+    submitBtn.textContent =
       "Uploading & Submitting...";
 
 
-    try {
+    document.getElementById(
+      "applicationForm"
+    ).classList.add(
+      "loading"
+    );
 
-      const fields = {};
+
+    try{
+
+      const payload = {
+
+        action:
+          "submitApplication",
+
+        retailerId:
+          loggedRetailer.retailerId ||
+          loggedRetailer.username,
+
+        retailerMobile:
+          loggedRetailer.mobile ||
+          "",
+
+        customerMobile:
+          customerMobile,
+
+        email:
+          document.getElementById(
+            "customerEmail"
+          ).value.trim(),
+
+        serviceCode:
+          service.id,
+
+        service:
+          service.id,
+
+        amount:
+          amount,
+
+        utrNumber:
+          utr,
+
+        paymentStatus:
+          "Pending",
+
+        applicationStatus:
+          "Received",
+
+        fields:
+          fields,
+
+        files:
+          files
+
+      };
 
 
-      document
-        .querySelectorAll(
-          "#dynamicFields [data-field]"
-        )
-        .forEach(
-          function(element) {
-
-            fields[
-              element.dataset.field
-            ] =
-              element.value;
-
-          }
+      const result =
+        await postAPI(
+          payload
         );
 
 
-      const files = {};
+      if(
+        !result ||
+        result.success !== true
+      ){
 
-
-      const fileElements =
-        document.querySelectorAll(
-          "[data-file-field]"
+        throw new Error(
+          result &&
+          result.message
+            ? result.message
+            : "Application submit failed."
         );
 
+      }
 
-      for (
-        const input of fileElements
-      ) {
 
-        if (
-          !input.files ||
-          !input.files[0]
-        ) {
+      const tr =
+        result.trNumber ||
+        result.tr_number ||
+        result.applicationId;
 
-          continue;
+
+      if(!tr){
+
+        throw new Error(
+          "Application submit hua lekin TR Number receive nahi hua."
+        );
+
+      }
+
+
+      document.getElementById(
+        "successTR"
+      ).textContent =
+        tr;
+
+
+      document.getElementById(
+        "trackingTR"
+      ).value =
+        tr;
+
+
+      document.getElementById(
+        "successCard"
+      ).classList.remove(
+        "hidden"
+      );
+
+
+      window.scrollTo({
+        top:
+          document.getElementById(
+            "successCard"
+          ).offsetTop - 80,
+        behavior:
+          "smooth"
+      });
+
+
+      showAppMessage(
+        "Application successfully submitted.",
+        "success"
+      );
+
+    }
+    catch(error){
+
+      showAppMessage(
+        error.message ||
+        "Application submit failed.",
+        "error"
+      );
+
+    }
+    finally{
+
+      submitBtn.disabled =
+        false;
+
+      submitBtn.textContent =
+        "Submit Application";
+
+      document.getElementById(
+        "applicationForm"
+      ).classList.remove(
+        "loading"
+      );
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   CURRENT AMOUNT
+===================================================== */
+
+function getCurrentAmount(){
+
+  const service =
+    getSelectedService();
+
+
+  if(!service){
+    return 0;
+  }
+
+
+  if(
+    service.without_ration_amount &&
+    document.getElementById(
+      "withoutRation"
+    ).checked
+  ){
+
+    return Number(
+      service.without_ration_amount
+    );
+
+  }
+
+
+  return Number(
+    service.amount || 0
+  );
+
+}
+
+
+/* =====================================================
+   FILE -> BASE64
+===================================================== */
+
+function fileToBase64(
+  file
+){
+
+  return new Promise(
+    function(resolve,reject){
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        function(){
+
+          resolve({
+
+            name:
+              file.name,
+
+            type:
+              file.type ||
+              "application/octet-stream",
+
+            data:
+              reader.result
+
+          });
+
+        };
+
+
+      reader.onerror =
+        function(){
+
+          reject(
+            reader.error ||
+            new Error(
+              "File read failed."
+            )
+          );
+
+        };
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   RESET FORM
+===================================================== */
+
+function resetApplicationForm(){
+
+  document.getElementById(
+    "applicationForm"
+  ).reset();
+
+
+  document.getElementById(
+    "fieldsContainer"
+  ).innerHTML =
+    "";
+
+  document.getElementById(
+    "filesContainer"
+  ).innerHTML =
+    "";
+
+
+  document.getElementById(
+    "dynamicFields"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "filesCard"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "rationOption"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "amountDisplay"
+  ).textContent =
+    "₹0";
+
+}
+
+
+/* =====================================================
+   NEW APPLICATION
+===================================================== */
+
+function newApplication(){
+
+  document.getElementById(
+    "successCard"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  resetApplicationForm();
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =====================================================
+   TRACK SUCCESS TR
+===================================================== */
+
+function trackSuccessTR(){
+
+  const tr =
+    document.getElementById(
+      "successTR"
+    ).textContent.trim();
+
+
+  if(!tr || tr === "-"){
+    return;
+  }
+
+
+  document.getElementById(
+    "trackingTR"
+  ).value =
+    tr;
+
+
+  trackApplication();
+
+}
+
+
+/* =====================================================
+   TRACK APPLICATION
+===================================================== */
+
+async function trackApplication(){
+
+  const tr =
+    document.getElementById(
+      "trackingTR"
+    ).value.trim();
+
+
+  if(!tr){
+
+    showTrackingMessage(
+      "TR Number enter karein.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const btn =
+    document.getElementById(
+      "trackingBtn"
+    );
+
+
+  btn.disabled =
+    true;
+
+  btn.textContent =
+    "Checking...";
+
+
+  document.getElementById(
+    "trackingResult"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  try{
+
+    const result =
+      await getAPI(
+        "action=track&trNumber=" +
+        encodeURIComponent(tr)
+      );
+
+
+    if(
+      !result ||
+      result.success !== true
+    ){
+
+      throw new Error(
+        result &&
+        result.message
+          ? result.message
+          : "Application not found."
+      );
+
+    }
+
+
+    renderTrackingResult(
+      result
+    );
+
+
+    showTrackingMessage(
+      "Application found.",
+      "success"
+    );
+
+  }
+  catch(error){
+
+    showTrackingMessage(
+      error.message ||
+      "Tracking failed.",
+      "error"
+    );
+
+  }
+  finally{
+
+    btn.disabled =
+      false;
+
+    btn.textContent =
+      "Track";
+
+  }
+
+}
+
+
+/* =====================================================
+   RENDER TRACKING
+===================================================== */
+
+function renderTrackingResult(
+  result
+){
+
+  const grid =
+    document.getElementById(
+      "trackingGrid"
+    );
+
+
+  grid.innerHTML =
+    "";
+
+
+  const items = [
+
+    [
+      "TR Number",
+      result.trNumber ||
+      result.tr_number ||
+      result.applicationId ||
+      "-"
+    ],
+
+    [
+      "Created At",
+      result.createdAt || "-"
+    ],
+
+    [
+      "Retailer ID",
+      result.retailerId || "-"
+    ],
+
+    [
+      "Customer Mobile",
+      result.customerMobile || "-"
+    ],
+
+    [
+      "Service",
+      result.serviceName ||
+      result.serviceCode ||
+      "-"
+    ],
+
+    [
+      "Amount",
+      result.amount
+        ? "₹" +
+          Number(
+            result.amount
+          ).toLocaleString(
+            "en-IN"
+          )
+        : "-"
+    ],
+
+    [
+      "UTR Number",
+      result.utrNumber || "-"
+    ],
+
+    [
+      "Payment Status",
+      result.paymentStatus || "Pending"
+    ],
+
+    [
+      "Application Status",
+      result.applicationStatus || "Received"
+    ],
+
+    [
+      "Applicant Name",
+      result.applicantName ||
+      result.englishName ||
+      "-"
+    ],
+
+    [
+      "Gujarati Name",
+      result.gujaratiName || "-"
+    ]
+
+  ];
+
+
+  items.forEach(
+    function(item){
+
+      const div =
+        document.createElement(
+          "div"
+        );
+
+      div.className =
+        "result-item";
+
+
+      const label =
+        document.createElement(
+          "div"
+        );
+
+      label.className =
+        "label";
+
+      label.textContent =
+        item[0];
+
+
+      const value =
+        document.createElement(
+          "div"
+        );
+
+      value.className =
+        "value";
+
+      value.textContent =
+        item[1];
+
+
+      div.appendChild(
+        label
+      );
+
+      div.appendChild(
+        value
+      );
+
+
+      grid.appendChild(
+        div
+      );
+
+    }
+  );
+
+
+  const filesBox =
+    document.getElementById(
+      "trackedFiles"
+    );
+
+
+  filesBox.innerHTML =
+    "";
+
+
+  if(
+    result.files &&
+    typeof result.files === "object"
+  ){
+
+    const title =
+      document.createElement(
+        "h4"
+      );
+
+    title.textContent =
+      "Uploaded Documents";
+
+    title.style.marginBottom =
+      "10px";
+
+    filesBox.appendChild(
+      title
+    );
+
+
+    Object.keys(
+      result.files
+    ).forEach(
+      function(key){
+
+        const file =
+          result.files[key];
+
+
+        if(!file){
+          return;
+        }
+
+
+        const item =
+          document.createElement(
+            "div"
+          );
+
+        item.className =
+          "file-item";
+
+
+        if(file.url){
+
+          item.innerHTML =
+            "<a href=\"" +
+            escapeHtml(
+              file.url
+            ) +
+            "\" target=\"_blank\" rel=\"noopener\">" +
+            escapeHtml(
+              file.name ||
+              key
+            ) +
+            "</a>";
+
+        }
+        else{
+
+          item.textContent =
+            file.name ||
+            key;
 
         }
 
 
-        const file =
-          input.files[0];
-
-
-        const data =
-          await readFileAsBase64(
-            file
-          );
-
-
-        files[
-          input.dataset.fileField
-        ] = {
-
-          name:
-            file.name,
-
-          type:
-            file.type,
-
-          data:
-            data
-
-        };
-
-      }
-
-
-      const amount =
-        Number(
-          document
-            .getElementById(
-              "amount"
-            )
-            .value ||
-          selectedService.amount
-        );
-
-
-      const result =
-        await apiPost({
-
-          action:
-            "submitapplication",
-
-          retailerId:
-            currentRetailer.retailerId,
-
-          retailerMobile:
-            currentRetailer.mobile || "",
-
-          customerMobile:
-            customerMobile,
-
-          email:
-            document
-              .getElementById(
-                "customerEmail"
-              )
-              .value
-              .trim(),
-
-          serviceCode:
-            selectedService.id,
-
-          amount:
-            amount,
-
-          utrNumber:
-            utrNumber,
-
-          paymentStatus:
-            "Pending",
-
-          applicationStatus:
-            "Received",
-
-          fields:
-            fields,
-
-          files:
-            files
-
-        });
-
-
-      if (
-        !result.success
-      ) {
-
-        throw new Error(
-          result.message ||
-          "Application submission failed."
+        filesBox.appendChild(
+          item
         );
 
       }
+    );
+
+  }
 
 
-      document
-        .getElementById(
-          "submitResult"
-        )
-        .innerHTML = `
+  if(result.driveFolder){
 
-          <div class="result-box">
-
-            <div>
-              Application submitted successfully.
-            </div>
-
-            <br>
-
-            <div>
-              Your TR Number:
-            </div>
-
-            <div class="tr-number">
-              ${escapeHtml(
-                result.trNumber ||
-                result.tr_number ||
-                result.applicationId
-              )}
-            </div>
-
-            <br>
-
-            <div>
-              Please save this TR Number for tracking.
-            </div>
-
-            <br>
-
-            <button
-              class="btn-secondary"
-              onclick="openTracking('${escapeHtml(
-                result.trNumber ||
-                result.tr_number ||
-                result.applicationId
-              )}')"
-            >
-              Track This Application
-            </button>
-
-          </div>
-
-        `;
-
-
-      document
-        .getElementById(
-          "applicationMessage"
-        )
-        .className =
-        "message";
-
-
-      resetApplicationForm();
-
-    } catch (err) {
-
-      showMessage(
-        "applicationMessage",
-        err.message ||
-          "Application submission failed.",
-        "error"
+    const item =
+      document.createElement(
+        "div"
       );
 
-    } finally {
+    item.className =
+      "file-item";
 
-      button.disabled = false;
+    item.innerHTML =
+      "<a href=\"" +
+      escapeHtml(
+        result.driveFolder
+      ) +
+      "\" target=\"_blank\" rel=\"noopener\">" +
+      "Open Application Drive Folder" +
+      "</a>";
 
-      button.textContent =
-        "Submit Application";
-
-    }
-
-  }
-
-
-  /* =====================================================
-     RESET
-  ===================================================== */
-
-  function resetApplicationForm() {
-
-    document
-      .getElementById(
-        "customerMobile"
-      )
-      .value = "";
-
-
-    document
-      .getElementById(
-        "customerEmail"
-      )
-      .value = "";
-
-
-    document
-      .getElementById(
-        "utrNumber"
-      )
-      .value = "";
-
-
-    document
-      .getElementById(
-        "dynamicFields"
-      )
-      .innerHTML = "";
-
-
-    document
-      .getElementById(
-        "fileInputs"
-      )
-      .innerHTML = "";
+    filesBox.appendChild(
+      item
+    );
 
   }
 
 
-  /* =====================================================
-     TRACKING
-  ===================================================== */
+  document.getElementById(
+    "trackingResult"
+  ).classList.remove(
+    "hidden"
+  );
 
-  function openTracking(trNumber) {
-
-    let url =
-      "tracking.html";
-
-
-    if (trNumber) {
-
-      url +=
-        "?trNumber=" +
-        encodeURIComponent(
-          trNumber
-        );
-
-    }
+}
 
 
-    window.location.href =
-      url;
+/* =====================================================
+   COPY UPI
+===================================================== */
+
+async function copyUPI(){
+
+  try{
+
+    await navigator.clipboard.writeText(
+      UPI_ID
+    );
+
+    alert(
+      "UPI ID copied: " +
+      UPI_ID
+    );
+
+  }
+  catch(error){
+
+    prompt(
+      "Copy UPI ID:",
+      UPI_ID
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   API GET
+===================================================== */
+
+async function getAPI(
+  query
+){
+
+  const url =
+    API_URL +
+    (
+      API_URL.indexOf("?") >= 0
+        ? "&"
+        : "?"
+    ) +
+    query;
+
+
+  const response =
+    await fetch(
+      url,
+      {
+        method:"GET",
+        cache:"no-store"
+      }
+    );
+
+
+  const text =
+    await response.text();
+
+
+  let result;
+
+
+  try{
+
+    result =
+      JSON.parse(
+        text
+      );
+
+  }
+  catch(error){
+
+    throw new Error(
+      "API ne valid JSON response nahi diya."
+    );
 
   }
 
 
-  /* =====================================================
-     LOGOUT
-  ===================================================== */
+  return result;
 
-  function logout() {
-
-    clearRetailer();
-
-    currentRetailer =
-      null;
-
-    window.location.reload();
-
-  }
+}
 
 
-  /* =====================================================
-     INIT
-  ===================================================== */
+/* =====================================================
+   API POST
+===================================================== */
 
-  document.addEventListener(
-    "DOMContentLoaded",
-    function() {
+async function postAPI(
+  data
+){
 
-      const stored =
-        getStoredRetailer();
+  const response =
+    await fetch(
+      API_URL,
+      {
+        method:"POST",
 
+        headers:{
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
 
-      if (stored) {
-
-        currentRetailer =
-          stored;
-
-        showDashboard();
+        body:
+          JSON.stringify(
+            data
+          )
 
       }
+    );
 
-    }
+
+  const text =
+    await response.text();
+
+
+  let result;
+
+
+  try{
+
+    result =
+      JSON.parse(
+        text
+      );
+
+  }
+  catch(error){
+
+    throw new Error(
+      "API ne valid JSON response nahi diya."
+    );
+
+  }
+
+
+  return result;
+
+}
+
+
+/* =====================================================
+   LOGIN MESSAGE
+===================================================== */
+
+function showLoginMessage(
+  text,
+  type
+){
+
+  const box =
+    document.getElementById(
+      "loginMessage"
+    );
+
+
+  box.textContent =
+    text;
+
+
+  box.className =
+    "message show " +
+    (
+      type ||
+      "info"
+    );
+
+}
+
+
+/* =====================================================
+   APP MESSAGE
+===================================================== */
+
+function showAppMessage(
+  text,
+  type
+){
+
+  const box =
+    document.getElementById(
+      "appMessage"
+    );
+
+
+  box.textContent =
+    text;
+
+
+  box.className =
+    "message show " +
+    (
+      type ||
+      "info"
+    );
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* =====================================================
+   TRACKING MESSAGE
+===================================================== */
+
+function showTrackingMessage(
+  text,
+  type
+){
+
+  const box =
+    document.getElementById(
+      "trackingMessage"
+    );
+
+
+  box.textContent =
+    text;
+
+
+  box.className =
+    "message show " +
+    (
+      type ||
+      "info"
+    );
+
+}
+
+
+/* =====================================================
+   FORMAT BYTES
+===================================================== */
+
+function formatBytes(
+  bytes
+){
+
+  if(!bytes){
+    return "0 B";
+  }
+
+
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB"
+  ];
+
+
+  const index =
+    Math.floor(
+      Math.log(bytes) /
+      Math.log(1024)
+    );
+
+
+  return (
+    bytes /
+    Math.pow(
+      1024,
+      index
+    )
+  ).toFixed(1) +
+  " " +
+  units[index];
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(
+  value
+){
+
+  return String(
+    value || ""
+  )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
   );
+
+}
 
 </script>
 
 </body>
 </html>
+```
+
+### Upload karne se pehle sirf ye ek jagah change karein
+
+```javascript
+const API_URL =
+  "PASTE_YOUR_GOOGLE_APPS_SCRIPT_EXEC_URL_HERE";
+```
+
+Isko aapke Apps Script deployment ke **live `/exec` URL** se replace karein.
+
+Aapke current `Code.gs` ke saath frontend ye actions use karega:
+
+```text
+retailerLogin
+services
+submitApplication
+track
+```
+
+Aur submit hone ke baad backend ka returned `TR Number` automatically screen par dikhega aur usi TR se **same retailer page par tracking** bhi ho jayegi.
