@@ -4,2859 +4,400 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>AllInOneStop | Retailer Portal</title>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
 <style>
 *{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Inter,Segoe UI,Arial,sans-serif;
-  background:linear-gradient(135deg,#eef2ff,#f8fbff 45%,#ecfeff);
-  color:#172033;
-  min-height:100vh
-}
-
-button,input,select{
-  font:inherit
-}
-
-button,.btn{
-  border:0;
-  border-radius:11px;
-  padding:12px 17px;
-  font-weight:800;
-  cursor:pointer;
-  text-decoration:none;
-  display:inline-block;
-  background:linear-gradient(135deg,#5b5cf0,#287cff);
-  color:#fff
-}
-
-button:hover,.btn:hover{
-  box-shadow:0 8px 22px #3658ff30;
-  transform:translateY(-1px)
-}
-
-button:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-  transform:none
-}
-
-.topbar{
-  background:#fff;
-  border-bottom:1px solid #e4e7ec;
-  position:sticky;
-  top:0;
-  z-index:20;
-  box-shadow:0 5px 20px #26305012
-}
-
-.nav{
-  max-width:1200px;
-  margin:auto;
-  padding:16px 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px
-}
-
-.brand{
-  font-size:25px;
-  font-weight:900;
-  color:#4f46e5
-}
-
-.brand span{
-  color:#172033
-}
-
-.nav-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap
-}
-
-.dark{
-  background:#344054
-}
-
-.light{
-  background:#fff;
-  color:#344054;
-  border:1px solid #d0d5dd
-}
-
-.wrap{
-  max-width:1200px;
-  margin:28px auto;
-  padding:0 16px
-}
-
-.box{
-  background:#ffffffee;
-  border:1px solid #fff;
-  border-radius:22px;
-  padding:25px;
-  box-shadow:0 15px 45px #26305018;
-  margin-bottom:20px
-}
-
-.login-box{
-  max-width:470px;
-  margin:65px auto
-}
-
-.login-logo{
-  width:72px;
-  height:72px;
-  border-radius:20px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,#5b5cf0,#06b6d4);
-  font-size:34px;
-  margin-bottom:15px
-}
-
-h1{
-  margin:0 0 8px;
-  color:#4f46e5
-}
-
-h2{
-  margin:0 0 8px
-}
-
-h3{
-  margin:0 0 12px
-}
-
-.sub,p{
-  color:#667085;
-  line-height:1.55
-}
-
-.hidden{
-  display:none!important
-}
-
-label{
-  display:block;
-  font-size:13px;
-  font-weight:800;
-  color:#475467;
-  margin-bottom:6px
-}
-
-input,select,textarea{
-  width:100%;
-  padding:12px;
-  border:1px solid #d9deea;
-  border-radius:11px;
-  background:#fff;
-  outline:none;
-  margin-bottom:14px
-}
-
-textarea{
-  min-height:90px;
-  resize:vertical
-}
-
-input:focus,select:focus,textarea:focus{
-  border-color:#6366f1;
-  outline:2px solid #c7d2fe
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:15px
-}
-
-.full{
-  grid-column:1/-1
-}
-
-.section-title{
-  padding:15px 17px;
-  border-radius:14px;
-  background:#eef4ff;
-  color:#175cd3;
-  margin:20px 0 16px;
-  font-weight:900
-}
-
-.service-card{
-  border:1px solid #d9deea;
-  border-radius:15px;
-  padding:16px;
-  background:#fff
-}
-
-.service-card.selected{
-  border:2px solid #6366f1;
-  background:#f7f7ff
-}
-
-.service-name{
-  font-weight:900
-}
-
-.price{
-  font-size:20px;
-  color:#4f46e5;
-  font-weight:900;
-  margin-top:6px
-}
-
-.muted{
-  font-size:12px;
-  color:#667085
-}
-
-.services{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px
-}
-
-.service-card{
-  cursor:pointer
-}
-
-.service-card:hover{
-  box-shadow:0 8px 22px #26305012
-}
-
-#dynamicFields{
-  margin-top:20px
-}
-
-.req{
-  color:#d92d20
-}
-
-.help{
-  font-size:12px;
-  color:#667085;
-  margin:-7px 0 12px
-}
-
-.filebox{
-  padding:13px;
-  border:1px dashed #aab4c5;
-  border-radius:12px;
-  background:#fafbff;
-  margin-bottom:14px
-}
-
-.summary{
-  background:#eef5ff;
-  border-radius:15px;
-  padding:18px;
-  margin-top:20px
-}
-
-.summary-row{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  padding:7px 0
-}
-
-.total{
-  font-size:23px;
-  font-weight:900;
-  color:#1769e0;
-  border-top:1px solid #cbdaf5;
-  margin-top:8px;
-  padding-top:12px
-}
-
-.payment{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin-top:20px
-}
-
-.paybox{
-  border:1px solid #d9deea;
-  border-radius:15px;
-  padding:18px;
-  background:#fff
-}
-
-.upi{
-  font-weight:900;
-  color:#4f46e5
-}
-
-.qr{
-  min-height:210px;
-  display:grid;
-  place-items:center
-}
-
-.utr{
-  font-size:16px;
-  text-transform:uppercase
-}
-
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:18px
-}
-
-.status{
-  padding:13px 15px;
-  border-radius:11px;
-  margin-top:12px;
-  font-weight:700
-}
-
-.success{
-  background:#ecfdf3;
-  color:#087443
-}
-
-.error{
-  background:#fef2f2;
-  color:#b42318
-}
-
-.warning{
-  background:#fffbeb;
-  color:#92400e
-}
-
-.result{
-  border:2px solid #86efac;
-  background:#f0fdf4;
-  border-radius:18px;
-  padding:20px;
-  margin-top:22px
-}
-
-.tr{
-  font-size:25px;
-  font-weight:900;
-  color:#15803d
-}
-
-.center{
-  text-align:center
-}
-
-.small{
-  font-size:12px;
-  color:#667085
-}
-
-.userbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  flex-wrap:wrap;
-  background:#f8fafc;
-  border:1px solid #e4e7ec;
-  padding:14px 16px;
-  border-radius:14px;
-  margin-bottom:18px
-}
-
-.userbar strong{
-  color:#4f46e5
-}
-
-@media(max-width:900px){
-
-  .services{
-    grid-template-columns:repeat(2,minmax(0,1fr))
-  }
-
-  .payment{
-    grid-template-columns:1fr
-  }
-}
-
-@media(max-width:650px){
-
-  .grid,
-  .services{
-    grid-template-columns:1fr
-  }
-
-  .full{
-    grid-column:auto
-  }
-
-  .nav{
-    align-items:flex-start;
-    flex-direction:column
-  }
-
-  .nav-actions{
-    width:100%
-  }
-
-  .nav-actions>*{
-    flex:1;
-    text-align:center
-  }
-
-  .wrap{
-    margin-top:18px
-  }
-
-  .box{
-    padding:18px
-  }
-}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#eef2ff,#f8fbff 45%,#ecfeff);color:#172033;min-height:100vh}
+button,input,select{font:inherit}
+button,.btn{border:0;border-radius:11px;padding:12px 17px;font-weight:800;cursor:pointer;text-decoration:none;display:inline-block;background:linear-gradient(135deg,#5b5cf0,#287cff);color:#fff}
+button:hover,.btn:hover{box-shadow:0 8px 22px #3658ff30;transform:translateY(-1px)}
+button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.topbar{background:#fff;border-bottom:1px solid #e4e7ec;position:sticky;top:0;z-index:20;box-shadow:0 5px 20px #26305012}
+.nav{max-width:1200px;margin:auto;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{font-size:25px;font-weight:900;color:#4f46e5}.brand span{color:#172033}
+.nav-actions{display:flex;gap:8px;flex-wrap:wrap}.dark{background:#344054}.light{background:#fff;color:#344054;border:1px solid #d0d5dd}
+.wrap{max-width:1200px;margin:28px auto;padding:0 16px}.box{background:#ffffffee;border:1px solid #fff;border-radius:22px;padding:25px;box-shadow:0 15px 45px #26305018;margin-bottom:20px}
+.login-box{max-width:470px;margin:65px auto}.login-logo{width:72px;height:72px;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#5b5cf0,#06b6d4);font-size:34px;margin-bottom:15px}
+h1{margin:0 0 8px;color:#4f46e5}h2{margin:0 0 8px}h3{margin:0 0 12px}.sub,p{color:#667085;line-height:1.55}.hidden{display:none!important}
+label{display:block;font-size:13px;font-weight:800;color:#475467;margin-bottom:6px}input,select,textarea{width:100%;padding:12px;border:1px solid #d9deea;border-radius:11px;background:#fff;outline:none;margin-bottom:14px}textarea{min-height:90px;resize:vertical}input:focus,select:focus,textarea:focus{border-color:#6366f1;outline:2px solid #c7d2fe}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.full{grid-column:1/-1}
+.section-title{padding:15px 17px;border-radius:14px;background:#eef4ff;color:#175cd3;margin:20px 0 16px;font-weight:900}
+.service-card{border:1px solid #d9deea;border-radius:15px;padding:16px;background:#fff}.service-card.selected{border:2px solid #6366f1;background:#f7f7ff}.service-name{font-weight:900}.price{font-size:20px;color:#4f46e5;font-weight:900;margin-top:6px}.muted{font-size:12px;color:#667085}
+.services{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.service-card{cursor:pointer}.service-card:hover{box-shadow:0 8px 22px #26305012}
+#dynamicFields{margin-top:20px}.req{color:#d92d20}.help{font-size:12px;color:#667085;margin:-7px 0 12px}.filebox{padding:13px;border:1px dashed #aab4c5;border-radius:12px;background:#fafbff;margin-bottom:14px}
+.summary{background:#eef5ff;border-radius:15px;padding:18px;margin-top:20px}.summary-row{display:flex;justify-content:space-between;gap:15px;padding:7px 0}.total{font-size:23px;font-weight:900;color:#1769e0;border-top:1px solid #cbdaf5;margin-top:8px;padding-top:12px}
+.payment{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}.paybox{border:1px solid #d9deea;border-radius:15px;padding:18px;background:#fff}.upi{font-weight:900;color:#4f46e5}.qr{min-height:210px;display:grid;place-items:center}.utr{font-size:16px;text-transform:uppercase}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.status{padding:13px 15px;border-radius:11px;margin-top:12px;font-weight:700}.success{background:#ecfdf3;color:#087443}.error{background:#fef2f2;color:#b42318}.warning{background:#fffbeb;color:#92400e}
+.result{border:2px solid #86efac;background:#f0fdf4;border-radius:18px;padding:20px;margin-top:22px}.tr{font-size:25px;font-weight:900;color:#15803d}.center{text-align:center}.small{font-size:12px;color:#667085}
+.userbar{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;background:#f8fafc;border:1px solid #e4e7ec;padding:14px 16px;border-radius:14px;margin-bottom:18px}.userbar strong{color:#4f46e5}
+@media(max-width:900px){.services{grid-template-columns:repeat(2,minmax(0,1fr))}.payment{grid-template-columns:1fr}}
+@media(max-width:650px){.grid,.services{grid-template-columns:1fr}.full{grid-column:auto}.nav{align-items:flex-start;flex-direction:column}.nav-actions{width:100%}.nav-actions>*{flex:1;text-align:center}.wrap{margin-top:18px}.box{padding:18px}}
 </style>
 </head>
-
 <body>
-
 <header class="topbar">
-
   <div class="nav">
-
-    <div class="brand">
-      All<span>InOneStop</span>
-    </div>
-
+    <div class="brand">All<span>InOneStop</span></div>
     <div class="nav-actions">
-
-      <a
-        class="btn light"
-        href="index.html"
-      >
-        🏠 Home
-      </a>
-
-      <button
-        id="logoutTop"
-        class="dark hidden"
-        type="button"
-        onclick="logout()"
-      >
-        🚪 Logout
-      </button>
-
+      <a class="btn light" href="index.html">🏠 Home</a>
+      <button id="logoutTop" class="dark hidden" type="button" onclick="logout()">🚪 Logout</button>
     </div>
-
   </div>
-
 </header>
 
-
 <main class="wrap">
-
-
-<!-- =========================================================
-     RETAILER LOGIN
-========================================================= -->
-
-<section
-  id="loginPanel"
-  class="box login-box"
->
-
-  <div class="login-logo">
-    🏪
-  </div>
-
-  <h1>
-    Retailer Login
-  </h1>
-
-  <p class="sub">
-    Retailer ID / Username और Password से login करें।
-    बिना login के service portal नहीं खुलेगा।
-  </p>
-
-  <label for="loginUser">
-    Retailer ID / Username
-    <span class="req">*</span>
-  </label>
-
-  <input
-    id="loginUser"
-    autocomplete="username"
-    placeholder="RET-XXXXXX"
-  >
-
-  <label for="loginPass">
-    Password
-    <span class="req">*</span>
-  </label>
-
-  <input
-    id="loginPass"
-    type="password"
-    autocomplete="current-password"
-    placeholder="Enter password"
-  >
-
-  <button
-    id="loginBtn"
-    type="button"
-    style="width:100%"
-    onclick="login()"
-  >
-    🔐 Login
-  </button>
-
-  <div id="loginMsg"></div>
-
-</section>
-
-
-<!-- =========================================================
-     RETAILER PORTAL
-========================================================= -->
-
-<section
-  id="portalPanel"
-  class="hidden"
->
-
-<div class="box">
-
-
-<!-- RETAILER INFO -->
-
-<div class="userbar">
-
-  <div>
-
-    👤 Retailer:
-
-    <strong id="retailerName">
-      —
-    </strong>
-
-    <br>
-
-    <span class="small">
-
-      Retailer ID:
-
-      <strong id="retailerIdView">
-        —
-      </strong>
-
-    </span>
-
-  </div>
-
-
-  <div>
-
-    📱
-
-    <strong id="retailerMobileView">
-      —
-    </strong>
-
-  </div>
-
-</div>
-
-
-<h1>
-  New Application
-</h1>
-
-<p class="sub">
-  पहले service select करें। उसके बाद उसी service के
-  required fields अपने आप खुलेंगे।
-</p>
-
-
-<!-- CUSTOMER -->
-
-<div class="section-title">
-  1. Customer / Retailer Information
-</div>
-
-
-<div class="grid">
-
-  <div>
-
-    <label>
-      Customer Mobile
-      <span class="req">*</span>
-    </label>
-
-    <input
-      id="customerMobile"
-      inputmode="numeric"
-      maxlength="10"
-      placeholder="10 digit mobile number"
-    >
-
-  </div>
-
-
-  <div>
-
-    <label>
-      Customer Email
-    </label>
-
-    <input
-      id="customerEmail"
-      type="email"
-      placeholder="customer@email.com"
-    >
-
-  </div>
-
-</div>
-
-
-<!-- SERVICES -->
-
-<div class="section-title">
-  2. Select Service
-</div>
-
-
-<div
-  id="serviceCards"
-  class="services"
-></div>
-
-
-<!-- SERVICE FORM -->
-
-<div
-  id="serviceForm"
-  class="hidden"
->
-
-
-<div class="section-title">
-  3. Required Details
-</div>
-
-
-<div
-  id="dynamicFields"
-  class="grid"
-></div>
-
-
-<!-- PAYMENT -->
-
-<div class="section-title">
-  4. Payment
-</div>
-
-
-<div class="summary">
-
-  <div class="summary-row">
-
-    <span>
-      Selected Service
-    </span>
-
-    <strong id="selectedService">
-      —
-    </strong>
-
-  </div>
-
-
-  <div class="summary-row">
-
-    <span>
-      UPI
-    </span>
-
-    <strong id="upiText">
-      gujrat.nsfa@ybl
-    </strong>
-
-  </div>
-
-
-  <div class="summary-row total">
-
-    <span>
-      Total Amount
-    </span>
-
-    <span>
-
-      ₹
-
-      <span id="price">
-        0
-      </span>
-
-    </span>
-
-  </div>
-
-</div>
-
-
-<div class="payment">
-
-
-<!-- QR -->
-
-<div class="paybox center">
-
-  <h3>
-    Scan & Pay
-  </h3>
-
-  <div
-    id="qrcode"
-    class="qr"
-  ></div>
-
-  <div class="upi">
-    gujrat.nsfa@ybl
-  </div>
-
-  <p class="small">
-    QR amount selected service के अनुसार automatic है।
-  </p>
-
-</div>
-
-
-<!-- UTR -->
-
-<div class="paybox">
-
-  <h3>
-    Payment Details
-  </h3>
-
-  <label>
-    UTR / Transaction Number
-    <span class="req">*</span>
-  </label>
-
-  <input
-    id="utr"
-    class="utr"
-    placeholder="Enter UTR / Transaction ID"
-  >
-
-
-  <label>
-    Payment Screenshot
-    <span class="req">*</span>
-  </label>
-
-  <div class="filebox">
-
-    <input
-      id="paymentScreenshot"
-      type="file"
-      accept="image/*,.pdf"
-    >
-
-  </div>
-
-
-  <p class="small">
-    Payment complete करने के बाद UTR और screenshot देना जरूरी है।
-  </p>
-
-</div>
-
-</div>
-
-
-<!-- BUTTONS -->
-
-<div class="actions">
-
-  <button
-    id="submitBtn"
-    type="button"
-    onclick="submitApplication()"
-  >
-    ✅ Submit Application
-  </button>
-
-
-  <button
-    type="button"
-    class="dark"
-    onclick="resetApplication()"
-  >
-    ↻ Reset
-  </button>
-
-
-  <button
-    type="button"
-    class="light"
-    onclick="logout()"
-  >
-    🚪 Logout
-  </button>
-
-</div>
-
-
-<div id="formMsg"></div>
-
-
-<!-- RESULT -->
-
-<div
-  id="result"
-  class="result hidden center"
->
-
-  <div>
-    Application / TR Number
-  </div>
-
-  <div
-    id="trNo"
-    class="tr"
-  ></div>
-
-  <p id="resultMsg"></p>
-
-  <a
-    class="btn"
-    href="tracking.html"
-  >
-    🔎 Track Application
-  </a>
-
-</div>
-
-
-</div>
-
-</div>
-
-</section>
-
-</main>
-
-
-<script>
-
-/* =========================================================
-   CONFIG
-========================================================= */
-
-const API_URL =
-"https://script.google.com/macros/s/AKfycbzBQyU5eT1yZSDJ_QtmUY4g8ulDSXJKBXLVO9Oq0w37Ipt5hDayv3rp8XN9HnnjN899lg/exec";
-
-const UPI_ID =
-"gujrat.nsfa@ybl";
-
-const UPI_NAME =
-"RAJKUMAR RATIONCARD SERVICES";
-
-
-/* =========================================================
-   SERVICES
-========================================================= */
-
-const SERVICES = [
-
-{
-  id:"ration_new_name",
-  name:"Ration Card - New Name Add",
-  amount:70,
-  without:100,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "father_name",
-    "husband_name",
-    "dob",
-    "dob_year",
-    "ration_card_number",
-    "aadhaar_pdf",
-    "ration_card_pdf",
-    "without_ration_card"
-  ]
-},
-
-{
-  id:"ration_name_delete",
-  name:"Ration Card - Name Delete",
-  amount:100,
-  without:200,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "father_name",
-    "dob",
-    "ration_card_number",
-    "aadhaar_pdf",
-    "ration_card_pdf",
-    "without_ration_card"
-  ]
-},
-
-{
-  id:"ration_father_to_husband",
-  name:"Ration Card - Father Name to Husband Name Update",
-  amount:350,
-  without:500,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "father_name",
-    "husband_name",
-    "dob",
-    "ration_card_number",
-    "aadhaar_pdf",
-    "ration_card_pdf",
-    "without_ration_card"
-  ]
-},
-
-{
-  id:"ration_name_correction",
-  name:"Ration Card - Name Correction",
-  amount:350,
-  without:500,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "correct_name",
-    "dob",
-    "ration_card_number",
-    "aadhaar_pdf",
-    "ration_card_pdf",
-    "without_ration_card"
-  ]
-},
-
-{
-  id:"ration_bandh_chalu",
-  name:"Ration Card - Bandh Card Chalu",
-  amount:3500,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "dob",
-    "ration_card_number",
-    "aadhaar_pdf",
-    "ration_card_pdf"
-  ]
-},
-
-{
-  id:"ration_vibhajan",
-  name:"Ration Card - Vibhajan",
-  amount:2500,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "dob",
-    "ration_card_number",
-    "aadhaar_pdf",
-    "ration_card_pdf"
-  ]
-},
-
-{
-  id:"pan_pdf",
-  name:"PAN Card PDF",
-  amount:70,
-  fields:[
-    "pan_number",
-    "mobile",
-    "aadhaar_pdf"
-  ]
-},
-
-{
-  id:"dl_pdf",
-  name:"DL PDF",
-  amount:250,
-  fields:[
-    "dl_number",
-    "name_english",
-    "dob",
-    "mobile",
-    "aadhaar_pdf"
-  ]
-},
-
-{
-  id:"rc_pdf",
-  name:"RC PDF",
-  amount:300,
-  fields:[
-    "rc_number",
-    "vehicle_number",
-    "mobile",
-    "aadhaar_pdf"
-  ]
-},
-
-{
-  id:"election_card",
-  name:"Election Card",
-  amount:500,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "father_name",
-    "mother_name",
-    "husband_name",
-    "election_number",
-    "mobile",
-    "aadhaar_pdf",
-    "lc_pdf",
-    "photo",
-    "signature"
-  ]
-},
-
-{
-  id:"election_update",
-  name:"Election Card Update",
-  amount:500,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "father_name",
-    "mother_name",
-    "husband_name",
-    "election_number",
-    "mobile",
-    "aadhaar_pdf",
-    "lc_pdf",
-    "photo",
-    "signature",
-    "pancard_pdf"
-  ]
-},
-
-{
-  id:"pan_new",
-  name:"New PAN Card",
-  amount:500,
-  fields:[
-    "name_english",
-    "name_gujarati",
-    "father_name",
-    "dob",
-    "mobile",
-    "aadhaar_number",
-    "aadhaar_pdf",
-    "photo",
-    "signature"
-  ]
-},
-
-{
-  id:"pan_instant",
-  name:"Instant PAN Card",
-  amount:500,
-  fields:[
-    "aadhaar_number",
-    "mobile",
-    "aadhaar_pdf"
-  ]
-},
-
-{
-  id:"pan_correction",
-  name:"PAN Card Correction",
-  amount:500,
-  fields:[
-    "pan_number",
-    "correction_type",
-    "correct_name",
-    "dob",
-    "mobile",
-    "aadhaar_pdf",
-    "pancard_pdf",
-    "photo",
-    "signature"
-  ]
-},
-
-{
-  id:"lms_certificate",
-  name:"LMS Certificate",
-  amount:1500,
-  fields:[
-    "name_english",
-    "mobile",
-    "email",
-    "state",
-    "district",
-    "aadhaar_number",
-    "aadhaar_pdf"
-  ]
-}
-
-];
-
-
-/* =========================================================
-   FIELD DEFINITIONS
-========================================================= */
-
-const FIELD_META = {
-
-name_english:{
-  label:"Name as per Aadhaar - English",
-  type:"text",
-  placeholder:"Full Name"
-},
-
-name_gujarati:{
-  label:"આધાર મુજબ નામ - ગુજરાતી",
-  type:"text",
-  placeholder:"ગુજરાતી નામ"
-},
-
-father_name:{
-  label:"Father Name",
-  type:"text",
-  placeholder:"Father Name"
-},
-
-husband_name:{
-  label:"Husband Name",
-  type:"text",
-  placeholder:"Husband Name"
-},
-
-mother_name:{
-  label:"Mother Name",
-  type:"text",
-  placeholder:"Mother Name"
-},
-
-correct_name:{
-  label:"Correct Name",
-  type:"text",
-  placeholder:"Correct Name"
-},
-
-dob:{
-  label:"Date of Birth",
-  type:"date"
-},
-
-dob_year:{
-  label:"DOB Year",
-  type:"number",
-  placeholder:"YYYY"
-},
-
-ration_card_number:{
-  label:"Ration Card Number",
-  type:"text",
-  placeholder:"Ration Card Number"
-},
-
-pan_number:{
-  label:"PAN Number",
-  type:"text",
-  placeholder:"ABCDE1234F"
-},
-
-dl_number:{
-  label:"DL Number",
-  type:"text",
-  placeholder:"Driving Licence Number"
-},
-
-rc_number:{
-  label:"RC Number",
-  type:"text",
-  placeholder:"RC Number"
-},
-
-vehicle_number:{
-  label:"Vehicle Number",
-  type:"text",
-  placeholder:"GJ01AB1234"
-},
-
-election_number:{
-  label:"Election Card Number",
-  type:"text",
-  placeholder:"Election Number"
-},
-
-mobile:{
-  label:"Mobile Number",
-  type:"tel",
-  placeholder:"10 digit mobile number"
-},
-
-email:{
-  label:"Email",
-  type:"email",
-  placeholder:"email@example.com"
-},
-
-state:{
-  label:"State",
-  type:"text",
-  placeholder:"State"
-},
-
-district:{
-  label:"District",
-  type:"text",
-  placeholder:"District"
-},
-
-aadhaar_number:{
-  label:"Aadhaar Number",
-  type:"text",
-  placeholder:"12 digit Aadhaar number"
-},
-
-correction_type:{
-  label:"Correction Type",
-  type:"select",
-  options:[
-    "Name",
-    "Date of Birth",
-    "Photo",
-    "Other"
-  ]
-},
-
-aadhaar_pdf:{
-  label:"Aadhaar Card PDF",
-  type:"file",
-  accept:".pdf",
-  fileKey:"aadhaar"
-},
-
-ration_card_pdf:{
-  label:"Ration Card PDF",
-  type:"file",
-  accept:".pdf",
-  fileKey:"ration"
-},
-
-lc_pdf:{
-  label:"LC / Optical Document PDF",
-  type:"file",
-  accept:".pdf,image/*",
-  fileKey:"lc"
-},
-
-pancard_pdf:{
-  label:"PAN Card PDF",
-  type:"file",
-  accept:".pdf,image/*",
-  fileKey:"pancard"
-},
-
-photo:{
-  label:"Photo",
-  type:"file",
-  accept:"image/*",
-  fileKey:"photo"
-},
-
-signature:{
-  label:"Signature",
-  type:"file",
-  accept:"image/*",
-  fileKey:"signature"
-},
-
-without_ration_card:{
-  label:"Without Ration Card",
-  type:"checkbox"
-}
-
-};
-
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-let selectedService =
-null;
-
-let retailer =
-null;
-
-
-/* =========================================================
-   ESCAPE
-========================================================= */
-
-function esc(v){
-
-  return String(v??"")
-    .replace(
-      /[&<>"']/g,
-      c=>({
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        "\"":"&quot;",
-        "'":"&#039;"
-      }[c])
-    );
-
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-function showMsg(
-  id,
-  text,
-  type="success"
-){
-
-  const el =
-    document.getElementById(id);
-
-  el.innerHTML =
-    `<div class="status ${type}">
-      ${esc(text)}
-    </div>`;
-
-}
-
-
-function clearMsg(id){
-
-  document
-    .getElementById(id)
-    .innerHTML="";
-
-}
-
-
-/* =========================================================
-   API CALL
-========================================================= */
-
-async function api(
-  action,
-  data={}
-){
-
-  const body =
-    JSON.stringify({
-      action,
-      ...data
-    });
-
-  const res =
-    await fetch(
-      API_URL,
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":
-            "text/plain;charset=utf-8"
-        },
-        body
-      }
-    );
-
-  const text =
-    await res.text();
-
-  let json;
-
-  try{
-
-    json =
-      JSON.parse(text);
-
-  }
-  catch(e){
-
-    throw new Error(
-      "API returned invalid response."
-    );
-
-  }
-
-  if(!json.success){
-
-    throw new Error(
-      json.message ||
-      "Request failed."
-    );
-
-  }
-
-  return json;
-
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-async function login(){
-
-  clearMsg("loginMsg");
-
-  const username =
-    document
-      .getElementById("loginUser")
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById("loginPass")
-      .value;
-
-  if(
-    !username ||
-    !password
-  ){
-
-    showMsg(
-      "loginMsg",
-      "Retailer ID / Username और Password दोनों भरें.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const btn =
-    document
-      .getElementById("loginBtn");
-
-  btn.disabled=true;
-
-  btn.textContent =
-    "⏳ Logging in...";
-
-
-  try{
-
-    const data =
-      await api(
-        "retailerLogin",
-        {
-          username,
-          password
-        }
-      );
-
-
-    if(
-      data.role !==
-      "retailer"
-    ){
-
-      throw new Error(
-        "This account is not a retailer account."
-      );
-
-    }
-
-
-    retailer = {
-
-      retailerId:
-        data.retailerId ||
-        username,
-
-      retailerName:
-        data.retailerName ||
-        username,
-
-      mobile:
-        data.mobile ||
-        "",
-
-      email:
-        data.email ||
-        "",
-
-      username:
-        data.username ||
-        username
-
-    };
-
-
-    sessionStorage.setItem(
-      "allinonestop_retailer",
-      JSON.stringify(retailer)
-    );
-
-
-    openPortal();
-
-  }
-  catch(err){
-
-    showMsg(
-      "loginMsg",
-      err.message ||
-      "Login failed.",
-      "error"
-    );
-
-  }
-  finally{
-
-    btn.disabled=false;
-
-    btn.textContent =
-      "🔐 Login";
-
-  }
-
-}
-
-
-/* =========================================================
-   OPEN PORTAL
-========================================================= */
-
-function openPortal(){
-
-  document
-    .getElementById("loginPanel")
-    .classList
-    .add("hidden");
-
-
-  document
-    .getElementById("portalPanel")
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById("logoutTop")
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById("retailerName")
-    .textContent =
-      retailer.retailerName ||
-      retailer.retailerId;
-
-
-  document
-    .getElementById("retailerIdView")
-    .textContent =
-      retailer.retailerId;
-
-
-  document
-    .getElementById("retailerMobileView")
-    .textContent =
-      retailer.mobile ||
-      "—";
-
-
-  renderServices();
-
-}
-
-
-/* =========================================================
-   SERVICE CARDS
-========================================================= */
-
-function renderServices(){
-
-  const wrap =
-    document.getElementById(
-      "serviceCards"
-    );
-
-
-  wrap.innerHTML =
-    SERVICES
-      .map(
-        s=>`
-
-        <div
-          class="service-card"
-          id="card-${s.id}"
-          onclick="selectService('${s.id}')"
-        >
-
-          <div class="service-name">
-            ${esc(s.name)}
-          </div>
-
-          <div class="price">
-            ₹${s.amount}
-          </div>
-
-          ${
-            s.without
-            ?
-            `<div class="muted">
-              Without Ration Card:
-              ₹${s.without}
-            </div>`
-            :
-            `<div class="muted">
-              Required fields:
-              ${s.fields.length}
-            </div>`
-          }
-
+  <section id="loginPanel" class="box login-box">
+    <div class="login-logo">🏪</div>
+    <h1>Retailer Login</h1>
+    <p class="sub">Retailer ID / Username और Password से login करें। बिना login के service portal नहीं खुलेगा।</p>
+    <label for="loginUser">Retailer ID / Username <span class="req">*</span></label>
+    <input id="loginUser" autocomplete="username" placeholder="RET-XXXXXX">
+    <label for="loginPass">Password <span class="req">*</span></label>
+    <input id="loginPass" type="password" autocomplete="current-password" placeholder="Enter password">
+    <button id="loginBtn" type="button" style="width:100%" onclick="login()">🔐 Login</button>
+    <div id="loginMsg"></div>
+  </section>
+
+  <section id="portalPanel" class="hidden">
+    <div class="box">
+      <div class="userbar">
+        <div>👤 Retailer: <strong id="retailerName">—</strong><br><span class="small">Retailer ID: <strong id="retailerIdView">—</strong></span></div>
+        <div>📱 <strong id="retailerMobileView">—</strong></div>
+      </div>
+      <h1>New Application</h1>
+      <p class="sub">पहले service select करें। उसके बाद उसी service के required fields अपने आप खुलेंगे।</p>
+
+      <div class="section-title">1. Customer / Retailer Information</div>
+      <div class="grid">
+        <div><label>Customer Mobile <span class="req">*</span></label><input id="customerMobile" inputmode="numeric" maxlength="10" placeholder="10 digit mobile number"></div>
+        <div><label>Customer Email</label><input id="customerEmail" type="email" placeholder="customer@email.com"></div>
+      </div>
+
+      <div class="section-title">2. Select Service</div>
+      <div id="serviceCards" class="services"></div>
+
+      <div id="serviceForm" class="hidden">
+        <div class="section-title">3. Required Details</div>
+        <div id="dynamicFields" class="grid"></div>
+
+        <div class="section-title">4. Payment</div>
+        <div class="summary">
+          <div class="summary-row"><span>Selected Service</span><strong id="selectedService">—</strong></div>
+          <div class="summary-row"><span>UPI</span><strong id="upiText">gujrat.nsfa@ybl</strong></div>
+          <div class="summary-row total"><span>Total Amount</span><span>₹<span id="price">0</span></span></div>
         </div>
 
-        `
-      )
-      .join("");
+        <div class="payment">
+          <div class="paybox center">
+            <h3>Scan & Pay</h3>
+            <div id="qrcode" class="qr"></div>
+            <div class="upi">gujrat.nsfa@ybl</div>
+            <p class="small">QR amount selected service के अनुसार automatic है।</p>
+          </div>
+          <div class="paybox">
+            <h3>Payment Details</h3>
+            <label>UTR / Transaction Number <span class="req">*</span></label>
+            <input id="utr" class="utr" placeholder="Enter UTR / Transaction ID">
+            <label>Payment Screenshot <span class="req">*</span></label>
+            <div class="filebox"><input id="paymentScreenshot" type="file" accept="image/*,.pdf"></div>
+            <p class="small">Payment complete करने के बाद UTR और screenshot देना जरूरी है।</p>
+          </div>
+        </div>
 
+        <div class="actions">
+          <button id="submitBtn" type="button" onclick="submitApplication()">✅ Submit Application</button>
+          <button type="button" class="dark" onclick="resetApplication()">↻ Reset</button>
+          <button type="button" class="light" onclick="logout()">🚪 Logout</button>
+        </div>
+        <div id="formMsg"></div>
+
+        <div id="result" class="result hidden center">
+          <div>Application / TR Number</div>
+          <div id="trNo" class="tr"></div>
+          <p id="resultMsg"></p>
+          <a class="btn" href="tracking.html">🔎 Track Application</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzBQyU5eT1yZSDJ_QtmUY4g8ulDSXJKBXLVO9Oq0w37Ipt5hDayv3rp8XN9HnnjN899lg/exec";
+const UPI_ID = "gujrat.nsfa@ybl";
+const UPI_NAME = "RAJKUMAR RATIONCARD SERVICES";
+
+const SERVICES = [
+  {id:"ration_new_name",name:"Ration Card - New Name Add",amount:70,without:100,fields:["name_english","name_gujarati","father_name","husband_name","dob","dob_year","ration_card_number","aadhaar_pdf","ration_card_pdf","without_ration_card"]},
+  {id:"ration_name_delete",name:"Ration Card - Name Delete",amount:100,without:200,fields:["name_english","name_gujarati","father_name","dob","ration_card_number","aadhaar_pdf","ration_card_pdf","without_ration_card"]},
+  {id:"ration_father_to_husband",name:"Ration Card - Father Name to Husband Name Update",amount:350,without:500,fields:["name_english","name_gujarati","father_name","husband_name","dob","ration_card_number","aadhaar_pdf","ration_card_pdf","without_ration_card"]},
+  {id:"ration_name_correction",name:"Ration Card - Name Correction",amount:350,without:500,fields:["name_english","name_gujarati","correct_name","dob","ration_card_number","aadhaar_pdf","ration_card_pdf","without_ration_card"]},
+  {id:"ration_bandh_chalu",name:"Ration Card - Bandh Card Chalu",amount:3500,fields:["name_english","name_gujarati","dob","ration_card_number","aadhaar_pdf","ration_card_pdf"]},
+  {id:"ration_vibhajan",name:"Ration Card - Vibhajan",amount:2500,fields:["name_english","name_gujarati","dob","ration_card_number","aadhaar_pdf","ration_card_pdf"]},
+  {id:"pan_pdf",name:"PAN Card PDF",amount:70,fields:["pan_number","mobile","aadhaar_pdf"]},
+  {id:"dl_pdf",name:"DL PDF",amount:250,fields:["dl_number","name_english","dob","mobile","aadhaar_pdf"]},
+  {id:"rc_pdf",name:"RC PDF",amount:300,fields:["rc_number","vehicle_number","mobile","aadhaar_pdf"]},
+  {id:"election_card",name:"Election Card",amount:500,fields:["name_english","name_gujarati","father_name","mother_name","husband_name","election_number","mobile","aadhaar_pdf","lc_pdf","photo","signature"]},
+  {id:"election_update",name:"Election Card Update",amount:500,fields:["name_english","name_gujarati","father_name","mother_name","husband_name","election_number","mobile","aadhaar_pdf","lc_pdf","photo","signature","pancard_pdf"]},
+  {id:"pan_new",name:"New PAN Card",amount:500,fields:["name_english","name_gujarati","father_name","dob","mobile","aadhaar_number","aadhaar_pdf","photo","signature"]},
+  {id:"pan_instant",name:"Instant PAN Card",amount:500,fields:["aadhaar_number","mobile","aadhaar_pdf"]},
+  {id:"pan_correction",name:"PAN Card Correction",amount:500,fields:["pan_number","correction_type","correct_name","dob","mobile","aadhaar_pdf","pancard_pdf","photo","signature"]},
+  {id:"lms_certificate",name:"LMS Certificate",amount:1500,fields:["name_english","mobile","email","state","district","aadhaar_number","aadhaar_pdf"]}
+];
+
+let selectedService = null;
+let retailer = null;
+
+const FIELD_META = {
+  name_english:{label:"Name as per Aadhaar - English",type:"text",placeholder:"Full Name"},
+  name_gujarati:{label:"આધાર મુજબ નામ - ગુજરાતી",type:"text",placeholder:"ગુજરાતી નામ"},
+  father_name:{label:"Father Name",type:"text",placeholder:"Father Name"},
+  husband_name:{label:"Husband Name",type:"text",placeholder:"Husband Name"},
+  mother_name:{label:"Mother Name",type:"text",placeholder:"Mother Name"},
+  correct_name:{label:"Correct Name",type:"text",placeholder:"Correct Name"},
+  dob:{label:"Date of Birth",type:"date"},
+  dob_year:{label:"DOB Year",type:"number",placeholder:"YYYY"},
+  ration_card_number:{label:"Ration Card Number",type:"text",placeholder:"Ration Card Number"},
+  pan_number:{label:"PAN Number",type:"text",placeholder:"ABCDE1234F"},
+  dl_number:{label:"DL Number",type:"text",placeholder:"Driving Licence Number"},
+  rc_number:{label:"RC Number",type:"text",placeholder:"RC Number"},
+  vehicle_number:{label:"Vehicle Number",type:"text",placeholder:"GJ01AB1234"},
+  election_number:{label:"Election Card Number",type:"text",placeholder:"Election Number"},
+  mobile:{label:"Mobile Number",type:"tel",placeholder:"10 digit mobile number"},
+  email:{label:"Email",type:"email",placeholder:"email@example.com"},
+  state:{label:"State",type:"text",placeholder:"State"},
+  district:{label:"District",type:"text",placeholder:"District"},
+  aadhaar_number:{label:"Aadhaar Number",type:"text",placeholder:"12 digit Aadhaar number"},
+  correction_type:{label:"Correction Type",type:"select",options:["Name","Date of Birth","Photo","Other"]},
+  aadhaar_pdf:{label:"Aadhaar Card PDF",type:"file",accept:".pdf",fileKey:"aadhaar"},
+  ration_card_pdf:{label:"Ration Card PDF",type:"file",accept:".pdf",fileKey:"ration"},
+  lc_pdf:{label:"LC / Optical Document PDF",type:"file",accept:".pdf,image/*",fileKey:"lc"},
+  pancard_pdf:{label:"PAN Card PDF",type:"file",accept:".pdf,image/*",fileKey:"pancard"},
+  photo:{label:"Photo",type:"file",accept:"image/*",fileKey:"photo"},
+  signature:{label:"Signature",type:"file",accept:"image/*",fileKey:"signature"},
+  without_ration_card:{label:"Without Ration Card",type:"checkbox"}
+};
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));}
+function showMsg(id,text,type="success"){const el=document.getElementById(id);el.innerHTML=`<div class="status ${type}">${esc(text)}</div>`;}
+function clearMsg(id){document.getElementById(id).innerHTML="";}
+
+async function api(action,data={}){
+  const body=JSON.stringify({action,...data});
+  const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body});
+  const text=await res.text();
+  let json;
+  try{json=JSON.parse(text)}catch(e){throw new Error("API returned invalid response.");}
+  if(!json.success)throw new Error(json.message||"Request failed.");
+  return json;
 }
 
+async function login(){
+  clearMsg("loginMsg");
+  const username=document.getElementById("loginUser").value.trim();
+  const password=document.getElementById("loginPass").value;
+  if(!username||!password){showMsg("loginMsg","Retailer ID / Username और Password दोनों भरें.","error");return;}
+  const btn=document.getElementById("loginBtn");btn.disabled=true;btn.textContent="⏳ Logging in...";
+  try{
+    const data=await api("retailerLogin",{username,password});
+    if(data.role!=="retailer")throw new Error("This account is not a retailer account.");
+    retailer={retailerId:data.retailerId||username,retailerName:data.retailerName||username,mobile:data.mobile||"",email:data.email||"",username:data.username||username};
+    sessionStorage.setItem("allinonestop_retailer",JSON.stringify(retailer));
+    openPortal();
+  }catch(err){showMsg("loginMsg",err.message||"Login failed.","error");}
+  finally{btn.disabled=false;btn.textContent="🔐 Login";}
+}
 
-/* =========================================================
-   SELECT SERVICE
-========================================================= */
+function openPortal(){
+  document.getElementById("loginPanel").classList.add("hidden");
+  document.getElementById("portalPanel").classList.remove("hidden");
+  document.getElementById("logoutTop").classList.remove("hidden");
+  document.getElementById("retailerName").textContent=retailer.retailerName||retailer.retailerId;
+  document.getElementById("retailerIdView").textContent=retailer.retailerId;
+  document.getElementById("retailerMobileView").textContent=retailer.mobile||"—";
+  renderServices();
+}
+
+function renderServices(){
+  const wrap=document.getElementById("serviceCards");
+  wrap.innerHTML=SERVICES.map(s=>`<div class="service-card" id="card-${s.id}" onclick="selectService('${s.id}')"><div class="service-name">${esc(s.name)}</div><div class="price">₹${s.amount}</div>${s.without?`<div class="muted">Without Ration Card: ₹${s.without}</div>`:`<div class="muted">Required fields: ${s.fields.length}</div>`}</div>`).join("");
+}
 
 function selectService(id){
-
-  selectedService =
-    SERVICES.find(
-      s=>s.id===id
-    );
-
-
-  document
-    .querySelectorAll(".service-card")
-    .forEach(
-      x=>
-        x.classList.remove(
-          "selected"
-        )
-    );
-
-
-  document
-    .getElementById(
-      "card-"+id
-    )
-    .classList
-    .add("selected");
-
-
-  document
-    .getElementById(
-      "serviceForm"
-    )
-    .classList
-    .remove("hidden");
-
-
+  selectedService=SERVICES.find(s=>s.id===id);
+  document.querySelectorAll(".service-card").forEach(x=>x.classList.remove("selected"));
+  document.getElementById("card-"+id).classList.add("selected");
+  document.getElementById("serviceForm").classList.remove("hidden");
   renderFields();
-
   updatePayment();
-
-
-  document
-    .getElementById("result")
-    .classList
-    .add("hidden");
-
-
+  document.getElementById("result").classList.add("hidden");
   clearMsg("formMsg");
-
-
-  document
-    .getElementById("serviceForm")
-    .scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-
+  document.getElementById("serviceForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
-
-
-/* =========================================================
-   DYNAMIC FIELDS
-========================================================= */
 
 function renderFields(){
-
-  const wrap =
-    document.getElementById(
-      "dynamicFields"
-    );
-
-
+  const wrap=document.getElementById("dynamicFields");
   wrap.innerHTML="";
-
-
-  selectedService.fields
-    .forEach(
-      key=>{
-
-        const m =
-          FIELD_META[key];
-
-        if(!m)return;
-
-
-        const div =
-          document.createElement(
-            "div"
-          );
-
-
-        div.className =
-          key==="without_ration_card"
-          ?
-          "full"
-          :
-          (
-            m.type==="file"
-            ?
-            "filebox"
-            :
-            ""
-          );
-
-
-        const label =
-          document.createElement(
-            "label"
-          );
-
-
-        label.textContent =
-          m.label +
-          (
-            m.type==="checkbox"
-            ?
-            ""
-            :
-            " *"
-          );
-
-
-        div.appendChild(label);
-
-
-        if(
-          m.type==="select"
-        ){
-
-          const el =
-            document.createElement(
-              "select"
-            );
-
-          el.id =
-            "f_"+key;
-
-          el.required=true;
-
-
-          el.innerHTML =
-            '<option value="">Select</option>' +
-
-            m.options
-              .map(
-                o=>
-                  `<option value="${esc(o)}">
-                    ${esc(o)}
-                  </option>`
-              )
-              .join("");
-
-
-          div.appendChild(el);
-
-        }
-
-        else if(
-          m.type==="checkbox"
-        ){
-
-          div.innerHTML =
-            `
-            <label
-              style="
-                display:flex;
-                align-items:center;
-                gap:8px
-              "
-            >
-
-              <input
-                id="f_${key}"
-                type="checkbox"
-                style="
-                  width:auto;
-                  margin:0
-                "
-              >
-
-              Without Ration Card
-
-            </label>
-            `;
-
-        }
-
-        else{
-
-          const el =
-            document.createElement(
-              "input"
-            );
-
-          el.id =
-            "f_"+key;
-
-          el.type =
-            m.type;
-
-          el.placeholder =
-            m.placeholder ||
-            "";
-
-          el.accept =
-            m.accept ||
-            "";
-
-          el.required=true;
-
-
-          if(
-            key==="dob_year"
-          ){
-
-            el.oninput =
-              syncYear;
-
-          }
-
-
-          div.appendChild(el);
-
-        }
-
-
-        wrap.appendChild(div);
-
-      }
-    );
-
-}
-
-
-/* =========================================================
-   DOB YEAR
-========================================================= */
-
-function syncYear(){
-
-  const y =
-    document.getElementById(
-      "f_dob_year"
-    );
-
-  const d =
-    document.getElementById(
-      "f_dob"
-    );
-
-
-  if(
-    y &&
-    d &&
-    /^\d{4}$/.test(
-      y.value
-    )
-  ){
-
-    d.value =
-      y.value +
-      "-01-01";
-
-  }
-
-}
-
-
-/* =========================================================
-   AMOUNT
-========================================================= */
-
-function getAmount(){
-
-  if(!selectedService)
-    return 0;
-
-
-  const w =
-    document.getElementById(
-      "f_without_ration_card"
-    );
-
-
-  return(
-    selectedService.without &&
-    w &&
-    w.checked
-  )
-  ?
-  selectedService.without
-  :
-  selectedService.amount;
-
-}
-
-
-/* =========================================================
-   PAYMENT QR
-========================================================= */
-
-function updatePayment(){
-
-  const amount =
-    getAmount();
-
-
-  document
-    .getElementById(
-      "selectedService"
-    )
-    .textContent =
-      selectedService
-      ?
-      selectedService.name
-      :
-      "—";
-
-
-  document
-    .getElementById(
-      "price"
-    )
-    .textContent =
-      amount;
-
-
-  document
-    .getElementById(
-      "upiText"
-    )
-    .textContent =
-      UPI_ID;
-
-
-  const qr =
-    document.getElementById(
-      "qrcode"
-    );
-
-
-  qr.innerHTML="";
-
-
-  if(amount){
-
-    const upi =
-      `upi://pay` +
-      `?pa=${encodeURIComponent(UPI_ID)}` +
-      `&pn=${encodeURIComponent(UPI_NAME)}` +
-      `&am=${encodeURIComponent(
-        Number(amount).toFixed(2)
-      )}` +
-      `&cu=INR`;
-
-
-    new QRCode(
-      qr,
-      {
-        text:upi,
-        width:190,
-        height:190
-      }
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   WITHOUT RATION CARD CHANGE
-========================================================= */
-
-document.addEventListener(
-  "change",
-  e=>{
-
-    if(
-      e.target &&
-      e.target.id===
-      "f_without_ration_card"
-    ){
-
-      updatePayment();
-
+  selectedService.fields.forEach(key=>{
+    const m=FIELD_META[key];
+    if(!m)return;
+    const div=document.createElement("div");
+    div.className=key==="without_ration_card"?"full":(m.type==="file"?"filebox":"");
+    const label=document.createElement("label");
+    label.textContent=m.label+(m.type==="checkbox"?"":" *");
+    div.appendChild(label);
+    if(m.type==="select"){
+      const el=document.createElement("select");el.id="f_"+key;el.required=true;el.innerHTML='<option value="">Select</option>'+m.options.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join("");div.appendChild(el);
+    }else if(m.type==="checkbox"){
+      const el=document.createElement("input");el.type="checkbox";el.id="f_"+key;el.style.width="auto";el.style.marginRight="8px";div.appendChild(el);label.remove();
+      div.innerHTML=`<label style="display:flex;align-items:center;gap:8px"><input id="f_${key}" type="checkbox" style="width:auto;margin:0"> Without Ration Card</label>`;
+    }else{
+      const el=document.createElement("input");el.id="f_"+key;el.type=m.type;el.placeholder=m.placeholder||"";el.accept=m.accept||"";el.required=true;if(key==="dob_year")el.oninput=()=>syncYear();div.appendChild(el);
     }
+    wrap.appendChild(div);
+  });
+  const rationToggle=document.getElementById("f_without_ration_card");
+  if(rationToggle){rationToggle.addEventListener("change",()=>{if(rationToggle.checked){const rc=document.getElementById("f_ration_card_pdf");if(rc)rc.required=false;}})}
+}
 
-  }
-);
+function syncYear(){const y=document.getElementById("f_dob_year");const d=document.getElementById("f_dob");if(y&&d&&/^\d{4}$/.test(y.value))d.value=y.value+"-01-01";}
 
+function getAmount(){if(!selectedService)return 0;const w=document.getElementById("f_without_ration_card");return selectedService.without&&w&&w.checked?selectedService.without:selectedService.amount;}
+function updatePayment(){
+  const amount=getAmount();
+  document.getElementById("selectedService").textContent=selectedService?selectedService.name:"—";
+  document.getElementById("price").textContent=amount;
+  document.getElementById("upiText").textContent=UPI_ID;
+  const qr=document.getElementById("qrcode");qr.innerHTML="";
+  if(amount){const upi=`upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_NAME)}&am=${encodeURIComponent(Number(amount).toFixed(2))}&cu=INR`;new QRCode(qr,{text:upi,width:190,height:190});}
+}
 
-/* =========================================================
-   COLLECT FIELDS
-========================================================= */
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="f_without_ration_card")updatePayment();});
 
 function collectFields(){
-
   const data={};
-
-
-  for(
-    const key
-    of selectedService.fields
-  ){
-
-    const el =
-      document.getElementById(
-        "f_"+key
-      );
-
-
-    if(!el)
-      continue;
-
-
-    data[key] =
-      el.type==="checkbox"
-      ?
-      el.checked
-      :
-      el.value;
-
+  for(const key of selectedService.fields){
+    const el=document.getElementById("f_"+key);if(!el)continue;
+    data[key]=el.type==="checkbox"?el.checked:el.value;
   }
-
-
   return data;
-
 }
-
-
-/* =========================================================
-   FILE TO BASE64
-========================================================= */
 
 async function fileToData(file){
-
-  if(!file)
-    return null;
-
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      const r =
-        new FileReader();
-
-
-      r.onload =
-        ()=>
-          resolve({
-            name:file.name,
-            type:file.type,
-            data:r.result
-          });
-
-
-      r.onerror =
-        reject;
-
-
-      r.readAsDataURL(
-        file
-      );
-
-    }
-  );
-
+  if(!file)return null;
+  return await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve({name:file.name,type:file.type,data:r.result});r.onerror=reject;r.readAsDataURL(file);});
 }
-
-
-/* =========================================================
-   COLLECT FILES
-========================================================= */
 
 async function collectFiles(){
-
   const out={};
-
-
-  for(
-    const key
-    of selectedService.fields
-  ){
-
-    const m =
-      FIELD_META[key];
-
-
-    if(
-      m &&
-      m.type==="file"
-    ){
-
-      const el =
-        document.getElementById(
-          "f_"+key
-        );
-
-
-      if(
-        el &&
-        el.files &&
-        el.files[0]
-      ){
-
-        out[key] =
-          await fileToData(
-            el.files[0]
-          );
-
-      }
-
+  for(const key of selectedService.fields){
+    const m=FIELD_META[key];
+    if(m&&m.type==="file"){
+      const el=document.getElementById("f_"+key);if(el&&el.files&&el.files[0])out[key]=await fileToData(el.files[0]);
     }
-
   }
-
-
-  const pay =
-    document.getElementById(
-      "paymentScreenshot"
-    );
-
-
-  if(
-    pay.files &&
-    pay.files[0]
-  ){
-
-    out.payment_screenshot =
-      await fileToData(
-        pay.files[0]
-      );
-
-  }
-
-
+  const pay=document.getElementById("paymentScreenshot");
+  if(pay.files&&pay.files[0])out.payment_screenshot=await fileToData(pay.files[0]);
   return out;
-
 }
-
-
-/* =========================================================
-   VALIDATE
-========================================================= */
 
 function validateFields(){
-
-  for(
-    const key
-    of selectedService.fields
-  ){
-
-    const el =
-      document.getElementById(
-        "f_"+key
-      );
-
-
-    if(!el)
-      continue;
-
-
-    if(
-      key==="without_ration_card"
-    )
-      continue;
-
-
-    if(
-      el.type==="file"
-    ){
-
-      const without =
-        document.getElementById(
-          "f_without_ration_card"
-        );
-
-
-      if(
-        key==="ration_card_pdf" &&
-        without &&
-        without.checked
-      ){
-
-        continue;
-
-      }
-
-
-      if(
-        !el.files ||
-        !el.files.length
-      ){
-
-        el.focus();
-
-
-        return(
-          FIELD_META[key].label +
-          " required है."
-        );
-
-      }
-
-    }
-
-    else if(
-      !el.value.trim()
-    ){
-
-      el.focus();
-
-
-      return(
-        FIELD_META[key].label +
-        " required है."
-      );
-
-    }
-
+  for(const key of selectedService.fields){
+    const el=document.getElementById("f_"+key);if(!el)continue;
+    if(key==="without_ration_card")continue;
+    if(el.type==="file"){
+      const without=document.getElementById("f_without_ration_card");
+      if(key==="ration_card_pdf"&&without&&without.checked)continue;
+      if(!el.files||!el.files.length){el.focus();return `${FIELD_META[key].label} required है.`;}
+    }else if(!el.value.trim()){el.focus();return `${FIELD_META[key].label} required है.`;}
   }
-
-
   return "";
-
 }
-
-
-/* =========================================================
-   SUBMIT APPLICATION
-========================================================= */
 
 async function submitApplication(){
-
   clearMsg("formMsg");
-
-
-  if(!selectedService){
-
-    showMsg(
-      "formMsg",
-      "पहले service select करें.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const mobile =
-    document
-      .getElementById(
-        "customerMobile"
-      )
-      .value
-      .trim();
-
-
-  if(
-    !/^\d{10}$/.test(
-      mobile
-    )
-  ){
-
-    showMsg(
-      "formMsg",
-      "Customer mobile 10 digit होना चाहिए.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const err =
-    validateFields();
-
-
-  if(err){
-
-    showMsg(
-      "formMsg",
-      err,
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const utr =
-    document
-      .getElementById(
-        "utr"
-      )
-      .value
-      .trim();
-
-
-  if(!utr){
-
-    showMsg(
-      "formMsg",
-      "UTR / Transaction Number भरें.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const payment =
-    document.getElementById(
-      "paymentScreenshot"
-    );
-
-
-  if(
-    !payment.files.length
-  ){
-
-    showMsg(
-      "formMsg",
-      "Payment screenshot upload करें.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  const btn =
-    document.getElementById(
-      "submitBtn"
-    );
-
-
-  btn.disabled=true;
-
-  btn.textContent =
-    "⏳ Uploading & submitting...";
-
-
+  if(!selectedService){showMsg("formMsg","पहले service select करें.","error");return;}
+  const mobile=document.getElementById("customerMobile").value.trim();
+  if(!/^\d{10}$/.test(mobile)){showMsg("formMsg","Customer mobile 10 digit होना चाहिए.","error");return;}
+  const err=validateFields();if(err){showMsg("formMsg",err,"error");return;}
+  const utr=document.getElementById("utr").value.trim();if(!utr){showMsg("formMsg","UTR / Transaction Number भरें.","error");return;}
+  const payment=document.getElementById("paymentScreenshot");if(!payment.files.length){showMsg("formMsg","Payment screenshot upload करें.","error");return;}
+  const btn=document.getElementById("submitBtn");btn.disabled=true;btn.textContent="⏳ Uploading & submitting...";
   try{
-
-    const fields =
-      collectFields();
-
-
-    const files =
-      await collectFiles();
-
-
-    const amount =
-      getAmount();
-
-
+    const fields=collectFields();
+    const files=await collectFiles();
+    const amount=getAmount();
     const payload={
-
-      retailerId:
-        retailer.retailerId,
-
-      retailerMobile:
-        retailer.mobile,
-
-      customerMobile:
-        mobile,
-
-      mobile:
-        fields.mobile ||
-        mobile,
-
-      email:
-        fields.email ||
-        document
-          .getElementById(
-            "customerEmail"
-          )
-          .value
-          .trim(),
-
-      serviceCode:
-        selectedService.id,
-
-      service:
-        selectedService.id,
-
-      serviceName:
-        selectedService.name,
-
+      retailerId:retailer.retailerId,
+      retailerMobile:retailer.mobile,
+      customerMobile:mobile,
+      mobile:fields.mobile||mobile,
+      email:fields.email||document.getElementById("customerEmail").value.trim(),
+      serviceCode:selectedService.id,
+      service:selectedService.id,
+      serviceName:selectedService.name,
       amount,
-
-      utrNumber:
-        utr,
-
+      utrNumber:utr,
       utr,
-
-      paymentStatus:
-        "Pending",
-
-      applicationStatus:
-        "Received",
-
-      applicantName:
-        fields.name_english ||
-        fields.correct_name ||
-        "",
-
-      englishName:
-        fields.name_english ||
-        "",
-
-      gujaratiName:
-        fields.name_gujarati ||
-        "",
-
-      rationCardNumber:
-        fields.ration_card_number ||
-        "",
-
-      birthDate:
-        fields.dob ||
-        "",
-
-      dob:
-        fields.dob ||
-        "",
-
-      birthYear:
-        fields.dob_year ||
-        "",
-
-      rationCardStatus:
-        fields.without_ration_card
-        ?
-        "Without Ration Card"
-        :
-        "With Ration Card",
-
-      correctionType:
-        fields.correction_type ||
-        "",
-
-      panNumber:
-        fields.pan_number ||
-        "",
-
-      dlNumber:
-        fields.dl_number ||
-        "",
-
-      rcNumber:
-        fields.rc_number ||
-        "",
-
-      vehicleNumber:
-        fields.vehicle_number ||
-        "",
-
-      electionNumber:
-        fields.election_number ||
-        "",
-
-      fatherName:
-        fields.father_name ||
-        "",
-
-      motherName:
-        fields.mother_name ||
-        "",
-
-      husbandName:
-        fields.husband_name ||
-        "",
-
-      aadhaarNumber:
-        fields.aadhaar_number ||
-        "",
-
-      state:
-        fields.state ||
-        "",
-
-      district:
-        fields.district ||
-        "",
-
+      paymentStatus:"Pending",
+      applicationStatus:"Received",
+      applicantName:fields.name_english||fields.correct_name||"",
+      englishName:fields.name_english||"",
+      gujaratiName:fields.name_gujarati||"",
+      rationCardNumber:fields.ration_card_number||"",
+      birthDate:fields.dob||"",
+      dob:fields.dob||"",
+      birthYear:fields.dob_year||"",
+      rationCardStatus:fields.without_ration_card?"Without Ration Card":"With Ration Card",
+      correctionType:fields.correction_type||"",
+      panNumber:fields.pan_number||"",
+      dlNumber:fields.dl_number||"",
+      rcNumber:fields.rc_number||"",
+      vehicleNumber:fields.vehicle_number||"",
+      electionNumber:fields.election_number||"",
+      fatherName:fields.father_name||"",
+      motherName:fields.mother_name||"",
+      husbandName:fields.husband_name||"",
+      aadhaarNumber:fields.aadhaar_number||"",
+      state:fields.state||"",
+      district:fields.district||"",
       fields,
-
       files,
-
-
-      /*
-        Backward compatible file names
-        for the current Code.gs.
-      */
-
-      aadhaarFileBase64:
-        files.aadhaar?.data ||
-        "",
-
-      aadhaarFileName:
-        files.aadhaar?.name ||
-        "",
-
-      rationFileBase64:
-        files.ration?.data ||
-        "",
-
-      rationFileName:
-        files.ration?.name ||
-        "",
-
-      paymentScreenshotBase64:
-        files.payment_screenshot?.data ||
-        "",
-
-      paymentScreenshotName:
-        files.payment_screenshot?.name ||
-        ""
-
+      aadhaarFileBase64:files.aadhaar?.data||"",
+      aadhaarFileName:files.aadhaar?.name||"",
+      rationFileBase64:files.ration?.data||"",
+      rationFileName:files.ration?.name||"",
+      paymentScreenshotBase64:files.payment_screenshot?.data||"",
+      paymentScreenshotName:files.payment_screenshot?.name||""
     };
-
-
-    const result =
-      await api(
-        "submitApplication",
-        payload
-      );
-
-
-    const tr =
-      result.trNumber ||
-      result.tr_number ||
-      result.applicationId ||
-      result.applicationID ||
-      "";
-
-
-    document
-      .getElementById(
-        "trNo"
-      )
-      .textContent =
-        tr ||
-        "Submitted";
-
-
-    document
-      .getElementById(
-        "resultMsg"
-      )
-      .textContent =
-        result.message ||
-        "Application submitted successfully.";
-
-
-    document
-      .getElementById(
-        "result"
-      )
-      .classList
-      .remove("hidden");
-
-
-    showMsg(
-      "formMsg",
-      result.message ||
-      "Application submitted successfully.",
-      "success"
-    );
-
-
-    document
-      .getElementById(
-        "result"
-      )
-      .scrollIntoView({
-        behavior:"smooth"
-      });
-
-  }
-  catch(err){
-
-    showMsg(
-      "formMsg",
-      err.message ||
-      "Application submit failed.",
-      "error"
-    );
-
-  }
-  finally{
-
-    btn.disabled=false;
-
-    btn.textContent =
-      "✅ Submit Application";
-
-  }
-
+    const result=await api("submitApplication",payload);
+    const tr=result.trNumber||result.tr_number||result.applicationId||result.applicationID||"";
+    document.getElementById("trNo").textContent=tr||"Submitted";
+    document.getElementById("resultMsg").textContent=result.message||"Application submitted successfully.";
+    document.getElementById("result").classList.remove("hidden");
+    showMsg("formMsg",result.message||"Application submitted successfully.","success");
+    document.getElementById("result").scrollIntoView({behavior:"smooth"});
+  }catch(err){showMsg("formMsg",err.message||"Application submit failed.","error");}
+  finally{btn.disabled=false;btn.textContent="✅ Submit Application";}
 }
-
-
-/* =========================================================
-   RESET
-========================================================= */
 
 function resetApplication(){
-
-  if(!selectedService)
-    return;
-
-
-  document
-    .querySelectorAll(
-      "#dynamicFields input,#dynamicFields select"
-    )
-    .forEach(
-      el=>{
-
-        if(
-          el.type==="checkbox"
-        ){
-
-          el.checked=false;
-
-        }
-        else{
-
-          el.value="";
-
-        }
-
-      }
-    );
-
-
-  document
-    .getElementById(
-      "utr"
-    )
-    .value="";
-
-
-  document
-    .getElementById(
-      "paymentScreenshot"
-    )
-    .value="";
-
-
-  document
-    .getElementById(
-      "customerEmail"
-    )
-    .value="";
-
-
-  document
-    .getElementById(
-      "result"
-    )
-    .classList
-    .add("hidden");
-
-
-  clearMsg("formMsg");
-
-  updatePayment();
-
+  if(!selectedService)return;
+  document.querySelectorAll("#dynamicFields input,#dynamicFields select").forEach(el=>{if(el.type==="checkbox")el.checked=false;else el.value="";});
+  document.getElementById("utr").value="";document.getElementById("paymentScreenshot").value="";document.getElementById("customerEmail").value="";document.getElementById("result").classList.add("hidden");clearMsg("formMsg");updatePayment();
 }
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
 
 async function logout(){
-
-  retailer=null;
-
-
-  sessionStorage.removeItem(
-    "allinonestop_retailer"
-  );
-
-
-  document
-    .getElementById(
-      "portalPanel"
-    )
-    .classList
-    .add("hidden");
-
-
-  document
-    .getElementById(
-      "loginPanel"
-    )
-    .classList
-    .remove("hidden");
-
-
-  document
-    .getElementById(
-      "logoutTop"
-    )
-    .classList
-    .add("hidden");
-
-
-  document
-    .getElementById(
-      "loginPass"
-    )
-    .value="";
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
+  retailer=null;sessionStorage.removeItem("allinonestop_retailer");
+  document.getElementById("portalPanel").classList.add("hidden");document.getElementById("loginPanel").classList.remove("hidden");document.getElementById("logoutTop").classList.add("hidden");document.getElementById("loginPass").value="";window.scrollTo({top:0,behavior:"smooth"});
 }
-
-
-/* =========================================================
-   RESTORE SESSION
-========================================================= */
 
 function restoreSession(){
-
-  try{
-
-    const saved =
-      sessionStorage.getItem(
-        "allinonestop_retailer"
-      );
-
-
-    if(saved){
-
-      retailer =
-        JSON.parse(saved);
-
-
-      if(
-        retailer &&
-        retailer.retailerId
-      ){
-
-        openPortal();
-
-      }
-
-    }
-
-  }
-  catch(e){
-
-    sessionStorage.removeItem(
-      "allinonestop_retailer"
-    );
-
-  }
-
+  try{const saved=sessionStorage.getItem("allinonestop_retailer");if(saved){retailer=JSON.parse(saved);if(retailer&&retailer.retailerId)openPortal();}}catch(e){sessionStorage.removeItem("allinonestop_retailer");}
 }
 
-
-/* =========================================================
-   ENTER KEY LOGIN
-========================================================= */
-
-document
-  .getElementById(
-    "loginPass"
-  )
-  .addEventListener(
-    "keydown",
-    e=>{
-
-      if(
-        e.key==="Enter"
-      ){
-
-        login();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   START
-========================================================= */
-
+document.getElementById("loginPass").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
 restoreSession();
-
 </script>
-
 </body>
 </html>
