@@ -1,4 +1,4 @@
-```html
+html
 <!doctype html>
 <html lang="en">
 <head>
@@ -1028,183 +1028,112 @@ function getLoginEmail(value){
 /* =========================================================
    RETAILER LOGIN
 ========================================================= */
+async function login() {
+  const v = document.getElementById("email").value.trim();
+  const p = document.getElementById("pass").value;
 
-async function retailerLogin(){
-
-  const loginId =
-    document.getElementById("loginId")
-      .value
-      .trim();
-
-  const password =
-    document.getElementById("loginPassword")
-      .value;
-
-  const message =
-    document.getElementById("loginMessage");
-
-  const button =
-    document.getElementById("loginButton");
-
-
-  if(!loginId){
-
-    showMessage(
-      message,
-      "Retailer ID / Username डालें.",
+  if (!v || !p) {
+    msg(
+      document.getElementById("loginMsg"),
+      "Retailer ID / Email and password are required.",
       true
     );
-
     return;
   }
 
+  try {
+    // Retailer ID जैसे RET-ABC123 को Supabase internal email में बदलना
+    let loginEmail = v;
 
-  if(!password){
+    if (!v.includes("@")) {
+      loginEmail =
+        v.toLowerCase() +
+        "@dixsmucrgnyuvudhymdj.supabase.co";
+    }
 
-    showMessage(
-      message,
-      "Password डालें.",
-      true
-    );
+    const { data, error } =
+      await supabaseClient.auth.signInWithPassword({
+        email: loginEmail,
+        password: p
+      });
 
-    return;
-  }
+    if (error) {
+      console.error("LOGIN ERROR:", error);
 
+      msg(
+        document.getElementById("loginMsg"),
+        "Login failed: " + error.message,
+        true
+      );
+      return;
+    }
 
-  button.disabled = true;
-  button.textContent =
-    "⏳ Logging in...";
-
-
-  try{
-
-    const email =
-      getLoginEmail(loginId);
-
-
-    /*
-      Supabase Auth हमेशा email/password
-      से login करेगा.
-    */
+    if (!data?.user) {
+      msg(
+        document.getElementById("loginMsg"),
+        "Login failed. User account not found.",
+        true
+      );
+      return;
+    }
 
     const {
-      data,
-      error
-    } =
-      await supabaseClient.auth
-        .signInWithPassword({
+      data: profile,
+      error: profileError
+    } = await supabaseClient
+      .from("profiles")
+      .select("id, full_name, role, retailer_number, mobile")
+      .eq("id", data.user.id)
+      .maybeSingle();
 
-          email:email,
-
-          password:password
-
-        });
-
-
-    if(error){
-
-      throw new Error(
-        "Login failed: " +
-        error.message
-      );
-
-    }
-
-
-    if(
-      !data ||
-      !data.user
-    ){
-
-      throw new Error(
-        "Login failed. User not found."
-      );
-
-    }
-
-
-    /*
-      Profile check
-    */
-
-    const {
-      data:profile,
-      error:profileError
-    } =
-      await supabaseClient
-        .from("profiles")
-        .select(
-          "id,full_name,role,retailer_number,mobile"
-        )
-        .eq(
-          "id",
-          data.user.id
-        )
-        .maybeSingle();
-
-
-    if(profileError){
-
+    if (profileError) {
       await supabaseClient.auth.signOut();
 
-      throw new Error(
-        "Retailer profile check failed: " +
-        profileError.message
+      msg(
+        document.getElementById("loginMsg"),
+        "Profile verification failed: " +
+          profileError.message,
+        true
       );
-
+      return;
     }
 
-
-    if(
-      !profile ||
-      profile.role !== "retailer"
-    ){
-
+    if (!profile) {
       await supabaseClient.auth.signOut();
 
-      throw new Error(
-        "यह retailer account नहीं है."
+      msg(
+        document.getElementById("loginMsg"),
+        "Retailer profile not found.",
+        true
       );
-
+      return;
     }
 
+    if (profile.role !== "retailer") {
+      await supabaseClient.auth.signOut();
 
-    currentUser =
-      data.user;
+      msg(
+        document.getElementById("loginMsg"),
+        "This account is not a retailer account.",
+        true
+      );
+      return;
+    }
 
-    currentProfile =
-      profile;
+    user = data.user;
 
+    openApp(profile);
 
-    openRetailerPanel();
+  } catch (err) {
+    console.error("RETAILER LOGIN ERROR:", err);
 
-  }
-  catch(error){
-
-    console.error(
-      "RETAILER LOGIN ERROR:",
-      error
-    );
-
-    showMessage(
-      message,
-      error.message ||
-      "Invalid login credentials.",
+    msg(
+      document.getElementById("loginMsg"),
+      err?.message || "Login failed. Please try again.",
       true
     );
-
   }
-  finally{
-
-    button.disabled = false;
-
-    button.textContent =
-      "🔐 Login";
-
-  }
-
 }
-
 
 /* =========================================================
    OPEN PANEL
