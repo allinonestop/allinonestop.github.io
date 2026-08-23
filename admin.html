@@ -183,9 +183,13 @@ async function loadApps(){
     return '<tr><td>'+t+'</td><td>'+esc(a.service_name)+'</td><td>₹'+esc(a.amount)+'</td>'+
     '<td><select id="p-'+t+'"><option '+(a.payment_status==='Pending'?'selected':'')+'>Pending</option><option '+(a.payment_status==='Paid'?'selected':'')+'>Paid</option><option '+(a.payment_status==='Failed'?'selected':'')+'>Failed</option></select></td>'+
     '<td><select id="s-'+t+'"><option '+(a.application_status==='Received'?'selected':'')+'>Received</option><option '+(a.application_status==='Verification'?'selected':'')+'>Verification</option><option '+(a.application_status==='Processing'?'selected':'')+'>Processing</option><option '+(a.application_status==='Completed'?'selected':'')+'>Completed</option><option '+(a.application_status==='Rejected'?'selected':'')+'>Rejected</option></select></td>'+
-    '<td><input id="r-'+t+'" value="'+esc(a.remark||'')+'"></td><td><button onclick="saveStatus(\\''+t+'\\')">Save</button></td></tr>'
+    '<td><input id="r-'+t+'" value="'+esc(a.remark||'')+'"></td><td><button class="saveBtn" data-tr="'+t+'">Save</button></td></tr>'
   }).join('')
 }
+document.addEventListener('click', function(e){
+  const btn=e.target.closest('.saveBtn');
+  if(btn) saveStatus(btn.dataset.tr);
+});
 async function saveStatus(t){
   const {data:s}=await supabaseClient.auth.getSession();if(!s.session){alert('Admin session expired. Please login again.');return}
   const body={tr_number:t,payment_status:document.getElementById('p-'+t).value,application_status:document.getElementById('s-'+t).value,remark:document.getElementById('r-'+t).value};
