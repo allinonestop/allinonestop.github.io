@@ -1,368 +1,423 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AllInOneStop | Retailer Portal</title>
 
-<title>AllInOneStop - Retailer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
 *{box-sizing:border-box}
 
 body{
   margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:
-    radial-gradient(circle at 10% 10%,#6366f125,transparent 28%),
-    radial-gradient(circle at 90% 10%,#06b6d425,transparent 28%),
-    linear-gradient(135deg,#eef2ff,#f8fbff,#ecfeff);
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  background:linear-gradient(135deg,#eef2ff,#f8fbff 45%,#ecfeff);
   color:#172033;
-  min-height:100vh;
+  min-height:100vh
 }
 
-button,input,select,textarea{
-  font:inherit;
+button,input,select{
+  font:inherit
 }
 
-button{
+button,.btn{
   border:0;
-  cursor:pointer;
-}
-
-.hidden{
-  display:none!important;
-}
-
-.wrap{
-  width:min(1200px,calc(100% - 24px));
-  margin:20px auto;
-}
-
-.card{
-  background:rgba(255,255,255,.97);
-  border:1px solid #fff;
-  border-radius:22px;
-  padding:24px;
-  margin-bottom:18px;
-  box-shadow:0 15px 45px rgba(31,41,70,.10);
-}
-
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  flex-wrap:wrap;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.logo-icon{
-  width:52px;
-  height:52px;
-  display:grid;
-  place-items:center;
-  border-radius:16px;
-  background:linear-gradient(135deg,#6366f1,#06b6d4);
-  color:white;
-  font-size:27px;
-}
-
-h1{
-  margin:0;
-  color:#4f46e5;
-}
-
-h2{
-  margin:0 0 8px;
-}
-
-p{
-  color:#667085;
-}
-
-.badge{
-  display:inline-block;
-  padding:7px 12px;
-  border-radius:999px;
-  background:#eef2ff;
-  color:#4f46e5;
-  font-size:12px;
-  font-weight:800;
-}
-
-.btn{
-  display:inline-block;
-  border:0;
-  padding:12px 17px;
   border-radius:11px;
-  color:white;
-  background:linear-gradient(135deg,#5b5cf0,#287cff);
+  padding:12px 17px;
   font-weight:800;
   cursor:pointer;
   text-decoration:none;
+  display:inline-block;
+  background:linear-gradient(135deg,#5b5cf0,#287cff);
+  color:#fff
 }
 
-.btn.secondary{
-  background:#475467;
+button:hover,.btn:hover{
+  box-shadow:0 8px 22px #3658ff30;
+  transform:translateY(-1px)
 }
 
-.btn.green{
-  background:linear-gradient(135deg,#059669,#10b981);
-}
-
-.btn.red{
-  background:linear-gradient(135deg,#dc2626,#ef4444);
-}
-
-.btn:disabled{
-  opacity:.55;
+button:disabled{
+  opacity:.6;
   cursor:not-allowed;
+  transform:none
 }
 
-.top-actions{
+.topbar{
+  background:#fff;
+  border-bottom:1px solid #e4e7ec;
+  position:sticky;
+  top:0;
+  z-index:20;
+  box-shadow:0 5px 20px #26305012
+}
+
+.nav{
+  max-width:1200px;
+  margin:auto;
+  padding:16px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px
+}
+
+.brand{
+  font-size:25px;
+  font-weight:900;
+  color:#4f46e5
+}
+
+.brand span{
+  color:#172033
+}
+
+.nav-actions{
   display:flex;
   gap:8px;
-  flex-wrap:wrap;
+  flex-wrap:wrap
 }
 
-.grid{
+.dark{
+  background:#344054
+}
+
+.light{
+  background:#fff;
+  color:#344054;
+  border:1px solid #d0d5dd
+}
+
+.wrap{
+  max-width:1200px;
+  margin:28px auto;
+  padding:0 16px
+}
+
+.box{
+  background:#ffffffee;
+  border:1px solid #fff;
+  border-radius:22px;
+  padding:25px;
+  box-shadow:0 15px 45px #26305018;
+  margin-bottom:20px
+}
+
+.login-box{
+  max-width:470px;
+  margin:65px auto
+}
+
+.login-logo{
+  width:72px;
+  height:72px;
+  border-radius:20px;
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
+  place-items:center;
+  background:linear-gradient(135deg,#5b5cf0,#06b6d4);
+  font-size:34px;
+  margin-bottom:15px
+}
+
+h1{
+  margin:0 0 8px;
+  color:#4f46e5
+}
+
+h2{
+  margin:0 0 8px
+}
+
+h3{
+  margin:0 0 12px
+}
+
+.sub,p{
+  color:#667085;
+  line-height:1.55
+}
+
+.hidden{
+  display:none!important
 }
 
 label{
   display:block;
-  margin-bottom:7px;
   font-size:13px;
   font-weight:800;
   color:#475467;
+  margin-bottom:6px
 }
 
-input,
-select,
-textarea{
+input,select,textarea{
   width:100%;
-  padding:13px;
+  padding:12px;
   border:1px solid #d9deea;
   border-radius:11px;
-  background:white;
+  background:#fff;
   outline:none;
+  margin-bottom:14px
 }
 
 textarea{
   min-height:90px;
-  resize:vertical;
+  resize:vertical
 }
 
-input:focus,
-select:focus,
-textarea:focus{
+input:focus,select:focus,textarea:focus{
   border-color:#6366f1;
-  box-shadow:0 0 0 3px #6366f118;
+  outline:2px solid #c7d2fe
 }
 
-.service-grid{
+.grid{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px
 }
 
-.service{
-  border:1px solid #e4e7ec;
-  background:#fff;
-  border-radius:16px;
-  padding:18px;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.service:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 25px rgba(31,41,70,.08);
-}
-
-.service.active{
-  border:2px solid #6366f1;
-  background:#f5f7ff;
-}
-
-.service-name{
-  font-weight:900;
-  margin-bottom:7px;
-}
-
-.service-price{
-  color:#4f46e5;
-  font-weight:900;
-  font-size:18px;
-}
-
-.service-extra{
-  color:#667085;
-  font-size:12px;
-  margin-top:5px;
-}
-
-.field{
-  margin-bottom:2px;
+.full{
+  grid-column:1/-1
 }
 
 .section-title{
+  padding:15px 17px;
+  border-radius:14px;
+  background:#eef4ff;
+  color:#175cd3;
+  margin:20px 0 16px;
+  font-weight:900
+}
+
+.service-card{
+  border:1px solid #d9deea;
+  border-radius:15px;
+  padding:16px;
+  background:#fff
+}
+
+.service-card.selected{
+  border:2px solid #6366f1;
+  background:#f7f7ff
+}
+
+.service-name{
+  font-weight:900
+}
+
+.price{
+  font-size:20px;
+  color:#4f46e5;
+  font-weight:900;
+  margin-top:6px
+}
+
+.muted{
+  font-size:12px;
+  color:#667085
+}
+
+.services{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px
+}
+
+.service-card{
+  cursor:pointer
+}
+
+.service-card:hover{
+  box-shadow:0 8px 22px #26305012
+}
+
+#dynamicFields{
+  margin-top:20px
+}
+
+.req{
+  color:#d92d20
+}
+
+.help{
+  font-size:12px;
+  color:#667085;
+  margin:-7px 0 12px
+}
+
+.filebox{
+  padding:13px;
+  border:1px dashed #aab4c5;
+  border-radius:12px;
+  background:#fafbff;
+  margin-bottom:14px
+}
+
+.summary{
+  background:#eef5ff;
+  border-radius:15px;
+  padding:18px;
+  margin-top:20px
+}
+
+.summary-row{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:16px;
+  gap:15px;
+  padding:7px 0
 }
 
-.required{
-  color:#dc2626;
-}
-
-.amount-box{
-  background:linear-gradient(135deg,#eef2ff,#ecfeff);
-  border:1px solid #c7d2fe;
-  border-radius:17px;
-  padding:20px;
-}
-
-.amount{
-  font-size:36px;
+.total{
+  font-size:23px;
   font-weight:900;
-  color:#4f46e5;
+  color:#1769e0;
+  border-top:1px solid #cbdaf5;
+  margin-top:8px;
+  padding-top:12px
 }
 
-.payment-grid{
+.payment{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:20px;
+  gap:18px;
+  margin-top:20px
 }
 
-.qr-box{
-  min-height:270px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  border:1px dashed #c7d2fe;
-  border-radius:17px;
-  background:#fafbff;
+.paybox{
+  border:1px solid #d9deea;
+  border-radius:15px;
   padding:18px;
-  text-align:center;
+  background:#fff
 }
 
-.qr-box img{
-  width:210px;
-  height:210px;
-  object-fit:contain;
-  border-radius:10px;
-  background:#fff;
-}
-
-.file-note{
-  font-size:11px;
-  color:#667085;
-  margin-top:5px;
-}
-
-.msg{
-  margin-top:14px;
-  padding:14px;
-  border-radius:12px;
-  background:#ecfdf3;
-  color:#087443;
-  font-weight:700;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
-
-.msg.error{
-  background:#fef2f2;
-  color:#b42318;
-}
-
-.msg.warning{
-  background:#fffbeb;
-  color:#92400e;
-}
-
-.success-box{
-  text-align:center;
-  padding:30px;
-  background:#ecfdf3;
-  border:1px solid #a7f3d0;
-  border-radius:18px;
-}
-
-.tr-number{
-  font-size:32px;
+.upi{
   font-weight:900;
-  color:#047857;
-  margin:12px 0;
+  color:#4f46e5
 }
 
-.loading{
-  padding:30px;
-  text-align:center;
-  color:#667085;
+.qr{
+  min-height:210px;
+  display:grid;
+  place-items:center
 }
 
-.empty{
-  padding:25px;
-  text-align:center;
-  color:#667085;
-  border:1px dashed #d0d5dd;
-  border-radius:14px;
+.utr{
+  font-size:16px;
+  text-transform:uppercase
 }
 
-.info{
-  padding:13px;
+.actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px
+}
+
+.status{
+  padding:13px 15px;
   border-radius:11px;
+  margin-top:12px;
+  font-weight:700
+}
+
+.success{
+  background:#ecfdf3;
+  color:#087443
+}
+
+.error{
+  background:#fef2f2;
+  color:#b42318
+}
+
+.warning{
+  background:#fffbeb;
+  color:#92400e
+}
+
+.result{
+  border:2px solid #86efac;
+  background:#f0fdf4;
+  border-radius:18px;
+  padding:20px;
+  margin-top:22px
+}
+
+.tr{
+  font-size:25px;
+  font-weight:900;
+  color:#15803d
+}
+
+.center{
+  text-align:center
+}
+
+.small{
+  font-size:12px;
+  color:#667085
+}
+
+.userbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  flex-wrap:wrap;
   background:#f8fafc;
-  color:#475467;
-  font-size:13px;
+  border:1px solid #e4e7ec;
+  padding:14px 16px;
+  border-radius:14px;
+  margin-bottom:18px
 }
 
-hr{
-  border:0;
-  border-top:1px solid #eaecf0;
-  margin:22px 0;
+.userbar strong{
+  color:#4f46e5
 }
 
-@media(max-width:850px){
-  .service-grid{
-    grid-template-columns:repeat(2,1fr);
+@media(max-width:900px){
+
+  .services{
+    grid-template-columns:repeat(2,minmax(0,1fr))
   }
 
-  .payment-grid{
-    grid-template-columns:1fr;
+  .payment{
+    grid-template-columns:1fr
   }
 }
 
 @media(max-width:650px){
-  .grid{
-    grid-template-columns:1fr;
+
+  .grid,
+  .services{
+    grid-template-columns:1fr
   }
 
-  .service-grid{
-    grid-template-columns:1fr;
+  .full{
+    grid-column:auto
+  }
+
+  .nav{
+    align-items:flex-start;
+    flex-direction:column
+  }
+
+  .nav-actions{
+    width:100%
+  }
+
+  .nav-actions>*{
+    flex:1;
+    text-align:center
   }
 
   .wrap{
-    width:min(100% - 14px,1200px);
-    margin:8px auto;
+    margin-top:18px
   }
 
-  .card{
-    padding:17px;
-    border-radius:17px;
+  .box{
+    padding:18px
   }
 }
 </style>
@@ -370,620 +425,1225 @@ hr{
 
 <body>
 
-<div class="wrap">
+<header class="topbar">
 
-  <!-- HEADER -->
-  <div class="card">
-    <div class="header">
+  <div class="nav">
 
-      <div class="logo">
-        <div class="logo-icon">🏪</div>
-
-        <div>
-          <h1>AllInOneStop</h1>
-          <div style="margin-top:5px">
-            <span class="badge">Retailer Portal</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="top-actions">
-        <a href="index.html" class="btn secondary">
-          🏠 Home
-        </a>
-
-        <button
-          type="button"
-          class="btn secondary"
-          onclick="location.reload()"
-        >
-          🔄 Refresh
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-
-  <!-- RETAILER INFORMATION -->
-  <div class="card">
-
-    <div class="section-title">
-      <div>
-        <h2>👤 Customer / Retailer Information</h2>
-        <p style="margin:5px 0 0">
-          पहले service select करें।
-        </p>
-      </div>
+    <div class="brand">
+      All<span>InOneStop</span>
     </div>
 
-    <div class="grid">
+    <div class="nav-actions">
 
-      <div class="field">
-        <label>Retailer ID</label>
-        <input
-          id="retailerId"
-          placeholder="RET-XXXXXX"
-        >
-      </div>
-
-      <div class="field">
-        <label>Customer Mobile <span class="required">*</span></label>
-        <input
-          id="customerMobile"
-          type="tel"
-          maxlength="10"
-          inputmode="numeric"
-          placeholder="10 digit mobile number"
-        >
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- SERVICES -->
-  <div class="card">
-
-    <div class="section-title">
-      <div>
-        <h2>🧾 Select Service</h2>
-        <p style="margin:5px 0 0">
-          Service select करते ही उसी service के required fields खुलेंगे।
-        </p>
-      </div>
-
-      <span
-        id="serviceCount"
-        class="badge"
+      <a
+        class="btn light"
+        href="index.html"
       >
-        Loading...
-      </span>
-    </div>
-
-    <div
-      id="serviceGrid"
-      class="service-grid"
-    >
-      <div class="loading">
-        Loading services...
-      </div>
-    </div>
-
-    <div id="serviceMessage"></div>
-
-  </div>
-
-
-  <!-- DYNAMIC FORM -->
-  <div
-    id="formCard"
-    class="card hidden"
-  >
-
-    <div class="section-title">
-
-      <div>
-        <h2 id="selectedServiceName">
-          Service Details
-        </h2>
-
-        <p id="selectedServiceDescription">
-          Required information भरें।
-        </p>
-      </div>
-
-      <span
-        id="selectedServiceBadge"
-        class="badge"
-      >
-        Service
-      </span>
-
-    </div>
-
-    <div
-      id="dynamicFields"
-      class="grid"
-    ></div>
-
-    <div id="dynamicMessage"></div>
-
-  </div>
-
-
-  <!-- AMOUNT -->
-  <div
-    id="amountCard"
-    class="card hidden"
-  >
-
-    <div class="section-title">
-      <div>
-        <h2>💰 Service Amount</h2>
-        <p style="margin:5px 0 0">
-          Amount selected service के अनुसार automatically calculate होगा।
-        </p>
-      </div>
-    </div>
-
-    <div class="amount-box">
-
-      <div style="color:#667085;font-size:13px;font-weight:800">
-        PAYABLE AMOUNT
-      </div>
-
-      <div
-        id="amount"
-        class="amount"
-      >
-        ₹0
-      </div>
-
-      <div
-        id="amountDescription"
-        class="info"
-        style="margin-top:10px"
-      >
-        Service select करें।
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- PAYMENT -->
-  <div
-    id="paymentCard"
-    class="card hidden"
-  >
-
-    <div class="section-title">
-      <div>
-        <h2>💳 Payment</h2>
-        <p style="margin:5px 0 0">
-          QR scan करके payment करें और UTR / screenshot submit करें।
-        </p>
-      </div>
-    </div>
-
-    <div class="payment-grid">
-
-      <div class="qr-box">
-
-        <strong>Scan & Pay</strong>
-
-        <div
-          id="qrAmount"
-          style="margin:5px 0 12px;color:#4f46e5;font-weight:900"
-        >
-          ₹0
-        </div>
-
-        <img
-          id="paymentQr"
-          alt="Payment QR"
-          src=""
-        >
-
-        <div
-          id="qrMessage"
-          class="file-note"
-        >
-          QR amount के अनुसार generate होगा।
-        </div>
-
-      </div>
-
-
-      <div>
-
-        <div class="field">
-          <label>
-            Payment UTR / Transaction Number
-            <span class="required">*</span>
-          </label>
-
-          <input
-            id="paymentUtr"
-            type="text"
-            placeholder="Enter UTR / transaction number"
-          >
-        </div>
-
-
-        <div class="field">
-          <label>
-            Payment Screenshot
-          </label>
-
-          <input
-            id="paymentScreenshot"
-            type="file"
-            accept="image/*,.pdf"
-          >
-
-          <div class="file-note">
-            JPG / PNG / PDF
-          </div>
-        </div>
-
-
-        <div class="field">
-          <label>
-            Payment Date
-          </label>
-
-          <input
-            id="paymentDate"
-            type="date"
-          >
-        </div>
-
-      </div>
-
-    </div>
-
-    <div id="paymentMessage"></div>
-
-  </div>
-
-
-  <!-- SUBMIT -->
-  <div
-    id="submitCard"
-    class="card hidden"
-  >
-
-    <div class="section-title">
-      <div>
-        <h2>📤 Submit Application</h2>
-        <p style="margin:5px 0 0">
-          Submit करने से पहले सभी details check करें।
-        </p>
-      </div>
-    </div>
-
-    <div class="info">
-      ⚠️ Submit करने के बाद application number generate होगा।
-      कृपया उसे सुरक्षित रखें।
-    </div>
-
-    <div
-      id="submitMessage"
-      style="margin-top:14px"
-    ></div>
-
-    <div style="margin-top:18px">
+        🏠 Home
+      </a>
 
       <button
-        id="submitBtn"
+        id="logoutTop"
+        class="dark hidden"
         type="button"
-        class="btn green"
-        onclick="submitApplication()"
+        onclick="logout()"
       >
-        📤 Submit Application
-      </button>
-
-      <button
-        type="button"
-        class="btn secondary"
-        onclick="resetApplication()"
-      >
-        🔄 Reset
+        🚪 Logout
       </button>
 
     </div>
 
   </div>
 
+</header>
 
-  <!-- SUCCESS -->
-  <div
-    id="successCard"
-    class="card hidden"
+
+<main class="wrap">
+
+
+<!-- =========================================================
+     RETAILER LOGIN
+========================================================= -->
+
+<section
+  id="loginPanel"
+  class="box login-box"
+>
+
+  <div class="login-logo">
+    🏪
+  </div>
+
+  <h1>
+    Retailer Login
+  </h1>
+
+  <p class="sub">
+    Retailer ID / Username और Password से login करें।
+    बिना login के service portal नहीं खुलेगा।
+  </p>
+
+  <label for="loginUser">
+    Retailer ID / Username
+    <span class="req">*</span>
+  </label>
+
+  <input
+    id="loginUser"
+    autocomplete="username"
+    placeholder="RET-XXXXXX"
   >
 
-    <div class="success-box">
+  <label for="loginPass">
+    Password
+    <span class="req">*</span>
+  </label>
 
-      <div style="font-size:50px">
-        ✅
-      </div>
+  <input
+    id="loginPass"
+    type="password"
+    autocomplete="current-password"
+    placeholder="Enter password"
+  >
 
-      <h2>Application Submitted Successfully</h2>
+  <button
+    id="loginBtn"
+    type="button"
+    style="width:100%"
+    onclick="login()"
+  >
+    🔐 Login
+  </button>
 
-      <p>
-        आपका application successfully submit हो गया है।
-      </p>
+  <div id="loginMsg"></div>
 
-      <div
-        id="successTrNumber"
-        class="tr-number"
-      >
-        -
-      </div>
+</section>
 
-      <div
-        id="successDetails"
-        class="info"
-      ></div>
 
-      <div style="margin-top:18px">
+<!-- =========================================================
+     RETAILER PORTAL
+========================================================= -->
 
-        <button
-          type="button"
-          class="btn"
-          onclick="newApplication()"
-        >
-          ➕ New Application
-        </button>
+<section
+  id="portalPanel"
+  class="hidden"
+>
 
-        <a
-          href="index.html"
-          class="btn secondary"
-        >
-          🏠 Home
-        </a>
+<div class="box">
 
-      </div>
 
-    </div>
+<!-- RETAILER INFO -->
+
+<div class="userbar">
+
+  <div>
+
+    👤 Retailer:
+
+    <strong id="retailerName">
+      —
+    </strong>
+
+    <br>
+
+    <span class="small">
+
+      Retailer ID:
+
+      <strong id="retailerIdView">
+        —
+      </strong>
+
+    </span>
+
+  </div>
+
+
+  <div>
+
+    📱
+
+    <strong id="retailerMobileView">
+      —
+    </strong>
 
   </div>
 
 </div>
 
 
+<h1>
+  New Application
+</h1>
+
+<p class="sub">
+  पहले service select करें। उसके बाद उसी service के
+  required fields अपने आप खुलेंगे।
+</p>
+
+
+<!-- CUSTOMER -->
+
+<div class="section-title">
+  1. Customer / Retailer Information
+</div>
+
+
+<div class="grid">
+
+  <div>
+
+    <label>
+      Customer Mobile
+      <span class="req">*</span>
+    </label>
+
+    <input
+      id="customerMobile"
+      inputmode="numeric"
+      maxlength="10"
+      placeholder="10 digit mobile number"
+    >
+
+  </div>
+
+
+  <div>
+
+    <label>
+      Customer Email
+    </label>
+
+    <input
+      id="customerEmail"
+      type="email"
+      placeholder="customer@email.com"
+    >
+
+  </div>
+
+</div>
+
+
+<!-- SERVICES -->
+
+<div class="section-title">
+  2. Select Service
+</div>
+
+
+<div
+  id="serviceCards"
+  class="services"
+></div>
+
+
+<!-- SERVICE FORM -->
+
+<div
+  id="serviceForm"
+  class="hidden"
+>
+
+
+<div class="section-title">
+  3. Required Details
+</div>
+
+
+<div
+  id="dynamicFields"
+  class="grid"
+></div>
+
+
+<!-- PAYMENT -->
+
+<div class="section-title">
+  4. Payment
+</div>
+
+
+<div class="summary">
+
+  <div class="summary-row">
+
+    <span>
+      Selected Service
+    </span>
+
+    <strong id="selectedService">
+      —
+    </strong>
+
+  </div>
+
+
+  <div class="summary-row">
+
+    <span>
+      UPI
+    </span>
+
+    <strong id="upiText">
+      gujrat.nsfa@ybl
+    </strong>
+
+  </div>
+
+
+  <div class="summary-row total">
+
+    <span>
+      Total Amount
+    </span>
+
+    <span>
+
+      ₹
+
+      <span id="price">
+        0
+      </span>
+
+    </span>
+
+  </div>
+
+</div>
+
+
+<div class="payment">
+
+
+<!-- QR -->
+
+<div class="paybox center">
+
+  <h3>
+    Scan & Pay
+  </h3>
+
+  <div
+    id="qrcode"
+    class="qr"
+  ></div>
+
+  <div class="upi">
+    gujrat.nsfa@ybl
+  </div>
+
+  <p class="small">
+    QR amount selected service के अनुसार automatic है।
+  </p>
+
+</div>
+
+
+<!-- UTR -->
+
+<div class="paybox">
+
+  <h3>
+    Payment Details
+  </h3>
+
+  <label>
+    UTR / Transaction Number
+    <span class="req">*</span>
+  </label>
+
+  <input
+    id="utr"
+    class="utr"
+    placeholder="Enter UTR / Transaction ID"
+  >
+
+
+  <label>
+    Payment Screenshot
+    <span class="req">*</span>
+  </label>
+
+  <div class="filebox">
+
+    <input
+      id="paymentScreenshot"
+      type="file"
+      accept="image/*,.pdf"
+    >
+
+  </div>
+
+
+  <p class="small">
+    Payment complete करने के बाद UTR और screenshot देना जरूरी है।
+  </p>
+
+</div>
+
+</div>
+
+
+<!-- BUTTONS -->
+
+<div class="actions">
+
+  <button
+    id="submitBtn"
+    type="button"
+    onclick="submitApplication()"
+  >
+    ✅ Submit Application
+  </button>
+
+
+  <button
+    type="button"
+    class="dark"
+    onclick="resetApplication()"
+  >
+    ↻ Reset
+  </button>
+
+
+  <button
+    type="button"
+    class="light"
+    onclick="logout()"
+  >
+    🚪 Logout
+  </button>
+
+</div>
+
+
+<div id="formMsg"></div>
+
+
+<!-- RESULT -->
+
+<div
+  id="result"
+  class="result hidden center"
+>
+
+  <div>
+    Application / TR Number
+  </div>
+
+  <div
+    id="trNo"
+    class="tr"
+  ></div>
+
+  <p id="resultMsg"></p>
+
+  <a
+    class="btn"
+    href="tracking.html"
+  >
+    🔎 Track Application
+  </a>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
 <script>
 
 /* =========================================================
-   API
+   CONFIG
 ========================================================= */
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbzBQyU5eT1yZSDJ_QtmUY4g8ulDSXJKBXLVO9Oq0w37Ipt5hDayv3rp8XN9HnnjN899lg/exec";
+"https://script.google.com/macros/s/AKfycbzBQyU5eT1yZSDJ_QtmUY4g8ulDSXJKBXLVO9Oq0w37Ipt5hDayv3rp8XN9HnnjN899lg/exec";
 
+const UPI_ID =
+"gujrat.nsfa@ybl";
 
-/*
-  अपना UPI यहाँ डालें।
-
-  Example:
-  const PAYMENT_UPI = "yourname@ybl";
-
-  आपने पहले दिया था:
-  gujrat.nsfa@ybl
-
-  इसलिए अभी वही रखा गया है।
-*/
-
-const PAYMENT_UPI =
-  "gujrat.nsfa@ybl";
-
-const PAYMENT_NAME =
-  "AllInOneStop";
+const UPI_NAME =
+"RAJKUMAR RATIONCARD SERVICES";
 
 
 /* =========================================================
-   GLOBAL DATA
+   SERVICES
 ========================================================= */
 
-let services = [];
-let selectedService = null;
+const SERVICES = [
 
+{
+  id:"ration_new_name",
+  name:"Ration Card - New Name Add",
+  amount:70,
+  without:100,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "father_name",
+    "husband_name",
+    "dob",
+    "dob_year",
+    "ration_card_number",
+    "aadhaar_pdf",
+    "ration_card_pdf",
+    "without_ration_card"
+  ]
+},
 
-/* =========================================================
-   HELPERS
-========================================================= */
+{
+  id:"ration_name_delete",
+  name:"Ration Card - Name Delete",
+  amount:100,
+  without:200,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "father_name",
+    "dob",
+    "ration_card_number",
+    "aadhaar_pdf",
+    "ration_card_pdf",
+    "without_ration_card"
+  ]
+},
 
-function $(id){
-  return document.getElementById(id);
+{
+  id:"ration_father_to_husband",
+  name:"Ration Card - Father Name to Husband Name Update",
+  amount:350,
+  without:500,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "father_name",
+    "husband_name",
+    "dob",
+    "ration_card_number",
+    "aadhaar_pdf",
+    "ration_card_pdf",
+    "without_ration_card"
+  ]
+},
+
+{
+  id:"ration_name_correction",
+  name:"Ration Card - Name Correction",
+  amount:350,
+  without:500,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "correct_name",
+    "dob",
+    "ration_card_number",
+    "aadhaar_pdf",
+    "ration_card_pdf",
+    "without_ration_card"
+  ]
+},
+
+{
+  id:"ration_bandh_chalu",
+  name:"Ration Card - Bandh Card Chalu",
+  amount:3500,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "dob",
+    "ration_card_number",
+    "aadhaar_pdf",
+    "ration_card_pdf"
+  ]
+},
+
+{
+  id:"ration_vibhajan",
+  name:"Ration Card - Vibhajan",
+  amount:2500,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "dob",
+    "ration_card_number",
+    "aadhaar_pdf",
+    "ration_card_pdf"
+  ]
+},
+
+{
+  id:"pan_pdf",
+  name:"PAN Card PDF",
+  amount:70,
+  fields:[
+    "pan_number",
+    "mobile",
+    "aadhaar_pdf"
+  ]
+},
+
+{
+  id:"dl_pdf",
+  name:"DL PDF",
+  amount:250,
+  fields:[
+    "dl_number",
+    "name_english",
+    "dob",
+    "mobile",
+    "aadhaar_pdf"
+  ]
+},
+
+{
+  id:"rc_pdf",
+  name:"RC PDF",
+  amount:300,
+  fields:[
+    "rc_number",
+    "vehicle_number",
+    "mobile",
+    "aadhaar_pdf"
+  ]
+},
+
+{
+  id:"election_card",
+  name:"Election Card",
+  amount:500,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "father_name",
+    "mother_name",
+    "husband_name",
+    "election_number",
+    "mobile",
+    "aadhaar_pdf",
+    "lc_pdf",
+    "photo",
+    "signature"
+  ]
+},
+
+{
+  id:"election_update",
+  name:"Election Card Update",
+  amount:500,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "father_name",
+    "mother_name",
+    "husband_name",
+    "election_number",
+    "mobile",
+    "aadhaar_pdf",
+    "lc_pdf",
+    "photo",
+    "signature",
+    "pancard_pdf"
+  ]
+},
+
+{
+  id:"pan_new",
+  name:"New PAN Card",
+  amount:500,
+  fields:[
+    "name_english",
+    "name_gujarati",
+    "father_name",
+    "dob",
+    "mobile",
+    "aadhaar_number",
+    "aadhaar_pdf",
+    "photo",
+    "signature"
+  ]
+},
+
+{
+  id:"pan_instant",
+  name:"Instant PAN Card",
+  amount:500,
+  fields:[
+    "aadhaar_number",
+    "mobile",
+    "aadhaar_pdf"
+  ]
+},
+
+{
+  id:"pan_correction",
+  name:"PAN Card Correction",
+  amount:500,
+  fields:[
+    "pan_number",
+    "correction_type",
+    "correct_name",
+    "dob",
+    "mobile",
+    "aadhaar_pdf",
+    "pancard_pdf",
+    "photo",
+    "signature"
+  ]
+},
+
+{
+  id:"lms_certificate",
+  name:"LMS Certificate",
+  amount:1500,
+  fields:[
+    "name_english",
+    "mobile",
+    "email",
+    "state",
+    "district",
+    "aadhaar_number",
+    "aadhaar_pdf"
+  ]
 }
 
+];
 
-function escapeHtml(value){
 
-  return String(value ?? "")
-    .replace(/[&<>"']/g,function(char){
+/* =========================================================
+   FIELD DEFINITIONS
+========================================================= */
 
-      const map = {
+const FIELD_META = {
+
+name_english:{
+  label:"Name as per Aadhaar - English",
+  type:"text",
+  placeholder:"Full Name"
+},
+
+name_gujarati:{
+  label:"આધાર મુજબ નામ - ગુજરાતી",
+  type:"text",
+  placeholder:"ગુજરાતી નામ"
+},
+
+father_name:{
+  label:"Father Name",
+  type:"text",
+  placeholder:"Father Name"
+},
+
+husband_name:{
+  label:"Husband Name",
+  type:"text",
+  placeholder:"Husband Name"
+},
+
+mother_name:{
+  label:"Mother Name",
+  type:"text",
+  placeholder:"Mother Name"
+},
+
+correct_name:{
+  label:"Correct Name",
+  type:"text",
+  placeholder:"Correct Name"
+},
+
+dob:{
+  label:"Date of Birth",
+  type:"date"
+},
+
+dob_year:{
+  label:"DOB Year",
+  type:"number",
+  placeholder:"YYYY"
+},
+
+ration_card_number:{
+  label:"Ration Card Number",
+  type:"text",
+  placeholder:"Ration Card Number"
+},
+
+pan_number:{
+  label:"PAN Number",
+  type:"text",
+  placeholder:"ABCDE1234F"
+},
+
+dl_number:{
+  label:"DL Number",
+  type:"text",
+  placeholder:"Driving Licence Number"
+},
+
+rc_number:{
+  label:"RC Number",
+  type:"text",
+  placeholder:"RC Number"
+},
+
+vehicle_number:{
+  label:"Vehicle Number",
+  type:"text",
+  placeholder:"GJ01AB1234"
+},
+
+election_number:{
+  label:"Election Card Number",
+  type:"text",
+  placeholder:"Election Number"
+},
+
+mobile:{
+  label:"Mobile Number",
+  type:"tel",
+  placeholder:"10 digit mobile number"
+},
+
+email:{
+  label:"Email",
+  type:"email",
+  placeholder:"email@example.com"
+},
+
+state:{
+  label:"State",
+  type:"text",
+  placeholder:"State"
+},
+
+district:{
+  label:"District",
+  type:"text",
+  placeholder:"District"
+},
+
+aadhaar_number:{
+  label:"Aadhaar Number",
+  type:"text",
+  placeholder:"12 digit Aadhaar number"
+},
+
+correction_type:{
+  label:"Correction Type",
+  type:"select",
+  options:[
+    "Name",
+    "Date of Birth",
+    "Photo",
+    "Other"
+  ]
+},
+
+aadhaar_pdf:{
+  label:"Aadhaar Card PDF",
+  type:"file",
+  accept:".pdf",
+  fileKey:"aadhaar"
+},
+
+ration_card_pdf:{
+  label:"Ration Card PDF",
+  type:"file",
+  accept:".pdf",
+  fileKey:"ration"
+},
+
+lc_pdf:{
+  label:"LC / Optical Document PDF",
+  type:"file",
+  accept:".pdf,image/*",
+  fileKey:"lc"
+},
+
+pancard_pdf:{
+  label:"PAN Card PDF",
+  type:"file",
+  accept:".pdf,image/*",
+  fileKey:"pancard"
+},
+
+photo:{
+  label:"Photo",
+  type:"file",
+  accept:"image/*",
+  fileKey:"photo"
+},
+
+signature:{
+  label:"Signature",
+  type:"file",
+  accept:"image/*",
+  fileKey:"signature"
+},
+
+without_ration_card:{
+  label:"Without Ration Card",
+  type:"checkbox"
+}
+
+};
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let selectedService =
+null;
+
+let retailer =
+null;
+
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function esc(v){
+
+  return String(v??"")
+    .replace(
+      /[&<>"']/g,
+      c=>({
         "&":"&amp;",
         "<":"&lt;",
         ">":"&gt;",
-        '"':"&quot;",
+        "\"":"&quot;",
         "'":"&#039;"
-      };
-
-      return map[char];
-
-    });
-
-}
-
-
-function showMessage(
-  id,
-  text,
-  type = ""
-){
-
-  const el = $(id);
-
-  if(!el) return;
-
-  el.innerHTML =
-    `<div class="msg ${type}">${escapeHtml(text)}</div>`;
-
-}
-
-
-function clearMessage(id){
-
-  const el = $(id);
-
-  if(el){
-    el.innerHTML = "";
-  }
+      }[c])
+    );
 
 }
 
 
 /* =========================================================
-   LOAD SERVICES
+   MESSAGE
 ========================================================= */
 
-async function loadServices(){
+function showMsg(
+  id,
+  text,
+  type="success"
+){
 
-  const grid = $("serviceGrid");
+  const el =
+    document.getElementById(id);
 
-  grid.innerHTML =
-    `<div class="loading">Loading services...</div>`;
+  el.innerHTML =
+    `<div class="status ${type}">
+      ${esc(text)}
+    </div>`;
+
+}
+
+
+function clearMsg(id){
+
+  document
+    .getElementById(id)
+    .innerHTML="";
+
+}
+
+
+/* =========================================================
+   API CALL
+========================================================= */
+
+async function api(
+  action,
+  data={}
+){
+
+  const body =
+    JSON.stringify({
+      action,
+      ...data
+    });
+
+  const res =
+    await fetch(
+      API_URL,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+        body
+      }
+    );
+
+  const text =
+    await res.text();
+
+  let json;
 
   try{
 
-    const response =
-      await fetch(API_URL,{
-        method:"GET",
-        cache:"no-store"
-      });
-
-    if(!response.ok){
-
-      throw new Error(
-        "API error: HTTP " + response.status
-      );
-
-    }
-
-    const data =
-      await response.json();
-
-    console.log(
-      "API RESPONSE:",
-      data
-    );
-
-    if(!data || data.success !== true){
-
-      throw new Error(
-        data?.message ||
-        data?.error ||
-        "Services could not be loaded."
-      );
-
-    }
-
-    services =
-      Array.isArray(data.services)
-        ? data.services
-        : [];
-
-    $("serviceCount").textContent =
-      services.length + " Services";
-
-    renderServices();
+    json =
+      JSON.parse(text);
 
   }
-  catch(error){
+  catch(e){
 
-    console.error(
-      "LOAD SERVICES ERROR:",
-      error
+    throw new Error(
+      "API returned invalid response."
     );
 
-    grid.innerHTML =
-      `<div class="empty">
-        Services load नहीं हो पाईं.<br><br>
-        ${escapeHtml(error.message)}
-      </div>`;
+  }
 
-    $("serviceCount").textContent =
-      "Error";
+  if(!json.success){
+
+    throw new Error(
+      json.message ||
+      "Request failed."
+    );
 
   }
+
+  return json;
 
 }
 
 
 /* =========================================================
-   RENDER SERVICES
+   LOGIN
 ========================================================= */
 
-function renderServices(){
+async function login(){
 
-  const grid =
-    $("serviceGrid");
+  clearMsg("loginMsg");
 
-  if(!services.length){
+  const username =
+    document
+      .getElementById("loginUser")
+      .value
+      .trim();
 
-    grid.innerHTML =
-      `<div class="empty">
-        No services available.
-      </div>`;
+  const password =
+    document
+      .getElementById("loginPass")
+      .value;
+
+  if(
+    !username ||
+    !password
+  ){
+
+    showMsg(
+      "loginMsg",
+      "Retailer ID / Username और Password दोनों भरें.",
+      "error"
+    );
 
     return;
 
   }
 
-  grid.innerHTML =
-    services.map(function(service,index){
 
-      const amount =
-        service.amount ?? 0;
+  const btn =
+    document
+      .getElementById("loginBtn");
 
-      const withoutAmount =
-        service.without_ration_amount;
+  btn.disabled=true;
 
-      const extra =
-        withoutAmount !== null &&
-        withoutAmount !== undefined
-          ? `Without Ration Card: ₹${withoutAmount}`
-          : `${service.fields?.length || 0} required fields`;
+  btn.textContent =
+    "⏳ Logging in...";
 
-      return `
+
+  try{
+
+    const data =
+      await api(
+        "retailerLogin",
+        {
+          username,
+          password
+        }
+      );
+
+
+    if(
+      data.role !==
+      "retailer"
+    ){
+
+      throw new Error(
+        "This account is not a retailer account."
+      );
+
+    }
+
+
+    retailer = {
+
+      retailerId:
+        data.retailerId ||
+        username,
+
+      retailerName:
+        data.retailerName ||
+        username,
+
+      mobile:
+        data.mobile ||
+        "",
+
+      email:
+        data.email ||
+        "",
+
+      username:
+        data.username ||
+        username
+
+    };
+
+
+    sessionStorage.setItem(
+      "allinonestop_retailer",
+      JSON.stringify(retailer)
+    );
+
+
+    openPortal();
+
+  }
+  catch(err){
+
+    showMsg(
+      "loginMsg",
+      err.message ||
+      "Login failed.",
+      "error"
+    );
+
+  }
+  finally{
+
+    btn.disabled=false;
+
+    btn.textContent =
+      "🔐 Login";
+
+  }
+
+}
+
+
+/* =========================================================
+   OPEN PORTAL
+========================================================= */
+
+function openPortal(){
+
+  document
+    .getElementById("loginPanel")
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById("portalPanel")
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById("logoutTop")
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById("retailerName")
+    .textContent =
+      retailer.retailerName ||
+      retailer.retailerId;
+
+
+  document
+    .getElementById("retailerIdView")
+    .textContent =
+      retailer.retailerId;
+
+
+  document
+    .getElementById("retailerMobileView")
+    .textContent =
+      retailer.mobile ||
+      "—";
+
+
+  renderServices();
+
+}
+
+
+/* =========================================================
+   SERVICE CARDS
+========================================================= */
+
+function renderServices(){
+
+  const wrap =
+    document.getElementById(
+      "serviceCards"
+    );
+
+
+  wrap.innerHTML =
+    SERVICES
+      .map(
+        s=>`
+
         <div
-          class="service"
-          data-index="${index}"
-          onclick="selectService(${index})"
+          class="service-card"
+          id="card-${s.id}"
+          onclick="selectService('${s.id}')"
         >
 
           <div class="service-name">
-            ${escapeHtml(service.name)}
+            ${esc(s.name)}
           </div>
 
-          <div class="service-price">
-            ₹${escapeHtml(amount)}
+          <div class="price">
+            ₹${s.amount}
           </div>
 
-          <div class="service-extra">
-            ${escapeHtml(extra)}
-          </div>
+          ${
+            s.without
+            ?
+            `<div class="muted">
+              Without Ration Card:
+              ₹${s.without}
+            </div>`
+            :
+            `<div class="muted">
+              Required fields:
+              ${s.fields.length}
+            </div>`
+          }
 
         </div>
-      `;
 
-    }).join("");
+        `
+      )
+      .join("");
 
 }
 
@@ -992,699 +1652,624 @@ function renderServices(){
    SELECT SERVICE
 ========================================================= */
 
-function selectService(index){
+function selectService(id){
 
   selectedService =
-    services[index];
-
-  if(!selectedService){
-
-    return;
-
-  }
-
-  document
-    .querySelectorAll(".service")
-    .forEach(function(card){
-
-      card.classList.remove("active");
-
-    });
-
-  const selectedCard =
-    document.querySelector(
-      `.service[data-index="${index}"]`
+    SERVICES.find(
+      s=>s.id===id
     );
 
-  if(selectedCard){
 
-    selectedCard.classList.add("active");
+  document
+    .querySelectorAll(".service-card")
+    .forEach(
+      x=>
+        x.classList.remove(
+          "selected"
+        )
+    );
 
-  }
 
-  $("formCard")
-    .classList.remove("hidden");
+  document
+    .getElementById(
+      "card-"+id
+    )
+    .classList
+    .add("selected");
 
-  $("amountCard")
-    .classList.remove("hidden");
 
-  $("paymentCard")
-    .classList.remove("hidden");
+  document
+    .getElementById(
+      "serviceForm"
+    )
+    .classList
+    .remove("hidden");
 
-  $("submitCard")
-    .classList.remove("hidden");
 
-  $("selectedServiceName")
-    .textContent =
-      selectedService.name;
+  renderFields();
 
-  $("selectedServiceBadge")
-    .textContent =
-      selectedService.id;
+  updatePayment();
 
-  $("selectedServiceDescription")
-    .textContent =
-      "इस service के लिए नीचे required information भरें।";
 
-  renderDynamicFields();
+  document
+    .getElementById("result")
+    .classList
+    .add("hidden");
 
-  updateAmount();
 
-  generatePaymentQR();
+  clearMsg("formMsg");
 
-  clearMessage("serviceMessage");
 
-  window.scrollTo({
-    top:$("formCard").offsetTop - 10,
-    behavior:"smooth"
-  });
-
-}
-
-
-/* =========================================================
-   FIELD LABELS
-========================================================= */
-
-const FIELD_LABELS = {
-
-  name_english:
-    "Name as per Aadhaar - English",
-
-  name_gujarati:
-    "Name as per Aadhaar - Gujarati",
-
-  father_name:
-    "Father Name",
-
-  husband_name:
-    "Husband Name",
-
-  mother_name:
-    "Mother Name",
-
-  correct_name:
-    "Correct Name",
-
-  dob:
-    "Date of Birth",
-
-  dob_year:
-    "DOB Year",
-
-  ration_card_number:
-    "Ration Card Number",
-
-  aadhaar_number:
-    "Aadhaar Number",
-
-  election_number:
-    "Election Card Number",
-
-  pan_number:
-    "PAN Number",
-
-  dl_number:
-    "Driving Licence Number",
-
-  rc_number:
-    "RC Number",
-
-  vehicle_number:
-    "Vehicle Number",
-
-  mobile:
-    "Mobile Number",
-
-  email:
-    "Email",
-
-  state:
-    "State",
-
-  district:
-    "District",
-
-  correction_type:
-    "Correction Type"
-
-};
-
-
-/* =========================================================
-   FILE FIELDS
-========================================================= */
-
-const FILE_FIELDS = [
-
-  "aadhaar_pdf",
-  "ration_card_pdf",
-  "pancard_pdf",
-  "lc_pdf",
-  "photo",
-  "signature",
-  "payment_screenshot"
-
-];
-
-
-/* =========================================================
-   FIELD TYPES
-========================================================= */
-
-function fieldType(field){
-
-  if(FILE_FIELDS.includes(field)){
-
-    return "file";
-
-  }
-
-  if(field === "dob"){
-
-    return "date";
-
-  }
-
-  if(field === "email"){
-
-    return "email";
-
-  }
-
-  if(
-    field === "mobile" ||
-    field === "aadhaar_number" ||
-    field === "dob_year"
-  ){
-
-    return "tel";
-
-  }
-
-  return "text";
-
-}
-
-
-/* =========================================================
-   FIELD LABEL
-========================================================= */
-
-function fieldLabel(field){
-
-  if(FIELD_LABELS[field]){
-
-    return FIELD_LABELS[field];
-
-  }
-
-  return field
-    .replaceAll("_"," ")
-    .replace(/\b\w/g,function(c){
-      return c.toUpperCase();
+  document
+    .getElementById("serviceForm")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"start"
     });
 
 }
 
 
 /* =========================================================
-   RENDER DYNAMIC FIELDS
+   DYNAMIC FIELDS
 ========================================================= */
 
-function renderDynamicFields(){
+function renderFields(){
 
-  const container =
-    $("dynamicFields");
+  const wrap =
+    document.getElementById(
+      "dynamicFields"
+    );
 
-  const fields =
-    Array.isArray(selectedService.fields)
-      ? selectedService.fields
-      : [];
 
-  if(!fields.length){
+  wrap.innerHTML="";
 
-    container.innerHTML =
-      `<div class="empty">
-        इस service के लिए कोई extra field नहीं है।
-      </div>`;
 
-    return;
+  selectedService.fields
+    .forEach(
+      key=>{
 
-  }
+        const m =
+          FIELD_META[key];
 
-  container.innerHTML = "";
+        if(!m)return;
 
-  fields.forEach(function(field){
 
-    /*
-      Without ration card checkbox अलग से render करेंगे।
-    */
+        const div =
+          document.createElement(
+            "div"
+          );
 
-    if(field === "without_ration_card"){
 
-      const wrapper =
-        document.createElement("div");
+        div.className =
+          key==="without_ration_card"
+          ?
+          "full"
+          :
+          (
+            m.type==="file"
+            ?
+            "filebox"
+            :
+            ""
+          );
 
-      wrapper.className =
-        "field";
 
-      wrapper.style.gridColumn =
-        "1 / -1";
+        const label =
+          document.createElement(
+            "label"
+          );
 
-      wrapper.innerHTML = `
-        <div class="info">
 
-          <label style="margin:0">
+        label.textContent =
+          m.label +
+          (
+            m.type==="checkbox"
+            ?
+            ""
+            :
+            " *"
+          );
 
-            <input
-              id="without_ration_card"
-              type="checkbox"
-              style="width:auto;margin-right:8px"
-              onchange="updateAmount()"
+
+        div.appendChild(label);
+
+
+        if(
+          m.type==="select"
+        ){
+
+          const el =
+            document.createElement(
+              "select"
+            );
+
+          el.id =
+            "f_"+key;
+
+          el.required=true;
+
+
+          el.innerHTML =
+            '<option value="">Select</option>' +
+
+            m.options
+              .map(
+                o=>
+                  `<option value="${esc(o)}">
+                    ${esc(o)}
+                  </option>`
+              )
+              .join("");
+
+
+          div.appendChild(el);
+
+        }
+
+        else if(
+          m.type==="checkbox"
+        ){
+
+          div.innerHTML =
+            `
+            <label
+              style="
+                display:flex;
+                align-items:center;
+                gap:8px
+              "
             >
 
-            Without Ration Card
+              <input
+                id="f_${key}"
+                type="checkbox"
+                style="
+                  width:auto;
+                  margin:0
+                "
+              >
 
-          </label>
+              Without Ration Card
 
-        </div>
-      `;
+            </label>
+            `;
 
-      container.appendChild(wrapper);
+        }
 
-      return;
+        else{
 
-    }
+          const el =
+            document.createElement(
+              "input"
+            );
 
+          el.id =
+            "f_"+key;
 
-    const wrapper =
-      document.createElement("div");
+          el.type =
+            m.type;
 
-    wrapper.className =
-      "field";
+          el.placeholder =
+            m.placeholder ||
+            "";
 
+          el.accept =
+            m.accept ||
+            "";
 
-    const type =
-      fieldType(field);
-
-
-    const label =
-      fieldLabel(field);
-
-
-    if(type === "file"){
-
-      wrapper.innerHTML = `
-
-        <label>
-          ${escapeHtml(label)}
-          <span class="required">*</span>
-        </label>
-
-        <input
-          id="field_${escapeHtml(field)}"
-          type="file"
-          accept="${fileAccept(field)}"
-        >
-
-        <div class="file-note">
-          ${fileDescription(field)}
-        </div>
-
-      `;
-
-    }
-    else if(field === "correction_type"){
-
-      wrapper.innerHTML = `
-
-        <label>
-          ${escapeHtml(label)}
-          <span class="required">*</span>
-        </label>
-
-        <select
-          id="field_${escapeHtml(field)}"
-        >
-
-          <option value="">
-            Select correction type
-          </option>
-
-          <option value="name">
-            Name Correction
-          </option>
-
-          <option value="dob">
-            Date of Birth Correction
-          </option>
-
-          <option value="photo">
-            Photo Correction
-          </option>
-
-          <option value="signature">
-            Signature Correction
-          </option>
-
-          <option value="other">
-            Other
-          </option>
-
-        </select>
-
-      `;
-
-    }
-    else{
-
-      wrapper.innerHTML = `
-
-        <label>
-          ${escapeHtml(label)}
-          <span class="required">*</span>
-        </label>
-
-        <input
-          id="field_${escapeHtml(field)}"
-          type="${type}"
-          placeholder="${escapeHtml(label)}"
-          ${field === "mobile" ? 'maxlength="10" inputmode="numeric"' : ""}
-          ${field === "aadhaar_number" ? 'maxlength="12" inputmode="numeric"' : ""}
-        >
-
-      `;
-
-    }
-
-    container.appendChild(wrapper);
-
-  });
+          el.required=true;
 
 
-  /*
-    File inputs और normal fields को grid में रखें।
-  */
+          if(
+            key==="dob_year"
+          ){
+
+            el.oninput =
+              syncYear;
+
+          }
+
+
+          div.appendChild(el);
+
+        }
+
+
+        wrap.appendChild(div);
+
+      }
+    );
 
 }
 
 
 /* =========================================================
-   FILE HELPERS
+   DOB YEAR
 ========================================================= */
 
-function fileAccept(field){
+function syncYear(){
 
-  if(field === "photo"){
+  const y =
+    document.getElementById(
+      "f_dob_year"
+    );
 
-    return "image/*";
-
-  }
-
-  if(field === "signature"){
-
-    return "image/*";
-
-  }
-
-  return ".pdf,image/*";
-
-}
-
-
-function fileDescription(field){
-
-  if(field === "aadhaar_pdf"){
-
-    return "Aadhaar PDF upload करें।";
-
-  }
-
-  if(field === "ration_card_pdf"){
-
-    return "Ration Card PDF upload करें।";
-
-  }
-
-  if(field === "pancard_pdf"){
-
-    return "PAN Card PDF upload करें।";
-
-  }
-
-  if(field === "lc_pdf"){
-
-    return "LC PDF upload करें।";
-
-  }
-
-  if(field === "photo"){
-
-    return "Passport size photo upload करें।";
-
-  }
-
-  if(field === "signature"){
-
-    return "Signature image upload करें।";
-
-  }
-
-  return "File upload करें।";
-
-}
-
-
-/* =========================================================
-   GET FIELD VALUE
-========================================================= */
-
-function getFieldValue(field){
-
-  const el =
-    $("field_" + field);
-
-  if(!el){
-
-    return "";
-
-  }
-
-  return el.value?.trim() || "";
-
-}
-
-
-/* =========================================================
-   UPDATE AMOUNT
-========================================================= */
-
-function updateAmount(){
-
-  if(!selectedService){
-
-    return;
-
-  }
-
-  let amount =
-    Number(selectedService.amount || 0);
-
-  const withoutCheckbox =
-    $("without_ration_card");
-
-  const isWithoutRation =
-    withoutCheckbox &&
-    withoutCheckbox.checked;
+  const d =
+    document.getElementById(
+      "f_dob"
+    );
 
 
   if(
-    isWithoutRation &&
-    selectedService.without_ration_amount !== null &&
-    selectedService.without_ration_amount !== undefined
+    y &&
+    d &&
+    /^\d{4}$/.test(
+      y.value
+    )
   ){
 
-    amount =
-      Number(
-        selectedService.without_ration_amount
+    d.value =
+      y.value +
+      "-01-01";
+
+  }
+
+}
+
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+function getAmount(){
+
+  if(!selectedService)
+    return 0;
+
+
+  const w =
+    document.getElementById(
+      "f_without_ration_card"
+    );
+
+
+  return(
+    selectedService.without &&
+    w &&
+    w.checked
+  )
+  ?
+  selectedService.without
+  :
+  selectedService.amount;
+
+}
+
+
+/* =========================================================
+   PAYMENT QR
+========================================================= */
+
+function updatePayment(){
+
+  const amount =
+    getAmount();
+
+
+  document
+    .getElementById(
+      "selectedService"
+    )
+    .textContent =
+      selectedService
+      ?
+      selectedService.name
+      :
+      "—";
+
+
+  document
+    .getElementById(
+      "price"
+    )
+    .textContent =
+      amount;
+
+
+  document
+    .getElementById(
+      "upiText"
+    )
+    .textContent =
+      UPI_ID;
+
+
+  const qr =
+    document.getElementById(
+      "qrcode"
+    );
+
+
+  qr.innerHTML="";
+
+
+  if(amount){
+
+    const upi =
+      `upi://pay` +
+      `?pa=${encodeURIComponent(UPI_ID)}` +
+      `&pn=${encodeURIComponent(UPI_NAME)}` +
+      `&am=${encodeURIComponent(
+        Number(amount).toFixed(2)
+      )}` +
+      `&cu=INR`;
+
+
+    new QRCode(
+      qr,
+      {
+        text:upi,
+        width:190,
+        height:190
+      }
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   WITHOUT RATION CARD CHANGE
+========================================================= */
+
+document.addEventListener(
+  "change",
+  e=>{
+
+    if(
+      e.target &&
+      e.target.id===
+      "f_without_ration_card"
+    ){
+
+      updatePayment();
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   COLLECT FIELDS
+========================================================= */
+
+function collectFields(){
+
+  const data={};
+
+
+  for(
+    const key
+    of selectedService.fields
+  ){
+
+    const el =
+      document.getElementById(
+        "f_"+key
+      );
+
+
+    if(!el)
+      continue;
+
+
+    data[key] =
+      el.type==="checkbox"
+      ?
+      el.checked
+      :
+      el.value;
+
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================================
+   FILE TO BASE64
+========================================================= */
+
+async function fileToData(file){
+
+  if(!file)
+    return null;
+
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const r =
+        new FileReader();
+
+
+      r.onload =
+        ()=>
+          resolve({
+            name:file.name,
+            type:file.type,
+            data:r.result
+          });
+
+
+      r.onerror =
+        reject;
+
+
+      r.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   COLLECT FILES
+========================================================= */
+
+async function collectFiles(){
+
+  const out={};
+
+
+  for(
+    const key
+    of selectedService.fields
+  ){
+
+    const m =
+      FIELD_META[key];
+
+
+    if(
+      m &&
+      m.type==="file"
+    ){
+
+      const el =
+        document.getElementById(
+          "f_"+key
+        );
+
+
+      if(
+        el &&
+        el.files &&
+        el.files[0]
+      ){
+
+        out[key] =
+          await fileToData(
+            el.files[0]
+          );
+
+      }
+
+    }
+
+  }
+
+
+  const pay =
+    document.getElementById(
+      "paymentScreenshot"
+    );
+
+
+  if(
+    pay.files &&
+    pay.files[0]
+  ){
+
+    out.payment_screenshot =
+      await fileToData(
+        pay.files[0]
       );
 
   }
 
 
-  $("amount").textContent =
-    "₹" + amount.toLocaleString("en-IN");
-
-  $("qrAmount").textContent =
-    "₹" + amount.toLocaleString("en-IN");
-
-
-  if(isWithoutRation){
-
-    $("amountDescription").textContent =
-      "Without Ration Card amount selected.";
-
-  }
-  else{
-
-    $("amountDescription").textContent =
-      selectedService.name +
-      " — Standard Service Amount";
-
-  }
+  return out;
 
 }
 
 
 /* =========================================================
-   QR
-========================================================= */
-
-function generatePaymentQR(){
-
-  if(!selectedService){
-
-    return;
-
-  }
-
-  let amount =
-    Number(selectedService.amount || 0);
-
-  const checkbox =
-    $("without_ration_card");
-
-  if(
-    checkbox &&
-    checkbox.checked &&
-    selectedService.without_ration_amount !== null &&
-    selectedService.without_ration_amount !== undefined
-  ){
-
-    amount =
-      Number(
-        selectedService.without_ration_amount
-      );
-
-  }
-
-
-  const upiUrl =
-    "upi://pay" +
-    "?pa=" +
-    encodeURIComponent(PAYMENT_UPI) +
-    "&pn=" +
-    encodeURIComponent(PAYMENT_NAME) +
-    "&am=" +
-    encodeURIComponent(amount.toFixed(2)) +
-    "&cu=INR";
-
-
-  /*
-    QR image service.
-    यह केवल QR image generate करता है।
-  */
-
-  const qrUrl =
-    "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" +
-    encodeURIComponent(upiUrl);
-
-
-  $("paymentQr").src =
-    qrUrl;
-
-  $("qrMessage").textContent =
-    "UPI: " +
-    PAYMENT_UPI +
-    " | Amount: ₹" +
-    amount.toLocaleString("en-IN");
-
-}
-
-
-/* =========================================================
-   VALIDATE NORMAL FIELD
+   VALIDATE
 ========================================================= */
 
 function validateFields(){
 
-  if(!selectedService){
+  for(
+    const key
+    of selectedService.fields
+  ){
 
-    return "Please select a service.";
-
-  }
-
-
-  const mobile =
-    $("customerMobile").value.trim();
-
-
-  if(!/^\d{10}$/.test(mobile)){
-
-    return "Customer mobile number must be exactly 10 digits.";
-
-  }
+    const el =
+      document.getElementById(
+        "f_"+key
+      );
 
 
-  const fields =
-    Array.isArray(selectedService.fields)
-      ? selectedService.fields
-      : [];
-
-
-  for(const field of fields){
-
-    if(field === "without_ration_card"){
-
+    if(!el)
       continue;
+
+
+    if(
+      key==="without_ration_card"
+    )
+      continue;
+
+
+    if(
+      el.type==="file"
+    ){
+
+      const without =
+        document.getElementById(
+          "f_without_ration_card"
+        );
+
+
+      if(
+        key==="ration_card_pdf" &&
+        without &&
+        without.checked
+      ){
+
+        continue;
+
+      }
+
+
+      if(
+        !el.files ||
+        !el.files.length
+      ){
+
+        el.focus();
+
+
+        return(
+          FIELD_META[key].label +
+          " required है."
+        );
+
+      }
 
     }
 
+    else if(
+      !el.value.trim()
+    ){
 
-    const value =
-      getFieldValue(field);
+      el.focus();
 
 
-    if(!value){
-
-      return (
-        fieldLabel(field) +
-        " is required."
+      return(
+        FIELD_META[key].label +
+        " required है."
       );
 
     }
-
-
-    if(
-      field === "mobile" &&
-      !/^\d{10}$/.test(value)
-    ){
-
-      return "Mobile number must be exactly 10 digits.";
-
-    }
-
-
-    if(
-      field === "aadhaar_number" &&
-      !/^\d{12}$/.test(value)
-    ){
-
-      return "Aadhaar Number must be exactly 12 digits.";
-
-    }
-
-  }
-
-
-  const utr =
-    $("paymentUtr").value.trim();
-
-
-  if(!utr){
-
-    return "Payment UTR / Transaction Number is required.";
 
   }
 
@@ -1695,205 +2280,19 @@ function validateFields(){
 
 
 /* =========================================================
-   COLLECT FORM DATA
-========================================================= */
-
-function collectApplicationData(){
-
-  const fields =
-    Array.isArray(selectedService.fields)
-      ? selectedService.fields
-      : [];
-
-
-  const data = {
-
-    service_id:
-      selectedService.id,
-
-    service_name:
-      selectedService.name,
-
-    amount:
-      calculateCurrentAmount(),
-
-    retailer_id:
-      $("retailerId").value.trim(),
-
-    customer_mobile:
-      $("customerMobile").value.trim(),
-
-    payment_utr:
-      $("paymentUtr").value.trim(),
-
-    payment_date:
-      $("paymentDate").value,
-
-    without_ration_card:
-      Boolean(
-        $("without_ration_card")?.checked
-      )
-
-  };
-
-
-  fields.forEach(function(field){
-
-    if(field === "without_ration_card"){
-
-      return;
-
-    }
-
-
-    const input =
-      $("field_" + field);
-
-
-    if(!input){
-
-      return;
-
-    }
-
-
-    if(input.type === "file"){
-
-      return;
-
-    }
-
-
-    data[field] =
-      input.value.trim();
-
-  });
-
-
-  return data;
-
-}
-
-
-/* =========================================================
-   FILES
-========================================================= */
-
-function collectFiles(){
-
-  const files = [];
-
-
-  if(selectedService){
-
-    const fields =
-      Array.isArray(selectedService.fields)
-        ? selectedService.fields
-        : [];
-
-
-    fields.forEach(function(field){
-
-      const input =
-        $("field_" + field);
-
-
-      if(
-        input &&
-        input.type === "file" &&
-        input.files &&
-        input.files[0]
-      ){
-
-        files.push({
-          field:field,
-          file:input.files[0]
-        });
-
-      }
-
-    });
-
-  }
-
-
-  const paymentFile =
-    $("paymentScreenshot")?.files?.[0];
-
-
-  if(paymentFile){
-
-    files.push({
-      field:"payment_screenshot",
-      file:paymentFile
-    });
-
-  }
-
-
-  return files;
-
-}
-
-
-/* =========================================================
-   CURRENT AMOUNT
-========================================================= */
-
-function calculateCurrentAmount(){
-
-  if(!selectedService){
-
-    return 0;
-
-  }
-
-  let amount =
-    Number(selectedService.amount || 0);
-
-
-  const checkbox =
-    $("without_ration_card");
-
-
-  if(
-    checkbox &&
-    checkbox.checked &&
-    selectedService.without_ration_amount !== null &&
-    selectedService.without_ration_amount !== undefined
-  ){
-
-    amount =
-      Number(
-        selectedService.without_ration_amount
-      );
-
-  }
-
-
-  return amount;
-
-}
-
-
-/* =========================================================
-   SUBMIT
+   SUBMIT APPLICATION
 ========================================================= */
 
 async function submitApplication(){
 
-  clearMessage("submitMessage");
+  clearMsg("formMsg");
 
 
-  const error =
-    validateFields();
+  if(!selectedService){
 
-
-  if(error){
-
-    showMessage(
-      "submitMessage",
-      error,
+    showMsg(
+      "formMsg",
+      "पहले service select करें.",
       "error"
     );
 
@@ -1902,188 +2301,348 @@ async function submitApplication(){
   }
 
 
-  const button =
-    $("submitBtn");
+  const mobile =
+    document
+      .getElementById(
+        "customerMobile"
+      )
+      .value
+      .trim();
 
 
-  button.disabled =
-    true;
+  if(
+    !/^\d{10}$/.test(
+      mobile
+    )
+  ){
 
-  button.textContent =
-    "⏳ Submitting...";
+    showMsg(
+      "formMsg",
+      "Customer mobile 10 digit होना चाहिए.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const err =
+    validateFields();
+
+
+  if(err){
+
+    showMsg(
+      "formMsg",
+      err,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const utr =
+    document
+      .getElementById(
+        "utr"
+      )
+      .value
+      .trim();
+
+
+  if(!utr){
+
+    showMsg(
+      "formMsg",
+      "UTR / Transaction Number भरें.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const payment =
+    document.getElementById(
+      "paymentScreenshot"
+    );
+
+
+  if(
+    !payment.files.length
+  ){
+
+    showMsg(
+      "formMsg",
+      "Payment screenshot upload करें.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const btn =
+    document.getElementById(
+      "submitBtn"
+    );
+
+
+  btn.disabled=true;
+
+  btn.textContent =
+    "⏳ Uploading & submitting...";
 
 
   try{
 
-    const formData =
-      new FormData();
+    const fields =
+      collectFields();
 
-
-    /*
-      API को action भेज रहे हैं।
-    */
-
-    formData.append(
-      "action",
-      "submit_application"
-    );
-
-
-    const application =
-      collectApplicationData();
-
-
-    formData.append(
-      "data",
-      JSON.stringify(application)
-    );
-
-
-    /*
-      Files
-    */
 
     const files =
-      collectFiles();
+      await collectFiles();
 
 
-    for(const item of files){
+    const amount =
+      getAmount();
 
-      formData.append(
-        item.field,
-        item.file,
-        item.file.name
+
+    const payload={
+
+      retailerId:
+        retailer.retailerId,
+
+      retailerMobile:
+        retailer.mobile,
+
+      customerMobile:
+        mobile,
+
+      mobile:
+        fields.mobile ||
+        mobile,
+
+      email:
+        fields.email ||
+        document
+          .getElementById(
+            "customerEmail"
+          )
+          .value
+          .trim(),
+
+      serviceCode:
+        selectedService.id,
+
+      service:
+        selectedService.id,
+
+      serviceName:
+        selectedService.name,
+
+      amount,
+
+      utrNumber:
+        utr,
+
+      utr,
+
+      paymentStatus:
+        "Pending",
+
+      applicationStatus:
+        "Received",
+
+      applicantName:
+        fields.name_english ||
+        fields.correct_name ||
+        "",
+
+      englishName:
+        fields.name_english ||
+        "",
+
+      gujaratiName:
+        fields.name_gujarati ||
+        "",
+
+      rationCardNumber:
+        fields.ration_card_number ||
+        "",
+
+      birthDate:
+        fields.dob ||
+        "",
+
+      dob:
+        fields.dob ||
+        "",
+
+      birthYear:
+        fields.dob_year ||
+        "",
+
+      rationCardStatus:
+        fields.without_ration_card
+        ?
+        "Without Ration Card"
+        :
+        "With Ration Card",
+
+      correctionType:
+        fields.correction_type ||
+        "",
+
+      panNumber:
+        fields.pan_number ||
+        "",
+
+      dlNumber:
+        fields.dl_number ||
+        "",
+
+      rcNumber:
+        fields.rc_number ||
+        "",
+
+      vehicleNumber:
+        fields.vehicle_number ||
+        "",
+
+      electionNumber:
+        fields.election_number ||
+        "",
+
+      fatherName:
+        fields.father_name ||
+        "",
+
+      motherName:
+        fields.mother_name ||
+        "",
+
+      husbandName:
+        fields.husband_name ||
+        "",
+
+      aadhaarNumber:
+        fields.aadhaar_number ||
+        "",
+
+      state:
+        fields.state ||
+        "",
+
+      district:
+        fields.district ||
+        "",
+
+      fields,
+
+      files,
+
+
+      /*
+        Backward compatible file names
+        for the current Code.gs.
+      */
+
+      aadhaarFileBase64:
+        files.aadhaar?.data ||
+        "",
+
+      aadhaarFileName:
+        files.aadhaar?.name ||
+        "",
+
+      rationFileBase64:
+        files.ration?.data ||
+        "",
+
+      rationFileName:
+        files.ration?.name ||
+        "",
+
+      paymentScreenshotBase64:
+        files.payment_screenshot?.data ||
+        "",
+
+      paymentScreenshotName:
+        files.payment_screenshot?.name ||
+        ""
+
+    };
+
+
+    const result =
+      await api(
+        "submitApplication",
+        payload
       );
 
-    }
 
-
-    console.log(
-      "SUBMIT DATA:",
-      application
-    );
-
-
-    const response =
-      await fetch(
-        API_URL,
-        {
-          method:"POST",
-          body:formData
-        }
-      );
-
-
-    const text =
-      await response.text();
-
-
-    console.log(
-      "SUBMIT RESPONSE:",
-      text
-    );
-
-
-    let result;
-
-    try{
-
-      result =
-        JSON.parse(text);
-
-    }
-    catch{
-
-      throw new Error(
-        "Server ने valid JSON response नहीं दिया:\n" +
-        text.substring(0,500)
-      );
-
-    }
-
-
-    if(
-      !result ||
-      result.success !== true
-    ){
-
-      throw new Error(
-        result?.message ||
-        result?.error ||
-        "Application submit failed."
-      );
-
-    }
-
-
-    /*
-      Success
-    */
-
-    const trNumber =
-      result.tr_number ||
-      result.application_number ||
+    const tr =
       result.trNumber ||
-      result.id ||
-      "GENERATED";
+      result.tr_number ||
+      result.applicationId ||
+      result.applicationID ||
+      "";
 
 
-    $("successTrNumber")
+    document
+      .getElementById(
+        "trNo"
+      )
       .textContent =
-        trNumber;
+        tr ||
+        "Submitted";
 
 
-    $("successDetails")
-      .innerHTML =
-        `
-          <strong>Service:</strong>
-          ${escapeHtml(selectedService.name)}
-          <br><br>
-
-          <strong>Amount:</strong>
-          ₹${calculateCurrentAmount().toLocaleString("en-IN")}
-          <br><br>
-
-          <strong>Payment UTR:</strong>
-          ${escapeHtml($("paymentUtr").value.trim())}
-        `;
+    document
+      .getElementById(
+        "resultMsg"
+      )
+      .textContent =
+        result.message ||
+        "Application submitted successfully.";
 
 
-    $("successCard")
-      .classList.remove("hidden");
+    document
+      .getElementById(
+        "result"
+      )
+      .classList
+      .remove("hidden");
 
 
-    $("submitCard")
-      .classList.add("hidden");
-
-    $("paymentCard")
-      .classList.add("hidden");
-
-    $("amountCard")
-      .classList.add("hidden");
-
-    $("formCard")
-      .classList.add("hidden");
+    showMsg(
+      "formMsg",
+      result.message ||
+      "Application submitted successfully.",
+      "success"
+    );
 
 
-    window.scrollTo({
-      top:$("successCard").offsetTop - 10,
-      behavior:"smooth"
-    });
-
+    document
+      .getElementById(
+        "result"
+      )
+      .scrollIntoView({
+        behavior:"smooth"
+      });
 
   }
-  catch(error){
+  catch(err){
 
-    console.error(
-      "SUBMIT ERROR:",
-      error
-    );
-
-
-    showMessage(
-      "submitMessage",
-      error.message ||
+    showMsg(
+      "formMsg",
+      err.message ||
       "Application submit failed.",
       "error"
     );
@@ -2091,11 +2650,10 @@ async function submitApplication(){
   }
   finally{
 
-    button.disabled =
-      false;
+    btn.disabled=false;
 
-    button.textContent =
-      "📤 Submit Application";
+    btn.textContent =
+      "✅ Submit Application";
 
   }
 
@@ -2108,47 +2666,113 @@ async function submitApplication(){
 
 function resetApplication(){
 
-  selectedService =
-    null;
-
-
-  $("formCard")
-    .classList.add("hidden");
-
-  $("amountCard")
-    .classList.add("hidden");
-
-  $("paymentCard")
-    .classList.add("hidden");
-
-  $("submitCard")
-    .classList.add("hidden");
-
-  $("successCard")
-    .classList.add("hidden");
-
-
-  $("dynamicFields")
-    .innerHTML = "";
-
-
-  $("paymentUtr")
-    .value = "";
-
-  $("paymentDate")
-    .value = "";
-
-  $("paymentScreenshot")
-    .value = "";
+  if(!selectedService)
+    return;
 
 
   document
-    .querySelectorAll(".service")
-    .forEach(function(card){
+    .querySelectorAll(
+      "#dynamicFields input,#dynamicFields select"
+    )
+    .forEach(
+      el=>{
 
-      card.classList.remove("active");
+        if(
+          el.type==="checkbox"
+        ){
 
-    });
+          el.checked=false;
+
+        }
+        else{
+
+          el.value="";
+
+        }
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      "utr"
+    )
+    .value="";
+
+
+  document
+    .getElementById(
+      "paymentScreenshot"
+    )
+    .value="";
+
+
+  document
+    .getElementById(
+      "customerEmail"
+    )
+    .value="";
+
+
+  document
+    .getElementById(
+      "result"
+    )
+    .classList
+    .add("hidden");
+
+
+  clearMsg("formMsg");
+
+  updatePayment();
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout(){
+
+  retailer=null;
+
+
+  sessionStorage.removeItem(
+    "allinonestop_retailer"
+  );
+
+
+  document
+    .getElementById(
+      "portalPanel"
+    )
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById(
+      "loginPanel"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document
+    .getElementById(
+      "logoutTop"
+    )
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById(
+      "loginPass"
+    )
+    .value="";
 
 
   window.scrollTo({
@@ -2160,67 +2784,79 @@ function resetApplication(){
 
 
 /* =========================================================
-   NEW APPLICATION
+   RESTORE SESSION
 ========================================================= */
 
-function newApplication(){
+function restoreSession(){
 
-  $("successCard")
-    .classList.add("hidden");
+  try{
+
+    const saved =
+      sessionStorage.getItem(
+        "allinonestop_retailer"
+      );
 
 
-  $("submitCard")
-    .classList.remove("hidden");
+    if(saved){
+
+      retailer =
+        JSON.parse(saved);
 
 
-  resetApplication();
+      if(
+        retailer &&
+        retailer.retailerId
+      ){
+
+        openPortal();
+
+      }
+
+    }
+
+  }
+  catch(e){
+
+    sessionStorage.removeItem(
+      "allinonestop_retailer"
+    );
+
+  }
 
 }
 
 
 /* =========================================================
-   MOBILE ONLY NUMBERS
+   ENTER KEY LOGIN
 ========================================================= */
 
-$("customerMobile")
+document
+  .getElementById(
+    "loginPass"
+  )
   .addEventListener(
-    "input",
-    function(){
+    "keydown",
+    e=>{
 
-      this.value =
-        this.value
-          .replace(/\D/g,"")
-          .slice(0,10);
+      if(
+        e.key==="Enter"
+      ){
+
+        login();
+
+      }
 
     }
   );
 
 
 /* =========================================================
-   PAYMENT DATE DEFAULT
+   START
 ========================================================= */
 
-(function(){
-
-  const today =
-    new Date()
-      .toISOString()
-      .split("T")[0];
-
-  $("paymentDate").value =
-    today;
-
-})();
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-loadServices();
+restoreSession();
 
 </script>
 
 </body>
 </html>
-```
