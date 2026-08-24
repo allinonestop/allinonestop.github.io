@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Retailer Portal - AllInOneStop</title>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
 
@@ -47,6 +48,37 @@
       padding: 9px 14px;
       border-radius: 7px;
       cursor: pointer;
+      font-weight: bold;
+    }
+
+    .page-buttons {
+      max-width: 1100px;
+      margin: 18px auto 0;
+      padding: 0 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .page-buttons button {
+      border: 0;
+      padding: 10px 18px;
+      border-radius: 7px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .home-btn {
+      background: #1976d2;
+    }
+
+    .back-btn {
+      background: #455a64;
+    }
+
+    .page-buttons button:hover {
+      opacity: .9;
     }
 
     .container {
@@ -100,16 +132,16 @@
       background: white;
     }
 
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
     input:focus,
     select:focus,
     textarea:focus {
       outline: none;
       border-color: #1976d2;
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
     }
 
     .btn {
@@ -221,6 +253,7 @@
     .retailer-info {
       font-size: 14px;
       opacity: .95;
+      margin-top: 4px;
     }
 
     .required {
@@ -231,7 +264,17 @@
       display: none !important;
     }
 
+    .login-help {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f5f7fa;
+      border-radius: 7px;
+      font-size: 13px;
+      color: #555;
+    }
+
     @media(max-width: 700px) {
+
       .grid {
         grid-template-columns: 1fr;
       }
@@ -248,382 +291,559 @@
       .logout {
         display: block;
       }
+
+      .page-buttons {
+        flex-wrap: wrap;
+      }
     }
   </style>
 </head>
 
 <body>
 
-<div class="topbar">
-  <div>
-    <h1>AllInOneStop - Retailer Portal</h1>
-    <div id="retailerInfo" class="retailer-info"></div>
-  </div>
+  <!-- TOP BAR -->
+  <div class="topbar">
 
-  <button id="logoutBtn" class="logout" onclick="logout()">
-    Logout
-  </button>
-</div>
+    <div>
+      <h1>AllInOneStop - Retailer Portal</h1>
 
-
-<div class="container">
-
-  <!-- LOGIN -->
-  <div id="loginSection" class="card login-card">
-
-    <h2>Retailer Login</h2>
-
-    <div id="loginStatus" class="status"></div>
-
-    <div style="margin-bottom:15px;">
-      <label>Retailer ID / Username</label>
-      <input
-        type="text"
-        id="username"
-        autocomplete="username"
-        placeholder="RET-K4CFYQ">
-    </div>
-
-    <div style="margin-bottom:15px;">
-      <label>Password</label>
-      <input
-        type="password"
-        id="password"
-        autocomplete="current-password"
-        placeholder="Password">
+      <div id="retailerInfo" class="retailer-info"></div>
     </div>
 
     <button
-      class="btn btn-primary"
-      id="loginBtn"
-      onclick="login()">
-      Login
+      id="logoutBtn"
+      class="logout"
+      onclick="logout()">
+      Logout
     </button>
 
   </div>
 
 
-  <!-- APPLICATION -->
-  <div id="applicationSection" class="hidden">
+  <!-- HOME / BACK -->
+  <div class="page-buttons">
 
-    <div id="mainStatus" class="status"></div>
+    <button
+      type="button"
+      class="home-btn"
+      onclick="goHome()">
+      🏠 Home
+    </button>
+
+    <button
+      type="button"
+      class="back-btn"
+      onclick="goBack()">
+      ← Back
+    </button>
+
+  </div>
 
 
-    <!-- SERVICE -->
-    <div class="card">
+  <div class="container">
 
-      <h2>1. Select Service</h2>
+    <!-- LOGIN -->
+    <div
+      id="loginSection"
+      class="card login-card">
 
-      <div class="grid">
+      <h2>Retailer Login</h2>
 
-        <div class="full">
-          <label>
-            Service <span class="required">*</span>
-          </label>
+      <div
+        id="loginStatus"
+        class="status">
+      </div>
 
-          <select id="service" onchange="serviceChanged()">
-            <option value="">Loading services...</option>
-          </select>
-        </div>
+      <div style="margin-bottom:15px;">
+
+        <label>
+          Retailer ID / Username
+        </label>
+
+        <input
+          type="text"
+          id="username"
+          autocomplete="username"
+          placeholder="RET-K4CFYQ">
 
       </div>
 
-      <div id="serviceInfo" class="service-info hidden"></div>
 
-    </div>
+      <div style="margin-bottom:15px;">
 
+        <label>
+          Password
+        </label>
 
-    <!-- CUSTOMER -->
-    <div class="card">
-
-      <h2>2. Customer Details</h2>
-
-      <div class="grid">
-
-        <div>
-          <label>
-            Customer Mobile <span class="required">*</span>
-          </label>
-
-          <input
-            type="tel"
-            id="customerMobile"
-            maxlength="10"
-            placeholder="10 digit mobile">
-        </div>
-
-        <div>
-          <label>Customer Email</label>
-
-          <input
-            type="email"
-            id="customerEmail"
-            placeholder="example@gmail.com">
-        </div>
-
-        <div>
-          <label>English Name</label>
-
-          <input
-            type="text"
-            id="name_english"
-            placeholder="Applicant name">
-        </div>
-
-        <div>
-          <label>Gujarati Name</label>
-
-          <input
-            type="text"
-            id="name_gujarati"
-            placeholder="ગુજરાતી નામ">
-        </div>
-
-        <div>
-          <label>Father Name</label>
-
-          <input
-            type="text"
-            id="father_name">
-        </div>
-
-        <div>
-          <label>Mother Name</label>
-
-          <input
-            type="text"
-            id="mother_name">
-        </div>
-
-        <div>
-          <label>Husband Name</label>
-
-          <input
-            type="text"
-            id="husband_name">
-        </div>
-
-        <div>
-          <label>Date of Birth</label>
-
-          <input
-            type="date"
-            id="dob">
-        </div>
-
-        <div>
-          <label>DOB Year</label>
-
-          <input
-            type="text"
-            id="dob_year"
-            maxlength="4"
-            placeholder="YYYY">
-        </div>
-
-        <div>
-          <label>Ration Card Number</label>
-
-          <input
-            type="text"
-            id="ration_card_number">
-        </div>
-
-        <div>
-          <label>PAN Number</label>
-
-          <input
-            type="text"
-            id="pan_number">
-        </div>
-
-        <div>
-          <label>DL Number</label>
-
-          <input
-            type="text"
-            id="dl_number">
-        </div>
-
-        <div>
-          <label>RC Number</label>
-
-          <input
-            type="text"
-            id="rc_number">
-        </div>
-
-        <div>
-          <label>Vehicle Number</label>
-
-          <input
-            type="text"
-            id="vehicle_number">
-        </div>
-
-        <div>
-          <label>Election Number</label>
-
-          <input
-            type="text"
-            id="election_number">
-        </div>
-
-        <div>
-          <label>Aadhaar Number</label>
-
-          <input
-            type="text"
-            id="aadhaar_number"
-            maxlength="12">
-        </div>
-
-        <div>
-          <label>Correction Type</label>
-
-          <input
-            type="text"
-            id="correction_type">
-        </div>
-
-        <div>
-          <label>Correct Name</label>
-
-          <input
-            type="text"
-            id="correct_name">
-        </div>
-
-        <div>
-          <label>State</label>
-
-          <input
-            type="text"
-            id="state">
-        </div>
-
-        <div>
-          <label>District</label>
-
-          <input
-            type="text"
-            id="district">
-        </div>
-
-        <div>
-          <label>Without Ration Card</label>
-
-          <select id="without_ration_card">
-            <option value="">Select</option>
-            <option value="false">No - With Ration Card</option>
-            <option value="true">Yes - Without Ration Card</option>
-          </select>
-        </div>
+        <input
+          type="password"
+          id="password"
+          autocomplete="current-password"
+          placeholder="Password">
 
       </div>
 
-    </div>
-
-
-    <!-- PAYMENT -->
-    <div class="card">
-
-      <h2>3. Payment</h2>
-
-      <div class="payment-box">
-
-        <div>
-          UPI ID:
-          <strong>gujrat.nsfa@ybl</strong>
-        </div>
-
-        <div style="margin-top:5px;">
-          Name:
-          <strong>RAJKUMAR RATIONCARD SERVICES</strong>
-        </div>
-
-        <div style="margin-top:12px;">
-          Pay the displayed service amount and enter the UTR below.
-        </div>
-
-      </div>
-
-      <br>
-
-      <div class="grid">
-
-        <div>
-          <label>
-            Amount <span class="required">*</span>
-          </label>
-
-          <input
-            type="number"
-            id="amount"
-            readonly>
-        </div>
-
-        <div>
-          <label>
-            UTR / Transaction Number
-            <span class="required">*</span>
-          </label>
-
-          <input
-            type="text"
-            id="utrNumber"
-            placeholder="Enter payment UTR">
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- FILES -->
-    <div class="card">
-
-      <h2>4. Documents</h2>
-
-      <div id="fileFields"></div>
-
-      <div class="status info" style="display:block;">
-        Select the required documents for this service.
-        PDF, JPG, JPEG and PNG files are supported.
-      </div>
-
-    </div>
-
-
-    <!-- SUBMIT -->
-    <div class="card">
-
-      <h2>5. Submit Application</h2>
 
       <button
-        class="btn btn-success"
-        id="submitBtn"
-        onclick="submitApplication()">
-        Submit Application
+        class="btn btn-primary"
+        id="loginBtn"
+        onclick="login()">
+
+        Login
+
       </button>
 
-      <div id="trBox" class="tr-box">
 
-        <div>Application submitted successfully</div>
+      <div class="login-help">
+        Retailer ID example: <b>RET-K4CFYQ</b>
+      </div>
 
-        <div class="tr-number" id="trNumber"></div>
+    </div>
 
-        <div>
-          Save this TR Number for tracking.
+
+    <!-- APPLICATION -->
+    <div
+      id="applicationSection"
+      class="hidden">
+
+      <div
+        id="mainStatus"
+        class="status">
+      </div>
+
+
+      <!-- SERVICE -->
+      <div class="card">
+
+        <h2>1. Select Service</h2>
+
+        <div class="grid">
+
+          <div class="full">
+
+            <label>
+              Service
+              <span class="required">*</span>
+            </label>
+
+            <select
+              id="service"
+              onchange="serviceChanged()">
+
+              <option value="">
+                Loading services...
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="serviceInfo"
+          class="service-info hidden">
+        </div>
+
+      </div>
+
+
+      <!-- CUSTOMER -->
+      <div class="card">
+
+        <h2>2. Customer Details</h2>
+
+        <div class="grid">
+
+          <div>
+
+            <label>
+              Customer Mobile
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="tel"
+              id="customerMobile"
+              maxlength="10"
+              placeholder="10 digit mobile">
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Customer Email
+            </label>
+
+            <input
+              type="email"
+              id="customerEmail"
+              placeholder="example@gmail.com">
+
+          </div>
+
+
+          <div>
+
+            <label>English Name</label>
+
+            <input
+              type="text"
+              id="name_english"
+              placeholder="Applicant name">
+
+          </div>
+
+
+          <div>
+
+            <label>Gujarati Name</label>
+
+            <input
+              type="text"
+              id="name_gujarati"
+              placeholder="ગુજરાતી નામ">
+
+          </div>
+
+
+          <div>
+
+            <label>Father Name</label>
+
+            <input
+              type="text"
+              id="father_name">
+
+          </div>
+
+
+          <div>
+
+            <label>Mother Name</label>
+
+            <input
+              type="text"
+              id="mother_name">
+
+          </div>
+
+
+          <div>
+
+            <label>Husband Name</label>
+
+            <input
+              type="text"
+              id="husband_name">
+
+          </div>
+
+
+          <div>
+
+            <label>Date of Birth</label>
+
+            <input
+              type="date"
+              id="dob">
+
+          </div>
+
+
+          <div>
+
+            <label>DOB Year</label>
+
+            <input
+              type="text"
+              id="dob_year"
+              maxlength="4"
+              placeholder="YYYY">
+
+          </div>
+
+
+          <div>
+
+            <label>Ration Card Number</label>
+
+            <input
+              type="text"
+              id="ration_card_number">
+
+          </div>
+
+
+          <div>
+
+            <label>PAN Number</label>
+
+            <input
+              type="text"
+              id="pan_number">
+
+          </div>
+
+
+          <div>
+
+            <label>DL Number</label>
+
+            <input
+              type="text"
+              id="dl_number">
+
+          </div>
+
+
+          <div>
+
+            <label>RC Number</label>
+
+            <input
+              type="text"
+              id="rc_number">
+
+          </div>
+
+
+          <div>
+
+            <label>Vehicle Number</label>
+
+            <input
+              type="text"
+              id="vehicle_number">
+
+          </div>
+
+
+          <div>
+
+            <label>Election Number</label>
+
+            <input
+              type="text"
+              id="election_number">
+
+          </div>
+
+
+          <div>
+
+            <label>Aadhaar Number</label>
+
+            <input
+              type="text"
+              id="aadhaar_number"
+              maxlength="12">
+
+          </div>
+
+
+          <div>
+
+            <label>Correction Type</label>
+
+            <input
+              type="text"
+              id="correction_type">
+
+          </div>
+
+
+          <div>
+
+            <label>Correct Name</label>
+
+            <input
+              type="text"
+              id="correct_name">
+
+          </div>
+
+
+          <div>
+
+            <label>State</label>
+
+            <input
+              type="text"
+              id="state">
+
+          </div>
+
+
+          <div>
+
+            <label>District</label>
+
+            <input
+              type="text"
+              id="district">
+
+          </div>
+
+
+          <div>
+
+            <label>
+              Without Ration Card
+            </label>
+
+            <select id="without_ration_card">
+
+              <option value="">
+                Select
+              </option>
+
+              <option value="false">
+                No - With Ration Card
+              </option>
+
+              <option value="true">
+                Yes - Without Ration Card
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PAYMENT -->
+      <div class="card">
+
+        <h2>3. Payment</h2>
+
+        <div class="payment-box">
+
+          <div>
+            UPI ID:
+            <strong>gujrat.nsfa@ybl</strong>
+          </div>
+
+          <div style="margin-top:5px;">
+            Name:
+            <strong>
+              RAJKUMAR RATIONCARD SERVICES
+            </strong>
+          </div>
+
+          <div style="margin-top:12px;">
+            Pay the displayed service amount and enter
+            the UTR below.
+          </div>
+
         </div>
 
         <br>
 
+        <div class="grid">
+
+          <div>
+
+            <label>
+              Amount
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="number"
+              id="amount"
+              readonly>
+
+          </div>
+
+
+          <div>
+
+            <label>
+              UTR / Transaction Number
+              <span class="required">*</span>
+            </label>
+
+            <input
+              type="text"
+              id="utrNumber"
+              placeholder="Enter payment UTR">
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- FILES -->
+      <div class="card">
+
+        <h2>4. Documents</h2>
+
+        <div id="fileFields"></div>
+
+        <div
+          class="status info"
+          style="display:block;">
+
+          Select the required documents for this service.
+          PDF, JPG, JPEG and PNG files are supported.
+
+        </div>
+
+      </div>
+
+
+      <!-- SUBMIT -->
+      <div class="card">
+
+        <h2>5. Submit Application</h2>
+
         <button
-          class="btn btn-secondary"
-          onclick="newApplication()">
-          New Application
+          class="btn btn-success"
+          id="submitBtn"
+          onclick="submitApplication()">
+
+          Submit Application
+
         </button>
+
+
+        <div
+          id="trBox"
+          class="tr-box">
+
+          <div>
+            Application submitted successfully
+          </div>
+
+          <div
+            class="tr-number"
+            id="trNumber">
+          </div>
+
+          <div>
+            Save this TR Number for tracking.
+          </div>
+
+          <br>
+
+          <button
+            class="btn btn-secondary"
+            onclick="newApplication()">
+
+            New Application
+
+          </button>
+
+        </div>
 
       </div>
 
@@ -631,14 +851,19 @@
 
   </div>
 
-</div>
 
 <script>
+
+  /* =====================================================
+     SUPABASE CONFIG
+     ===================================================== */
+
   const SUPABASE_URL =
     window.ALLINONESTOP_CONFIG.SUPABASE_URL;
 
   const SUPABASE_PUBLISHABLE_KEY =
     window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
+
 
   const supabaseClient =
     window.supabase.createClient(
@@ -646,7 +871,14 @@
       SUPABASE_PUBLISHABLE_KEY
     );
 
-  const SUBMIT_FUNCTION = "submit-application";
+
+  /* =====================================================
+     SUBMIT FUNCTION
+     ===================================================== */
+
+  const SUBMIT_FUNCTION =
+    "submit-application";
+
 
   let services = [];
   let loggedRetailer = null;
@@ -654,43 +886,61 @@
 
 
   /* =====================================================
-     SESSION
-  ===================================================== */
+     IMPORTANT LOGIN EMAIL
+     ===================================================== */
 
-  async function getSession() {
-    const {
-      data,
-      error
-    } = await supabaseClient.auth.getSession();
+  /*
+     Admin-create-retailer function creates retailer
+     Auth email like:
 
-    if (error) {
-      throw new Error(
-        "Session error: " + error.message
-      );
-    }
+     RET-K4CFYQ@dixsmucrgnyuvudhymdj.supabase.co
 
-    if (!data.session) {
-      throw new Error(
-        "Please login first."
-      );
-    }
+     Therefore login MUST use same format.
+  */
 
-    return data.session;
+  function retailerEmail(username) {
+
+    return (
+      username.trim().toLowerCase() +
+      "@dixsmucrgnyuvudhymdj.supabase.co"
+    );
+
   }
 
 
   /* =====================================================
-     RETAILER EMAIL
-  ===================================================== */
+     HOME
+     ===================================================== */
 
- function retailerEmail(username) {
-  return username.trim().toLowerCase() + "@dixsmucrgnyuvudhymdj.supabase.co";
-}
+  function goHome() {
+
+    window.location.href = "index.html";
+
+  }
+
+
+  /* =====================================================
+     BACK
+     ===================================================== */
+
+  function goBack() {
+
+    if (document.referrer) {
+
+      window.history.back();
+
+    } else {
+
+      window.location.href = "index.html";
+
+    }
+
+  }
 
 
   /* =====================================================
      LOGIN
-  ===================================================== */
+     ===================================================== */
 
   async function login() {
 
@@ -701,70 +951,80 @@
         .trim()
         .toUpperCase();
 
+
     const password =
       document
         .getElementById("password")
         .value;
 
+
     if (!username) {
+
       showStatus(
         "loginStatus",
         "Retailer ID / Username required.",
         "error"
       );
+
       return;
+
     }
 
+
     if (!password) {
+
       showStatus(
         "loginStatus",
         "Password required.",
         "error"
       );
+
       return;
+
     }
 
+
     const btn =
-      document.getElementById(
-        "loginBtn"
-      );
+      document.getElementById("loginBtn");
+
 
     btn.disabled = true;
-    btn.textContent =
-      "Logging in...";
+    btn.textContent = "Logging in...";
+
 
     try {
+
+      const internalEmail =
+        retailerEmail(username);
+
 
       const {
         data,
         error
       } =
-        await supabaseClient.auth
-          .signInWithPassword({
-            email:
-              retailerEmail(
-                username
-              ),
-            password:
-              password
-          });
+        await supabaseClient.auth.signInWithPassword({
+
+          email: internalEmail,
+          password: password
+
+        });
+
 
       if (error) {
-        throw new Error(
-          error.message
-        );
-      }
 
-      if (!data.user) {
-        throw new Error(
-          "Login failed."
-        );
+        throw new Error(error.message);
+
       }
 
 
-      /* -----------------------------------------
-         GET RETAILER PROFILE
-      ----------------------------------------- */
+      if (!data || !data.user) {
+
+        throw new Error(
+          "Login failed. User account not found."
+        );
+
+      }
+
 
       const {
         data: profile,
@@ -775,17 +1035,19 @@
           .select(
             "id,full_name,mobile,retailer_number,role"
           )
-          .eq(
-            "id",
-            data.user.id
-          )
+          .eq("id", data.user.id)
           .maybeSingle();
 
+
       if (profileError) {
+
         throw new Error(
+          "Profile error: " +
           profileError.message
         );
+
       }
+
 
       if (
         !profile ||
@@ -797,101 +1059,92 @@
         throw new Error(
           "Retailer profile not found."
         );
+
       }
 
 
       loggedRetailer = {
+
         success: true,
-        retailerId:
-          profile.id,
+
+        retailerId: profile.id,
+
         username:
           profile.retailer_number,
+
         retailerName:
           profile.full_name,
+
         mobile:
           profile.mobile
+
       };
 
 
-      /* -----------------------------------------
-         SHOW APPLICATION
-      ----------------------------------------- */
+      document
+        .getElementById("loginSection")
+        .classList
+        .add("hidden");
+
 
       document
-        .getElementById(
-          "loginSection"
-        )
-        .classList.add(
-          "hidden"
-        );
+        .getElementById("applicationSection")
+        .classList
+        .remove("hidden");
+
 
       document
-        .getElementById(
-          "applicationSection"
-        )
-        .classList.remove(
-          "hidden"
-        );
+        .getElementById("logoutBtn")
+        .style
+        .display = "block";
+
 
       document
-        .getElementById(
-          "logoutBtn"
-        )
-        .style.display =
-        "block";
-
-      document
-        .getElementById(
-          "retailerInfo"
-        )
+        .getElementById("retailerInfo")
         .textContent =
-        (
-          profile.full_name ||
-          ""
-        ) +
-        " | " +
-        (
-          profile.retailer_number ||
-          ""
-        );
+          (
+            profile.full_name || ""
+          ) +
+          " | " +
+          (
+            profile.retailer_number || ""
+          );
 
 
       await loadServices();
 
-      showStatus(
-        "mainStatus",
-        "Login successful.",
-        "success"
-      );
 
     } catch (error) {
 
       showStatus(
         "loginStatus",
         "Login error: " +
-          error.message,
+          (
+            error.message ||
+            "Invalid login credentials."
+          ),
         "error"
       );
 
     } finally {
 
       btn.disabled = false;
-      btn.textContent =
-        "Login";
+      btn.textContent = "Login";
+
     }
+
   }
 
 
   /* =====================================================
      LOAD SERVICES
-  ===================================================== */
+     ===================================================== */
 
   async function loadServices() {
 
     const select =
-      document.getElementById(
-        "service"
-      );
+      document.getElementById("service");
+
 
     try {
 
@@ -904,74 +1157,63 @@
           .select(
             "id,name,amount,without_ration_amount,fields"
           )
-          .eq(
-            "active",
-            true
-          )
-          .order(
-            "name"
-          );
+          .eq("active", true)
+          .order("name");
+
 
       if (error) {
-        throw new Error(
-          error.message
-        );
+
+        throw new Error(error.message);
+
       }
 
+
       services =
-        (data || []).map(
-          function(service) {
+        (data || []).map(service => ({
 
-            return {
-              ...service,
+          ...service,
 
-              fields:
-                Array.isArray(
-                  service.fields
-                )
-                  ? service.fields
-                  : []
-            };
-          }
-        );
+          fields:
+            Array.isArray(service.fields)
+              ? service.fields
+              : []
+
+        }));
 
 
       select.innerHTML =
         '<option value="">Select Service</option>';
 
 
-      services.forEach(
-        function(service) {
+      services.forEach(service => {
 
-          const option =
-            document.createElement(
-              "option"
-            );
-
-          option.value =
-            service.id;
-
-          option.textContent =
-            service.name +
-            " - ₹" +
-            service.amount;
-
-          select.appendChild(
-            option
-          );
-        }
-      );
+        const option =
+          document.createElement("option");
 
 
-      if (
-        !services.length
-      ) {
+        option.value =
+          service.id;
+
+
+        option.textContent =
+          service.name +
+          " - ₹" +
+          service.amount;
+
+
+        select.appendChild(option);
+
+      });
+
+
+      if (!services.length) {
 
         showStatus(
           "mainStatus",
-          "No services found. Add services in Supabase.",
+          "No services found. Add your services in Supabase table 'services'.",
           "error"
         );
+
       }
 
     } catch (error) {
@@ -982,45 +1224,38 @@
           error.message,
         "error"
       );
+
     }
+
   }
 
 
   /* =====================================================
      SERVICE CHANGE
-  ===================================================== */
+     ===================================================== */
 
   function serviceChanged() {
 
     const id =
       document
-        .getElementById(
-          "service"
-        )
+        .getElementById("service")
         .value;
+
 
     selectedService =
       services.find(
-        function(service) {
-          return (
-            String(service.id) ===
-            String(id)
-          );
-        }
+        service =>
+          String(service.id) === String(id)
       );
 
 
     const info =
-      document.getElementById(
-        "serviceInfo"
-      );
+      document.getElementById("serviceInfo");
 
 
     if (!selectedService) {
 
-      info.classList.add(
-        "hidden"
-      );
+      info.classList.add("hidden");
 
       document.getElementById(
         "amount"
@@ -1029,81 +1264,71 @@
       renderFileFields([]);
 
       return;
+
     }
 
 
     let amount =
       Number(
-        selectedService.amount ||
-        0
+        selectedService.amount || 0
       );
 
 
     const withoutRation =
-      document
-        .getElementById(
-          "without_ration_card"
-        )
-        .value;
+      document.getElementById(
+        "without_ration_card"
+      ).value;
 
 
     if (
-      withoutRation ===
-        "true" &&
-      selectedService.without_ration_amount !=
-        null
+      withoutRation === "true" &&
+      selectedService.without_ration_amount != null
     ) {
 
       amount =
         Number(
-          selectedService
-            .without_ration_amount
+          selectedService.without_ration_amount
         );
+
     }
 
 
     document.getElementById(
       "amount"
-    ).value =
-      amount;
+    ).value = amount;
 
 
-    info.classList.remove(
-      "hidden"
-    );
+    info.classList.remove("hidden");
 
 
     info.innerHTML =
       "<strong>" +
-      escapeHtml(
-        selectedService.name
-      ) +
-      "</strong><br>" +
-      "Service Amount: ₹" +
-      escapeHtml(
-        amount
-      );
+      escapeHtml(selectedService.name) +
+      "</strong><br>Service Amount: ₹" +
+      escapeHtml(amount);
 
 
     renderFileFields(
-      selectedService.fields ||
-      []
+      selectedService.fields || []
     );
+
   }
 
 
+  /* =====================================================
+     WITHOUT RATION CARD CHANGE
+     ===================================================== */
+
   document
-    .getElementById(
-      "without_ration_card"
-    )
+    .getElementById("without_ration_card")
     .addEventListener(
       "change",
       function() {
 
-        if (
-          selectedService
-        ) {
+        if (selectedService) {
+
           serviceChanged();
+
         }
 
       }
@@ -1112,127 +1337,110 @@
 
   /* =====================================================
      FILE FIELDS
-  ===================================================== */
+     ===================================================== */
 
-  function renderFileFields(
-    fields
-  ) {
+  function renderFileFields(fields) {
 
     const container =
       document.getElementById(
         "fileFields"
       );
 
-    container.innerHTML =
-      "";
+
+    container.innerHTML = "";
 
 
     const documentFields =
-      fields.filter(
-        function(field) {
+      fields.filter(field => {
 
-          return (
-            String(field)
-              .endsWith("_pdf") ||
-            field === "photo" ||
-            field === "signature" ||
-            field === "lc_pdf"
-          );
+        return (
+          String(field).endsWith("_pdf") ||
+          field === "photo" ||
+          field === "signature" ||
+          field === "lc_pdf"
+        );
 
-        }
-      );
+      });
 
 
-    if (
-      !documentFields.length
-    ) {
+    if (!documentFields.length) {
 
       container.innerHTML =
         "<p>No document upload required.</p>";
 
       return;
+
     }
 
 
-    documentFields.forEach(
-      function(field) {
+    documentFields.forEach(field => {
 
-        const row =
-          document.createElement(
-            "div"
-          );
-
-        row.className =
-          "file-row";
+      const row =
+        document.createElement("div");
 
 
-        const label =
-          document.createElement(
-            "label"
-          );
-
-        label.textContent =
-          formatFieldName(
-            field
-          );
+      row.className =
+        "file-row";
 
 
-        const input =
-          document.createElement(
-            "input"
-          );
-
-        input.type =
-          "file";
-
-        input.accept =
-          ".pdf,.jpg,.jpeg,.png";
-
-        input.dataset.field =
-          field;
+      const label =
+        document.createElement("label");
 
 
-        row.appendChild(
-          label
-        );
-
-        row.appendChild(
-          input
-        );
-
-        container.appendChild(
-          row
-        );
-      }
-    );
-  }
+      label.textContent =
+        formatFieldName(field);
 
 
-  function formatFieldName(
-    name
-  ) {
+      const input =
+        document.createElement("input");
 
-    return String(name)
-      .replace(
-        /_/g,
-        " "
-      )
-      .replace(
-        /\b\w/g,
-        function(c) {
-          return c.toUpperCase();
-        }
-      );
+
+      input.type = "file";
+
+      input.accept =
+        ".pdf,.jpg,.jpeg,.png";
+
+      input.dataset.field =
+        field;
+
+
+      row.appendChild(label);
+
+      row.appendChild(input);
+
+      container.appendChild(row);
+
+    });
+
   }
 
 
   /* =====================================================
-     COLLECT FORM FIELDS
-  ===================================================== */
+     FIELD NAME
+     ===================================================== */
+
+  function formatFieldName(name) {
+
+    return String(name)
+
+      .replace(/_/g, " ")
+
+      .replace(
+        /\b\w/g,
+        c => c.toUpperCase()
+      );
+
+  }
+
+
+  /* =====================================================
+     COLLECT CUSTOMER FIELDS
+     ===================================================== */
 
   function collectFields() {
 
     const fields = {};
+
 
     const ids = [
 
@@ -1241,10 +1449,8 @@
       "father_name",
       "mother_name",
       "husband_name",
-
       "dob",
       "dob_year",
-
       "ration_card_number",
       "pan_number",
       "dl_number",
@@ -1252,93 +1458,84 @@
       "vehicle_number",
       "election_number",
       "aadhaar_number",
-
       "correction_type",
       "correct_name",
-
       "state",
       "district"
+
     ];
 
 
-    ids.forEach(
-      function(id) {
+    ids.forEach(id => {
 
-        const el =
-          document.getElementById(
-            id
-          );
+      const el =
+        document.getElementById(id);
 
-        if (el) {
-          fields[id] =
-            el.value.trim();
-        }
+
+      if (el) {
+
+        fields[id] =
+          el.value.trim();
 
       }
-    );
+
+    });
 
 
     fields.without_ration_card =
-      document
-        .getElementById(
-          "without_ration_card"
-        )
-        .value ===
-      "true";
+      document.getElementById(
+        "without_ration_card"
+      ).value === "true";
 
 
     return fields;
+
   }
 
 
   /* =====================================================
-     FILE → BASE64
-  ===================================================== */
+     FILE TO BASE64
+     ===================================================== */
 
-  function fileToBase64(
-    file
-  ) {
+  function fileToBase64(file) {
 
     return new Promise(
-      function(resolve, reject) {
+      (resolve, reject) => {
 
         const reader =
           new FileReader();
 
+
         reader.onload =
-          function() {
-            resolve(
-              reader.result
-            );
-          };
+          () => resolve(
+            reader.result
+          );
+
 
         reader.onerror =
-          function() {
+          () => reject(
+            new Error(
+              "Could not read file."
+            )
+          );
 
-            reject(
-              new Error(
-                "Could not read file."
-              )
-            );
 
-          };
-
-        reader.readAsDataURL(
-          file
-        );
+        reader.readAsDataURL(file);
 
       }
     );
+
   }
 
 
   /* =====================================================
-     COLLECT DOCUMENTS
-  ===================================================== */
+     COLLECT FILES
+     ===================================================== */
 
   async function collectFiles() {
 
     const files = {};
+
 
     const inputs =
       document.querySelectorAll(
@@ -1354,7 +1551,9 @@
         !input.files ||
         !input.files[0]
       ) {
+
         continue;
+
       }
 
 
@@ -1371,34 +1570,32 @@
           file.name +
           " is larger than 10 MB."
         );
+
       }
 
 
-      files[
-        input.dataset.field
-      ] = {
+      files[input.dataset.field] = {
 
-        name:
-          file.name,
+        name: file.name,
 
-        type:
-          file.type,
+        type: file.type,
 
         data:
-          await fileToBase64(
-            file
-          )
+          await fileToBase64(file)
+
       };
+
     }
 
 
     return files;
+
   }
 
 
   /* =====================================================
      SUBMIT APPLICATION
-  ===================================================== */
+     ===================================================== */
 
   async function submitApplication() {
 
@@ -1411,6 +1608,7 @@
       );
 
       return;
+
     }
 
 
@@ -1423,6 +1621,7 @@
       );
 
       return;
+
     }
 
 
@@ -1448,6 +1647,7 @@
       );
 
       return;
+
     }
 
 
@@ -1469,6 +1669,7 @@
       );
 
       return;
+
     }
 
 
@@ -1482,10 +1683,7 @@
       );
 
 
-    if (
-      !amount ||
-      amount <= 0
-    ) {
+    if (!amount) {
 
       showStatus(
         "mainStatus",
@@ -1494,6 +1692,7 @@
       );
 
       return;
+
     }
 
 
@@ -1503,8 +1702,7 @@
       );
 
 
-    btn.disabled =
-      true;
+    btn.disabled = true;
 
     btn.textContent =
       "Uploading & Submitting...";
@@ -1517,23 +1715,6 @@
         "Documents upload ho rahe hain. Please wait...",
         "info"
       );
-
-
-      /*
-       * Make sure valid Supabase
-       * session exists.
-       */
-
-      const session =
-        await getSession();
-
-
-      if (!session.access_token) {
-
-        throw new Error(
-          "Supabase login session missing. Please login again."
-        );
-      }
 
 
       const fields =
@@ -1553,81 +1734,51 @@
           .trim();
 
 
-      /*
-       * IMPORTANT:
-       * These names MUST match
-       * submit-application Edge Function.
-       */
-
-      const requestBody = {
-
-        serviceCode:
-          selectedService.name,
-
-        customerMobile:
-          customerMobile,
-
-        email:
-          customerEmail,
-
-        utrNumber:
-          utrNumber,
-
-        amount:
-          amount,
-
-        fields:
-          fields,
-
-        files:
-          files
-      };
-
-
-      console.log(
-        "Submitting application:",
-        requestBody
-      );
-
-
-      /*
-       * Supabase automatically
-       * sends the logged-in user's
-       * access token.
-       */
-
       const {
         data,
         error
       } =
-        await supabaseClient
-          .functions
-          .invoke(
-            SUBMIT_FUNCTION,
-            {
-              body:
-                requestBody
+        await supabaseClient.functions.invoke(
+          SUBMIT_FUNCTION,
+          {
+            body: {
+
+              service_id:
+                selectedService.id,
+
+              customer_mobile:
+                customerMobile,
+
+              customer_email:
+                customerEmail,
+
+              utr_number:
+                utrNumber,
+
+              fields:
+                fields,
+
+              files:
+                files
+
             }
-          );
+          }
+        );
 
 
       if (error) {
-
-        console.error(
-          "Function error:",
-          error
-        );
 
         throw new Error(
           error.message ||
           "Submit function failed."
         );
+
       }
 
 
       if (
         !data ||
-        data.success !== true
+        !data.success
       ) {
 
         throw new Error(
@@ -1635,17 +1786,15 @@
           data?.error ||
           "Application submission failed."
         );
+
       }
 
-
-      /*
-       * SUCCESS
-       */
 
       document.getElementById(
         "trNumber"
       ).textContent =
         data.trNumber ||
+        data.applicationId ||
         "";
 
 
@@ -1666,19 +1815,7 @@
         "none";
 
 
-      console.log(
-        "Application success:",
-        data
-      );
-
-
     } catch (error) {
-
-      console.error(
-        "Application error:",
-        error
-      );
-
 
       showStatus(
         "mainStatus",
@@ -1687,28 +1824,28 @@
         "error"
       );
 
-
     } finally {
 
-      btn.disabled =
-        false;
+      btn.disabled = false;
 
 
       if (
-        btn.style.display !==
-        "none"
+        btn.style.display !== "none"
       ) {
 
         btn.textContent =
           "Submit Application";
+
       }
+
     }
+
   }
 
 
   /* =====================================================
      NEW APPLICATION
-  ===================================================== */
+     ===================================================== */
 
   function newApplication() {
 
@@ -1716,70 +1853,62 @@
       .querySelectorAll(
         "#applicationSection input"
       )
-      .forEach(
-        function(input) {
+      .forEach(input => {
 
-          if (
-            input.type !==
-            "file"
-          ) {
-            input.value =
-              "";
-          }
+        if (
+          input.type !== "file"
+        ) {
+
+          input.value = "";
 
         }
-      );
+
+      });
 
 
     document
       .querySelectorAll(
         "#applicationSection select"
       )
-      .forEach(
-        function(select) {
+      .forEach(select => {
 
-          select.selectedIndex =
-            0;
+        select.selectedIndex = 0;
 
-        }
-      );
+      });
 
 
     document
       .getElementById(
         "serviceInfo"
       )
-      .classList.add(
-        "hidden"
-      );
+      .classList
+      .add("hidden");
 
 
     document
       .getElementById(
         "fileFields"
       )
-      .innerHTML =
-      "";
+      .innerHTML = "";
 
 
     document
       .getElementById(
         "trBox"
       )
-      .style.display =
-      "none";
+      .style
+      .display = "none";
 
 
     document
       .getElementById(
         "submitBtn"
       )
-      .style.display =
-      "inline-block";
+      .style
+      .display = "inline-block";
 
 
-    selectedService =
-      null;
+    selectedService = null;
 
 
     showStatus(
@@ -1787,27 +1916,37 @@
       "Ready for new application.",
       "info"
     );
+
   }
 
 
   /* =====================================================
      LOGOUT
-  ===================================================== */
+     ===================================================== */
 
   async function logout() {
 
-    await supabaseClient.auth.signOut();
+    try {
 
-    loggedRetailer =
-      null;
+      await supabaseClient.auth.signOut();
+
+    } catch (error) {
+
+      console.warn(error);
+
+    }
+
+
+    loggedRetailer = null;
 
     location.reload();
+
   }
 
 
   /* =====================================================
      STATUS
-  ===================================================== */
+     ===================================================== */
 
   function showStatus(
     id,
@@ -1816,60 +1955,61 @@
   ) {
 
     const el =
-      document.getElementById(
-        id
-      );
+      document.getElementById(id);
+
 
     if (!el) return;
 
 
     el.className =
-      "status " +
-      type;
+      "status " + type;
 
 
     el.textContent =
       message;
+
   }
 
 
   /* =====================================================
      ESCAPE HTML
-  ===================================================== */
+     ===================================================== */
 
-  function escapeHtml(
-    value
-  ) {
+  function escapeHtml(value) {
 
-    return String(
-      value ?? ""
-    )
+    return String(value ?? "")
+
       .replace(
         /&/g,
         "&amp;"
       )
+
       .replace(
         /</g,
         "&lt;"
       )
+
       .replace(
         />/g,
         "&gt;"
       )
+
       .replace(
         /"/g,
         "&quot;"
       )
+
       .replace(
         /'/g,
         "&#039;"
       );
+
   }
 
 
   /* =====================================================
      AUTO LOGIN / EXISTING SESSION
-  ===================================================== */
+     ===================================================== */
 
   window.addEventListener(
     "DOMContentLoaded",
@@ -1880,15 +2020,13 @@
         const {
           data
         } =
-          await supabaseClient
-            .auth
-            .getSession();
+          await supabaseClient.auth.getSession();
 
 
-        if (
-          !data.session
-        ) {
+        if (!data.session) {
+
           return;
+
         }
 
 
@@ -1897,29 +2035,31 @@
           error
         } =
           await supabaseClient
+
             .from("profiles")
+
             .select(
               "id,full_name,mobile,retailer_number,role"
             )
+
             .eq(
               "id",
               data.session.user.id
             )
+
             .maybeSingle();
 
 
         if (
           error ||
           !profile ||
-          profile.role !==
-            "retailer"
+          profile.role !== "retailer"
         ) {
 
-          await supabaseClient
-            .auth
-            .signOut();
+          await supabaseClient.auth.signOut();
 
           return;
+
         }
 
 
@@ -1938,6 +2078,7 @@
 
           mobile:
             profile.mobile
+
         };
 
 
@@ -1945,26 +2086,24 @@
           .getElementById(
             "loginSection"
           )
-          .classList.add(
-            "hidden"
-          );
+          .classList
+          .add("hidden");
 
 
         document
           .getElementById(
             "applicationSection"
           )
-          .classList.remove(
-            "hidden"
-          );
+          .classList
+          .remove("hidden");
 
 
         document
           .getElementById(
             "logoutBtn"
           )
-          .style.display =
-          "block";
+          .style
+          .display = "block";
 
 
         document
@@ -1972,26 +2111,27 @@
             "retailerInfo"
           )
           .textContent =
-          (
-            profile.full_name ||
-            ""
-          ) +
-          " | " +
-          (
-            profile.retailer_number ||
-            ""
-          );
+            (
+              profile.full_name ||
+              ""
+            ) +
+            " | " +
+            (
+              profile.retailer_number ||
+              ""
+            );
 
 
         await loadServices();
 
-      } catch (
-        error
-      ) {
+
+      } catch (error) {
 
         console.warn(
+          "Session check error:",
           error
         );
+
       }
 
     }
