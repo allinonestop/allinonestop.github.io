@@ -247,6 +247,7 @@ button:disabled{
 
 <body>
 
+<!-- TOP HEADER -->
 <div class="top">
 
   <div>
@@ -254,13 +255,13 @@ button:disabled{
     <div id="retailerInfo" class="info"></div>
   </div>
 
-  <button class="danger" onclick="logout()">Logout</button>
+  <!-- LOGOUT KI JAGAH HOME -->
+  <button class="primary" onclick="goHome()">Home</button>
 
 </div>
 
 
 <div class="wrap">
-
 
 <!-- LOGIN -->
 
@@ -295,7 +296,9 @@ button:disabled{
     id="loginBtn"
     class="primary"
     onclick="login()">
+
     Login
+
   </button>
 
 </div>
@@ -383,6 +386,7 @@ button:disabled{
     <div class="grid">
 
       <div>
+
         <label>Amount</label>
 
         <input
@@ -390,6 +394,7 @@ button:disabled{
           type="number"
           readonly
           value="0">
+
       </div>
 
       <div>
@@ -702,6 +707,22 @@ function showApp() {
 
 
 /* =====================================================
+   HOME BUTTON
+===================================================== */
+
+function goHome() {
+
+  /*
+    Retailer logout nahi hoga.
+    Sirf main homepage open hoga.
+  */
+
+  window.location.href = "index.html";
+
+}
+
+
+/* =====================================================
    LOAD SERVICES
 ===================================================== */
 
@@ -737,11 +758,6 @@ async function loadServices() {
     services =
       data || [];
 
-
-    /*
-      Agar database mein services already hain,
-      unhi ko select mein dikhayega.
-    */
 
     $("service").innerHTML =
       '<option value="">Select Service</option>';
@@ -1092,6 +1108,7 @@ const SERVICE_FILES = {
       "aadhaar_pdf",
       "Aadhaar Card PDF - Separate Members"
     ],
+
     [
       "ration_card_pdf",
       "Ration Card PDF"
@@ -1205,10 +1222,7 @@ function serviceChanged() {
     );
 
 
-  /*
-    LMS:
-    sirf contact number
-  */
+  /* LMS */
 
   if (type === "lms") {
 
@@ -1241,10 +1255,6 @@ function serviceChanged() {
     .remove("hidden");
 
 
-  /*
-    Service information
-  */
-
   $("serviceInfo")
     .classList
     .remove("hidden");
@@ -1266,25 +1276,13 @@ function serviceChanged() {
     "</span>";
 
 
-  /*
-    Render fields
-  */
-
   renderCustomerFields(type);
 
-
-  /*
-    Render documents
-  */
 
   renderFiles(
     SERVICE_FILES[type] || []
   );
 
-
-  /*
-    Amount
-  */
 
   let amount =
     Number(selected.amount || 0);
@@ -1359,6 +1357,7 @@ function resetApplicationArea() {
     .classList
     .add("hidden");
 
+
   $("dynamicFields").innerHTML =
     "";
 
@@ -1427,10 +1426,12 @@ function renderCustomerFields(type) {
         `
         <div class="full">
           <label>${escapeHtml(label)}</label>
+
           <textarea
             id="field_${escapeAttr(key)}"
             data-field="${escapeAttr(key)}"
           ></textarea>
+
         </div>
         `;
 
@@ -1444,6 +1445,7 @@ function renderCustomerFields(type) {
       wrapper.innerHTML =
         `
         <div>
+
           <label>${escapeHtml(label)}</label>
 
           <select
@@ -1456,6 +1458,7 @@ function renderCustomerFields(type) {
             <option value="Other">Other</option>
 
           </select>
+
         </div>
         `;
 
@@ -1466,12 +1469,14 @@ function renderCustomerFields(type) {
       wrapper.innerHTML =
         `
         <div>
+
           <label>${escapeHtml(label)}</label>
 
           <input
             id="field_${escapeAttr(key)}"
             data-field="${escapeAttr(key)}"
             type="${escapeAttr(inputType)}">
+
         </div>
         `;
 
@@ -1481,7 +1486,6 @@ function renderCustomerFields(type) {
     box.appendChild(wrapper);
 
   });
-
 
 }
 
@@ -1560,10 +1564,6 @@ function getFields() {
     });
 
 
-  /*
-    Existing backend compatibility
-  */
-
   const mobile =
     result.mobile ||
     "";
@@ -1641,10 +1641,6 @@ async function getFiles() {
     {};
 
 
-  /*
-    Payment screenshot required
-  */
-
   const payment =
     $("paymentScreenshot")
       .files[0];
@@ -1684,10 +1680,6 @@ async function getFiles() {
 
   };
 
-
-  /*
-    All other documents optional
-  */
 
   const inputs =
     document.querySelectorAll(
@@ -1761,10 +1753,6 @@ async function submitApplication() {
   }
 
 
-  /*
-    LMS has no application form.
-  */
-
   if (
     getServiceType(
       selected.name
@@ -1801,11 +1789,6 @@ async function submitApplication() {
   const mobile =
     fieldData.mobile;
 
-
-  /*
-    Mobile optional hai,
-    lekin agar dala hai to 10 digit hona chahiye.
-  */
 
   if (
     mobile &&
@@ -2000,19 +1983,6 @@ async function submitApplication() {
 ===================================================== */
 
 function newApplication() {
-
-  location.reload();
-
-}
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-async function logout() {
-
-  await sb.auth.signOut();
 
   location.reload();
 
