@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,6 +128,15 @@
     .small-btn {
       padding: 7px 10px;
       font-size: 12px;
+    }
+
+    .save-btn {
+      min-width: 75px;
+      background: linear-gradient(135deg, #4f46e5, #287cff);
+    }
+
+    .save-btn.saved {
+      background: linear-gradient(135deg, #059669, #10b981);
     }
 
     .top {
@@ -277,6 +285,11 @@
     th {
       background: #f8fafc;
       color: #475467;
+    }
+
+    td input,
+    td select {
+      margin-bottom: 0;
     }
 
     .loading {
@@ -825,9 +838,11 @@
    SUPABASE CONFIG
 ========================================================= */
 
-const SUPABASE_URL = window.ALLINONESTOP_CONFIG.SUPABASE_URL;
+const SUPABASE_URL =
+  window.ALLINONESTOP_CONFIG.SUPABASE_URL;
 
-const SUPABASE_PUBLISHABLE_KEY = window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
+const SUPABASE_PUBLISHABLE_KEY =
+  window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
 
 const supabaseClient =
   window.supabase.createClient(
@@ -1352,8 +1367,6 @@ async function createRetailer() {
       .value;
 
 
-  /* ================= VALIDATION ================= */
-
   if (!fullName) {
 
     showMessage(
@@ -1437,16 +1450,8 @@ async function createRetailer() {
 
   try {
 
-    /* ============================================
-       CHECK ADMIN SESSION
-    ============================================ */
-
     await getSession();
 
-
-    /* ============================================
-       REQUEST
-    ============================================ */
 
     const requestBody = {
 
@@ -1473,10 +1478,6 @@ async function createRetailer() {
       }
     );
 
-
-    /* ============================================
-       EDGE FUNCTION
-    ============================================ */
 
     const {
       data,
@@ -1517,10 +1518,6 @@ async function createRetailer() {
     }
 
 
-    /* ============================================
-       SUCCESS
-    ============================================ */
-
     const createdUsername =
       data.username ||
       username;
@@ -1545,10 +1542,6 @@ async function createRetailer() {
       false
     );
 
-
-    /* ============================================
-       CLEAR FORM
-    ============================================ */
 
     document
       .getElementById(
@@ -1717,7 +1710,6 @@ async function callRetailerFunction(
 
   await getSession();
 
-
   const body = {
 
     action: action,
@@ -1736,17 +1728,6 @@ async function callRetailerFunction(
       password;
 
   }
-
-
-  console.log(
-    "CALLING RETAILER FUNCTION:",
-    RETAILER_FUNCTION
-  );
-
-  console.log(
-    "ACTION:",
-    action
-  );
 
 
   const {
@@ -1864,12 +1845,6 @@ async function resetRetailerPassword(
       trimmedPassword
     );
 
-
-    /*
-      IMPORTANT:
-      New password is deliberately NOT
-      displayed anywhere after reset.
-    */
 
     alert(
       "Password updated successfully.\n\n" +
@@ -2375,11 +2350,11 @@ async function loadApplications() {
 
                 <button
                   type="button"
-                  class="small-btn"
-                  onclick="saveApplication(
-                    ${JSON.stringify(tr)},
-                    ${JSON.stringify(key)}
-                  )"
+                  id="save-${key}"
+                  class="small-btn save-btn"
+                  data-tr="${escapeHtml(tr)}"
+                  data-key="${escapeHtml(key)}"
+                  onclick="saveApplicationFromButton(this)"
                 >
                   💾 Save
                 </button>
@@ -2418,63 +2393,166 @@ async function loadApplications() {
 
 
 /* =========================================================
-   SAVE APPLICATION
+   SAVE BUTTON HANDLER
+========================================================= */
+
+async function saveApplicationFromButton(button) {
+
+  if (!button) {
+    return;
+  }
+
+  const trNumber =
+    button.dataset.tr || "";
+
+  const key =
+    button.dataset.key || "";
+
+  await saveApplication(
+    trNumber,
+    key,
+    button
+  );
+
+}
+
+
+/* =========================================================
+   SAVE APPLICATION - FIXED
 ========================================================= */
 
 async function saveApplication(
   trNumber,
-  key
+  key,
+  button
 ) {
+
+  if (!trNumber) {
+
+    alert(
+      "TR Number missing. Cannot save."
+    );
+
+    return;
+
+  }
+
+
+  if (!button) {
+
+    button =
+      document.getElementById(
+        "save-" + key
+      );
+
+  }
+
+
+  if (button.disabled) {
+    return;
+  }
+
+
+  const paymentElement =
+    document.getElementById(
+      "payment-" + key
+    );
+
+
+  const statusElement =
+    document.getElementById(
+      "status-" + key
+    );
+
+
+  const remarkElement =
+    document.getElementById(
+      "remark-" + key
+    );
+
+
+  if (
+    !paymentElement ||
+    !statusElement ||
+    !remarkElement
+  ) {
+
+    alert(
+      "Application form fields not found."
+    );
+
+    return;
+
+  }
+
+
+  const payment =
+    paymentElement.value;
+
+
+  const status =
+    statusElement.value;
+
+
+  const remark =
+    remarkElement.value.trim();
+
+
+  const oldButtonText =
+    button
+      ? button.textContent
+      : "💾 Save";
+
 
   try {
 
-    await getSession();
+    if (button) {
+
+      button.disabled = true;
+
+      button.textContent =
+        "⏳ Saving...";
+
+    }
 
 
-    const paymentElement =
-      document.getElementById(
-        "payment-" + key
-      );
+    /* ==========================================
+       CHECK ADMIN SESSION
+    ========================================== */
 
-
-    const statusElement =
-      document.getElementById(
-        "status-" + key
-      );
-
-
-    const remarkElement =
-      document.getElementById(
-        "remark-" + key
-      );
+    const session =
+      await getSession();
 
 
     if (
-      !paymentElement ||
-      !statusElement ||
-      !remarkElement
+      !session ||
+      !session.user
     ) {
 
       throw new Error(
-        "Application form fields not found."
+        "Admin session expired. Please login again."
       );
 
     }
 
 
-    const payment =
-      paymentElement.value;
+    console.log(
+      "SAVE APPLICATION:",
+      {
+        tr_number: trNumber,
+        payment_status: payment,
+        application_status: status,
+        remark: remark
+      }
+    );
 
 
-    const status =
-      statusElement.value;
-
-
-    const remark =
-      remarkElement.value.trim();
-
+    /* ==========================================
+       UPDATE DATABASE
+    ========================================== */
 
     const {
+      data,
       error
     } =
       await supabaseClient
@@ -2494,24 +2572,138 @@ async function saveApplication(
         .eq(
           "tr_number",
           trNumber
+        )
+        .select(
+          "tr_number,payment_status,application_status,remark"
         );
 
+
+    console.log(
+      "SAVE RESPONSE:",
+      {
+        data,
+        error
+      }
+    );
+
+
+    /* ==========================================
+       SUPABASE ERROR
+    ========================================== */
 
     if (error) {
 
       throw new Error(
+        "Database update failed: " +
         error.message
       );
 
     }
 
 
-    alert(
-      "Application status updated successfully."
+    /* ==========================================
+       IMPORTANT:
+       UPDATE SUCCESS BUT 0 ROWS
+    ========================================== */
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      throw new Error(
+        "Save failed: database ने कोई application update नहीं की.\n\n" +
+        "Possible reason: Supabase RLS UPDATE policy missing है."
+      );
+
+    }
+
+
+    /* ==========================================
+       VERIFY SAVED DATA
+    ========================================== */
+
+    const savedRow =
+      data[0];
+
+
+    if (
+      savedRow.payment_status !==
+      payment ||
+      savedRow.application_status !==
+      status ||
+      String(savedRow.remark || "") !==
+      remark
+    ) {
+
+      throw new Error(
+        "Database update verification failed."
+      );
+
+    }
+
+
+    /* ==========================================
+       SUCCESS
+    ========================================== */
+
+    if (button) {
+
+      button.textContent =
+        "✅ Saved";
+
+      button.classList.add(
+        "saved"
+      );
+
+    }
+
+
+    /* Small success message */
+
+    console.log(
+      "APPLICATION SAVED SUCCESSFULLY:",
+      trNumber
     );
 
 
-    await refreshDashboard();
+    /* ==========================================
+       REFRESH STATS ONLY
+       Don't reload table immediately because
+       that can make UX jump.
+    ========================================== */
+
+    await loadStats();
+
+
+    /* ==========================================
+       SUCCESS MESSAGE
+    ========================================== */
+
+    if (button) {
+
+      setTimeout(
+        function() {
+
+          if (!button.disabled) {
+            return;
+          }
+
+          button.disabled = false;
+
+          button.textContent =
+            oldButtonText;
+
+          button.classList.remove(
+            "saved"
+          );
+
+        },
+        1500
+      );
+
+    }
+
 
   }
   catch (error) {
@@ -2522,9 +2714,23 @@ async function saveApplication(
     );
 
 
+    if (button) {
+
+      button.disabled = false;
+
+      button.textContent =
+        "❌ Retry";
+
+      button.classList.remove(
+        "saved"
+      );
+
+    }
+
+
     alert(
       error?.message ||
-      "Status update failed."
+      "Application status update failed."
     );
 
   }
@@ -2543,9 +2749,9 @@ async function loadStats() {
     await getSession();
 
 
-    /* ============================================
+    /* ==========================================
        RETAILER COUNT
-    ============================================ */
+    ========================================== */
 
     const {
       count,
@@ -2581,9 +2787,9 @@ async function loadStats() {
         count || 0;
 
 
-    /* ============================================
+    /* ==========================================
        APPLICATIONS
-    ============================================ */
+    ========================================== */
 
     const {
       data: applications,
@@ -2694,14 +2900,19 @@ supabaseClient.auth.onAuthStateChange(
     );
 
     if (
-      event === "SIGNED_OUT" &&
-      !window.location.pathname.endsWith(
-        "admin.html"
-      )
+      event === "SIGNED_OUT"
     ) {
 
-      window.location.href =
-        "admin.html";
+      if (
+        !window.location.pathname.endsWith(
+          "admin.html"
+        )
+      ) {
+
+        window.location.href =
+          "admin.html";
+
+      }
 
     }
 
@@ -2766,4 +2977,3 @@ document.addEventListener(
 
 </body>
 </html>
-```
