@@ -633,29 +633,18 @@
 
 </div>
 
-
 <script>
+  const SUPABASE_URL =
+    window.ALLINONESTOP_CONFIG.SUPABASE_URL;
 
-  /*
-   * ====================================================
-   * IMPORTANT
-   * ====================================================
-   *
-   * Replace this URL with your deployed Apps Script
-   * Web App URL.
-   *
-   * Example:
-   *
-   * https://script.google.com/macros/s/XXXXXXXX/exec
-   *
-   */
+  const SUPABASE_PUBLISHABLE_KEY =
+    window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
 
-  const SUPABASE_URL = window.ALLINONESTOP_CONFIG.SUPABASE_URL;
-  const SUPABASE_PUBLISHABLE_KEY = window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+  const supabaseClient =
+    window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 
   const SUBMIT_FUNCTION = "submit-application";
 
@@ -663,359 +652,1356 @@
   let loggedRetailer = null;
   let selectedService = null;
 
+
+  /* =====================================================
+     SESSION
+  ===================================================== */
+
   async function getSession() {
-    const { data, error } = await supabaseClient.auth.getSession();
-    if (error) throw new Error("Session error: " + error.message);
-    if (!data.session) throw new Error("Please login first.");
+    const {
+      data,
+      error
+    } = await supabaseClient.auth.getSession();
+
+    if (error) {
+      throw new Error(
+        "Session error: " + error.message
+      );
+    }
+
+    if (!data.session) {
+      throw new Error(
+        "Please login first."
+      );
+    }
+
     return data.session;
   }
 
+
+  /* =====================================================
+     RETAILER EMAIL
+  ===================================================== */
+
   function retailerEmail(username) {
-    return username.trim().toLowerCase() + "@retailer.allinonestop.local";
+    return (
+      String(username)
+        .trim()
+        .toLowerCase() +
+      "@retailer.allinonestop.local"
+    );
   }
 
+
+  /* =====================================================
+     LOGIN
+  ===================================================== */
+
   async function login() {
-    const username = document.getElementById("username").value.trim().toUpperCase();
-    const password = document.getElementById("password").value;
 
-    if (!username) return showStatus("loginStatus", "Retailer ID / Username required.", "error");
-    if (!password) return showStatus("loginStatus", "Password required.", "error");
+    const username =
+      document
+        .getElementById("username")
+        .value
+        .trim()
+        .toUpperCase();
 
-    const btn = document.getElementById("loginBtn");
+    const password =
+      document
+        .getElementById("password")
+        .value;
+
+    if (!username) {
+      showStatus(
+        "loginStatus",
+        "Retailer ID / Username required.",
+        "error"
+      );
+      return;
+    }
+
+    if (!password) {
+      showStatus(
+        "loginStatus",
+        "Password required.",
+        "error"
+      );
+      return;
+    }
+
+    const btn =
+      document.getElementById(
+        "loginBtn"
+      );
+
     btn.disabled = true;
-    btn.textContent = "Logging in...";
+    btn.textContent =
+      "Logging in...";
 
     try {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: retailerEmail(username),
-        password
-      });
 
-      if (error) throw new Error(error.message);
-      if (!data.user) throw new Error("Login failed.");
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth
+          .signInWithPassword({
+            email:
+              retailerEmail(
+                username
+              ),
+            password:
+              password
+          });
 
-      const { data: profile, error: profileError } = await supabaseClient
-        .from("profiles")
-        .select("id,full_name,mobile,retailer_number,role")
-        .eq("id", data.user.id)
-        .maybeSingle();
-
-      if (profileError) throw new Error(profileError.message);
-      if (!profile || profile.role !== "retailer") {
-        await supabaseClient.auth.signOut();
-        throw new Error("Retailer profile not found.");
+      if (error) {
+        throw new Error(
+          error.message
+        );
       }
+
+      if (!data.user) {
+        throw new Error(
+          "Login failed."
+        );
+      }
+
+
+      /* -----------------------------------------
+         GET RETAILER PROFILE
+      ----------------------------------------- */
+
+      const {
+        data: profile,
+        error: profileError
+      } =
+        await supabaseClient
+          .from("profiles")
+          .select(
+            "id,full_name,mobile,retailer_number,role"
+          )
+          .eq(
+            "id",
+            data.user.id
+          )
+          .maybeSingle();
+
+      if (profileError) {
+        throw new Error(
+          profileError.message
+        );
+      }
+
+      if (
+        !profile ||
+        profile.role !== "retailer"
+      ) {
+
+        await supabaseClient.auth.signOut();
+
+        throw new Error(
+          "Retailer profile not found."
+        );
+      }
+
 
       loggedRetailer = {
         success: true,
-        retailerId: profile.id,
-        username: profile.retailer_number,
-        retailerName: profile.full_name,
-        mobile: profile.mobile
+        retailerId:
+          profile.id,
+        username:
+          profile.retailer_number,
+        retailerName:
+          profile.full_name,
+        mobile:
+          profile.mobile
       };
 
-      document.getElementById("loginSection").classList.add("hidden");
-      document.getElementById("applicationSection").classList.remove("hidden");
-      document.getElementById("logoutBtn").style.display = "block";
-      document.getElementById("retailerInfo").textContent =
-        `${profile.full_name || ""} | ${profile.retailer_number || ""}`;
+
+      /* -----------------------------------------
+         SHOW APPLICATION
+      ----------------------------------------- */
+
+      document
+        .getElementById(
+          "loginSection"
+        )
+        .classList.add(
+          "hidden"
+        );
+
+      document
+        .getElementById(
+          "applicationSection"
+        )
+        .classList.remove(
+          "hidden"
+        );
+
+      document
+        .getElementById(
+          "logoutBtn"
+        )
+        .style.display =
+        "block";
+
+      document
+        .getElementById(
+          "retailerInfo"
+        )
+        .textContent =
+        (
+          profile.full_name ||
+          ""
+        ) +
+        " | " +
+        (
+          profile.retailer_number ||
+          ""
+        );
+
 
       await loadServices();
+
+      showStatus(
+        "mainStatus",
+        "Login successful.",
+        "success"
+      );
+
     } catch (error) {
-      showStatus("loginStatus", "Login error: " + error.message, "error");
+
+      showStatus(
+        "loginStatus",
+        "Login error: " +
+          error.message,
+        "error"
+      );
+
     } finally {
+
       btn.disabled = false;
-      btn.textContent = "Login";
+      btn.textContent =
+        "Login";
     }
   }
+
+
+  /* =====================================================
+     LOAD SERVICES
+  ===================================================== */
 
   async function loadServices() {
-    const select = document.getElementById("service");
+
+    const select =
+      document.getElementById(
+        "service"
+      );
+
     try {
-      const { data, error } = await supabaseClient
-        .from("services")
-        .select("id,name,amount,without_ration_amount,fields")
-        .eq("active", true)
-        .order("name");
 
-      if (error) throw new Error(error.message);
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .from("services")
+          .select(
+            "id,name,amount,without_ration_amount,fields"
+          )
+          .eq(
+            "active",
+            true
+          )
+          .order(
+            "name"
+          );
 
-      services = (data || []).map(s => ({
-        ...s,
-        fields: Array.isArray(s.fields) ? s.fields : []
-      }));
-
-      select.innerHTML = '<option value="">Select Service</option>';
-      services.forEach(service => {
-        const option = document.createElement("option");
-        option.value = service.id;
-        option.textContent = `${service.name} - ₹${service.amount}`;
-        select.appendChild(option);
-      });
-
-      if (!services.length) {
-        showStatus("mainStatus", "No services found. Add your services in Supabase table 'services'.", "error");
+      if (error) {
+        throw new Error(
+          error.message
+        );
       }
+
+      services =
+        (data || []).map(
+          function(service) {
+
+            return {
+              ...service,
+
+              fields:
+                Array.isArray(
+                  service.fields
+                )
+                  ? service.fields
+                  : []
+            };
+          }
+        );
+
+
+      select.innerHTML =
+        '<option value="">Select Service</option>';
+
+
+      services.forEach(
+        function(service) {
+
+          const option =
+            document.createElement(
+              "option"
+            );
+
+          option.value =
+            service.id;
+
+          option.textContent =
+            service.name +
+            " - ₹" +
+            service.amount;
+
+          select.appendChild(
+            option
+          );
+        }
+      );
+
+
+      if (
+        !services.length
+      ) {
+
+        showStatus(
+          "mainStatus",
+          "No services found. Add services in Supabase.",
+          "error"
+        );
+      }
+
     } catch (error) {
-      showStatus("mainStatus", "Services load error: " + error.message, "error");
+
+      showStatus(
+        "mainStatus",
+        "Services load error: " +
+          error.message,
+        "error"
+      );
     }
   }
+
+
+  /* =====================================================
+     SERVICE CHANGE
+  ===================================================== */
 
   function serviceChanged() {
-    const id = document.getElementById("service").value;
-    selectedService = services.find(service => service.id === id);
-    const info = document.getElementById("serviceInfo");
+
+    const id =
+      document
+        .getElementById(
+          "service"
+        )
+        .value;
+
+    selectedService =
+      services.find(
+        function(service) {
+          return (
+            String(service.id) ===
+            String(id)
+          );
+        }
+      );
+
+
+    const info =
+      document.getElementById(
+        "serviceInfo"
+      );
+
 
     if (!selectedService) {
-      info.classList.add("hidden");
-      document.getElementById("amount").value = "";
+
+      info.classList.add(
+        "hidden"
+      );
+
+      document.getElementById(
+        "amount"
+      ).value = "";
+
       renderFileFields([]);
+
       return;
     }
 
-    let amount = Number(selectedService.amount || 0);
-    const withoutRation = document.getElementById("without_ration_card").value;
 
-    if (withoutRation === "true" && selectedService.without_ration_amount != null) {
-      amount = Number(selectedService.without_ration_amount);
+    let amount =
+      Number(
+        selectedService.amount ||
+        0
+      );
+
+
+    const withoutRation =
+      document
+        .getElementById(
+          "without_ration_card"
+        )
+        .value;
+
+
+    if (
+      withoutRation ===
+        "true" &&
+      selectedService.without_ration_amount !=
+        null
+    ) {
+
+      amount =
+        Number(
+          selectedService
+            .without_ration_amount
+        );
     }
 
-    document.getElementById("amount").value = amount;
-    info.classList.remove("hidden");
-    info.innerHTML =
-      "<strong>" + escapeHtml(selectedService.name) +
-      "</strong><br>Service Amount: ₹" + escapeHtml(amount);
 
-    renderFileFields(selectedService.fields || []);
-  }
+    document.getElementById(
+      "amount"
+    ).value =
+      amount;
 
-  document.getElementById("without_ration_card").addEventListener("change", function() {
-    if (selectedService) serviceChanged();
-  });
 
-  function renderFileFields(fields) {
-    const container = document.getElementById("fileFields");
-    container.innerHTML = "";
-
-    const documentFields = fields.filter(field =>
-      String(field).endsWith("_pdf") ||
-      field === "photo" ||
-      field === "signature" ||
-      field === "lc_pdf"
+    info.classList.remove(
+      "hidden"
     );
 
-    if (!documentFields.length) {
-      container.innerHTML = "<p>No document upload required.</p>";
+
+    info.innerHTML =
+      "<strong>" +
+      escapeHtml(
+        selectedService.name
+      ) +
+      "</strong><br>" +
+      "Service Amount: ₹" +
+      escapeHtml(
+        amount
+      );
+
+
+    renderFileFields(
+      selectedService.fields ||
+      []
+    );
+  }
+
+
+  document
+    .getElementById(
+      "without_ration_card"
+    )
+    .addEventListener(
+      "change",
+      function() {
+
+        if (
+          selectedService
+        ) {
+          serviceChanged();
+        }
+
+      }
+    );
+
+
+  /* =====================================================
+     FILE FIELDS
+  ===================================================== */
+
+  function renderFileFields(
+    fields
+  ) {
+
+    const container =
+      document.getElementById(
+        "fileFields"
+      );
+
+    container.innerHTML =
+      "";
+
+
+    const documentFields =
+      fields.filter(
+        function(field) {
+
+          return (
+            String(field)
+              .endsWith("_pdf") ||
+            field === "photo" ||
+            field === "signature" ||
+            field === "lc_pdf"
+          );
+
+        }
+      );
+
+
+    if (
+      !documentFields.length
+    ) {
+
+      container.innerHTML =
+        "<p>No document upload required.</p>";
+
       return;
     }
 
-    documentFields.forEach(field => {
-      const row = document.createElement("div");
-      row.className = "file-row";
 
-      const label = document.createElement("label");
-      label.textContent = formatFieldName(field);
+    documentFields.forEach(
+      function(field) {
 
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = ".pdf,.jpg,.jpeg,.png";
-      input.dataset.field = field;
+        const row =
+          document.createElement(
+            "div"
+          );
 
-      row.appendChild(label);
-      row.appendChild(input);
-      container.appendChild(row);
-    });
+        row.className =
+          "file-row";
+
+
+        const label =
+          document.createElement(
+            "label"
+          );
+
+        label.textContent =
+          formatFieldName(
+            field
+          );
+
+
+        const input =
+          document.createElement(
+            "input"
+          );
+
+        input.type =
+          "file";
+
+        input.accept =
+          ".pdf,.jpg,.jpeg,.png";
+
+        input.dataset.field =
+          field;
+
+
+        row.appendChild(
+          label
+        );
+
+        row.appendChild(
+          input
+        );
+
+        container.appendChild(
+          row
+        );
+      }
+    );
   }
 
-  function formatFieldName(name) {
+
+  function formatFieldName(
+    name
+  ) {
+
     return String(name)
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, c => c.toUpperCase());
+      .replace(
+        /_/g,
+        " "
+      )
+      .replace(
+        /\b\w/g,
+        function(c) {
+          return c.toUpperCase();
+        }
+      );
   }
+
+
+  /* =====================================================
+     COLLECT FORM FIELDS
+  ===================================================== */
 
   function collectFields() {
+
     const fields = {};
+
     const ids = [
-      "name_english","name_gujarati","father_name","mother_name","husband_name",
-      "dob","dob_year","ration_card_number","pan_number","dl_number","rc_number",
-      "vehicle_number","election_number","aadhaar_number","correction_type",
-      "correct_name","state","district"
+
+      "name_english",
+      "name_gujarati",
+      "father_name",
+      "mother_name",
+      "husband_name",
+
+      "dob",
+      "dob_year",
+
+      "ration_card_number",
+      "pan_number",
+      "dl_number",
+      "rc_number",
+      "vehicle_number",
+      "election_number",
+      "aadhaar_number",
+
+      "correction_type",
+      "correct_name",
+
+      "state",
+      "district"
     ];
 
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) fields[id] = el.value.trim();
-    });
+
+    ids.forEach(
+      function(id) {
+
+        const el =
+          document.getElementById(
+            id
+          );
+
+        if (el) {
+          fields[id] =
+            el.value.trim();
+        }
+
+      }
+    );
+
 
     fields.without_ration_card =
-      document.getElementById("without_ration_card").value === "true";
+      document
+        .getElementById(
+          "without_ration_card"
+        )
+        .value ===
+      "true";
+
 
     return fields;
   }
 
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(new Error("Could not read file."));
-      reader.readAsDataURL(file);
-    });
+
+  /* =====================================================
+     FILE → BASE64
+  ===================================================== */
+
+  function fileToBase64(
+    file
+  ) {
+
+    return new Promise(
+      function(resolve, reject) {
+
+        const reader =
+          new FileReader();
+
+        reader.onload =
+          function() {
+            resolve(
+              reader.result
+            );
+          };
+
+        reader.onerror =
+          function() {
+
+            reject(
+              new Error(
+                "Could not read file."
+              )
+            );
+
+          };
+
+        reader.readAsDataURL(
+          file
+        );
+
+      }
+    );
   }
 
+
+  /* =====================================================
+     COLLECT DOCUMENTS
+  ===================================================== */
+
   async function collectFiles() {
+
     const files = {};
-    const inputs = document.querySelectorAll("#fileFields input[type=file]");
 
-    for (const input of inputs) {
-      if (!input.files || !input.files[0]) continue;
+    const inputs =
+      document.querySelectorAll(
+        "#fileFields input[type=file]"
+      );
 
-      const file = input.files[0];
-      if (file.size > 10 * 1024 * 1024) {
-        throw new Error(file.name + " is larger than 10 MB.");
+
+    for (
+      const input of inputs
+    ) {
+
+      if (
+        !input.files ||
+        !input.files[0]
+      ) {
+        continue;
       }
 
-      files[input.dataset.field] = {
-        name: file.name,
-        type: file.type,
-        data: await fileToBase64(file)
+
+      const file =
+        input.files[0];
+
+
+      if (
+        file.size >
+        10 * 1024 * 1024
+      ) {
+
+        throw new Error(
+          file.name +
+          " is larger than 10 MB."
+        );
+      }
+
+
+      files[
+        input.dataset.field
+      ] = {
+
+        name:
+          file.name,
+
+        type:
+          file.type,
+
+        data:
+          await fileToBase64(
+            file
+          )
       };
     }
+
 
     return files;
   }
 
-  async function submitApplication() {
-    if (!loggedRetailer) return showStatus("mainStatus", "Please login first.", "error");
-    if (!selectedService) return showStatus("mainStatus", "Please select a service.", "error");
 
-    const customerMobile = document.getElementById("customerMobile").value.trim();
-    if (!/^[0-9]{10}$/.test(customerMobile)) {
-      return showStatus("mainStatus", "Enter valid 10 digit customer mobile.", "error");
+  /* =====================================================
+     SUBMIT APPLICATION
+  ===================================================== */
+
+  async function submitApplication() {
+
+    if (!loggedRetailer) {
+
+      showStatus(
+        "mainStatus",
+        "Please login first.",
+        "error"
+      );
+
+      return;
     }
 
-    const utrNumber = document.getElementById("utrNumber").value.trim();
-    if (!utrNumber) return showStatus("mainStatus", "UTR / Transaction Number required.", "error");
 
-    const amount = Number(document.getElementById("amount").value);
-    if (!amount) return showStatus("mainStatus", "Amount missing.", "error");
+    if (!selectedService) {
 
-    const btn = document.getElementById("submitBtn");
-    btn.disabled = true;
-    btn.textContent = "Uploading & Submitting...";
+      showStatus(
+        "mainStatus",
+        "Please select a service.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const customerMobile =
+      document
+        .getElementById(
+          "customerMobile"
+        )
+        .value
+        .trim();
+
+
+    if (
+      !/^[0-9]{10}$/.test(
+        customerMobile
+      )
+    ) {
+
+      showStatus(
+        "mainStatus",
+        "Enter valid 10 digit customer mobile.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const utrNumber =
+      document
+        .getElementById(
+          "utrNumber"
+        )
+        .value
+        .trim();
+
+
+    if (!utrNumber) {
+
+      showStatus(
+        "mainStatus",
+        "UTR / Transaction Number required.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const amount =
+      Number(
+        document
+          .getElementById(
+            "amount"
+          )
+          .value
+      );
+
+
+    if (
+      !amount ||
+      amount <= 0
+    ) {
+
+      showStatus(
+        "mainStatus",
+        "Amount missing.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const btn =
+      document.getElementById(
+        "submitBtn"
+      );
+
+
+    btn.disabled =
+      true;
+
+    btn.textContent =
+      "Uploading & Submitting...";
+
 
     try {
-      showStatus("mainStatus", "Documents upload ho rahe hain. Please wait...", "info");
 
-      const fields = collectFields();
-      const files = await collectFiles();
-      const customerEmail = document.getElementById("customerEmail").value.trim();
+      showStatus(
+        "mainStatus",
+        "Documents upload ho rahe hain. Please wait...",
+        "info"
+      );
 
-      const { data, error } = await supabaseClient.functions.invoke(
-        SUBMIT_FUNCTION,
-        {
-          body: {
-            service_id: selectedService.id,
-            customer_mobile: customerMobile,
-            customer_email: customerEmail,
-            utr_number: utrNumber,
-            fields,
-            files
+
+      /*
+       * Make sure valid Supabase
+       * session exists.
+       */
+
+      const session =
+        await getSession();
+
+
+      if (!session.access_token) {
+
+        throw new Error(
+          "Supabase login session missing. Please login again."
+        );
+      }
+
+
+      const fields =
+        collectFields();
+
+
+      const files =
+        await collectFiles();
+
+
+      const customerEmail =
+        document
+          .getElementById(
+            "customerEmail"
+          )
+          .value
+          .trim();
+
+
+      /*
+       * IMPORTANT:
+       * These names MUST match
+       * submit-application Edge Function.
+       */
+
+      const requestBody = {
+
+        serviceCode:
+          selectedService.name,
+
+        customerMobile:
+          customerMobile,
+
+        email:
+          customerEmail,
+
+        utrNumber:
+          utrNumber,
+
+        amount:
+          amount,
+
+        fields:
+          fields,
+
+        files:
+          files
+      };
+
+
+      console.log(
+        "Submitting application:",
+        requestBody
+      );
+
+
+      /*
+       * Supabase automatically
+       * sends the logged-in user's
+       * access token.
+       */
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient
+          .functions
+          .invoke(
+            SUBMIT_FUNCTION,
+            {
+              body:
+                requestBody
+            }
+          );
+
+
+      if (error) {
+
+        console.error(
+          "Function error:",
+          error
+        );
+
+        throw new Error(
+          error.message ||
+          "Submit function failed."
+        );
+      }
+
+
+      if (
+        !data ||
+        data.success !== true
+      ) {
+
+        throw new Error(
+          data?.message ||
+          data?.error ||
+          "Application submission failed."
+        );
+      }
+
+
+      /*
+       * SUCCESS
+       */
+
+      document.getElementById(
+        "trNumber"
+      ).textContent =
+        data.trNumber ||
+        "";
+
+
+      document.getElementById(
+        "trBox"
+      ).style.display =
+        "block";
+
+
+      showStatus(
+        "mainStatus",
+        "Application successfully submitted.",
+        "success"
+      );
+
+
+      btn.style.display =
+        "none";
+
+
+      console.log(
+        "Application success:",
+        data
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Application error:",
+        error
+      );
+
+
+      showStatus(
+        "mainStatus",
+        error.message ||
+        "Application submission failed.",
+        "error"
+      );
+
+
+    } finally {
+
+      btn.disabled =
+        false;
+
+
+      if (
+        btn.style.display !==
+        "none"
+      ) {
+
+        btn.textContent =
+          "Submit Application";
+      }
+    }
+  }
+
+
+  /* =====================================================
+     NEW APPLICATION
+  ===================================================== */
+
+  function newApplication() {
+
+    document
+      .querySelectorAll(
+        "#applicationSection input"
+      )
+      .forEach(
+        function(input) {
+
+          if (
+            input.type !==
+            "file"
+          ) {
+            input.value =
+              "";
           }
+
         }
       );
 
-      if (error) throw new Error(error.message || "Submit function failed.");
-      if (!data || !data.success) {
-        throw new Error(data?.message || data?.error || "Application submission failed.");
-      }
 
-      document.getElementById("trNumber").textContent =
-        data.trNumber || data.applicationId || "";
+    document
+      .querySelectorAll(
+        "#applicationSection select"
+      )
+      .forEach(
+        function(select) {
 
-      document.getElementById("trBox").style.display = "block";
-      showStatus("mainStatus", "Application successfully submitted.", "success");
-      btn.style.display = "none";
-    } catch (error) {
-      showStatus("mainStatus", error.message || "Application submission failed.", "error");
-    } finally {
-      btn.disabled = false;
-      if (btn.style.display !== "none") btn.textContent = "Submit Application";
-    }
+          select.selectedIndex =
+            0;
+
+        }
+      );
+
+
+    document
+      .getElementById(
+        "serviceInfo"
+      )
+      .classList.add(
+        "hidden"
+      );
+
+
+    document
+      .getElementById(
+        "fileFields"
+      )
+      .innerHTML =
+      "";
+
+
+    document
+      .getElementById(
+        "trBox"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "submitBtn"
+      )
+      .style.display =
+      "inline-block";
+
+
+    selectedService =
+      null;
+
+
+    showStatus(
+      "mainStatus",
+      "Ready for new application.",
+      "info"
+    );
   }
 
-  function newApplication() {
-    document.querySelectorAll("#applicationSection input").forEach(input => {
-      if (input.type !== "file") input.value = "";
-    });
-    document.querySelectorAll("#applicationSection select").forEach(select => {
-      select.selectedIndex = 0;
-    });
 
-    document.getElementById("serviceInfo").classList.add("hidden");
-    document.getElementById("fileFields").innerHTML = "";
-    document.getElementById("trBox").style.display = "none";
-    document.getElementById("submitBtn").style.display = "inline-block";
-    selectedService = null;
-    showStatus("mainStatus", "Ready for new application.", "info");
-  }
+  /* =====================================================
+     LOGOUT
+  ===================================================== */
 
   async function logout() {
+
     await supabaseClient.auth.signOut();
-    loggedRetailer = null;
+
+    loggedRetailer =
+      null;
+
     location.reload();
   }
 
-  function showStatus(id, message, type) {
-    const el = document.getElementById(id);
+
+  /* =====================================================
+     STATUS
+  ===================================================== */
+
+  function showStatus(
+    id,
+    message,
+    type
+  ) {
+
+    const el =
+      document.getElementById(
+        id
+      );
+
     if (!el) return;
-    el.className = "status " + type;
-    el.textContent = message;
+
+
+    el.className =
+      "status " +
+      type;
+
+
+    el.textContent =
+      message;
   }
 
-  function escapeHtml(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+
+  /* =====================================================
+     ESCAPE HTML
+  ===================================================== */
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(
+      value ?? ""
+    )
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
   }
 
-  window.addEventListener("DOMContentLoaded", async () => {
-    try {
-      const { data } = await supabaseClient.auth.getSession();
-      if (!data.session) return;
 
-      const { data: profile } = await supabaseClient
-        .from("profiles")
-        .select("id,full_name,mobile,retailer_number,role")
-        .eq("id", data.session.user.id)
-        .maybeSingle();
+  /* =====================================================
+     AUTO LOGIN / EXISTING SESSION
+  ===================================================== */
 
-      if (!profile || profile.role !== "retailer") {
-        await supabaseClient.auth.signOut();
-        return;
+  window.addEventListener(
+    "DOMContentLoaded",
+    async function() {
+
+      try {
+
+        const {
+          data
+        } =
+          await supabaseClient
+            .auth
+            .getSession();
+
+
+        if (
+          !data.session
+        ) {
+          return;
+        }
+
+
+        const {
+          data: profile,
+          error
+        } =
+          await supabaseClient
+            .from("profiles")
+            .select(
+              "id,full_name,mobile,retailer_number,role"
+            )
+            .eq(
+              "id",
+              data.session.user.id
+            )
+            .maybeSingle();
+
+
+        if (
+          error ||
+          !profile ||
+          profile.role !==
+            "retailer"
+        ) {
+
+          await supabaseClient
+            .auth
+            .signOut();
+
+          return;
+        }
+
+
+        loggedRetailer = {
+
+          success: true,
+
+          retailerId:
+            profile.id,
+
+          username:
+            profile.retailer_number,
+
+          retailerName:
+            profile.full_name,
+
+          mobile:
+            profile.mobile
+        };
+
+
+        document
+          .getElementById(
+            "loginSection"
+          )
+          .classList.add(
+            "hidden"
+          );
+
+
+        document
+          .getElementById(
+            "applicationSection"
+          )
+          .classList.remove(
+            "hidden"
+          );
+
+
+        document
+          .getElementById(
+            "logoutBtn"
+          )
+          .style.display =
+          "block";
+
+
+        document
+          .getElementById(
+            "retailerInfo"
+          )
+          .textContent =
+          (
+            profile.full_name ||
+            ""
+          ) +
+          " | " +
+          (
+            profile.retailer_number ||
+            ""
+          );
+
+
+        await loadServices();
+
+      } catch (
+        error
+      ) {
+
+        console.warn(
+          error
+        );
       }
 
-      loggedRetailer = {
-        success: true,
-        retailerId: profile.id,
-        username: profile.retailer_number,
-        retailerName: profile.full_name,
-        mobile: profile.mobile
-      };
-
-      document.getElementById("loginSection").classList.add("hidden");
-      document.getElementById("applicationSection").classList.remove("hidden");
-      document.getElementById("logoutBtn").style.display = "block";
-      document.getElementById("retailerInfo").textContent =
-        `${profile.full_name || ""} | ${profile.retailer_number || ""}`;
-
-      await loadServices();
-    } catch (error) {
-      console.warn(error);
     }
-  });
+  );
+
 </script>
 
 </body>
