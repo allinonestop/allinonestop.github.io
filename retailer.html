@@ -1,612 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Retailer Portal - AllInOneStop</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-
-<style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f3f6fb;
-  color:#172033;
-}
-
-.topbar{
-  background:#0d47a1;
-  color:#fff;
-  padding:15px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-}
-
-.topbar h1{
-  margin:0;
-  font-size:21px;
-}
-
-.retailer-info{
-  margin-top:5px;
-  font-size:14px;
-  opacity:.9;
-}
-
-.logout{
-  border:0;
-  background:#d32f2f;
-  color:#fff;
-  padding:10px 16px;
-  border-radius:7px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.page-buttons{
-  max-width:1100px;
-  margin:18px auto 0;
-  padding:0 15px;
-  display:flex;
-  gap:10px;
-}
-
-.page-buttons button{
-  border:0;
-  padding:10px 18px;
-  border-radius:7px;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.home-btn{background:#1976d2}
-.back-btn{background:#455a64}
-
-.container{
-  max-width:1100px;
-  margin:20px auto;
-  padding:0 15px;
-}
-
-.card{
-  background:#fff;
-  border-radius:12px;
-  padding:22px;
-  margin-bottom:20px;
-  box-shadow:0 3px 15px rgba(0,0,0,.08);
-}
-
-.card h2{
-  margin-top:0;
-  font-size:20px;
-}
-
-.login-card{
-  max-width:450px;
-  margin:45px auto;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
-}
-
-.full{
-  grid-column:1/-1;
-}
-
-label{
-  display:block;
-  font-weight:600;
-  margin-bottom:6px;
-}
-
-input,select,textarea{
-  width:100%;
-  padding:11px 12px;
-  border:1px solid #ccd4df;
-  border-radius:7px;
-  font-size:15px;
-  background:#fff;
-}
-
-input:focus,select:focus,textarea:focus{
-  outline:none;
-  border-color:#1976d2;
-}
-
-.btn{
-  border:0;
-  border-radius:8px;
-  padding:12px 18px;
-  font-size:15px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.btn-primary{
-  background:#1976d2;
-  color:#fff;
-}
-
-.btn-success{
-  background:#2e7d32;
-  color:#fff;
-}
-
-.btn-secondary{
-  background:#455a64;
-  color:#fff;
-}
-
-.btn-danger{
-  background:#c62828;
-  color:#fff;
-}
-
-.service-info{
-  margin-top:15px;
-  background:#eef6ff;
-  padding:15px;
-  border-radius:8px;
-  border-left:4px solid #1976d2;
-}
-
-.payment-box{
-  background:#fff8e1;
-  border:1px solid #ffcc80;
-  padding:15px;
-  border-radius:8px;
-}
-
-.payment-box strong{
-  color:#e65100;
-}
-
-.qr-box{
-  text-align:center;
-  margin-top:18px;
-}
-
-.qr-box img{
-  width:230px;
-  max-width:100%;
-  border:8px solid #fff;
-  box-shadow:0 2px 10px rgba(0,0,0,.15);
-}
-
-.amount-display{
-  font-size:24px;
-  font-weight:bold;
-  color:#d84315;
-  margin:8px 0;
-}
-
-.file-row{
-  border:1px solid #d9e0e8;
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:10px;
-  background:#fafcff;
-}
-
-.file-row.required{
-  border-left:4px solid #d32f2f;
-}
-
-.file-row label{
-  margin-bottom:8px;
-}
-
-.status{
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:15px;
-  display:none;
-}
-
-.status.success{
-  display:block;
-  background:#e8f5e9;
-  color:#1b5e20;
-  border:1px solid #a5d6a7;
-}
-
-.status.error{
-  display:block;
-  background:#ffebee;
-  color:#b71c1c;
-  border:1px solid #ef9a9a;
-}
-
-.status.info{
-  display:block;
-  background:#e3f2fd;
-  color:#0d47a1;
-  border:1px solid #90caf9;
-}
-
-.tr-box{
-  display:none;
-  text-align:center;
-  background:#e8f5e9;
-  border:2px solid #43a047;
-  padding:20px;
-  border-radius:10px;
-  margin-top:20px;
-}
-
-.tr-number{
-  font-size:25px;
-  font-weight:bold;
-  color:#1b5e20;
-  letter-spacing:1px;
-  margin:10px 0;
-}
-
-.required-mark{
-  color:#d32f2f;
-}
-
-.hidden{
-  display:none!important;
-}
-
-.notice{
-  padding:12px;
-  background:#f5f7fa;
-  border-radius:8px;
-  margin-bottom:15px;
-  color:#555;
-  font-size:14px;
-}
-
-.service-title{
-  font-size:18px;
-  font-weight:bold;
-  color:#0d47a1;
-  margin-bottom:15px;
-}
-
-.field-note{
-  font-size:12px;
-  color:#777;
-  margin-top:4px;
-}
-
-@media(max-width:700px){
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .full{
-    grid-column:auto;
-  }
-
-  .topbar{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .page-buttons{
-    flex-wrap:wrap;
-  }
-
-  .logout{
-    width:100%;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<!-- TOP BAR -->
-<div class="topbar">
-
-  <div>
-    <h1>AllInOneStop - Retailer Portal</h1>
-    <div id="retailerInfo" class="retailer-info"></div>
-  </div>
-
-  <button
-    id="logoutBtn"
-    class="logout hidden"
-    onclick="logout()">
-    Logout
-  </button>
-
-</div>
-
-
-<!-- HOME / BACK -->
-<div class="page-buttons">
-
-  <button
-    type="button"
-    class="home-btn"
-    onclick="goHome()">
-    🏠 Home
-  </button>
-
-  <button
-    type="button"
-    class="back-btn"
-    onclick="goBack()">
-    ← Back
-  </button>
-
-</div>
-
-
-<div class="container">
-
-<!-- =====================================================
-     LOGIN
-===================================================== -->
-
-<div id="loginSection" class="card login-card">
-
-  <h2>Retailer Login</h2>
-
-  <div id="loginStatus" class="status"></div>
-
-  <div style="margin-bottom:15px">
-
-    <label>
-      Retailer ID / Username
-      <span class="required-mark">*</span>
-    </label>
-
-    <input
-      type="text"
-      id="username"
-      autocomplete="username"
-      placeholder="RET-K4CFYQ">
-
-  </div>
-
-  <div style="margin-bottom:15px">
-
-    <label>
-      Password
-      <span class="required-mark">*</span>
-    </label>
-
-    <input
-      type="password"
-      id="password"
-      autocomplete="current-password"
-      placeholder="Password">
-
-  </div>
-
-  <button
-    class="btn btn-primary"
-    id="loginBtn"
-    onclick="login()">
-    Login
-  </button>
-
-  <div class="notice" style="margin-top:15px">
-    Retailer ID example:
-    <b>RET-K4CFYQ</b>
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-     APPLICATION
-===================================================== -->
-
-<div id="applicationSection" class="hidden">
-
-  <div id="mainStatus" class="status"></div>
-
-
-  <!-- SERVICE -->
-  <div class="card">
-
-    <h2>1. Select Service</h2>
-
-    <div class="grid">
-
-      <div class="full">
-
-        <label>
-          Service
-          <span class="required-mark">*</span>
-        </label>
-
-        <select
-          id="service"
-          onchange="serviceChanged()">
-
-          <option value="">
-            Loading services...
-          </option>
-
-        </select>
-
-      </div>
-
-    </div>
-
-    <div
-      id="serviceInfo"
-      class="service-info hidden">
-    </div>
-
-  </div>
-
-
-  <!-- DYNAMIC FORM -->
-  <div
-    id="dynamicFormCard"
-    class="card hidden">
-
-    <h2>2. Customer Details</h2>
-
-    <div
-      id="dynamicForm">
-    </div>
-
-  </div>
-
-
-  <!-- PAYMENT -->
-  <div
-    id="paymentCard"
-    class="card hidden">
-
-    <h2>3. Payment</h2>
-
-    <div class="payment-box">
-
-      <div>
-        UPI ID:
-        <strong>gujrat.nsfa@ybl</strong>
-      </div>
-
-      <div style="margin-top:5px">
-        Name:
-        <strong>RAJKUMAR RATIONCARD SERVICES</strong>
-      </div>
-
-      <div class="amount-display">
-        ₹<span id="displayAmount">0</span>
-      </div>
-
-      <div>
-        Please pay the above amount using the QR/UPI
-        and upload the payment screenshot.
-      </div>
-
-    </div>
-
-    <div class="qr-box">
-
-      <div style="font-weight:bold;margin-bottom:10px">
-        Scan QR to Pay
-      </div>
-
-      <img
-        id="paymentQR"
-        alt="Payment QR">
-
-    </div>
-
-    <div class="grid" style="margin-top:20px">
-
-      <div>
-
-        <label>
-          UTR / Transaction Number
-          <span class="required-mark">*</span>
-        </label>
-
-        <input
-          type="text"
-          id="utrNumber"
-          placeholder="Enter UTR">
-
-      </div>
-
-      <div>
-
-        <label>
-          Payment Screenshot
-          <span class="required-mark">*</span>
-        </label>
-
-        <input
-          type="file"
-          id="paymentScreenshot"
-          accept=".jpg,.jpeg,.png,.pdf">
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- DOCUMENTS -->
-  <div
-    id="documentsCard"
-    class="card hidden">
-
-    <h2>4. Required Documents</h2>
-
-    <div
-      id="fileFields">
-    </div>
-
-  </div>
-
-
-  <!-- SUBMIT -->
-  <div
-    id="submitCard"
-    class="card hidden">
-
-    <h2>5. Submit Application</h2>
-
-    <button
-      class="btn btn-success"
-      id="submitBtn"
-      onclick="submitApplication()">
-      Submit Application
-    </button>
-
-    <div
-      id="trBox"
-      class="tr-box">
-
-      <div>
-        Application submitted successfully
-      </div>
-
-      <div
-        class="tr-number"
-        id="trNumber">
-      </div>
-
-      <div>
-        Save this TR Number for tracking.
-      </div>
-
-      <br>
-
-      <button
-        class="btn btn-secondary"
-        onclick="newApplication()">
-        New Application
-      </button>
-
-    </div>
-
-  </div>
-
-</div>
-
-</div>
-
-
 <script>
-
 /* =========================================================
-   SUPABASE
+   ALLINONESTOP - RETAILER PORTAL
+   OPTIONAL FIELDS VERSION
+
+   REQUIRED ONLY:
+   1. UTR / Transaction Number
+   2. Payment Screenshot
+
+   SERVICE selection is logically required.
+   All customer fields/documents are optional.
 ========================================================= */
 
 const SUPABASE_URL =
@@ -624,21 +26,19 @@ const supabaseClient =
 const SUBMIT_FUNCTION = "submit-application";
 
 let services = [];
-let selectedService = null;
 let loggedRetailer = null;
+let selectedService = null;
 
 
 /* =========================================================
    RETAILER EMAIL
 ========================================================= */
 
-function retailerEmail(username){
-
+function retailerEmail(username) {
   return (
     username.trim().toLowerCase() +
     "@dixsmucrgnyuvudhymdj.supabase.co"
   );
-
 }
 
 
@@ -646,10 +46,8 @@ function retailerEmail(username){
    HOME
 ========================================================= */
 
-function goHome(){
-
+function goHome() {
   window.location.href = "index.html";
-
 }
 
 
@@ -657,18 +55,46 @@ function goHome(){
    BACK
 ========================================================= */
 
-function goBack(){
-
-  if(history.length > 1){
-
-    history.back();
-
-  }else{
-
+function goBack() {
+  if (document.referrer) {
+    window.history.back();
+  } else {
     window.location.href = "index.html";
+  }
+}
+
+
+/* =========================================================
+   REMOVE ALL * EXCEPT UTR
+========================================================= */
+
+function setupOptionalFields() {
+
+  /* Remove all existing required stars */
+  document
+    .querySelectorAll(".required")
+    .forEach(el => {
+      el.remove();
+    });
+
+  /* Add UTR star */
+  const utrInput =
+    document.getElementById("utrNumber");
+
+  if (utrInput) {
+
+    const label =
+      utrInput.closest("div")?.querySelector("label");
+
+    if (label) {
+
+      label.innerHTML =
+        'UTR / Transaction Number ' +
+        '<span class="required">*</span>';
+
+    }
 
   }
-
 }
 
 
@@ -676,19 +102,21 @@ function goBack(){
    LOGIN
 ========================================================= */
 
-async function login(){
+async function login() {
 
   const username =
-    document.getElementById("username")
-    .value
-    .trim()
-    .toUpperCase();
+    document
+      .getElementById("username")
+      .value
+      .trim()
+      .toUpperCase();
 
   const password =
-    document.getElementById("password")
-    .value;
+    document
+      .getElementById("password")
+      .value;
 
-  if(!username){
+  if (!username) {
 
     showStatus(
       "loginStatus",
@@ -699,7 +127,7 @@ async function login(){
     return;
   }
 
-  if(!password){
+  if (!password) {
 
     showStatus(
       "loginStatus",
@@ -716,133 +144,108 @@ async function login(){
   btn.disabled = true;
   btn.textContent = "Logging in...";
 
-  try{
+  try {
 
-    const email =
+    const internalEmail =
       retailerEmail(username);
 
-    const {data,error} =
+    const {
+      data,
+      error
+    } =
       await supabaseClient.auth.signInWithPassword({
-
-        email:email,
-        password:password
-
+        email: internalEmail,
+        password: password
       });
 
-    if(error){
-
+    if (error) {
       throw new Error(error.message);
-
     }
 
-    if(!data || !data.user){
-
+    if (!data || !data.user) {
       throw new Error(
-        "Retailer account not found."
+        "Login failed. User account not found."
       );
-
     }
 
     const {
-      data:profile,
-      error:profileError
+      data: profile,
+      error: profileError
     } =
       await supabaseClient
-      .from("profiles")
-      .select(
-        "id,full_name,mobile,retailer_number,role"
-      )
-      .eq("id",data.user.id)
-      .maybeSingle();
+        .from("profiles")
+        .select(
+          "id,full_name,mobile,retailer_number,role"
+        )
+        .eq("id", data.user.id)
+        .maybeSingle();
 
-    if(profileError){
-
+    if (profileError) {
       throw new Error(
         "Profile error: " +
         profileError.message
       );
-
     }
 
-    if(
+    if (
       !profile ||
       profile.role !== "retailer"
-    ){
+    ) {
 
       await supabaseClient.auth.signOut();
 
       throw new Error(
         "Retailer profile not found."
       );
-
     }
 
-    setLoggedRetailer(profile);
+    loggedRetailer = {
+      success: true,
+      retailerId: profile.id,
+      username: profile.retailer_number,
+      retailerName: profile.full_name,
+      mobile: profile.mobile
+    };
+
+    document
+      .getElementById("loginSection")
+      .classList.add("hidden");
+
+    document
+      .getElementById("applicationSection")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("logoutBtn")
+      .style.display = "block";
+
+    document
+      .getElementById("retailerInfo")
+      .textContent =
+        (profile.full_name || "") +
+        " | Retailer ID: " +
+        (profile.retailer_number || "");
 
     await loadServices();
 
-  }catch(error){
+    setupOptionalFields();
+
+  } catch (error) {
 
     showStatus(
       "loginStatus",
       "Login error: " +
-      (
-        error.message ||
-        "Invalid login credentials."
-      ),
+        (error.message ||
+          "Invalid login credentials."),
       "error"
     );
 
-  }finally{
+  } finally {
 
     btn.disabled = false;
     btn.textContent = "Login";
 
   }
-
-}
-
-
-/* =========================================================
-   SET RETAILER
-========================================================= */
-
-function setLoggedRetailer(profile){
-
-  loggedRetailer = {
-
-    retailerId:profile.id,
-
-    username:profile.retailer_number,
-
-    retailerName:profile.full_name,
-
-    mobile:profile.mobile
-
-  };
-
-  document
-  .getElementById("loginSection")
-  .classList
-  .add("hidden");
-
-  document
-  .getElementById("applicationSection")
-  .classList
-  .remove("hidden");
-
-  document
-  .getElementById("logoutBtn")
-  .classList
-  .remove("hidden");
-
-  document
-  .getElementById("retailerInfo")
-  .textContent =
-    (profile.full_name || "") +
-    " | Retailer ID: " +
-    (profile.retailer_number || "");
-
 }
 
 
@@ -850,60 +253,40 @@ function setLoggedRetailer(profile){
    LOAD SERVICES
 ========================================================= */
 
-async function loadServices(){
+async function loadServices() {
 
   const select =
     document.getElementById("service");
 
-  try{
+  try {
 
     const {
       data,
       error
     } =
       await supabaseClient
-      .from("services")
-      .select("*")
-      .eq("active",true)
-      .order("name");
+        .from("services")
+        .select(
+          "id,name,amount,without_ration_amount,fields"
+        )
+        .eq("active", true)
+        .order("name");
 
-    if(error){
-
+    if (error) {
       throw new Error(error.message);
-
     }
 
     services =
-      (data || []).map(service => {
+      (data || []).map(service => ({
 
-        let fields = service.fields;
+        ...service,
 
-        if(typeof fields === "string"){
+        fields:
+          Array.isArray(service.fields)
+            ? service.fields
+            : []
 
-          try{
-
-            fields = JSON.parse(fields);
-
-          }catch{
-
-            fields = [];
-
-          }
-
-        }
-
-        if(!Array.isArray(fields)){
-
-          fields = [];
-
-        }
-
-        return {
-          ...service,
-          fields:fields
-        };
-
-      });
+      }));
 
     select.innerHTML =
       '<option value="">Select Service</option>';
@@ -913,41 +296,38 @@ async function loadServices(){
       const option =
         document.createElement("option");
 
-      option.value = service.id;
-
-      const amount =
-        Number(service.amount || 0);
+      option.value =
+        service.id;
 
       option.textContent =
         service.name +
         " - ₹" +
-        amount;
+        Number(service.amount || 0);
 
       select.appendChild(option);
 
     });
 
-    if(!services.length){
+    if (!services.length) {
 
       showStatus(
         "mainStatus",
-        "No active services found in Supabase.",
+        "No services found in services table.",
         "error"
       );
 
     }
 
-  }catch(error){
+  } catch (error) {
 
     showStatus(
       "mainStatus",
       "Services load error: " +
-      error.message,
+        error.message,
       "error"
     );
 
   }
-
 }
 
 
@@ -955,29 +335,60 @@ async function loadServices(){
    SERVICE CHANGE
 ========================================================= */
 
-function serviceChanged(){
+function serviceChanged() {
 
   const id =
-    document.getElementById("service").value;
+    document
+      .getElementById("service")
+      .value;
 
   selectedService =
     services.find(
-      s => String(s.id) === String(id)
+      service =>
+        String(service.id) === String(id)
     );
-
-  hideApplicationSections();
-
-  if(!selectedService){
-
-    return;
-
-  }
-
-  const amount =
-    Number(selectedService.amount || 0);
 
   const info =
     document.getElementById("serviceInfo");
+
+  if (!selectedService) {
+
+    info.classList.add("hidden");
+
+    document.getElementById(
+      "amount"
+    ).value = "";
+
+    renderFileFields([]);
+
+    return;
+  }
+
+  let amount =
+    Number(
+      selectedService.amount || 0
+    );
+
+  const withoutRation =
+    document.getElementById(
+      "without_ration_card"
+    ).value;
+
+  if (
+    withoutRation === "true" &&
+    selectedService.without_ration_amount != null
+  ) {
+
+    amount =
+      Number(
+        selectedService.without_ration_amount
+      );
+
+  }
+
+  document.getElementById(
+    "amount"
+  ).value = amount;
 
   info.classList.remove("hidden");
 
@@ -986,679 +397,139 @@ function serviceChanged(){
     escapeHtml(selectedService.name) +
     "</strong><br>" +
     "Service Amount: ₹" +
-    amount;
+    escapeHtml(amount);
 
-  document
-  .getElementById("dynamicFormCard")
-  .classList
-  .remove("hidden");
+  renderFileFields(
+    selectedService.fields || []
+  );
+}
 
-  document
-  .getElementById("paymentCard")
-  .classList
-  .remove("hidden");
 
-  document
-  .getElementById("documentsCard")
-  .classList
-  .remove("hidden");
+/* =========================================================
+   WITHOUT RATION CARD
+========================================================= */
 
-  document
-  .getElementById("submitCard")
-  .classList
-  .remove("hidden");
+document
+  .getElementById("without_ration_card")
+  .addEventListener(
+    "change",
+    function () {
 
-  document
-  .getElementById("displayAmount")
-  .textContent = amount;
+      if (selectedService) {
+        serviceChanged();
+      }
 
-  generateQR(
-    "gujrat.nsfa@ybl",
-    amount,
-    selectedService.name
+    }
   );
 
-  renderServiceForm(selectedService);
-
-  renderDocuments(selectedService);
-
-}
-
 
 /* =========================================================
-   HIDE SECTIONS
+   DOCUMENT FIELDS
 ========================================================= */
 
-function hideApplicationSections(){
-
-  [
-    "serviceInfo",
-    "dynamicFormCard",
-    "paymentCard",
-    "documentsCard",
-    "submitCard"
-  ].forEach(id => {
-
-    document
-    .getElementById(id)
-    .classList
-    .add("hidden");
-
-  });
-
-}
-
-
-/* =========================================================
-   DYNAMIC SERVICE FORMS
-========================================================= */
-
-function renderServiceForm(service){
-
-  const name =
-    String(service.name || "").toLowerCase();
-
-  const container =
-    document.getElementById("dynamicForm");
-
-  container.innerHTML = "";
-
-  /* -------------------------------------------------------
-     RATION CARD
-  ------------------------------------------------------- */
-
-  if(
-    name.includes("ration") ||
-    name.includes("rationcard")
-  ){
-
-    container.innerHTML = `
-
-      <div class="service-title">
-        Ration Card Work Details
-      </div>
-
-      <div class="grid">
-
-        ${textField(
-          "name_english",
-          "Name as per Aadhaar - English",
-          true
-        )}
-
-        ${textField(
-          "name_gujarati",
-          "Name - Gujarati",
-          true
-        )}
-
-        ${selectField(
-          "relation_change",
-          "Required Work",
-          [
-            "New Name Add",
-            "Name Delete",
-            "Husband Name to Father Name",
-            "Name Correction",
-            "Bandh Card Chalu",
-            "Vibhajan"
-          ],
-          true
-        )}
-
-        ${textField(
-          "father_name",
-          "Father Name",
-          false
-        )}
-
-        ${textField(
-          "husband_name",
-          "Husband Name",
-          false
-        )}
-
-        ${textField(
-          "ration_card_number",
-          "Ration Card Number",
-          true
-        )}
-
-        ${textField(
-          "customer_mobile",
-          "Mobile Number",
-          true,
-          "tel"
-        )}
-
-        ${textField(
-          "dob",
-          "Date of Birth",
-          false,
-          "date"
-        )}
-
-        ${textField(
-          "dob_year",
-          "DOB Year",
-          false
-        )}
-
-        ${textField(
-          "aadhaar_number",
-          "Aadhaar Number",
-          true
-        )}
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  /* -------------------------------------------------------
-     DL
-  ------------------------------------------------------- */
-
-  if(
-    name.includes("dl") ||
-    name.includes("driving")
-  ){
-
-    container.innerHTML = `
-
-      <div class="service-title">
-        DL PDF Work
-      </div>
-
-      <div class="grid">
-
-        ${textField(
-          "dl_number",
-          "Driving Licence Number",
-          true
-        )}
-
-        ${textField(
-          "whatsapp_number",
-          "WhatsApp Number",
-          true,
-          "tel"
-        )}
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  /* -------------------------------------------------------
-     RC
-  ------------------------------------------------------- */
-
-  if(
-    name.includes("rc pdf") ||
-    name === "rc"
-  ){
-
-    container.innerHTML = `
-
-      <div class="service-title">
-        RC PDF Work
-      </div>
-
-      <div class="grid">
-
-        ${textField(
-          "rc_number",
-          "RC Number",
-          true
-        )}
-
-        ${textField(
-          "whatsapp_number",
-          "WhatsApp Number",
-          true,
-          "tel"
-        )}
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  /* -------------------------------------------------------
-     ELECTION
-  ------------------------------------------------------- */
-
-  if(name.includes("election")){
-
-    container.innerHTML = `
-
-      <div class="service-title">
-        Election Card Work
-      </div>
-
-      <div class="grid">
-
-        ${textField(
-          "name_english",
-          "Name as per Aadhaar",
-          true
-        )}
-
-        ${textField(
-          "mobile",
-          "Mobile Number",
-          true,
-          "tel"
-        )}
-
-        ${textField(
-          "email",
-          "Email ID",
-          false,
-          "email"
-        )}
-
-        ${textField(
-          "dob",
-          "Date of Birth",
-          false,
-          "date"
-        )}
-
-        ${textField(
-          "election_number",
-          "Election Card Number",
-          false
-        )}
-
-        ${selectField(
-          "election_work",
-          "Election Work",
-          [
-            "New Election Card",
-            "Election Card Update",
-            "Election Card Correction"
-          ],
-          true
-        )}
-
-        ${textField(
-          "father_name",
-          "Father Name",
-          false
-        )}
-
-        ${textField(
-          "mother_name",
-          "Mother Name",
-          false
-        )}
-
-        ${textField(
-          "husband_name",
-          "Husband Name",
-          false
-        )}
-
-      </div>
-
-      <div class="notice">
-        Election Card Correction ke liye customer ka
-        Election Card required rahega. Wife ka Election
-        Card nikalne ke case mein husband ka Election
-        Card bhi required rahega.
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  /* -------------------------------------------------------
-     PAN
-  ------------------------------------------------------- */
-
-  if(name.includes("pan")){
-
-    container.innerHTML = `
-
-      <div class="service-title">
-        PAN Card Work
-      </div>
-
-      <div class="grid">
-
-        ${textField(
-          "name_english",
-          "Name as per Aadhaar",
-          true
-        )}
-
-        ${textField(
-          "aadhaar_number",
-          "Aadhaar Number",
-          true
-        )}
-
-        ${textField(
-          "mobile",
-          "Mobile Number",
-          true,
-          "tel"
-        )}
-
-        ${textField(
-          "email",
-          "Email ID",
-          true,
-          "email"
-        )}
-
-        ${textField(
-          "dob",
-          "Date of Birth",
-          true,
-          "date"
-        )}
-
-        ${textField(
-          "pan_number",
-          "PAN Number",
-          name.includes("correction")
-        )}
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  /* -------------------------------------------------------
-     LMS
-  ------------------------------------------------------- */
-
-  if(name.includes("lms")){
-
-    container.innerHTML = `
-
-      <div class="service-title">
-        LMS Certificate
-      </div>
-
-      <div class="notice">
-        LMS Service Contact / WhatsApp:
-        <strong>9429193151</strong>
-      </div>
-
-      <div class="grid">
-
-        ${textField(
-          "whatsapp_number",
-          "Customer WhatsApp Number",
-          true,
-          "tel"
-        )}
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  /* -------------------------------------------------------
-     DEFAULT
-  ------------------------------------------------------- */
-
-  container.innerHTML = `
-
-    <div class="service-title">
-      Customer Details
-    </div>
-
-    <div class="grid">
-
-      ${textField(
-        "name_english",
-        "Name",
-        true
-      )}
-
-      ${textField(
-        "mobile",
-        "Mobile Number",
-        true,
-        "tel"
-      )}
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   HTML FIELD HELPERS
-========================================================= */
-
-function textField(
-  id,
-  label,
-  required = false,
-  type = "text"
-){
-
-  return `
-
-    <div>
-
-      <label>
-        ${label}
-        ${required
-          ? '<span class="required-mark">*</span>'
-          : ''
-        }
-      </label>
-
-      <input
-        type="${type}"
-        id="${id}"
-        ${required ? "data-required=true" : ""}
-      >
-
-    </div>
-
-  `;
-
-}
-
-
-function selectField(
-  id,
-  label,
-  options,
-  required = false
-){
-
-  return `
-
-    <div>
-
-      <label>
-        ${label}
-        ${required
-          ? '<span class="required-mark">*</span>'
-          : ''
-        }
-      </label>
-
-      <select
-        id="${id}"
-        ${required ? "data-required=true" : ""}
-      >
-
-        <option value="">
-          Select
-        </option>
-
-        ${options.map(
-          option =>
-            `<option value="${escapeHtml(option)}">
-              ${escapeHtml(option)}
-            </option>`
-        ).join("")}
-
-      </select>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   DOCUMENTS
-========================================================= */
-
-function renderDocuments(service){
+function renderFileFields(fields) {
 
   const container =
     document.getElementById("fileFields");
 
   container.innerHTML = "";
 
-  let fields =
-    Array.isArray(service.fields)
-      ? service.fields
-      : [];
 
-  /*
-    Existing services table ke fields ko priority.
-    Agar fields empty hain to service-name ke basis
-    par basic document list.
-  */
+  /* ================================================
+     PAYMENT SCREENSHOT
+     ALWAYS SHOWN
+     ALWAYS REQUIRED
+  ================================================ */
 
-  if(!fields.length){
+  const paymentRow =
+    document.createElement("div");
 
-    const name =
-      String(service.name || "").toLowerCase();
+  paymentRow.className =
+    "file-row";
 
-    if(
-      name.includes("dl")
-    ){
+  const paymentLabel =
+    document.createElement("label");
 
-      fields = [
-        "dl_pdf"
-      ];
+  paymentLabel.innerHTML =
+    'Payment Screenshot ' +
+    '<span class="required">*</span>';
 
-    }else if(
-      name.includes("rc")
-    ){
+  const paymentInput =
+    document.createElement("input");
 
-      fields = [
-        "rc_pdf"
-      ];
+  paymentInput.type = "file";
 
-    }else if(
-      name.includes("election")
-    ){
+  paymentInput.id =
+    "paymentScreenshot";
 
-      fields = [
-        "aadhaar_pdf",
-        "photo",
-        "signature",
-        "lc_pdf",
-        "dob_pdf",
-        "customer_election_card_pdf",
-        "father_election_card_pdf",
-        "mother_election_card_pdf",
-        "husband_election_card_pdf",
-        "pan_pdf"
-      ];
+  paymentInput.accept =
+    ".jpg,.jpeg,.png,.pdf";
 
-    }else if(
-      name.includes("pan")
-    ){
+  paymentRow.appendChild(
+    paymentLabel
+  );
 
-      fields = [
-        "aadhaar_pdf",
-        "photo",
-        "signature"
-      ];
+  paymentRow.appendChild(
+    paymentInput
+  );
 
-      if(name.includes("correction")){
+  container.appendChild(
+    paymentRow
+  );
 
-        fields.push("pan_pdf");
 
-      }
+  /* ================================================
+     SERVICE DOCUMENTS
+     ALL OPTIONAL
+  ================================================ */
 
-    }else if(
-      name.includes("ration")
-    ){
+  const documentFields =
+    fields.filter(field => {
 
-      fields = [
-        "aadhaar_pdf",
-        "ration_card_pdf",
-        "payment_screenshot"
-      ];
+      return (
+        String(field).endsWith("_pdf") ||
+        field === "photo" ||
+        field === "signature" ||
+        field === "lc_pdf" ||
+        field === "aadhaar_photo" ||
+        field === "aadhaar_pdf" ||
+        field === "ration_card_pdf" ||
+        field === "election_card_pdf" ||
+        field === "pancard_pdf"
+      );
 
-    }
+    });
 
-  }
 
-  /*
-    Remove payment screenshot from document list,
-    because payment screenshot is handled separately.
-  */
+  if (!documentFields.length) {
 
-  fields =
-    fields.filter(
-      field =>
-        String(field).toLowerCase() !==
-        "payment_screenshot"
-    );
+    const note =
+      document.createElement("p");
 
-  if(!fields.length){
+    note.textContent =
+      "Service documents optional hain. Jo document available ho wahi upload karein.";
 
-    container.innerHTML =
-      `<div class="notice">
-        Is service ke liye additional document upload
-        required nahi hai.
-      </div>`;
+    container.appendChild(note);
 
     return;
   }
 
-  fields.forEach(field => {
+
+  documentFields.forEach(field => {
 
     const row =
       document.createElement("div");
 
     row.className =
-      "file-row required";
+      "file-row";
 
     const label =
       document.createElement("label");
 
-    label.innerHTML =
-      formatFieldName(field) +
-      ' <span class="required-mark">*</span>';
+    /* NO STAR HERE */
+
+    label.textContent =
+      formatFieldName(field);
 
     const input =
       document.createElement("input");
@@ -1671,132 +542,114 @@ function renderDocuments(service){
     input.dataset.field =
       field;
 
-    input.required = true;
-
     row.appendChild(label);
+
     row.appendChild(input);
 
     container.appendChild(row);
 
   });
-
 }
 
 
 /* =========================================================
-   FORMAT FIELD
+   FIELD NAME
 ========================================================= */
 
-function formatFieldName(name){
+function formatFieldName(name) {
 
   return String(name)
-    .replace(/_/g," ")
-    .replace(/\b\w/g,c => c.toUpperCase());
 
+    .replace(/_/g, " ")
+
+    .replace(
+      /\b\w/g,
+      c => c.toUpperCase()
+    );
 }
 
 
 /* =========================================================
-   GENERATE UPI QR
+   COLLECT CUSTOMER FIELDS
 ========================================================= */
 
-function generateQR(upi,amount,serviceName){
-
-  const pa =
-    encodeURIComponent(upi);
-
-  const pn =
-    encodeURIComponent(
-      "RAJKUMAR RATIONCARD SERVICES"
-    );
-
-  const tn =
-    encodeURIComponent(
-      serviceName
-    );
-
-  const qrData =
-    `upi://pay?pa=${pa}&pn=${pn}&am=${amount}&cu=INR&tn=${tn}`;
-
-  const qrUrl =
-    "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" +
-    encodeURIComponent(qrData);
-
-  document
-    .getElementById("paymentQR")
-    .src = qrUrl;
-
-}
-
-
-/* =========================================================
-   COLLECT DYNAMIC FIELDS
-========================================================= */
-
-function collectDynamicFields(){
+function collectFields() {
 
   const fields = {};
 
-  const elements =
-    document.querySelectorAll(
-      "#dynamicForm input, #dynamicForm select, #dynamicForm textarea"
-    );
+  const ids = [
 
-  elements.forEach(el => {
+    "name_english",
+    "name_gujarati",
+    "father_name",
+    "mother_name",
+    "husband_name",
+    "dob",
+    "dob_year",
+    "ration_card_number",
+    "pan_number",
+    "dl_number",
+    "rc_number",
+    "vehicle_number",
+    "election_number",
+    "aadhaar_number",
+    "correction_type",
+    "correct_name",
+    "state",
+    "district"
 
-    if(el.id){
+  ];
 
-      fields[el.id] =
-        String(el.value || "").trim();
+  ids.forEach(id => {
+
+    const el =
+      document.getElementById(id);
+
+    if (el) {
+
+      fields[id] =
+        el.value.trim();
 
     }
 
   });
 
-  return fields;
+  fields.without_ration_card =
+    document.getElementById(
+      "without_ration_card"
+    ).value === "true";
 
+  return fields;
 }
 
 
 /* =========================================================
-   VALIDATE DYNAMIC FIELDS
+   FILE TO BASE64
 ========================================================= */
 
-function validateDynamicFields(){
+function fileToBase64(file) {
 
-  const required =
-    document.querySelectorAll(
-      "#dynamicForm [data-required='true']"
-    );
+  return new Promise(
+    (resolve, reject) => {
 
-  for(const el of required){
+      const reader =
+        new FileReader();
 
-    if(!String(el.value || "").trim()){
+      reader.onload =
+        () => resolve(reader.result);
 
-      const label =
-        el.parentElement
-          ?.querySelector("label")
-          ?.innerText
-          ?.replace("*","")
-          ?.trim()
-        || el.id;
+      reader.onerror =
+        () =>
+          reject(
+            new Error(
+              "Could not read file."
+            )
+          );
 
-      showStatus(
-        "mainStatus",
-        label + " required.",
-        "error"
-      );
-
-      el.focus();
-
-      return false;
+      reader.readAsDataURL(file);
 
     }
-
-  }
-
-  return true;
-
+  );
 }
 
 
@@ -1804,38 +657,94 @@ function validateDynamicFields(){
    COLLECT FILES
 ========================================================= */
 
-async function collectFiles(){
+async function collectFiles() {
 
   const files = {};
 
-  const inputs =
-    document.querySelectorAll(
-      "#fileFields input[type=file]"
+
+  /* ================================================
+     PAYMENT SCREENSHOT
+     REQUIRED
+  ================================================ */
+
+  const paymentInput =
+    document.getElementById(
+      "paymentScreenshot"
     );
 
-  for(const input of inputs){
+  if (
+    !paymentInput ||
+    !paymentInput.files ||
+    !paymentInput.files[0]
+  ) {
 
-    if(
+    throw new Error(
+      "Payment Screenshot required."
+    );
+
+  }
+
+  const paymentFile =
+    paymentInput.files[0];
+
+  if (
+    paymentFile.size >
+    10 * 1024 * 1024
+  ) {
+
+    throw new Error(
+      "Payment Screenshot is larger than 10 MB."
+    );
+
+  }
+
+  files.payment_screenshot = {
+
+    name:
+      paymentFile.name,
+
+    type:
+      paymentFile.type,
+
+    data:
+      await fileToBase64(
+        paymentFile
+      )
+
+  };
+
+
+  /* ================================================
+     OTHER SERVICE DOCUMENTS
+     OPTIONAL
+  ================================================ */
+
+  const inputs =
+    document.querySelectorAll(
+      "#fileFields input[type=file][data-field]"
+    );
+
+  for (
+    const input of inputs
+  ) {
+
+    if (
       !input.files ||
       !input.files[0]
-    ){
+    ) {
 
-      throw new Error(
-        formatFieldName(
-          input.dataset.field
-        ) +
-        " is required."
-      );
+      /* OPTIONAL - SKIP */
+      continue;
 
     }
 
     const file =
       input.files[0];
 
-    if(
+    if (
       file.size >
       10 * 1024 * 1024
-    ){
+    ) {
 
       throw new Error(
         file.name +
@@ -1846,9 +755,11 @@ async function collectFiles(){
 
     files[input.dataset.field] = {
 
-      name:file.name,
+      name:
+        file.name,
 
-      type:file.type,
+      type:
+        file.type,
 
       data:
         await fileToBase64(file)
@@ -1858,90 +769,6 @@ async function collectFiles(){
   }
 
   return files;
-
-}
-
-
-/* =========================================================
-   FILE BASE64
-========================================================= */
-
-function fileToBase64(file){
-
-  return new Promise(
-    (resolve,reject) => {
-
-      const reader =
-        new FileReader();
-
-      reader.onload =
-        () => resolve(
-          reader.result
-        );
-
-      reader.onerror =
-        () => reject(
-          new Error(
-            "Could not read " +
-            file.name
-          )
-        );
-
-      reader.readAsDataURL(file);
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   PAYMENT SCREENSHOT
-========================================================= */
-
-async function collectPaymentScreenshot(){
-
-  const input =
-    document.getElementById(
-      "paymentScreenshot"
-    );
-
-  if(
-    !input.files ||
-    !input.files[0]
-  ){
-
-    throw new Error(
-      "Payment screenshot is required."
-    );
-
-  }
-
-  const file =
-    input.files[0];
-
-  if(
-    file.size >
-    10 * 1024 * 1024
-  ){
-
-    throw new Error(
-      "Payment screenshot is larger than 10 MB."
-    );
-
-  }
-
-  return {
-
-    name:file.name,
-
-    type:file.type,
-
-    data:
-      await fileToBase64(file)
-
-  };
-
 }
 
 
@@ -1949,9 +776,9 @@ async function collectPaymentScreenshot(){
    SUBMIT APPLICATION
 ========================================================= */
 
-async function submitApplication(){
+async function submitApplication() {
 
-  if(!loggedRetailer){
+  if (!loggedRetailer) {
 
     showStatus(
       "mainStatus",
@@ -1960,10 +787,11 @@ async function submitApplication(){
     );
 
     return;
-
   }
 
-  if(!selectedService){
+
+  /* SERVICE IS REQUIRED */
+  if (!selectedService) {
 
     showStatus(
       "mainStatus",
@@ -1972,22 +800,56 @@ async function submitApplication(){
     );
 
     return;
-
   }
 
-  if(!validateDynamicFields()){
+
+  /* ================================================
+     MOBILE OPTIONAL
+  ================================================ */
+
+  const customerMobile =
+    document
+      .getElementById(
+        "customerMobile"
+      )
+      .value
+      .trim();
+
+  /*
+     If mobile entered, validate it.
+     If empty, continue.
+  */
+
+  if (
+    customerMobile &&
+    !/^[0-9]{10}$/.test(
+      customerMobile
+    )
+  ) {
+
+    showStatus(
+      "mainStatus",
+      "Mobile number must be 10 digits.",
+      "error"
+    );
 
     return;
-
   }
 
-  const utr =
-    document
-    .getElementById("utrNumber")
-    .value
-    .trim();
 
-  if(!utr){
+  /* ================================================
+     UTR REQUIRED
+  ================================================ */
+
+  const utrNumber =
+    document
+      .getElementById(
+        "utrNumber"
+      )
+      .value
+      .trim();
+
+  if (!utrNumber) {
 
     showStatus(
       "mainStatus",
@@ -1995,90 +857,95 @@ async function submitApplication(){
       "error"
     );
 
-    return;
+    document
+      .getElementById(
+        "utrNumber"
+      )
+      .focus();
 
+    return;
   }
 
+
   const btn =
-    document.getElementById("submitBtn");
+    document.getElementById(
+      "submitBtn"
+    );
 
   btn.disabled = true;
+
   btn.textContent =
     "Uploading & Submitting...";
 
-  try{
+
+  try {
 
     showStatus(
       "mainStatus",
-      "Documents upload ho rahe hain. Please wait...",
+      "Payment screenshot aur documents upload ho rahe hain...",
       "info"
     );
 
-    const fields =
-      collectDynamicFields();
 
-    const documents =
+    /* Customer fields OPTIONAL */
+    const fields =
+      collectFields();
+
+
+    /*
+       Payment screenshot REQUIRED.
+       Other documents OPTIONAL.
+    */
+    const files =
       await collectFiles();
 
-    const paymentScreenshot =
-      await collectPaymentScreenshot();
-
-    documents.payment_screenshot =
-      paymentScreenshot;
-
-    const amount =
-      Number(
-        selectedService.amount || 0
-      );
-
-    const customerMobile =
-      fields.customer_mobile ||
-      fields.mobile ||
-      fields.whatsapp_number ||
-      "";
 
     const customerEmail =
-      fields.email ||
-      "";
+      document
+        .getElementById(
+          "customerEmail"
+        )
+        .value
+        .trim();
 
-    const {data,error} =
+
+    /* ================================================
+       SUBMIT EDGE FUNCTION
+    ================================================ */
+
+    const {
+      data,
+      error
+    } =
       await supabaseClient.functions.invoke(
         SUBMIT_FUNCTION,
         {
-          body:{
+          body: {
 
             service_id:
               selectedService.id,
 
             customer_mobile:
-              customerMobile,
+              customerMobile || "",
 
             customer_email:
-              customerEmail,
+              customerEmail || "",
 
             utr_number:
-              utr,
-
-            amount:
-              amount,
-
-            retailer_id:
-              loggedRetailer.retailerId,
-
-            retailer_number:
-              loggedRetailer.username,
+              utrNumber,
 
             fields:
               fields,
 
             files:
-              documents
+              files
 
           }
         }
       );
 
-    if(error){
+
+    if (error) {
 
       throw new Error(
         error.message ||
@@ -2087,10 +954,11 @@ async function submitApplication(){
 
     }
 
-    if(
+
+    if (
       !data ||
       !data.success
-    ){
+    ) {
 
       throw new Error(
         data?.message ||
@@ -2100,17 +968,24 @@ async function submitApplication(){
 
     }
 
-    document
-      .getElementById("trNumber")
-      .textContent =
-        data.trNumber ||
-        data.applicationId ||
-        "SUBMITTED";
 
-    document
-      .getElementById("trBox")
-      .style
-      .display = "block";
+    /* ================================================
+       SUCCESS
+    ================================================ */
+
+    document.getElementById(
+      "trNumber"
+    ).textContent =
+      data.trNumber ||
+      data.applicationId ||
+      "";
+
+
+    document.getElementById(
+      "trBox"
+    ).style.display =
+      "block";
+
 
     showStatus(
       "mainStatus",
@@ -2118,9 +993,17 @@ async function submitApplication(){
       "success"
     );
 
-    btn.style.display = "none";
 
-  }catch(error){
+    btn.style.display =
+      "none";
+
+
+  } catch (error) {
+
+    console.error(
+      "SUBMIT ERROR:",
+      error
+    );
 
     showStatus(
       "mainStatus",
@@ -2129,11 +1012,13 @@ async function submitApplication(){
       "error"
     );
 
-  }finally{
+  } finally {
 
     btn.disabled = false;
 
-    if(btn.style.display !== "none"){
+    if (
+      btn.style.display !== "none"
+    ) {
 
       btn.textContent =
         "Submit Application";
@@ -2141,7 +1026,6 @@ async function submitApplication(){
     }
 
   }
-
 }
 
 
@@ -2149,53 +1033,75 @@ async function submitApplication(){
    NEW APPLICATION
 ========================================================= */
 
-function newApplication(){
+function newApplication() {
 
   document
-    .getElementById("service")
-    .selectedIndex = 0;
+    .querySelectorAll(
+      "#applicationSection input"
+    )
+    .forEach(input => {
 
-  selectedService = null;
+      if (
+        input.type !== "file"
+      ) {
 
-  document
-    .getElementById("dynamicForm")
-    .innerHTML = "";
+        input.value = "";
 
-  document
-    .getElementById("fileFields")
-    .innerHTML = "";
+      }
 
-  document
-    .getElementById("utrNumber")
-    .value = "";
+    });
 
-  document
-    .getElementById("paymentScreenshot")
-    .value = "";
 
   document
-    .getElementById("serviceInfo")
+    .querySelectorAll(
+      "#applicationSection select"
+    )
+    .forEach(select => {
+
+      select.selectedIndex = 0;
+
+    });
+
+
+  document
+    .getElementById(
+      "serviceInfo"
+    )
     .classList
     .add("hidden");
 
-  hideApplicationSections();
 
   document
-    .getElementById("trBox")
+    .getElementById(
+      "fileFields"
+    )
+    .innerHTML = "";
+
+
+  document
+    .getElementById(
+      "trBox"
+    )
     .style
     .display = "none";
 
+
   document
-    .getElementById("submitBtn")
+    .getElementById(
+      "submitBtn"
+    )
     .style
     .display = "inline-block";
+
+
+  selectedService = null;
+
 
   showStatus(
     "mainStatus",
     "Ready for new application.",
     "info"
   );
-
 }
 
 
@@ -2203,13 +1109,13 @@ function newApplication(){
    LOGOUT
 ========================================================= */
 
-async function logout(){
+async function logout() {
 
-  try{
+  try {
 
     await supabaseClient.auth.signOut();
 
-  }catch(error){
+  } catch (error) {
 
     console.warn(error);
 
@@ -2218,7 +1124,6 @@ async function logout(){
   loggedRetailer = null;
 
   location.reload();
-
 }
 
 
@@ -2230,35 +1135,53 @@ function showStatus(
   id,
   message,
   type
-){
+) {
 
   const el =
     document.getElementById(id);
 
-  if(!el)return;
+  if (!el) return;
 
   el.className =
     "status " + type;
 
   el.textContent =
     message;
-
 }
 
 
 /* =========================================================
-   ESCAPE
+   ESCAPE HTML
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(value) {
 
   return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
 
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 }
 
 
@@ -2268,53 +1191,122 @@ function escapeHtml(value){
 
 window.addEventListener(
   "DOMContentLoaded",
-  async function(){
+  async function () {
 
-    try{
+    /* Remove unwanted stars */
+    setupOptionalFields();
+
+
+    try {
 
       const {
         data
       } =
-      await supabaseClient.auth.getSession();
+        await supabaseClient.auth.getSession();
 
-      if(!data.session){
 
+      if (!data.session) {
         return;
-
       }
 
+
       const {
-        data:profile,
+        data: profile,
         error
       } =
-      await supabaseClient
-      .from("profiles")
-      .select(
-        "id,full_name,mobile,retailer_number,role"
-      )
-      .eq(
-        "id",
-        data.session.user.id
-      )
-      .maybeSingle();
+        await supabaseClient
 
-      if(
+          .from("profiles")
+
+          .select(
+            "id,full_name,mobile,retailer_number,role"
+          )
+
+          .eq(
+            "id",
+            data.session.user.id
+          )
+
+          .maybeSingle();
+
+
+      if (
         error ||
         !profile ||
         profile.role !== "retailer"
-      ){
+      ) {
 
         await supabaseClient.auth.signOut();
 
         return;
-
       }
 
-      setLoggedRetailer(profile);
+
+      loggedRetailer = {
+
+        success: true,
+
+        retailerId:
+          profile.id,
+
+        username:
+          profile.retailer_number,
+
+        retailerName:
+          profile.full_name,
+
+        mobile:
+          profile.mobile
+
+      };
+
+
+      document
+        .getElementById(
+          "loginSection"
+        )
+        .classList
+        .add("hidden");
+
+
+      document
+        .getElementById(
+          "applicationSection"
+        )
+        .classList
+        .remove("hidden");
+
+
+      document
+        .getElementById(
+          "logoutBtn"
+        )
+        .style
+        .display = "block";
+
+
+      document
+        .getElementById(
+          "retailerInfo"
+        )
+        .textContent =
+          (
+            profile.full_name ||
+            ""
+          ) +
+          " | Retailer ID: " +
+          (
+            profile.retailer_number ||
+            ""
+          );
+
 
       await loadServices();
 
-    }catch(error){
+      setupOptionalFields();
+
+
+    } catch (error) {
 
       console.warn(
         "Session check error:",
@@ -2325,8 +1317,4 @@ window.addEventListener(
 
   }
 );
-
 </script>
-
-</body>
-</html>
