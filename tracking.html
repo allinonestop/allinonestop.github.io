@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
   <title>Track Application - AllInOneStop</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script src="config.js"></script>
 
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -33,10 +39,35 @@
       font-size: 24px;
     }
 
+    .header div {
+      margin-top: 3px;
+      font-size: 16px;
+    }
+
     .container {
       max-width: 750px;
-      margin: 35px auto;
+      margin: 25px auto;
       padding: 0 15px;
+    }
+
+    .top-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .home-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: #1976d2;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 7px;
+      font-weight: bold;
+    }
+
+    .home-btn:hover {
+      background: #1565c0;
     }
 
     .card {
@@ -49,6 +80,7 @@
 
     h2 {
       margin-top: 0;
+      margin-bottom: 20px;
     }
 
     label {
@@ -84,6 +116,10 @@
       cursor: pointer;
     }
 
+    button:hover {
+      background: #1565c0;
+    }
+
     button:disabled {
       opacity: .6;
       cursor: not-allowed;
@@ -94,6 +130,7 @@
       padding: 13px;
       border-radius: 7px;
       margin-bottom: 15px;
+      line-height: 1.5;
     }
 
     .success {
@@ -153,19 +190,13 @@
     .key {
       font-weight: bold;
       color: #455a64;
-      min-width: 170px;
+      min-width: 45%;
     }
 
     .value {
       text-align: right;
       font-weight: 600;
       word-break: break-word;
-    }
-
-    .payment {
-      padding: 10px;
-      border-radius: 6px;
-      background: #fff8e1;
     }
 
     .received {
@@ -184,6 +215,13 @@
       color: #c62828;
     }
 
+    .drive-box {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
     .drive-link {
       display: inline-block;
       margin-top: 12px;
@@ -192,205 +230,321 @@
       color: white;
       text-decoration: none;
       border-radius: 7px;
+      font-weight: bold;
     }
 
     .drive-link:hover {
       background: #263238;
     }
 
-    .loading {
+    .footer {
       text-align: center;
-      padding: 15px;
-      display: none;
+      color: #607d8b;
+      padding: 20px;
+      font-size: 13px;
     }
 
     @media (max-width: 600px) {
-      .row {
-        display: block;
+
+      .container {
+        margin-top: 15px;
       }
 
-      .key {
-        margin-bottom: 5px;
+      .card {
+        padding: 18px;
+      }
+
+      .row {
+        flex-direction: column;
+        gap: 5px;
       }
 
       .value {
         text-align: left;
       }
 
-      .card {
-        padding: 18px;
+      .key {
+        min-width: auto;
       }
+
+      .tr-number {
+        font-size: 21px;
+      }
+
     }
+
   </style>
+
 </head>
 
 <body>
 
-<div class="header">
-  <h1>AllInOneStop</h1>
-  <div>Application Tracking</div>
-</div>
+  <div class="header">
 
-<div class="container">
+    <h1>AllInOneStop</h1>
 
-  <div class="card">
-
-    <h2>Track Your Application</h2>
-
-    <div id="status" class="status"></div>
-
-    <label for="trNumber">
-      TR Number
-    </label>
-
-    <input
-      id="trNumber"
-      type="text"
-      placeholder="TR-20260824-875515"
-      autocomplete="off"
-    >
-
-    <button
-      id="trackBtn"
-      type="button"
-      onclick="trackApplication()">
-      Track Application
-    </button>
-
-    <div id="loading" class="loading">
-      Searching application...
+    <div>
+      Application Tracking
     </div>
 
   </div>
 
 
-  <div id="result" class="card result">
+  <div class="container">
 
-    <div class="tr">
+    <!-- HOME BUTTON -->
 
-      <div>
-        Application TR Number
-      </div>
-
-      <div
-        class="tr-number"
-        id="resultTr">
-      </div>
-
-    </div>
-
-
-    <div class="row">
-      <div class="key">Application Status</div>
-      <div
-        class="value"
-        id="applicationStatus">
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="key">Payment Status</div>
-      <div
-        class="value"
-        id="paymentStatus">
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="key">Service</div>
-      <div
-        class="value"
-        id="serviceName">
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="key">Applicant Name</div>
-      <div
-        class="value"
-        id="applicantName">
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="key">Customer Mobile</div>
-      <div
-        class="value"
-        id="customerMobile">
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="key">Amount</div>
-      <div
-        class="value"
-        id="amount">
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="key">UTR Number</div>
-      <div
-        class="value"
-        id="utrNumber">
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="key">Created At</div>
-      <div
-        class="value"
-        id="createdAt">
-      </div>
-    </div>
-
-
-    <div
-      id="driveBox"
-      style="display:none; margin-top:20px;">
-
-      <strong>Documents</strong>
-
-      <br>
+    <div class="top-buttons">
 
       <a
-        id="driveLink"
-        class="drive-link"
-        target="_blank"
-        rel="noopener noreferrer">
-        Open Documents
+        class="home-btn"
+        href="index.html">
+        🏠 Home
       </a>
 
     </div>
 
+
+    <!-- SEARCH CARD -->
+
+    <div class="card">
+
+      <h2>
+        Track Your Application
+      </h2>
+
+      <div
+        id="status"
+        class="status">
+      </div>
+
+
+      <label for="trNumber">
+        TR Number
+      </label>
+
+      <input
+        id="trNumber"
+        type="text"
+        placeholder="TR-20260824-123456"
+        autocomplete="off">
+
+
+      <button
+        id="trackBtn"
+        type="button"
+        onclick="trackApplication()">
+
+        Track Application
+
+      </button>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+      id="result"
+      class="card result">
+
+
+      <div class="tr">
+
+        <div>
+          Application TR Number
+        </div>
+
+        <div
+          class="tr-number"
+          id="resultTr">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Application Status
+        </div>
+
+        <div
+          class="value"
+          id="applicationStatus">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Payment Status
+        </div>
+
+        <div
+          class="value"
+          id="paymentStatus">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Service
+        </div>
+
+        <div
+          class="value"
+          id="serviceName">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Applicant Name
+        </div>
+
+        <div
+          class="value"
+          id="applicantName">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Customer Mobile
+        </div>
+
+        <div
+          class="value"
+          id="customerMobile">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Amount
+        </div>
+
+        <div
+          class="value"
+          id="amount">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          UTR Number
+        </div>
+
+        <div
+          class="value"
+          id="utrNumber">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Created At
+        </div>
+
+        <div
+          class="value"
+          id="createdAt">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Remark
+        </div>
+
+        <div
+          class="value"
+          id="remark">
+        </div>
+
+      </div>
+
+
+      <div
+        id="driveBox"
+        class="drive-box"
+        style="display:none;">
+
+        <strong>
+          📁 Documents
+        </strong>
+
+        <br>
+
+        <a
+          id="driveLink"
+          class="drive-link"
+          target="_blank"
+          rel="noopener noreferrer">
+
+          Open Documents
+
+        </a>
+
+      </div>
+
+
+    </div>
+
   </div>
 
-</div>
+
+  <div class="footer">
+
+    AllInOneStop © 2026
+
+  </div>
 
 
 <script>
 
   /*
    * ==========================================
-   * ALLINONESTOP TRACKING
+   * SUPABASE CONFIG
    * ==========================================
    */
 
-  const CONFIG = window.ALLINONESTOP_CONFIG || {};
-
   const SUPABASE_URL =
-    CONFIG.SUPABASE_URL ||
-    "https://dixsmucrgnyuvudhymdj.supabase.co";
+    window.ALLINONESTOP_CONFIG.SUPABASE_URL;
 
   const SUPABASE_PUBLISHABLE_KEY =
-    CONFIG.SUPABASE_PUBLISHABLE_KEY || "";
+    window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
+
+
+  /*
+   * ==========================================
+   * TRACK FUNCTION
+   * ==========================================
+   */
 
   const TRACK_FUNCTION =
     "track-application";
@@ -408,29 +562,13 @@
       document.getElementById("trNumber");
 
     const tr =
-      input.value
-        .trim()
-        .toUpperCase();
+      input.value.trim().toUpperCase();
 
-    hideResult();
-    clearStatus();
 
     if (!tr) {
-      showStatus(
-        "Please enter TR Number.",
-        "error"
-      );
-      input.focus();
-      return;
-    }
-
-    /*
-     * Accept only normal TR format
-     */
-    if (!/^TR-\d{8}-\d{6}$/.test(tr)) {
 
       showStatus(
-        "Invalid TR Number format. Example: TR-20260824-875515",
+        "TR Number required.",
         "error"
       );
 
@@ -441,23 +579,24 @@
     const button =
       document.getElementById("trackBtn");
 
-    const loading =
-      document.getElementById("loading");
-
 
     button.disabled = true;
-    button.textContent = "Searching...";
 
-    loading.style.display = "block";
+    button.textContent =
+      "Searching...";
+
+
+    hideResult();
+
+    showStatus(
+      "Searching application...",
+      "info"
+    );
 
 
     try {
 
-      /*
-       * Public tracking Edge Function
-       */
-
-      const url =
+      const apiUrl =
         SUPABASE_URL +
         "/functions/v1/" +
         TRACK_FUNCTION +
@@ -465,90 +604,47 @@
         encodeURIComponent(tr);
 
 
-      const headers = {
-        "Content-Type":
-          "application/json"
-      };
-
-
-      /*
-       * Send publishable key when available.
-       */
-      if (SUPABASE_PUBLISHABLE_KEY) {
-
-        headers["apikey"] =
-          SUPABASE_PUBLISHABLE_KEY;
-
-        headers["Authorization"] =
-          "Bearer " +
-          SUPABASE_PUBLISHABLE_KEY;
-      }
-
-
       const response =
         await fetch(
-          url,
+          apiUrl,
           {
             method: "GET",
-            headers: headers
+
+            headers: {
+              "apikey":
+                SUPABASE_PUBLISHABLE_KEY,
+
+              "Content-Type":
+                "application/json"
+            }
           }
         );
 
 
-      const text =
-        await response.text();
-
-
-      let result = null;
+      let result;
 
 
       try {
 
         result =
-          text
-            ? JSON.parse(text)
-            : null;
+          await response.json();
 
-      } catch (e) {
-
-        console.error(
-          "Tracking response:",
-          text
-        );
+      } catch (jsonError) {
 
         throw new Error(
-          "Invalid response from tracking server."
-        );
-      }
-
-
-      console.log(
-        "Tracking response:",
-        result
-      );
-
-
-      if (
-        !response.ok
-      ) {
-
-        showStatus(
-          result?.message ||
-          "Application not found.",
-          "error"
+          "Tracking server returned an invalid response."
         );
 
-        return;
       }
 
 
       if (
-        !result ||
-        result.success !== true
+        !response.ok ||
+        !result.success
       ) {
 
         showStatus(
-          result?.message ||
+          result.message ||
           "Application not found.",
           "error"
         );
@@ -559,7 +655,6 @@
 
       displayResult(result);
 
-
     } catch (error) {
 
       console.error(
@@ -567,9 +662,11 @@
         error
       );
 
+
       showStatus(
-        error.message ||
-        "Unable to connect to tracking server.",
+        "Tracking error: " +
+        (error.message ||
+        "Unable to connect to tracking server."),
         "error"
       );
 
@@ -580,9 +677,8 @@
       button.textContent =
         "Track Application";
 
-      loading.style.display =
-        "none";
     }
+
   }
 
 
@@ -594,12 +690,6 @@
 
   function displayResult(data) {
 
-    const application =
-      data.application ||
-      data.data ||
-      data;
-
-
     document.getElementById(
       "result"
     ).style.display = "block";
@@ -607,8 +697,6 @@
 
     setText(
       "resultTr",
-      application.trNumber ||
-      application.tr_number ||
       data.trNumber ||
       data.tr_number ||
       "-"
@@ -617,77 +705,66 @@
 
     setText(
       "applicationStatus",
-      application.applicationStatus ||
-      application.application_status ||
       data.applicationStatus ||
-      data.application_status ||
       "Received"
     );
 
 
     setText(
       "paymentStatus",
-      application.paymentStatus ||
-      application.payment_status ||
       data.paymentStatus ||
-      data.payment_status ||
       "Pending"
     );
 
 
     setText(
       "serviceName",
-      application.serviceName ||
-      application.service_name ||
       data.serviceName ||
-      data.service_name ||
       "-"
     );
 
 
     setText(
       "applicantName",
-      application.applicantName ||
-      application.customerNameEn ||
-      application.customer_name_en ||
       data.applicantName ||
-      data.customerNameEn ||
-      data.customer_name_en ||
       "-"
     );
 
 
     setText(
       "customerMobile",
-      application.customerMobile ||
-      application.mobile ||
       data.customerMobile ||
-      data.mobile ||
       "-"
     );
 
 
     const amount =
-      application.amount ??
-      data.amount;
+      Number(data.amount);
 
 
-    setText(
-      "amount",
-      amount !== null &&
-      amount !== undefined &&
-      amount !== ""
-        ? "₹" + amount
-        : "-"
-    );
+    if (
+      Number.isFinite(amount)
+    ) {
+
+      setText(
+        "amount",
+        "₹" +
+        amount
+      );
+
+    } else {
+
+      setText(
+        "amount",
+        "-"
+      );
+
+    }
 
 
     setText(
       "utrNumber",
-      application.utrNumber ||
-      application.utr_number ||
       data.utrNumber ||
-      data.utr_number ||
       "-"
     );
 
@@ -695,44 +772,65 @@
     setText(
       "createdAt",
       formatDate(
-        application.createdAt ||
-        application.created_at ||
-        data.createdAt ||
-        data.created_at
+        data.createdAt
       )
     );
 
 
+    setText(
+      "remark",
+      data.remark ||
+      "-"
+    );
+
+
     /*
-     * Drive URL
+     * DRIVE DOCUMENT
      */
 
-    const driveUrl =
-      application.driveFolderUrl ||
-      application.drive_folder_url ||
-      data.driveFolderUrl ||
-      data.drive_folder_url ||
-      application.driveFolder ||
-      data.driveFolder ||
-      "";
-
-
-    if (driveUrl) {
-
+    const driveBox =
       document.getElementById(
         "driveBox"
-      ).style.display = "block";
+      );
 
+    const driveLink =
       document.getElementById(
         "driveLink"
-      ).href = driveUrl;
+      );
+
+
+    if (
+      data.driveFolderUrl
+    ) {
+
+      driveBox.style.display =
+        "block";
+
+      driveLink.href =
+        data.driveFolderUrl;
 
     } else {
 
-      document.getElementById(
-        "driveBox"
-      ).style.display = "none";
+      driveBox.style.display =
+        "none";
+
+      driveLink.removeAttribute(
+        "href"
+      );
+
     }
+
+
+    colorStatus(
+      "applicationStatus",
+      data.applicationStatus
+    );
+
+
+    colorStatus(
+      "paymentStatus",
+      data.paymentStatus
+    );
 
 
     showStatus(
@@ -741,22 +839,19 @@
     );
 
 
-    /*
-     * Scroll result into view
-     */
+    document
+      .getElementById("result")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
 
-    document.getElementById(
-      "result"
-    ).scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
   }
 
 
   /*
    * ==========================================
-   * HELPERS
+   * SET TEXT
    * ==========================================
    */
 
@@ -771,13 +866,16 @@
     if (!element) return;
 
     element.textContent =
-      value === null ||
-      value === undefined ||
-      value === ""
-        ? "-"
-        : String(value);
+      value || "-";
+
   }
 
+
+  /*
+   * ==========================================
+   * FORMAT DATE
+   * ==========================================
+   */
 
   function formatDate(value) {
 
@@ -795,7 +893,7 @@
           date.getTime()
         )
       ) {
-        return String(value);
+        return value;
       }
 
       return date.toLocaleString(
@@ -806,12 +904,88 @@
         }
       );
 
-    } catch (e) {
+    } catch {
 
-      return String(value);
+      return value;
+
     }
+
   }
 
+
+  /*
+   * ==========================================
+   * STATUS COLOR
+   * ==========================================
+   */
+
+  function colorStatus(
+    id,
+    value
+  ) {
+
+    const element =
+      document.getElementById(id);
+
+    if (!element) return;
+
+
+    const text =
+      String(value || "")
+        .toLowerCase();
+
+
+    element.classList.remove(
+      "received",
+      "pending",
+      "completed",
+      "rejected"
+    );
+
+
+    if (
+      text.includes("complete") ||
+      text.includes("approved") ||
+      text.includes("success")
+    ) {
+
+      element.classList.add(
+        "completed"
+      );
+
+    } else if (
+      text.includes("reject") ||
+      text.includes("cancel")
+    ) {
+
+      element.classList.add(
+        "rejected"
+      );
+
+    } else if (
+      text.includes("pending")
+    ) {
+
+      element.classList.add(
+        "pending"
+      );
+
+    } else {
+
+      element.classList.add(
+        "received"
+      );
+
+    }
+
+  }
+
+
+  /*
+   * ==========================================
+   * HIDE RESULT
+   * ==========================================
+   */
 
   function hideResult() {
 
@@ -819,29 +993,19 @@
       "result"
     ).style.display = "none";
 
+
     document.getElementById(
       "driveBox"
     ).style.display = "none";
+
   }
 
 
-  function clearStatus() {
-
-    const element =
-      document.getElementById(
-        "status"
-      );
-
-    element.className =
-      "status";
-
-    element.textContent =
-      "";
-
-    element.style.display =
-      "none";
-  }
-
+  /*
+   * ==========================================
+   * STATUS MESSAGE
+   * ==========================================
+   */
 
   function showStatus(
     message,
@@ -853,19 +1017,22 @@
         "status"
       );
 
+
     element.className =
-      "status " + type;
+      "status " +
+      type;
+
 
     element.textContent =
       message;
 
-    element.style.display =
-      "block";
   }
 
 
   /*
+   * ==========================================
    * ENTER KEY
+   * ==========================================
    */
 
   document
@@ -881,44 +1048,11 @@
           event.preventDefault();
 
           trackApplication();
+
         }
+
       }
     );
-
-
-  /*
-   * AUTO READ TR NUMBER FROM URL
-   *
-   * Example:
-   * tracking.html?tr=TR-20260824-875515
-   */
-
-  window.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-      const params =
-        new URLSearchParams(
-          window.location.search
-        );
-
-      const tr =
-        params.get("tr") ||
-        params.get("trNumber");
-
-      if (tr) {
-
-        document.getElementById(
-          "trNumber"
-        ).value =
-          tr
-            .trim()
-            .toUpperCase();
-
-        trackApplication();
-      }
-    }
-  );
 
 </script>
 
