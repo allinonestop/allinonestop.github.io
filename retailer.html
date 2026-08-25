@@ -161,10 +161,9 @@ button:disabled{
   border-radius:8px
 }
 
-/* UPI QR */
 .qrBox{
   margin-top:18px;
-  text-align:center;
+  text-align:center
 }
 
 #upiQr{
@@ -176,20 +175,20 @@ button:disabled{
   border-radius:10px;
   border:1px solid #ddd;
   min-width:204px;
-  min-height:204px;
+  min-height:204px
 }
 
 .qrTitle{
   margin-top:10px;
   font-size:14px;
   font-weight:bold;
-  color:#172033;
+  color:#172033
 }
 
 .qrNote{
   margin-top:5px;
   font-size:12px;
-  color:#607080;
+  color:#607080
 }
 
 .file{
@@ -263,6 +262,7 @@ button:disabled{
 }
 
 @media(max-width:700px){
+
   .grid{
     grid-template-columns:1fr
   }
@@ -275,26 +275,36 @@ button:disabled{
     align-items:flex-start;
     flex-direction:column
   }
+
 }
 </style>
 </head>
 
 <body>
 
-<!-- TOP HEADER -->
 <div class="top">
 
   <div>
+
     <h1>AllInOneStop - Retailer Portal</h1>
+
     <div id="retailerInfo" class="info"></div>
+
   </div>
 
-  <button class="primary" onclick="goHome()">Home</button>
+  <button
+    class="primary"
+    onclick="goHome()">
+
+    Home
+
+  </button>
 
 </div>
 
 
 <div class="wrap">
+
 
 <!-- LOGIN -->
 
@@ -305,9 +315,14 @@ button:disabled{
 
   <h2>Retailer Login</h2>
 
-  <div id="loginMsg" class="status"></div>
+  <div
+    id="loginMsg"
+    class="status">
+  </div>
 
-  <label>Retailer ID / Username</label>
+  <label>
+    Retailer ID / Username
+  </label>
 
   <input
     id="username"
@@ -339,16 +354,23 @@ button:disabled{
 
 <!-- APPLICATION -->
 
-<div id="app" class="hidden">
+<div
+  id="app"
+  class="hidden">
 
-  <div id="msg" class="status"></div>
+  <div
+    id="msg"
+    class="status">
+  </div>
 
 
   <!-- SERVICE -->
 
   <div class="card">
 
-    <h2>1. Select Service</h2>
+    <h2>
+      1. Select Service
+    </h2>
 
     <label>
       Service
@@ -379,7 +401,9 @@ button:disabled{
     id="customerCard"
     class="card hidden">
 
-    <h2>2. Customer Details</h2>
+    <h2>
+      2. Customer Details
+    </h2>
 
     <div
       id="dynamicFields"
@@ -395,17 +419,14 @@ button:disabled{
     id="paymentCard"
     class="card hidden">
 
-    <h2>Payment</h2>
+    <h2>
+      Payment
+    </h2>
 
     <div class="pay">
 
       UPI ID:
       <b>gujrat.nsfa@ybl</b>
-
-      <br>
-
-      Name:
-      <b>RAJKUMAR RATIONCARD SERVICES</b>
 
       <br><br>
 
@@ -413,7 +434,8 @@ button:disabled{
       <b id="amountText">₹0</b>
 
 
-      <!-- UPI QR -->
+      <!-- QR -->
+
       <div class="qrBox">
 
         <div id="upiQr"></div>
@@ -423,7 +445,7 @@ button:disabled{
         </div>
 
         <div class="qrNote">
-          QR automatically includes the selected service amount.
+          QR contains UPI ID and selected amount.
         </div>
 
       </div>
@@ -436,7 +458,9 @@ button:disabled{
 
       <div>
 
-        <label>Amount</label>
+        <label>
+          Amount
+        </label>
 
         <input
           id="amount"
@@ -445,6 +469,7 @@ button:disabled{
           value="0">
 
       </div>
+
 
       <div>
 
@@ -470,7 +495,9 @@ button:disabled{
     id="documentsCard"
     class="card hidden">
 
-    <h2>Documents</h2>
+    <h2>
+      Documents
+    </h2>
 
     <div class="file">
 
@@ -489,8 +516,10 @@ button:disabled{
     <div id="otherFiles"></div>
 
     <div class="smallNote">
+
       Baaki documents optional hain.
       Upload na karne par bhi application submit ho jayega.
+
     </div>
 
   </div>
@@ -502,7 +531,9 @@ button:disabled{
     id="lmsCard"
     class="card hidden">
 
-    <h2>LMS Certificate</h2>
+    <h2>
+      LMS Certificate
+    </h2>
 
     <div class="contactBox">
 
@@ -523,7 +554,9 @@ button:disabled{
     id="submitCard"
     class="card hidden">
 
-    <h2>Submit Application</h2>
+    <h2>
+      Submit Application
+    </h2>
 
     <button
       id="submitBtn"
@@ -575,14 +608,18 @@ button:disabled{
 const cfg =
   window.ALLINONESTOP_CONFIG;
 
+
 const sb =
   window.supabase.createClient(
     cfg.SUPABASE_URL,
     cfg.SUPABASE_PUBLISHABLE_KEY
   );
 
+
 let services = [];
+
 let selected = null;
+
 let retailer = null;
 
 
@@ -594,34 +631,49 @@ const $ = id =>
   document.getElementById(id);
 
 
-function msg(text, type="inf") {
+function msg(
+  text,
+  type="inf"
+){
 
-  const e = $("msg");
-
-  e.className =
-    "status " + type;
-
-  e.textContent = text;
-}
-
-
-function loginMsg(text, type="err") {
-
-  const e = $("loginMsg");
+  const e =
+    $("msg");
 
   e.className =
     "status " + type;
 
-  e.textContent = text;
+  e.textContent =
+    text;
+
 }
 
 
-function emailFor(username) {
+function loginMsg(
+  text,
+  type="err"
+){
+
+  const e =
+    $("loginMsg");
+
+  e.className =
+    "status " + type;
+
+  e.textContent =
+    text;
+
+}
+
+
+function emailFor(
+  username
+){
 
   return username
     .trim()
     .toLowerCase()
-    + "@dixsmucrgnyuvudhymdj.supabase.co";
+    +
+    "@dixsmucrgnyuvudhymdj.supabase.co";
 
 }
 
@@ -630,7 +682,7 @@ function emailFor(username) {
    LOGIN
 ===================================================== */
 
-async function login() {
+async function login(){
 
   const username =
     $("username")
@@ -638,21 +690,31 @@ async function login() {
       .trim()
       .toUpperCase();
 
-  const password =
-    $("password").value;
 
-  if (!username || !password) {
+  const password =
+    $("password")
+      .value;
+
+
+  if(
+    !username ||
+    !password
+  ){
 
     loginMsg(
       "Retailer ID and Password required."
     );
 
     return;
+
   }
 
-  $("loginBtn").disabled = true;
 
-  try {
+  $("loginBtn").disabled =
+    true;
+
+
+  try{
 
     const {
       data,
@@ -668,7 +730,8 @@ async function login() {
 
       });
 
-    if (error)
+
+    if(error)
       throw error;
 
 
@@ -687,14 +750,15 @@ async function login() {
         )
         .maybeSingle();
 
-    if (pe)
+
+    if(pe)
       throw pe;
 
 
-    if (
+    if(
       !pr ||
       pr.role !== "retailer"
-    ) {
+    ){
 
       throw new Error(
         "Retailer profile not found."
@@ -703,15 +767,18 @@ async function login() {
     }
 
 
-    retailer = pr;
+    retailer =
+      pr;
+
 
     showApp();
+
 
     await loadServices();
 
   }
 
-  catch (e) {
+  catch(e){
 
     loginMsg(
       e.message ||
@@ -720,9 +787,10 @@ async function login() {
 
   }
 
-  finally {
+  finally{
 
-    $("loginBtn").disabled = false;
+    $("loginBtn").disabled =
+      false;
 
   }
 
@@ -733,11 +801,12 @@ async function login() {
    SHOW APP
 ===================================================== */
 
-function showApp() {
+function showApp(){
 
   $("loginCard")
     .classList
     .add("hidden");
+
 
   $("app")
     .classList
@@ -756,12 +825,13 @@ function showApp() {
 
 
 /* =====================================================
-   HOME BUTTON
+   HOME
 ===================================================== */
 
-function goHome() {
+function goHome(){
 
-  window.location.href = "index.html";
+  window.location.href =
+    "index.html";
 
 }
 
@@ -770,9 +840,9 @@ function goHome() {
    LOAD SERVICES
 ===================================================== */
 
-async function loadServices() {
+async function loadServices(){
 
-  try {
+  try{
 
     const {
       data,
@@ -795,7 +865,7 @@ async function loadServices() {
         );
 
 
-    if (error)
+    if(error)
       throw error;
 
 
@@ -807,28 +877,37 @@ async function loadServices() {
       '<option value="">Select Service</option>';
 
 
-    services.forEach(s => {
+    services.forEach(
+      s => {
 
-      const option =
-        document.createElement("option");
-
-      option.value =
-        s.id;
-
-      option.textContent =
-        s.name
-        +
-        " - ₹"
-        +
-        Number(s.amount || 0);
-
-      $("service")
-        .appendChild(option);
-
-    });
+        const option =
+          document.createElement(
+            "option"
+          );
 
 
-    if (!services.length) {
+        option.value =
+          s.id;
+
+
+        option.textContent =
+          s.name
+          +
+          " - ₹"
+          +
+          Number(
+            s.amount || 0
+          );
+
+
+        $("service")
+          .appendChild(option);
+
+      }
+    );
+
+
+    if(!services.length){
 
       msg(
         "No active services found.",
@@ -839,11 +918,10 @@ async function loadServices() {
 
   }
 
-  catch (e) {
+  catch(e){
 
     msg(
-      "Services error: "
-      +
+      "Services error: " +
       e.message,
       "err"
     );
@@ -854,10 +932,12 @@ async function loadServices() {
 
 
 /* =====================================================
-   SERVICE NAME MATCHING
+   SERVICE TYPE
 ===================================================== */
 
-function getServiceType(name) {
+function getServiceType(
+  name
+){
 
   const n =
     String(name || "")
@@ -866,13 +946,13 @@ function getServiceType(name) {
       .trim();
 
 
-  if (
+  if(
     n.includes("lms")
   )
     return "lms";
 
 
-  if (
+  if(
     n.includes("non card") ||
     n.includes("noncard") ||
     n.includes("nsfa")
@@ -880,28 +960,28 @@ function getServiceType(name) {
     return "ration_noncard";
 
 
-  if (
+  if(
     n.includes("vibhajan") ||
     n.includes("division")
   )
     return "ration_division";
 
 
-  if (
+  if(
     n.includes("finger") ||
     n.includes("fingerprint")
   )
     return "ration_finger";
 
 
-  if (
+  if(
     n.includes("pita") &&
     n.includes("pati")
   )
     return "ration_father_husband";
 
 
-  if (
+  if(
     n.includes("name delete") ||
     n.includes("name delet") ||
     n.includes("delete name")
@@ -909,34 +989,34 @@ function getServiceType(name) {
     return "ration_delete";
 
 
-  if (
+  if(
     n.includes("name add") ||
     n.includes("add name")
   )
     return "ration_add";
 
 
-  if (
+  if(
     n.includes("ration") &&
     n.includes("correction")
   )
     return "ration_correction";
 
 
-  if (
+  if(
     n.includes("new pan")
   )
     return "pan_new";
 
 
-  if (
+  if(
     n.includes("pan") &&
     n.includes("correction")
   )
     return "pan_correction";
 
 
-  if (
+  if(
     n.includes("patni") &&
     (
       n.includes("election") ||
@@ -946,14 +1026,14 @@ function getServiceType(name) {
     return "election_wife";
 
 
-  if (
+  if(
     n.includes("new election") ||
     n.includes("new election card")
   )
     return "election_new";
 
 
-  if (
+  if(
     n.includes("election") &&
     n.includes("correction")
   )
@@ -971,137 +1051,440 @@ function getServiceType(name) {
 
 const SERVICE_FIELDS = {
 
-  ration_correction: [
+  ration_correction:[
 
-    ["name_english","English Name (as per Aadhaar)","text"],
-    ["name_gujarati","Gujarati Name (je rakhvanu hoy te)","text"],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob","DOB","date"],
-    ["dob_year","DOB / Years","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
+    [
+      "name_english",
+      "English Name (as per Aadhaar)",
+      "text"
+    ],
 
-  ],
+    [
+      "name_gujarati",
+      "Gujarati Name (je rakhvanu hoy te)",
+      "text"
+    ],
 
+    [
+      "father_husband_name",
+      "Father / Husband Name",
+      "text"
+    ],
 
-  ration_add: [
+    [
+      "dob",
+      "DOB",
+      "date"
+    ],
 
-    ["name_english","English Name (as per Aadhaar)","text"],
-    ["name_gujarati","Gujarati Name","text"],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob","DOB","date"],
-    ["dob_year","DOB / Years","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
+    [
+      "dob_year",
+      "DOB / Years",
+      "text"
+    ],
 
-  ],
+    [
+      "aadhaar_number",
+      "Aadhaar Number",
+      "text"
+    ],
 
+    [
+      "ration_card_number",
+      "Ration Card Number",
+      "text"
+    ],
 
-  ration_delete: [
-
-    ["ration_card_number","Ration Card Number","text"],
-    ["delete_person_name","Jiska naam delete karna hai","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["mobile","Mobile Number","tel"]
-
-  ],
-
-
-  ration_father_husband: [
-
-    ["name_english","English Name","text"],
-    ["name_gujarati","Gujarati Name","text"],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob","DOB","date"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
-
-  ],
-
-
-  ration_division: [
-
-    ["applicant_name","Applicant Name","text"],
-    ["name_gujarati","Gujarati Name","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"],
-    ["whatsapp","WhatsApp Number","tel"]
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
 
   ],
 
 
-  ration_finger: [
+  ration_add:[
 
-    ["applicant_name","Applicant Name","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
+    [
+      "name_english",
+      "English Name (as per Aadhaar)",
+      "text"
+    ],
 
-  ],
+    [
+      "name_gujarati",
+      "Gujarati Name",
+      "text"
+    ],
 
+    [
+      "father_husband_name",
+      "Father / Husband Name",
+      "text"
+    ],
 
-  ration_noncard: [
+    [
+      "dob",
+      "DOB",
+      "date"
+    ],
 
-    ["applicant_name","Applicant Name","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
+    [
+      "dob_year",
+      "DOB / Years",
+      "text"
+    ],
 
-  ],
+    [
+      "aadhaar_number",
+      "Aadhaar Number",
+      "text"
+    ],
 
+    [
+      "ration_card_number",
+      "Ration Card Number",
+      "text"
+    ],
 
-  pan_new: [
-
-    ["name","Name","text"],
-    ["email","Email ID","email"],
-    ["mobile","Mobile Number","tel"]
-
-  ],
-
-
-  pan_correction: [
-
-    ["name","Name","text"],
-    ["email","Email ID","email"],
-    ["mobile","Mobile Number","tel"]
-
-  ],
-
-
-  election_new: [
-
-    ["applicant_name","Applicant Name","text"],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob_age","DOB / Age","text"],
-    ["gender","Gender","select"],
-    ["email","Email","email"],
-    ["address","Address","textarea"],
-    ["mobile","Mobile Number","tel"]
-
-  ],
-
-
-  election_correction: [
-
-    ["name","Name","text"],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob_age","DOB / Age","text"],
-    ["mobile","Mobile Number","tel"],
-    ["email","Email","email"]
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
 
   ],
 
 
-  election_wife: [
+  ration_delete:[
 
-    ["wife_name","Wife Name","text"],
-    ["husband_name","Husband Name","text"],
-    ["dob","DOB","date"],
-    ["mobile","Mobile Number","tel"]
+    [
+      "ration_card_number",
+      "Ration Card Number",
+      "text"
+    ],
+
+    [
+      "delete_person_name",
+      "Jiska naam delete karna hai",
+      "text"
+    ],
+
+    [
+      "aadhaar_number",
+      "Aadhaar Number",
+      "text"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
+
+  ],
+
+
+  ration_father_husband:[
+
+    [
+      "name_english",
+      "English Name",
+      "text"
+    ],
+
+    [
+      "name_gujarati",
+      "Gujarati Name",
+      "text"
+    ],
+
+    [
+      "father_husband_name",
+      "Father / Husband Name",
+      "text"
+    ],
+
+    [
+      "dob",
+      "DOB",
+      "date"
+    ],
+
+    [
+      "aadhaar_number",
+      "Aadhaar Number",
+      "text"
+    ],
+
+    [
+      "ration_card_number",
+      "Ration Card Number",
+      "text"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
+
+  ],
+
+
+  ration_division:[
+
+    [
+      "applicant_name",
+      "Applicant Name",
+      "text"
+    ],
+
+    [
+      "name_gujarati",
+      "Gujarati Name",
+      "text"
+    ],
+
+    [
+      "aadhaar_number",
+      "Aadhaar Number",
+      "text"
+    ],
+
+    [
+      "ration_card_number",
+      "Ration Card Number",
+      "text"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ],
+
+    [
+      "whatsapp",
+      "WhatsApp Number",
+      "tel"
+    ]
+
+  ],
+
+
+  ration_finger:[
+
+    [
+      "applicant_name",
+      "Applicant Name",
+      "text"
+    ],
+
+    [
+      "aadhaar_number",
+      "Aadhaar Number",
+      "text"
+    ],
+
+    [
+      "ration_card_number",
+      "Ration Card Number",
+      "text"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
+
+  ],
+
+
+  ration_noncard:[
+
+    [
+      "applicant_name",
+      "Applicant Name",
+      "text"
+    ],
+
+    [
+      "aadhaar_number",
+      "Aadhaar Number",
+      "text"
+    ],
+
+    [
+      "ration_card_number",
+      "Ration Card Number",
+      "text"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
+
+  ],
+
+
+  pan_new:[
+
+    [
+      "name",
+      "Name",
+      "text"
+    ],
+
+    [
+      "email",
+      "Email ID",
+      "email"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
+
+  ],
+
+
+  pan_correction:[
+
+    [
+      "name",
+      "Name",
+      "text"
+    ],
+
+    [
+      "email",
+      "Email ID",
+      "email"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
+
+  ],
+
+
+  election_new:[
+
+    [
+      "applicant_name",
+      "Applicant Name",
+      "text"
+    ],
+
+    [
+      "father_husband_name",
+      "Father / Husband Name",
+      "text"
+    ],
+
+    [
+      "dob_age",
+      "DOB / Age",
+      "text"
+    ],
+
+    [
+      "gender",
+      "Gender",
+      "select"
+    ],
+
+    [
+      "email",
+      "Email",
+      "email"
+    ],
+
+    [
+      "address",
+      "Address",
+      "textarea"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
+
+  ],
+
+
+  election_correction:[
+
+    [
+      "name",
+      "Name",
+      "text"
+    ],
+
+    [
+      "father_husband_name",
+      "Father / Husband Name",
+      "text"
+    ],
+
+    [
+      "dob_age",
+      "DOB / Age",
+      "text"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ],
+
+    [
+      "email",
+      "Email",
+      "email"
+    ]
+
+  ],
+
+
+  election_wife:[
+
+    [
+      "wife_name",
+      "Wife Name",
+      "text"
+    ],
+
+    [
+      "husband_name",
+      "Husband Name",
+      "text"
+    ],
+
+    [
+      "dob",
+      "DOB",
+      "date"
+    ],
+
+    [
+      "mobile",
+      "Mobile Number",
+      "tel"
+    ]
 
   ]
 
@@ -1114,39 +1497,67 @@ const SERVICE_FIELDS = {
 
 const SERVICE_FILES = {
 
-  ration_correction: [
+  ration_correction:[
 
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
 
-  ],
-
-
-  ration_add: [
-
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
-
-  ],
-
-
-  ration_delete: [
-
-    ["ration_card_pdf","Ration Card PDF"],
-    ["aadhaar_pdf","Aadhaar Card PDF"]
+    [
+      "ration_card_pdf",
+      "Ration Card PDF"
+    ]
 
   ],
 
 
-  ration_father_husband: [
+  ration_add:[
 
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
+
+    [
+      "ration_card_pdf",
+      "Ration Card PDF"
+    ]
 
   ],
 
 
-  ration_division: [
+  ration_delete:[
+
+    [
+      "ration_card_pdf",
+      "Ration Card PDF"
+    ],
+
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ]
+
+  ],
+
+
+  ration_father_husband:[
+
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
+
+    [
+      "ration_card_pdf",
+      "Ration Card PDF"
+    ]
+
+  ],
+
+
+  ration_division:[
 
     [
       "aadhaar_pdf",
@@ -1161,77 +1572,202 @@ const SERVICE_FILES = {
   ],
 
 
-  ration_finger: [
+  ration_finger:[
 
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
 
-  ],
-
-
-  ration_noncard: [
-
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
-
-  ],
-
-
-  pan_new: [
-
-    ["photo","Photo"],
-    ["signature","Signature"],
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["dob_certificate","DOB Certificate PDF"],
-    ["election_card_pdf","Election Card PDF"]
+    [
+      "ration_card_pdf",
+      "Ration Card PDF"
+    ]
 
   ],
 
 
-  pan_correction: [
+  ration_noncard:[
 
-    ["photo","Photo"],
-    ["signature","Signature"],
-    ["pan_card_pdf","PAN Card PDF"],
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["dob_certificate","DOB Certificate PDF"],
-    ["election_card_pdf","Election Card PDF"]
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
 
-  ],
-
-
-  election_new: [
-
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["mother_election_card","Mother Election Card PDF"],
-    ["father_election_card","Father Election Card PDF"],
-    ["signature","Signature"],
-    ["photo","Photo"],
-    ["lc_pdf","LC PDF"]
+    [
+      "ration_card_pdf",
+      "Ration Card PDF"
+    ]
 
   ],
 
 
-  election_correction: [
+  pan_new:[
 
-    ["signature","Signature"],
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["existing_election_card_pdf","Existing Election Card PDF"],
-    ["photo","Photo"]
+    [
+      "photo",
+      "Photo"
+    ],
+
+    [
+      "signature",
+      "Signature"
+    ],
+
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
+
+    [
+      "dob_certificate",
+      "DOB Certificate PDF"
+    ],
+
+    [
+      "election_card_pdf",
+      "Election Card PDF"
+    ]
 
   ],
 
 
-  election_wife: [
+  pan_correction:[
 
-    ["wife_aadhaar_pdf","Wife Aadhaar PDF"],
-    ["father_election_card_pdf","Father Election Card PDF"],
-    ["mother_election_card","Mother Election Card PDF"],
-    ["husband_election_card_pdf","Husband Election Card PDF"],
-    ["customer_aadhaar_pdf","Customer Aadhaar PDF"],
-    ["customer_photo","Customer Photo"],
-    ["customer_signature","Customer Signature"],
-    ["lc_pdf","LC PDF"]
+    [
+      "photo",
+      "Photo"
+    ],
+
+    [
+      "signature",
+      "Signature"
+    ],
+
+    [
+      "pan_card_pdf",
+      "PAN Card PDF"
+    ],
+
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
+
+    [
+      "dob_certificate",
+      "DOB Certificate PDF"
+    ],
+
+    [
+      "election_card_pdf",
+      "Election Card PDF"
+    ]
+
+  ],
+
+
+  election_new:[
+
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
+
+    [
+      "mother_election_card",
+      "Mother Election Card PDF"
+    ],
+
+    [
+      "father_election_card",
+      "Father Election Card PDF"
+    ],
+
+    [
+      "signature",
+      "Signature"
+    ],
+
+    [
+      "photo",
+      "Photo"
+    ],
+
+    [
+      "lc_pdf",
+      "LC PDF"
+    ]
+
+  ],
+
+
+  election_correction:[
+
+    [
+      "signature",
+      "Signature"
+    ],
+
+    [
+      "aadhaar_pdf",
+      "Aadhaar Card PDF"
+    ],
+
+    [
+      "existing_election_card_pdf",
+      "Existing Election Card PDF"
+    ],
+
+    [
+      "photo",
+      "Photo"
+    ]
+
+  ],
+
+
+  election_wife:[
+
+    [
+      "wife_aadhaar_pdf",
+      "Wife Aadhaar PDF"
+    ],
+
+    [
+      "father_election_card_pdf",
+      "Father Election Card PDF"
+    ],
+
+    [
+      "mother_election_card_pdf",
+      "Mother Election Card PDF"
+    ],
+
+    [
+      "husband_election_card_pdf",
+      "Husband Election Card PDF"
+    ],
+
+    [
+      "customer_aadhaar_pdf",
+      "Customer Aadhaar PDF"
+    ],
+
+    [
+      "customer_photo",
+      "Customer Photo"
+    ],
+
+    [
+      "customer_signature",
+      "Customer Signature"
+    ],
+
+    [
+      "lc_pdf",
+      "LC PDF"
+    ]
 
   ]
 
@@ -1239,37 +1775,39 @@ const SERVICE_FILES = {
 
 
 /* =====================================================
-   UPI QR GENERATOR
+   UPI QR
 ===================================================== */
 
-function generateUPIQR(amount) {
+function generateUPIQR(
+  amount
+){
 
   const qrBox =
     $("upiQr");
 
-  if (!qrBox)
+
+  if(!qrBox)
     return;
 
 
-  qrBox.innerHTML = "";
+  qrBox.innerHTML =
+    "";
 
 
   const upiId =
     "gujrat.nsfa@ybl";
-
-  const payeeName =
-    "RAJKUMAR RATIONCARD SERVICES";
 
 
   const cleanAmount =
     Number(amount || 0);
 
 
-  if (
-    !upiId ||
-    !Number.isFinite(cleanAmount) ||
+  if(
+    !Number.isFinite(
+      cleanAmount
+    ) ||
     cleanAmount <= 0
-  ) {
+  ){
 
     qrBox.innerHTML =
       "<div style='padding:20px;color:#b71c1c'>QR unavailable</div>";
@@ -1279,12 +1817,19 @@ function generateUPIQR(amount) {
   }
 
 
+  /*
+    QR contains ONLY:
+    UPI ID
+    Amount
+    INR
+  */
+
   const upiUrl =
     "upi://pay" +
     "?pa=" +
-    encodeURIComponent(upiId) +
-    "&pn=" +
-    encodeURIComponent(payeeName) +
+    encodeURIComponent(
+      upiId
+    ) +
     "&am=" +
     encodeURIComponent(
       cleanAmount.toFixed(2)
@@ -1292,10 +1837,10 @@ function generateUPIQR(amount) {
     "&cu=INR";
 
 
-  if (
+  if(
     typeof QRCode ===
     "undefined"
-  ) {
+  ){
 
     qrBox.innerHTML =
       "<div style='padding:20px;color:#b71c1c'>QR library loading failed.</div>";
@@ -1309,8 +1854,11 @@ function generateUPIQR(amount) {
     qrBox,
     {
       text:upiUrl,
+
       width:180,
+
       height:180,
+
       correctLevel:
         QRCode.CorrectLevel.H
     }
@@ -1323,7 +1871,7 @@ function generateUPIQR(amount) {
    SERVICE CHANGED
 ===================================================== */
 
-function serviceChanged() {
+function serviceChanged(){
 
   selected =
     services.find(
@@ -1337,7 +1885,7 @@ function serviceChanged() {
   resetApplicationArea();
 
 
-  if (!selected)
+  if(!selected)
     return;
 
 
@@ -1347,9 +1895,9 @@ function serviceChanged() {
     );
 
 
-  /* LMS */
-
-  if (type === "lms") {
+  if(
+    type === "lms"
+  ){
 
     $("lmsCard")
       .classList
@@ -1388,7 +1936,9 @@ function serviceChanged() {
   $("serviceInfo").innerHTML =
     "<b>"
     +
-    escapeHtml(selected.name)
+    escapeHtml(
+      selected.name
+    )
     +
     "</b>"
     +
@@ -1396,12 +1946,16 @@ function serviceChanged() {
     +
     '<span class="servicePrice">₹'
     +
-    Number(selected.amount || 0)
+    Number(
+      selected.amount || 0
+    )
     +
     "</span>";
 
 
-  renderCustomerFields(type);
+  renderCustomerFields(
+    type
+  );
 
 
   renderFiles(
@@ -1410,21 +1964,30 @@ function serviceChanged() {
 
 
   let amount =
-    Number(selected.amount || 0);
+    Number(
+      selected.amount || 0
+    );
 
 
-  if (
+  if(
     selected.without_ration_amount != null
-  ) {
+  ){
 
     const serviceName =
-      String(selected.name || "")
-        .toLowerCase();
+      String(
+        selected.name || ""
+      )
+      .toLowerCase();
 
-    if (
-      serviceName.includes("without ration") ||
-      serviceName.includes("without ration card")
-    ) {
+
+    if(
+      serviceName.includes(
+        "without ration"
+      ) ||
+      serviceName.includes(
+        "without ration card"
+      )
+    ){
 
       amount =
         Number(
@@ -1436,22 +1999,29 @@ function serviceChanged() {
   }
 
 
-  if (
+  if(
     !Number.isFinite(amount) ||
     amount < 0
-  )
+  ){
+
     amount = 0;
+
+  }
 
 
   $("amount").value =
     amount;
 
+
   $("amountText").textContent =
     "₹" + amount;
 
 
-  /* GENERATE UPI QR */
-  generateUPIQR(amount);
+  /* QR GENERATE */
+
+  generateUPIQR(
+    amount
+  );
 
 }
 
@@ -1460,27 +2030,32 @@ function serviceChanged() {
    RESET
 ===================================================== */
 
-function resetApplicationArea() {
+function resetApplicationArea(){
 
   $("customerCard")
     .classList
     .add("hidden");
 
+
   $("paymentCard")
     .classList
     .add("hidden");
+
 
   $("documentsCard")
     .classList
     .add("hidden");
 
+
   $("submitCard")
     .classList
     .add("hidden");
 
+
   $("lmsCard")
     .classList
     .add("hidden");
+
 
   $("serviceInfo")
     .classList
@@ -1490,11 +2065,14 @@ function resetApplicationArea() {
   $("dynamicFields").innerHTML =
     "";
 
+
   $("otherFiles").innerHTML =
     "";
 
 
-  if ($("upiQr")) {
+  if(
+    $("upiQr")
+  ){
 
     $("upiQr").innerHTML =
       "";
@@ -1505,17 +2083,22 @@ function resetApplicationArea() {
   $("amount").value =
     "0";
 
+
   $("amountText").textContent =
     "₹0";
+
 
   $("utr").value =
     "";
 
+
   $("paymentScreenshot").value =
     "";
 
+
   $("trBox").style.display =
     "none";
+
 
   $("submitBtn").style.display =
     "inline-block";
@@ -1524,165 +2107,205 @@ function resetApplicationArea() {
 
 
 /* =====================================================
-   RENDER CUSTOMER FIELDS
+   CUSTOMER FIELDS
 ===================================================== */
 
-function renderCustomerFields(type) {
+function renderCustomerFields(
+  type
+){
 
   const box =
     $("dynamicFields");
 
+
   box.innerHTML =
     "";
+
 
   const list =
     SERVICE_FIELDS[type] || [];
 
 
-  list.forEach(field => {
+  list.forEach(
+    field => {
 
-    const key =
-      field[0];
+      const key =
+        field[0];
 
-    const label =
-      field[1];
+      const label =
+        field[1];
 
-    const inputType =
-      field[2];
-
-
-    const wrapper =
-      document.createElement("div");
+      const inputType =
+        field[2];
 
 
-    if (
-      inputType ===
-      "textarea"
-    ) {
+      const wrapper =
+        document.createElement(
+          "div"
+        );
 
-      wrapper.innerHTML =
-        `
-        <div class="full">
-          <label>${escapeHtml(label)}</label>
 
-          <textarea
-            id="field_${escapeAttr(key)}"
-            data-field="${escapeAttr(key)}"
-          ></textarea>
+      if(
+        inputType ===
+        "textarea"
+      ){
 
-        </div>
-        `;
+        wrapper.innerHTML =
+          `
+          <div class="full">
+
+            <label>
+              ${escapeHtml(label)}
+            </label>
+
+            <textarea
+              id="field_${escapeAttr(key)}"
+              data-field="${escapeAttr(key)}"
+            ></textarea>
+
+          </div>
+          `;
+
+      }
+
+      else if(
+        inputType ===
+        "select"
+      ){
+
+        wrapper.innerHTML =
+          `
+          <div>
+
+            <label>
+              ${escapeHtml(label)}
+            </label>
+
+            <select
+              id="field_${escapeAttr(key)}"
+              data-field="${escapeAttr(key)}">
+
+              <option value="">
+                Select
+              </option>
+
+              <option value="Male">
+                Male
+              </option>
+
+              <option value="Female">
+                Female
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+
+            </select>
+
+          </div>
+          `;
+
+      }
+
+      else{
+
+        wrapper.innerHTML =
+          `
+          <div>
+
+            <label>
+              ${escapeHtml(label)}
+            </label>
+
+            <input
+              id="field_${escapeAttr(key)}"
+              data-field="${escapeAttr(key)}"
+              type="${escapeAttr(inputType)}">
+
+          </div>
+          `;
+
+      }
+
+
+      box.appendChild(
+        wrapper
+      );
 
     }
-
-    else if (
-      inputType ===
-      "select"
-    ) {
-
-      wrapper.innerHTML =
-        `
-        <div>
-
-          <label>${escapeHtml(label)}</label>
-
-          <select
-            id="field_${escapeAttr(key)}"
-            data-field="${escapeAttr(key)}">
-
-            <option value="">Select</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-
-          </select>
-
-        </div>
-        `;
-
-    }
-
-    else {
-
-      wrapper.innerHTML =
-        `
-        <div>
-
-          <label>${escapeHtml(label)}</label>
-
-          <input
-            id="field_${escapeAttr(key)}"
-            data-field="${escapeAttr(key)}"
-            type="${escapeAttr(inputType)}">
-
-        </div>
-        `;
-
-    }
-
-
-    box.appendChild(wrapper);
-
-  });
+  );
 
 }
 
 
 /* =====================================================
-   RENDER FILES
+   FILES
 ===================================================== */
 
-function renderFiles(list) {
+function renderFiles(
+  list
+){
 
   const box =
     $("otherFiles");
+
 
   box.innerHTML =
     "";
 
 
-  (list || []).forEach(item => {
+  (
+    list || []
+  ).forEach(
+    item => {
 
-    const key =
-      item[0];
+      const key =
+        item[0];
 
-    const label =
-      item[1];
-
-
-    const div =
-      document.createElement("div");
-
-    div.className =
-      "file";
+      const label =
+        item[1];
 
 
-    div.innerHTML =
-      `
-      <label>
-        ${escapeHtml(label)}
-      </label>
-
-      <input
-        type="file"
-        data-field="${escapeAttr(key)}"
-        accept=".jpg,.jpeg,.png,.pdf">
-
-      `;
+      const div =
+        document.createElement(
+          "div"
+        );
 
 
-    box.appendChild(div);
+      div.className =
+        "file";
 
-  });
+
+      div.innerHTML =
+        `
+        <label>
+          ${escapeHtml(label)}
+        </label>
+
+        <input
+          type="file"
+          data-field="${escapeAttr(key)}"
+          accept=".jpg,.jpeg,.png,.pdf">
+
+        `;
+
+
+      box.appendChild(
+        div
+      );
+
+    }
+  );
 
 }
 
 
 /* =====================================================
-   GET DYNAMIC FIELDS
+   GET FIELDS
 ===================================================== */
 
-function getFields() {
+function getFields(){
 
   const result =
     {};
@@ -1692,23 +2315,27 @@ function getFields() {
     .querySelectorAll(
       "#dynamicFields [data-field]"
     )
-    .forEach(el => {
+    .forEach(
+      el => {
 
-      result[
-        el.dataset.field
-      ] =
-        el.value.trim();
+        result[
+          el.dataset.field
+        ] =
+          el.value.trim();
 
-    });
+      }
+    );
 
 
   const mobile =
     result.mobile ||
     "";
 
+
   const email =
     result.email ||
     "";
+
 
   const nameEnglish =
     result.name_english ||
@@ -1723,23 +2350,37 @@ function getFields() {
 
 
   return {
-    fields: result,
-    mobile: mobile,
-    email: email,
-    nameEnglish: nameEnglish
+
+    fields:
+      result,
+
+    mobile:
+      mobile,
+
+    email:
+      email,
+
+    nameEnglish:
+      nameEnglish
+
   };
 
 }
 
 
 /* =====================================================
-   FILE TO BASE64
+   BASE64
 ===================================================== */
 
-function b64(file) {
+function b64(
+  file
+){
 
   return new Promise(
-    (resolve,reject) => {
+    (
+      resolve,
+      reject
+    ) => {
 
       const reader =
         new FileReader();
@@ -1761,7 +2402,9 @@ function b64(file) {
           );
 
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(
+        file
+      );
 
     }
   );
@@ -1773,7 +2416,7 @@ function b64(file) {
    GET FILES
 ===================================================== */
 
-async function getFiles() {
+async function getFiles(){
 
   const result =
     {};
@@ -1784,7 +2427,7 @@ async function getFiles() {
       .files[0];
 
 
-  if (!payment) {
+  if(!payment){
 
     throw new Error(
       "Payment Screenshot required."
@@ -1793,10 +2436,10 @@ async function getFiles() {
   }
 
 
-  if (
+  if(
     payment.size >
     10 * 1024 * 1024
-  ) {
+  ){
 
     throw new Error(
       "Payment Screenshot max 10 MB."
@@ -1814,7 +2457,9 @@ async function getFiles() {
       payment.type,
 
     data:
-      await b64(payment)
+      await b64(
+        payment
+      )
 
   };
 
@@ -1825,22 +2470,22 @@ async function getFiles() {
     );
 
 
-  for (
+  for(
     const input of inputs
-  ) {
+  ){
 
     const file =
       input.files[0];
 
 
-    if (!file)
+    if(!file)
       continue;
 
 
-    if (
+    if(
       file.size >
       10 * 1024 * 1024
-    ) {
+    ){
 
       throw new Error(
         file.name +
@@ -1861,7 +2506,9 @@ async function getFiles() {
         file.type,
 
       data:
-        await b64(file)
+        await b64(
+          file
+        )
 
     };
 
@@ -1874,12 +2521,12 @@ async function getFiles() {
 
 
 /* =====================================================
-   SUBMIT APPLICATION
+   SUBMIT
 ===================================================== */
 
-async function submitApplication() {
+async function submitApplication(){
 
-  if (!selected) {
+  if(!selected){
 
     msg(
       "Please select a service.",
@@ -1891,11 +2538,11 @@ async function submitApplication() {
   }
 
 
-  if (
+  if(
     getServiceType(
       selected.name
     ) === "lms"
-  ) {
+  ){
 
     return;
 
@@ -1908,7 +2555,7 @@ async function submitApplication() {
       .trim();
 
 
-  if (!utr) {
+  if(!utr){
 
     msg(
       "UTR / Transaction Number required.",
@@ -1928,10 +2575,12 @@ async function submitApplication() {
     fieldData.mobile;
 
 
-  if (
+  if(
     mobile &&
-    !/^[0-9]{10}$/.test(mobile)
-  ) {
+    !/^[0-9]{10}$/.test(
+      mobile
+    )
+  ){
 
     msg(
       "Mobile number must be 10 digits.",
@@ -1946,6 +2595,7 @@ async function submitApplication() {
   $("submitBtn").disabled =
     true;
 
+
   $("submitBtn").textContent =
     "Submitting...";
 
@@ -1956,7 +2606,7 @@ async function submitApplication() {
   );
 
 
-  try {
+  try{
 
     const uploadedFiles =
       await getFiles();
@@ -2031,22 +2681,23 @@ async function submitApplication() {
       await sb.functions.invoke(
         "submit-application",
         {
-          body: body
+          body:
+            body
         }
       );
 
 
-    if (error)
+    if(error)
       throw new Error(
         error.message ||
         "Edge Function error"
       );
 
 
-    if (
+    if(
       !data ||
       data.success !== true
-    ) {
+    ){
 
       throw new Error(
         data?.message ||
@@ -2083,7 +2734,7 @@ async function submitApplication() {
 
   }
 
-  catch (e) {
+  catch(e){
 
     console.error(e);
 
@@ -2096,12 +2747,12 @@ async function submitApplication() {
 
   }
 
-  finally {
+  finally{
 
-    if (
+    if(
       $("submitBtn").style.display !==
       "none"
-    ) {
+    ){
 
       $("submitBtn").disabled =
         false;
@@ -2120,7 +2771,7 @@ async function submitApplication() {
    NEW APPLICATION
 ===================================================== */
 
-function newApplication() {
+function newApplication(){
 
   location.reload();
 
@@ -2131,36 +2782,44 @@ function newApplication() {
    ESCAPE HTML
 ===================================================== */
 
-function escapeHtml(value) {
+function escapeHtml(
+  value
+){
 
-  return String(value ?? "")
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
+  return String(
+    value ?? ""
+  )
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+  .replace(
+    /</g,
+    "&lt;"
+  )
+  .replace(
+    />/g,
+    "&gt;"
+  )
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+  .replace(
+    /'/g,
+    "&#039;"
+  );
 
 }
 
 
-function escapeAttr(value) {
+function escapeAttr(
+  value
+){
 
-  return escapeHtml(value);
+  return escapeHtml(
+    value
+  );
 
 }
 
@@ -2173,7 +2832,7 @@ window.addEventListener(
   "DOMContentLoaded",
   async () => {
 
-    try {
+    try{
 
       const {
         data
@@ -2181,10 +2840,10 @@ window.addEventListener(
         await sb.auth.getSession();
 
 
-      if (
+      if(
         data &&
         data.session
-      ) {
+      ){
 
         const {
           data: pr
@@ -2201,16 +2860,18 @@ window.addEventListener(
             .maybeSingle();
 
 
-        if (
+        if(
           pr &&
           pr.role ===
           "retailer"
-        ) {
+        ){
 
           retailer =
             pr;
 
+
           showApp();
+
 
           await loadServices();
 
@@ -2220,7 +2881,7 @@ window.addEventListener(
 
     }
 
-    catch(e) {
+    catch(e){
 
       console.error(e);
 
