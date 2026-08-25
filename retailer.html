@@ -491,11 +491,20 @@ button:disabled{
     <div id="retailerInfo" class="info"></div>
   </div>
 
-  <button
-    class="primary"
-    onclick="goHome()">
-    Home
-  </button>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+    <button
+      class="primary"
+      onclick="goHome()">
+      Home
+    </button>
+
+    <button
+      class="danger"
+      id="logoutBtn"
+      onclick="logout()">
+      Logout
+    </button>
+  </div>
 
 </div>
 
@@ -1167,6 +1176,9 @@ function showApp(){
     .classList
     .add("hidden");
 
+  $("loginMsg").className = "status";
+  $("loginMsg").textContent = "";
+
   $("app")
     .classList
     .remove("hidden");
@@ -1190,6 +1202,88 @@ function goHome(){
 
   window.location.href =
     "index.html";
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+async function logout(){
+
+  const btn = $("logoutBtn");
+
+  if(btn){
+    btn.disabled = true;
+    btn.textContent = "Logging out...";
+  }
+
+  try{
+
+    const {
+      error
+    } =
+      await sb.auth.signOut();
+
+    if(error)
+      throw error;
+
+  }
+
+  catch(e){
+
+    console.error(
+      "Logout error:",
+      e
+    );
+
+    if(btn){
+      btn.disabled = false;
+      btn.textContent = "Logout";
+    }
+
+    msg(
+      e.message ||
+      "Logout failed.",
+      "err"
+    );
+
+    return;
+
+  }
+
+  retailer = null;
+  selected = null;
+  services = [];
+  applicationHistory = [];
+  filteredHistory = [];
+
+  $("app").classList.add("hidden");
+  $("loginCard").classList.remove("hidden");
+
+  $("username").value = "";
+  $("password").value = "";
+  $("retailerInfo").textContent = "";
+
+  $("historySearch").value = "";
+  $("historyBody").innerHTML = "";
+  $("historyTableWrap").classList.add("hidden");
+  $("historyEmpty").classList.remove("hidden");
+  $("historyLoading").classList.add("hidden");
+  $("historyCount").textContent = "0 applications found";
+
+  $("service").innerHTML =
+    '<option value="">Select Service</option>';
+
+  resetApplicationArea();
+
+  loginMsg(
+    "Logged out successfully.",
+    "ok"
+  );
+
+  $("username").focus();
 
 }
 
@@ -2644,6 +2738,31 @@ async function loadApplicationHistory(){
     !retailer.id
   ){
 
+    return;
+
+  }
+
+  /* Security guard:
+     History is loaded only for the currently authenticated retailer. */
+  const {
+    data: sessionData
+  } = await sb.auth.getSession();
+
+  const currentUserId =
+    sessionData &&
+    sessionData.session &&
+    sessionData.session.user
+      ? sessionData.session.user.id
+      : null;
+
+  if(
+    !currentUserId ||
+    currentUserId !== retailer.id
+  ){
+
+    applicationHistory = [];
+    filteredHistory = [];
+    renderApplicationHistory();
     return;
 
   }
