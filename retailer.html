@@ -9,6 +9,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 
+<!-- QR CODE LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <style>
 *{box-sizing:border-box}
 
@@ -158,6 +161,37 @@ button:disabled{
   border-radius:8px
 }
 
+/* UPI QR */
+.qrBox{
+  margin-top:18px;
+  text-align:center;
+}
+
+#upiQr{
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  background:#fff;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  min-width:204px;
+  min-height:204px;
+}
+
+.qrTitle{
+  margin-top:10px;
+  font-size:14px;
+  font-weight:bold;
+  color:#172033;
+}
+
+.qrNote{
+  margin-top:5px;
+  font-size:12px;
+  color:#607080;
+}
+
 .file{
   border:1px solid #d9e0e8;
   padding:11px;
@@ -255,7 +289,6 @@ button:disabled{
     <div id="retailerInfo" class="info"></div>
   </div>
 
-  <!-- LOGOUT KI JAGAH HOME -->
   <button class="primary" onclick="goHome()">Home</button>
 
 </div>
@@ -378,6 +411,22 @@ button:disabled{
 
       Amount:
       <b id="amountText">₹0</b>
+
+
+      <!-- UPI QR -->
+      <div class="qrBox">
+
+        <div id="upiQr"></div>
+
+        <div class="qrTitle">
+          Scan QR to Pay
+        </div>
+
+        <div class="qrNote">
+          QR automatically includes the selected service amount.
+        </div>
+
+      </div>
 
     </div>
 
@@ -711,11 +760,6 @@ function showApp() {
 ===================================================== */
 
 function goHome() {
-
-  /*
-    Retailer logout nahi hoga.
-    Sirf main homepage open hoga.
-  */
 
   window.location.href = "index.html";
 
@@ -1182,7 +1226,7 @@ const SERVICE_FILES = {
 
     ["wife_aadhaar_pdf","Wife Aadhaar PDF"],
     ["father_election_card_pdf","Father Election Card PDF"],
-    ["mother_election_card_pdf","Mother Election Card PDF"],
+    ["mother_election_card","Mother Election Card PDF"],
     ["husband_election_card_pdf","Husband Election Card PDF"],
     ["customer_aadhaar_pdf","Customer Aadhaar PDF"],
     ["customer_photo","Customer Photo"],
@@ -1192,6 +1236,87 @@ const SERVICE_FILES = {
   ]
 
 };
+
+
+/* =====================================================
+   UPI QR GENERATOR
+===================================================== */
+
+function generateUPIQR(amount) {
+
+  const qrBox =
+    $("upiQr");
+
+  if (!qrBox)
+    return;
+
+
+  qrBox.innerHTML = "";
+
+
+  const upiId =
+    "gujrat.nsfa@ybl";
+
+  const payeeName =
+    "RAJKUMAR RATIONCARD SERVICES";
+
+
+  const cleanAmount =
+    Number(amount || 0);
+
+
+  if (
+    !upiId ||
+    !Number.isFinite(cleanAmount) ||
+    cleanAmount <= 0
+  ) {
+
+    qrBox.innerHTML =
+      "<div style='padding:20px;color:#b71c1c'>QR unavailable</div>";
+
+    return;
+
+  }
+
+
+  const upiUrl =
+    "upi://pay" +
+    "?pa=" +
+    encodeURIComponent(upiId) +
+    "&pn=" +
+    encodeURIComponent(payeeName) +
+    "&am=" +
+    encodeURIComponent(
+      cleanAmount.toFixed(2)
+    ) +
+    "&cu=INR";
+
+
+  if (
+    typeof QRCode ===
+    "undefined"
+  ) {
+
+    qrBox.innerHTML =
+      "<div style='padding:20px;color:#b71c1c'>QR library loading failed.</div>";
+
+    return;
+
+  }
+
+
+  new QRCode(
+    qrBox,
+    {
+      text:upiUrl,
+      width:180,
+      height:180,
+      correctLevel:
+        QRCode.CorrectLevel.H
+    }
+  );
+
+}
 
 
 /* =====================================================
@@ -1324,6 +1449,10 @@ function serviceChanged() {
   $("amountText").textContent =
     "₹" + amount;
 
+
+  /* GENERATE UPI QR */
+  generateUPIQR(amount);
+
 }
 
 
@@ -1363,6 +1492,15 @@ function resetApplicationArea() {
 
   $("otherFiles").innerHTML =
     "";
+
+
+  if ($("upiQr")) {
+
+    $("upiQr").innerHTML =
+      "";
+
+  }
+
 
   $("amount").value =
     "0";
