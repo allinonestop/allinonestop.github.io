@@ -13,13 +13,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
   font-family:Arial,sans-serif;
   background:#f3f6fb;
-  color:#172033
+  color:#172033;
 }
 
 .top{
@@ -29,23 +31,23 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:15px
+  gap:15px;
 }
 
 .top h1{
   margin:0;
-  font-size:21px
+  font-size:21px;
 }
 
 .info{
   font-size:14px;
-  margin-top:5px
+  margin-top:5px;
 }
 
 .wrap{
-  max-width:1000px;
+  max-width:1200px;
   margin:20px auto;
-  padding:0 15px
+  padding:0 15px;
 }
 
 .card{
@@ -53,43 +55,45 @@ body{
   border-radius:12px;
   padding:20px;
   margin-bottom:18px;
-  box-shadow:0 3px 15px #00000012
+  box-shadow:0 3px 15px #00000012;
 }
 
 h2{
   margin-top:0;
-  font-size:20px
+  font-size:20px;
 }
 
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:13px
+  gap:13px;
 }
 
 .full{
-  grid-column:1/-1
+  grid-column:1/-1;
 }
 
 label{
   display:block;
   font-weight:700;
   margin-bottom:6px;
-  font-size:14px
+  font-size:14px;
 }
 
-input,select,textarea{
+input,
+select,
+textarea{
   width:100%;
   padding:10px;
   border:1px solid #ccd4df;
   border-radius:7px;
   font-size:15px;
-  background:#fff
+  background:#fff;
 }
 
 textarea{
   min-height:80px;
-  resize:vertical
+  resize:vertical;
 }
 
 button{
@@ -97,73 +101,73 @@ button{
   border-radius:8px;
   padding:11px 18px;
   font-weight:700;
-  cursor:pointer
+  cursor:pointer;
 }
 
 button:disabled{
   opacity:.6;
-  cursor:not-allowed
+  cursor:not-allowed;
 }
 
 .primary{
   background:#1976d2;
-  color:#fff
+  color:#fff;
 }
 
 .success{
   background:#2e7d32;
-  color:#fff
+  color:#fff;
 }
 
 .danger{
   background:#d32f2f;
-  color:#fff
+  color:#fff;
 }
 
 .secondary{
   background:#455a64;
-  color:#fff
+  color:#fff;
 }
 
 .req{
-  color:#d32f2f
+  color:#d32f2f;
 }
 
 .status{
   padding:12px;
   border-radius:8px;
   margin:12px 0;
-  display:none
+  display:none;
 }
 
 .ok{
   display:block;
   background:#e8f5e9;
-  color:#1b5e20
+  color:#1b5e20;
 }
 
 .err{
   display:block;
   background:#ffebee;
-  color:#b71c1c
+  color:#b71c1c;
 }
 
 .inf{
   display:block;
   background:#e3f2fd;
-  color:#0d47a1
+  color:#0d47a1;
 }
 
 .pay{
   background:#fff8e1;
   border:1px solid #ffcc80;
   padding:15px;
-  border-radius:8px
+  border-radius:8px;
 }
 
 .qrBox{
   margin-top:18px;
-  text-align:center
+  text-align:center;
 }
 
 #upiQr{
@@ -175,20 +179,20 @@ button:disabled{
   border-radius:10px;
   border:1px solid #ddd;
   min-width:204px;
-  min-height:204px
+  min-height:204px;
 }
 
 .qrTitle{
   margin-top:10px;
   font-size:14px;
   font-weight:bold;
-  color:#172033
+  color:#172033;
 }
 
 .qrNote{
   margin-top:5px;
   font-size:12px;
-  color:#607080
+  color:#607080;
 }
 
 .file{
@@ -196,7 +200,7 @@ button:disabled{
   padding:11px;
   border-radius:8px;
   margin:9px 0;
-  background:#fafcff
+  background:#fafcff;
 }
 
 .serviceBox{
@@ -204,13 +208,13 @@ button:disabled{
   border:1px solid #b9d7ff;
   padding:12px;
   border-radius:8px;
-  margin-top:10px
+  margin-top:10px;
 }
 
 .servicePrice{
   font-size:18px;
   font-weight:bold;
-  color:#0d47a1
+  color:#0d47a1;
 }
 
 .contactBox{
@@ -219,14 +223,14 @@ button:disabled{
   border-radius:10px;
   padding:20px;
   text-align:center;
-  font-size:18px
+  font-size:18px;
 }
 
 .contactNumber{
   font-size:27px;
   font-weight:bold;
   color:#1b5e20;
-  margin-top:8px
+  margin-top:8px;
 }
 
 .tr{
@@ -235,47 +239,244 @@ button:disabled{
   background:#e8f5e9;
   border:2px solid #43a047;
   padding:20px;
-  border-radius:10px
+  border-radius:10px;
 }
 
 .trno{
   font-size:25px;
   font-weight:bold;
   margin:10px;
-  color:#1b5e20
+  color:#1b5e20;
 }
 
 .hidden{
-  display:none!important
+  display:none!important;
 }
 
 .smallNote{
   color:#607080;
   font-size:13px;
-  margin-top:5px
+  margin-top:5px;
 }
 
 .sectionTitle{
   font-size:17px;
   font-weight:bold;
-  margin-bottom:13px
+  margin-bottom:13px;
+}
+
+/* =====================================================
+   APPLICATION HISTORY
+===================================================== */
+
+.historyHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+.historyHeader h2{
+  margin:0;
+}
+
+.historyTools{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.historyTools input{
+  width:280px;
+}
+
+.historyLoading{
+  text-align:center;
+  padding:25px;
+  color:#607080;
+}
+
+.historyEmpty{
+  text-align:center;
+  padding:30px 15px;
+  color:#607080;
+  background:#f8fafc;
+  border-radius:10px;
+}
+
+.historyTableWrap{
+  overflow-x:auto;
+  border:1px solid #e0e6ed;
+  border-radius:10px;
+}
+
+.historyTable{
+  width:100%;
+  border-collapse:collapse;
+  min-width:950px;
+}
+
+.historyTable th{
+  background:#0d47a1;
+  color:#fff;
+  padding:12px 10px;
+  text-align:left;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.historyTable td{
+  padding:11px 10px;
+  border-bottom:1px solid #e8edf3;
+  font-size:13px;
+  vertical-align:top;
+}
+
+.historyTable tr:last-child td{
+  border-bottom:0;
+}
+
+.historyTable tbody tr:hover{
+  background:#f7fbff;
+}
+
+.trLink{
+  font-weight:bold;
+  color:#0d47a1;
+}
+
+.statusBadge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
+  white-space:nowrap;
+}
+
+.statusReceived{
+  background:#e3f2fd;
+  color:#0d47a1;
+}
+
+.statusPending{
+  background:#fff3cd;
+  color:#856404;
+}
+
+.statusProcessing{
+  background:#e8eaf6;
+  color:#3949ab;
+}
+
+.statusCompleted{
+  background:#e8f5e9;
+  color:#1b5e20;
+}
+
+.statusRejected{
+  background:#ffebee;
+  color:#b71c1c;
+}
+
+.statusOther{
+  background:#eceff1;
+  color:#455a64;
+}
+
+.historyCount{
+  color:#607080;
+  font-size:13px;
+  margin-top:8px;
+}
+
+.detailsBox{
+  background:#f8fafc;
+  border:1px solid #dce4ed;
+  border-radius:8px;
+  padding:12px;
+  margin-top:10px;
+  display:none;
+}
+
+.detailsBox.show{
+  display:block;
+}
+
+.detailGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px 15px;
+}
+
+.detailItem{
+  padding:7px 0;
+  border-bottom:1px solid #e7ebef;
+}
+
+.detailLabel{
+  font-size:11px;
+  color:#607080;
+}
+
+.detailValue{
+  font-size:13px;
+  font-weight:bold;
+  word-break:break-word;
+}
+
+.viewBtn{
+  background:#1976d2;
+  color:#fff;
+  padding:7px 10px;
+  font-size:12px;
+}
+
+.driveBtn{
+  background:#2e7d32;
+  color:#fff;
+  padding:7px 10px;
+  font-size:12px;
+  text-decoration:none;
+  display:inline-block;
+  border-radius:7px;
+}
+
+.refreshBtn{
+  background:#455a64;
+  color:#fff;
 }
 
 @media(max-width:700px){
 
   .grid{
-    grid-template-columns:1fr
+    grid-template-columns:1fr;
   }
 
   .full{
-    grid-column:auto
+    grid-column:auto;
   }
 
   .top{
     align-items:flex-start;
-    flex-direction:column
+    flex-direction:column;
   }
 
+  .historyTools{
+    width:100%;
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .historyTools input{
+    width:100%;
+  }
+
+  .detailGrid{
+    grid-template-columns:1fr;
+  }
 }
 </style>
 </head>
@@ -285,19 +486,15 @@ button:disabled{
 <div class="top">
 
   <div>
-
     <h1>AllInOneStop - Retailer Portal</h1>
 
     <div id="retailerInfo" class="info"></div>
-
   </div>
 
   <button
     class="primary"
     onclick="goHome()">
-
     Home
-
   </button>
 
 </div>
@@ -306,7 +503,9 @@ button:disabled{
 <div class="wrap">
 
 
-<!-- LOGIN -->
+<!-- =====================================================
+     LOGIN
+===================================================== -->
 
 <div
   id="loginCard"
@@ -352,7 +551,9 @@ button:disabled{
 </div>
 
 
-<!-- APPLICATION -->
+<!-- =====================================================
+     APPLICATION AREA
+===================================================== -->
 
 <div
   id="app"
@@ -364,7 +565,113 @@ button:disabled{
   </div>
 
 
-  <!-- SERVICE -->
+  <!-- ===================================================
+       APPLICATION HISTORY
+  ==================================================== -->
+
+  <div class="card">
+
+    <div class="historyHeader">
+
+      <div>
+        <h2>Application History</h2>
+
+        <div
+          id="historyCount"
+          class="historyCount">
+          Loading application history...
+        </div>
+      </div>
+
+      <div class="historyTools">
+
+        <input
+          id="historySearch"
+          type="search"
+          placeholder="Search TR / customer / service..."
+          oninput="filterHistory()">
+
+        <button
+          class="refreshBtn"
+          onclick="loadApplicationHistory()">
+
+          Refresh
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="historyMsg"
+      class="status">
+    </div>
+
+
+    <div
+      id="historyLoading"
+      class="historyLoading">
+
+      Loading application history...
+
+    </div>
+
+
+    <div
+      id="historyEmpty"
+      class="historyEmpty hidden">
+
+      No applications found.
+
+    </div>
+
+
+    <div
+      id="historyTableWrap"
+      class="historyTableWrap hidden">
+
+      <table class="historyTable">
+
+        <thead>
+
+          <tr>
+
+            <th>TR Number</th>
+
+            <th>Date</th>
+
+            <th>Service</th>
+
+            <th>Customer</th>
+
+            <th>Amount</th>
+
+            <th>UTR</th>
+
+            <th>Payment</th>
+
+            <th>Application</th>
+
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="historyBody"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+  <!-- ===================================================
+       SERVICE
+  ==================================================== -->
 
   <div class="card">
 
@@ -395,7 +702,9 @@ button:disabled{
   </div>
 
 
-  <!-- CUSTOMER DETAILS -->
+  <!-- ===================================================
+       CUSTOMER DETAILS
+  ==================================================== -->
 
   <div
     id="customerCard"
@@ -413,7 +722,9 @@ button:disabled{
   </div>
 
 
-  <!-- PAYMENT -->
+  <!-- ===================================================
+       PAYMENT
+  ==================================================== -->
 
   <div
     id="paymentCard"
@@ -433,8 +744,6 @@ button:disabled{
       Amount:
       <b id="amountText">₹0</b>
 
-
-      <!-- QR -->
 
       <div class="qrBox">
 
@@ -489,7 +798,9 @@ button:disabled{
   </div>
 
 
-  <!-- DOCUMENTS -->
+  <!-- ===================================================
+       DOCUMENTS
+  ==================================================== -->
 
   <div
     id="documentsCard"
@@ -525,7 +836,9 @@ button:disabled{
   </div>
 
 
-  <!-- LMS CONTACT -->
+  <!-- ===================================================
+       LMS CONTACT
+  ==================================================== -->
 
   <div
     id="lmsCard"
@@ -548,7 +861,9 @@ button:disabled{
   </div>
 
 
-  <!-- SUBMIT -->
+  <!-- ===================================================
+       SUBMIT
+  ==================================================== -->
 
   <div
     id="submitCard"
@@ -605,9 +920,22 @@ button:disabled{
 
 <script>
 
+/* =====================================================
+   SUPABASE
+===================================================== */
+
 const cfg =
   window.ALLINONESTOP_CONFIG;
 
+if(
+  !cfg ||
+  !cfg.SUPABASE_URL ||
+  !cfg.SUPABASE_PUBLISHABLE_KEY
+){
+  console.error(
+    "Supabase config missing."
+  );
+}
 
 const sb =
   window.supabase.createClient(
@@ -616,11 +944,17 @@ const sb =
   );
 
 
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
+
 let services = [];
-
 let selected = null;
-
 let retailer = null;
+
+/* Application history */
+let applicationHistory = [];
+let filteredHistory = [];
 
 
 /* =====================================================
@@ -665,6 +999,23 @@ function loginMsg(
 }
 
 
+function historyMsg(
+  text,
+  type="err"
+){
+
+  const e =
+    $("historyMsg");
+
+  e.className =
+    "status " + type;
+
+  e.textContent =
+    text;
+
+}
+
+
 function emailFor(
   username
 ){
@@ -690,11 +1041,9 @@ async function login(){
       .trim()
       .toUpperCase();
 
-
   const password =
     $("password")
       .value;
-
 
   if(
     !username ||
@@ -709,10 +1058,8 @@ async function login(){
 
   }
 
-
   $("loginBtn").disabled =
     true;
-
 
   try{
 
@@ -729,7 +1076,6 @@ async function login(){
           password
 
       });
-
 
     if(error)
       throw error;
@@ -749,7 +1095,6 @@ async function login(){
           data.user.id
         )
         .maybeSingle();
-
 
     if(pe)
       throw pe;
@@ -774,11 +1119,26 @@ async function login(){
     showApp();
 
 
+    /*
+      Existing services continue to work.
+    */
     await loadServices();
+
+
+    /*
+      NEW:
+      Load retailer application history.
+    */
+    await loadApplicationHistory();
 
   }
 
   catch(e){
+
+    console.error(
+      "Login error:",
+      e
+    );
 
     loginMsg(
       e.message ||
@@ -807,11 +1167,9 @@ function showApp(){
     .classList
     .add("hidden");
 
-
   $("app")
     .classList
     .remove("hidden");
-
 
   $("retailerInfo")
     .textContent =
@@ -864,14 +1222,11 @@ async function loadServices(){
           }
         );
 
-
     if(error)
       throw error;
 
-
     services =
       data || [];
-
 
     $("service").innerHTML =
       '<option value="">Select Service</option>';
@@ -885,10 +1240,8 @@ async function loadServices(){
             "option"
           );
 
-
         option.value =
           s.id;
-
 
         option.textContent =
           s.name
@@ -898,7 +1251,6 @@ async function loadServices(){
           Number(
             s.amount || 0
           );
-
 
         $("service")
           .appendChild(option);
@@ -919,6 +1271,11 @@ async function loadServices(){
   }
 
   catch(e){
+
+    console.error(
+      "Services error:",
+      e
+    );
 
     msg(
       "Services error: " +
@@ -1052,440 +1409,102 @@ function getServiceType(
 const SERVICE_FIELDS = {
 
   ration_correction:[
-
-    [
-      "name_english",
-      "English Name (as per Aadhaar)",
-      "text"
-    ],
-
-    [
-      "name_gujarati",
-      "Gujarati Name (je rakhvanu hoy te)",
-      "text"
-    ],
-
-    [
-      "father_husband_name",
-      "Father / Husband Name",
-      "text"
-    ],
-
-    [
-      "dob",
-      "DOB",
-      "date"
-    ],
-
-    [
-      "dob_year",
-      "DOB / Years",
-      "text"
-    ],
-
-    [
-      "aadhaar_number",
-      "Aadhaar Number",
-      "text"
-    ],
-
-    [
-      "ration_card_number",
-      "Ration Card Number",
-      "text"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["name_english","English Name (as per Aadhaar)","text"],
+    ["name_gujarati","Gujarati Name (je rakhvanu hoy te)","text"],
+    ["father_husband_name","Father / Husband Name","text"],
+    ["dob","DOB","date"],
+    ["dob_year","DOB / Years","text"],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["ration_card_number","Ration Card Number","text"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   ration_add:[
-
-    [
-      "name_english",
-      "English Name (as per Aadhaar)",
-      "text"
-    ],
-
-    [
-      "name_gujarati",
-      "Gujarati Name",
-      "text"
-    ],
-
-    [
-      "father_husband_name",
-      "Father / Husband Name",
-      "text"
-    ],
-
-    [
-      "dob",
-      "DOB",
-      "date"
-    ],
-
-    [
-      "dob_year",
-      "DOB / Years",
-      "text"
-    ],
-
-    [
-      "aadhaar_number",
-      "Aadhaar Number",
-      "text"
-    ],
-
-    [
-      "ration_card_number",
-      "Ration Card Number",
-      "text"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["name_english","English Name (as per Aadhaar)","text"],
+    ["name_gujarati","Gujarati Name","text"],
+    ["father_husband_name","Father / Husband Name","text"],
+    ["dob","DOB","date"],
+    ["dob_year","DOB / Years","text"],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["ration_card_number","Ration Card Number","text"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   ration_delete:[
-
-    [
-      "ration_card_number",
-      "Ration Card Number",
-      "text"
-    ],
-
-    [
-      "delete_person_name",
-      "Jiska naam delete karna hai",
-      "text"
-    ],
-
-    [
-      "aadhaar_number",
-      "Aadhaar Number",
-      "text"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["ration_card_number","Ration Card Number","text"],
+    ["delete_person_name","Jiska naam delete karna hai","text"],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   ration_father_husband:[
-
-    [
-      "name_english",
-      "English Name",
-      "text"
-    ],
-
-    [
-      "name_gujarati",
-      "Gujarati Name",
-      "text"
-    ],
-
-    [
-      "father_husband_name",
-      "Father / Husband Name",
-      "text"
-    ],
-
-    [
-      "dob",
-      "DOB",
-      "date"
-    ],
-
-    [
-      "aadhaar_number",
-      "Aadhaar Number",
-      "text"
-    ],
-
-    [
-      "ration_card_number",
-      "Ration Card Number",
-      "text"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["name_english","English Name","text"],
+    ["name_gujarati","Gujarati Name","text"],
+    ["father_husband_name","Father / Husband Name","text"],
+    ["dob","DOB","date"],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["ration_card_number","Ration Card Number","text"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   ration_division:[
-
-    [
-      "applicant_name",
-      "Applicant Name",
-      "text"
-    ],
-
-    [
-      "name_gujarati",
-      "Gujarati Name",
-      "text"
-    ],
-
-    [
-      "aadhaar_number",
-      "Aadhaar Number",
-      "text"
-    ],
-
-    [
-      "ration_card_number",
-      "Ration Card Number",
-      "text"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ],
-
-    [
-      "whatsapp",
-      "WhatsApp Number",
-      "tel"
-    ]
-
+    ["applicant_name","Applicant Name","text"],
+    ["name_gujarati","Gujarati Name","text"],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["ration_card_number","Ration Card Number","text"],
+    ["mobile","Mobile Number","tel"],
+    ["whatsapp","WhatsApp Number","tel"]
   ],
-
 
   ration_finger:[
-
-    [
-      "applicant_name",
-      "Applicant Name",
-      "text"
-    ],
-
-    [
-      "aadhaar_number",
-      "Aadhaar Number",
-      "text"
-    ],
-
-    [
-      "ration_card_number",
-      "Ration Card Number",
-      "text"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["applicant_name","Applicant Name","text"],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["ration_card_number","Ration Card Number","text"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   ration_noncard:[
-
-    [
-      "applicant_name",
-      "Applicant Name",
-      "text"
-    ],
-
-    [
-      "aadhaar_number",
-      "Aadhaar Number",
-      "text"
-    ],
-
-    [
-      "ration_card_number",
-      "Ration Card Number",
-      "text"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["applicant_name","Applicant Name","text"],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["ration_card_number","Ration Card Number","text"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   pan_new:[
-
-    [
-      "name",
-      "Name",
-      "text"
-    ],
-
-    [
-      "email",
-      "Email ID",
-      "email"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["name","Name","text"],
+    ["email","Email ID","email"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   pan_correction:[
-
-    [
-      "name",
-      "Name",
-      "text"
-    ],
-
-    [
-      "email",
-      "Email ID",
-      "email"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["name","Name","text"],
+    ["email","Email ID","email"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   election_new:[
-
-    [
-      "applicant_name",
-      "Applicant Name",
-      "text"
-    ],
-
-    [
-      "father_husband_name",
-      "Father / Husband Name",
-      "text"
-    ],
-
-    [
-      "dob_age",
-      "DOB / Age",
-      "text"
-    ],
-
-    [
-      "gender",
-      "Gender",
-      "select"
-    ],
-
-    [
-      "email",
-      "Email",
-      "email"
-    ],
-
-    [
-      "address",
-      "Address",
-      "textarea"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["applicant_name","Applicant Name","text"],
+    ["father_husband_name","Father / Husband Name","text"],
+    ["dob_age","DOB / Age","text"],
+    ["gender","Gender","select"],
+    ["email","Email","email"],
+    ["address","Address","textarea"],
+    ["mobile","Mobile Number","tel"]
   ],
-
 
   election_correction:[
-
-    [
-      "name",
-      "Name",
-      "text"
-    ],
-
-    [
-      "father_husband_name",
-      "Father / Husband Name",
-      "text"
-    ],
-
-    [
-      "dob_age",
-      "DOB / Age",
-      "text"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ],
-
-    [
-      "email",
-      "Email",
-      "email"
-    ]
-
+    ["name","Name","text"],
+    ["father_husband_name","Father / Husband Name","text"],
+    ["dob_age","DOB / Age","text"],
+    ["mobile","Mobile Number","tel"],
+    ["email","Email","email"]
   ],
 
-
   election_wife:[
-
-    [
-      "wife_name",
-      "Wife Name",
-      "text"
-    ],
-
-    [
-      "husband_name",
-      "Husband Name",
-      "text"
-    ],
-
-    [
-      "dob",
-      "DOB",
-      "date"
-    ],
-
-    [
-      "mobile",
-      "Mobile Number",
-      "tel"
-    ]
-
+    ["wife_name","Wife Name","text"],
+    ["husband_name","Husband Name","text"],
+    ["dob","DOB","date"],
+    ["mobile","Mobile Number","tel"]
   ]
 
 };
@@ -1498,277 +1517,82 @@ const SERVICE_FIELDS = {
 const SERVICE_FILES = {
 
   ration_correction:[
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "ration_card_pdf",
-      "Ration Card PDF"
-    ]
-
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["ration_card_pdf","Ration Card PDF"]
   ],
-
 
   ration_add:[
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "ration_card_pdf",
-      "Ration Card PDF"
-    ]
-
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["ration_card_pdf","Ration Card PDF"]
   ],
-
 
   ration_delete:[
-
-    [
-      "ration_card_pdf",
-      "Ration Card PDF"
-    ],
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ]
-
+    ["ration_card_pdf","Ration Card PDF"],
+    ["aadhaar_pdf","Aadhaar Card PDF"]
   ],
-
 
   ration_father_husband:[
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "ration_card_pdf",
-      "Ration Card PDF"
-    ]
-
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["ration_card_pdf","Ration Card PDF"]
   ],
-
 
   ration_division:[
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF - Separate Members"
-    ],
-
-    [
-      "ration_card_pdf",
-      "Ration Card PDF"
-    ]
-
+    ["aadhaar_pdf","Aadhaar Card PDF - Separate Members"],
+    ["ration_card_pdf","Ration Card PDF"]
   ],
-
 
   ration_finger:[
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "ration_card_pdf",
-      "Ration Card PDF"
-    ]
-
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["ration_card_pdf","Ration Card PDF"]
   ],
-
 
   ration_noncard:[
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "ration_card_pdf",
-      "Ration Card PDF"
-    ]
-
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["ration_card_pdf","Ration Card PDF"]
   ],
-
 
   pan_new:[
-
-    [
-      "photo",
-      "Photo"
-    ],
-
-    [
-      "signature",
-      "Signature"
-    ],
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "dob_certificate",
-      "DOB Certificate PDF"
-    ],
-
-    [
-      "election_card_pdf",
-      "Election Card PDF"
-    ]
-
+    ["photo","Photo"],
+    ["signature","Signature"],
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["dob_certificate","DOB Certificate PDF"],
+    ["election_card_pdf","Election Card PDF"]
   ],
-
 
   pan_correction:[
-
-    [
-      "photo",
-      "Photo"
-    ],
-
-    [
-      "signature",
-      "Signature"
-    ],
-
-    [
-      "pan_card_pdf",
-      "PAN Card PDF"
-    ],
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "dob_certificate",
-      "DOB Certificate PDF"
-    ],
-
-    [
-      "election_card_pdf",
-      "Election Card PDF"
-    ]
-
+    ["photo","Photo"],
+    ["signature","Signature"],
+    ["pan_card_pdf","PAN Card PDF"],
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["dob_certificate","DOB Certificate PDF"],
+    ["election_card_pdf","Election Card PDF"]
   ],
-
 
   election_new:[
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "mother_election_card",
-      "Mother Election Card PDF"
-    ],
-
-    [
-      "father_election_card",
-      "Father Election Card PDF"
-    ],
-
-    [
-      "signature",
-      "Signature"
-    ],
-
-    [
-      "photo",
-      "Photo"
-    ],
-
-    [
-      "lc_pdf",
-      "LC PDF"
-    ]
-
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["mother_election_card","Mother Election Card PDF"],
+    ["father_election_card","Father Election Card PDF"],
+    ["signature","Signature"],
+    ["photo","Photo"],
+    ["lc_pdf","LC PDF"]
   ],
-
 
   election_correction:[
-
-    [
-      "signature",
-      "Signature"
-    ],
-
-    [
-      "aadhaar_pdf",
-      "Aadhaar Card PDF"
-    ],
-
-    [
-      "existing_election_card_pdf",
-      "Existing Election Card PDF"
-    ],
-
-    [
-      "photo",
-      "Photo"
-    ]
-
+    ["signature","Signature"],
+    ["aadhaar_pdf","Aadhaar Card PDF"],
+    ["existing_election_card_pdf","Existing Election Card PDF"],
+    ["photo","Photo"]
   ],
 
-
   election_wife:[
-
-    [
-      "wife_aadhaar_pdf",
-      "Wife Aadhaar PDF"
-    ],
-
-    [
-      "father_election_card_pdf",
-      "Father Election Card PDF"
-    ],
-
-    [
-      "mother_election_card_pdf",
-      "Mother Election Card PDF"
-    ],
-
-    [
-      "husband_election_card_pdf",
-      "Husband Election Card PDF"
-    ],
-
-    [
-      "customer_aadhaar_pdf",
-      "Customer Aadhaar PDF"
-    ],
-
-    [
-      "customer_photo",
-      "Customer Photo"
-    ],
-
-    [
-      "customer_signature",
-      "Customer Signature"
-    ],
-
-    [
-      "lc_pdf",
-      "LC PDF"
-    ]
-
+    ["wife_aadhaar_pdf","Wife Aadhaar PDF"],
+    ["father_election_card_pdf","Father Election Card PDF"],
+    ["mother_election_card_pdf","Mother Election Card PDF"],
+    ["husband_election_card_pdf","Husband Election Card PDF"],
+    ["customer_aadhaar_pdf","Customer Aadhaar PDF"],
+    ["customer_photo","Customer Photo"],
+    ["customer_signature","Customer Signature"],
+    ["lc_pdf","LC PDF"]
   ]
 
 };
@@ -1785,22 +1609,17 @@ function generateUPIQR(
   const qrBox =
     $("upiQr");
 
-
   if(!qrBox)
     return;
-
 
   qrBox.innerHTML =
     "";
 
-
   const upiId =
     "gujrat.nsfa@ybl";
 
-
   const cleanAmount =
     Number(amount || 0);
-
 
   if(
     !Number.isFinite(
@@ -1816,14 +1635,6 @@ function generateUPIQR(
 
   }
 
-
-  /*
-    QR contains ONLY:
-    UPI ID
-    Amount
-    INR
-  */
-
   const upiUrl =
     "upi://pay" +
     "?pa=" +
@@ -1835,7 +1646,6 @@ function generateUPIQR(
       cleanAmount.toFixed(2)
     ) +
     "&cu=INR";
-
 
   if(
     typeof QRCode ===
@@ -1849,16 +1659,12 @@ function generateUPIQR(
 
   }
 
-
   new QRCode(
     qrBox,
     {
       text:upiUrl,
-
       width:180,
-
       height:180,
-
       correctLevel:
         QRCode.CorrectLevel.H
     }
@@ -1881,19 +1687,15 @@ function serviceChanged(){
     )
     || null;
 
-
   resetApplicationArea();
-
 
   if(!selected)
     return;
-
 
   const type =
     getServiceType(
       selected.name
     );
-
 
   if(
     type === "lms"
@@ -1907,67 +1709,51 @@ function serviceChanged(){
 
   }
 
-
   $("customerCard")
     .classList
     .remove("hidden");
-
 
   $("paymentCard")
     .classList
     .remove("hidden");
 
-
   $("documentsCard")
     .classList
     .remove("hidden");
-
 
   $("submitCard")
     .classList
     .remove("hidden");
 
-
   $("serviceInfo")
     .classList
     .remove("hidden");
 
-
   $("serviceInfo").innerHTML =
-    "<b>"
-    +
+    "<b>" +
     escapeHtml(
       selected.name
-    )
-    +
-    "</b>"
-    +
-    "<br>"
-    +
-    '<span class="servicePrice">₹'
-    +
+    ) +
+    "</b>" +
+    "<br>" +
+    '<span class="servicePrice">₹' +
     Number(
       selected.amount || 0
-    )
-    +
+    ) +
     "</span>";
-
 
   renderCustomerFields(
     type
   );
 
-
   renderFiles(
     SERVICE_FILES[type] || []
   );
-
 
   let amount =
     Number(
       selected.amount || 0
     );
-
 
   if(
     selected.without_ration_amount != null
@@ -1978,7 +1764,6 @@ function serviceChanged(){
         selected.name || ""
       )
       .toLowerCase();
-
 
     if(
       serviceName.includes(
@@ -1998,7 +1783,6 @@ function serviceChanged(){
 
   }
 
-
   if(
     !Number.isFinite(amount) ||
     amount < 0
@@ -2008,16 +1792,11 @@ function serviceChanged(){
 
   }
 
-
   $("amount").value =
     amount;
 
-
   $("amountText").textContent =
     "₹" + amount;
-
-
-  /* QR GENERATE */
 
   generateUPIQR(
     amount
@@ -2036,39 +1815,31 @@ function resetApplicationArea(){
     .classList
     .add("hidden");
 
-
   $("paymentCard")
     .classList
     .add("hidden");
-
 
   $("documentsCard")
     .classList
     .add("hidden");
 
-
   $("submitCard")
     .classList
     .add("hidden");
-
 
   $("lmsCard")
     .classList
     .add("hidden");
 
-
   $("serviceInfo")
     .classList
     .add("hidden");
 
-
   $("dynamicFields").innerHTML =
     "";
 
-
   $("otherFiles").innerHTML =
     "";
-
 
   if(
     $("upiQr")
@@ -2079,26 +1850,20 @@ function resetApplicationArea(){
 
   }
 
-
   $("amount").value =
     "0";
-
 
   $("amountText").textContent =
     "₹0";
 
-
   $("utr").value =
     "";
-
 
   $("paymentScreenshot").value =
     "";
 
-
   $("trBox").style.display =
     "none";
-
 
   $("submitBtn").style.display =
     "inline-block";
@@ -2117,14 +1882,11 @@ function renderCustomerFields(
   const box =
     $("dynamicFields");
 
-
   box.innerHTML =
     "";
 
-
   const list =
     SERVICE_FIELDS[type] || [];
-
 
   list.forEach(
     field => {
@@ -2138,12 +1900,10 @@ function renderCustomerFields(
       const inputType =
         field[2];
 
-
       const wrapper =
         document.createElement(
           "div"
         );
-
 
       if(
         inputType ===
@@ -2160,8 +1920,7 @@ function renderCustomerFields(
 
             <textarea
               id="field_${escapeAttr(key)}"
-              data-field="${escapeAttr(key)}"
-            ></textarea>
+              data-field="${escapeAttr(key)}"></textarea>
 
           </div>
           `;
@@ -2228,7 +1987,6 @@ function renderCustomerFields(
 
       }
 
-
       box.appendChild(
         wrapper
       );
@@ -2250,10 +2008,8 @@ function renderFiles(
   const box =
     $("otherFiles");
 
-
   box.innerHTML =
     "";
-
 
   (
     list || []
@@ -2266,16 +2022,13 @@ function renderFiles(
       const label =
         item[1];
 
-
       const div =
         document.createElement(
           "div"
         );
 
-
       div.className =
         "file";
-
 
       div.innerHTML =
         `
@@ -2289,7 +2042,6 @@ function renderFiles(
           accept=".jpg,.jpeg,.png,.pdf">
 
         `;
-
 
       box.appendChild(
         div
@@ -2310,7 +2062,6 @@ function getFields(){
   const result =
     {};
 
-
   document
     .querySelectorAll(
       "#dynamicFields [data-field]"
@@ -2326,16 +2077,13 @@ function getFields(){
       }
     );
 
-
   const mobile =
     result.mobile ||
     "";
 
-
   const email =
     result.email ||
     "";
-
 
   const nameEnglish =
     result.name_english ||
@@ -2344,10 +2092,8 @@ function getFields(){
     result.wife_name ||
     "";
 
-
   result.without_ration_card =
     false;
-
 
   return {
 
@@ -2385,13 +2131,11 @@ function b64(
       const reader =
         new FileReader();
 
-
       reader.onload =
         () =>
           resolve(
             reader.result
           );
-
 
       reader.onerror =
         () =>
@@ -2400,7 +2144,6 @@ function b64(
               "File read failed."
             )
           );
-
 
       reader.readAsDataURL(
         file
@@ -2421,11 +2164,9 @@ async function getFiles(){
   const result =
     {};
 
-
   const payment =
     $("paymentScreenshot")
       .files[0];
-
 
   if(!payment){
 
@@ -2434,7 +2175,6 @@ async function getFiles(){
     );
 
   }
-
 
   if(
     payment.size >
@@ -2446,7 +2186,6 @@ async function getFiles(){
     );
 
   }
-
 
   result.payment_screenshot = {
 
@@ -2463,12 +2202,10 @@ async function getFiles(){
 
   };
 
-
   const inputs =
     document.querySelectorAll(
       "#otherFiles input[type=file]"
     );
-
 
   for(
     const input of inputs
@@ -2477,10 +2214,8 @@ async function getFiles(){
     const file =
       input.files[0];
 
-
     if(!file)
       continue;
-
 
     if(
       file.size >
@@ -2493,7 +2228,6 @@ async function getFiles(){
       );
 
     }
-
 
     result[
       input.dataset.field
@@ -2514,14 +2248,13 @@ async function getFiles(){
 
   }
 
-
   return result;
 
 }
 
 
 /* =====================================================
-   SUBMIT
+   SUBMIT APPLICATION
 ===================================================== */
 
 async function submitApplication(){
@@ -2537,7 +2270,6 @@ async function submitApplication(){
 
   }
 
-
   if(
     getServiceType(
       selected.name
@@ -2548,12 +2280,10 @@ async function submitApplication(){
 
   }
 
-
   const utr =
     $("utr")
       .value
       .trim();
-
 
   if(!utr){
 
@@ -2566,14 +2296,11 @@ async function submitApplication(){
 
   }
 
-
   const fieldData =
     getFields();
 
-
   const mobile =
     fieldData.mobile;
-
 
   if(
     mobile &&
@@ -2591,32 +2318,26 @@ async function submitApplication(){
 
   }
 
-
   $("submitBtn").disabled =
     true;
 
-
   $("submitBtn").textContent =
     "Submitting...";
-
 
   msg(
     "Submitting application...",
     "inf"
   );
 
-
   try{
 
     const uploadedFiles =
       await getFiles();
 
-
     const amount =
       Number(
         $("amount").value
       ) || 0;
-
 
     const body = {
 
@@ -2718,10 +2439,8 @@ async function submitApplication(){
     $("tr").textContent =
       trNumber;
 
-
     $("trBox").style.display =
       "block";
-
 
     $("submitBtn").style.display =
       "none";
@@ -2732,12 +2451,19 @@ async function submitApplication(){
       "ok"
     );
 
+
+    /*
+      NEW:
+      Application successfully save hone ke baad
+      history dobara load hogi.
+    */
+    await loadApplicationHistory();
+
   }
 
   catch(e){
 
     console.error(e);
-
 
     msg(
       e.message ||
@@ -2825,6 +2551,654 @@ function escapeAttr(
 
 
 /* =====================================================
+   HISTORY - STATUS CLASS
+===================================================== */
+
+function statusClass(
+  value
+){
+
+  const v =
+    String(
+      value || ""
+    )
+    .toLowerCase()
+    .trim();
+
+  if(
+    v.includes("complete") ||
+    v.includes("approved") ||
+    v.includes("success")
+  )
+    return "statusCompleted";
+
+  if(
+    v.includes("reject") ||
+    v.includes("cancel")
+  )
+    return "statusRejected";
+
+  if(
+    v.includes("process")
+  )
+    return "statusProcessing";
+
+  if(
+    v.includes("pending")
+  )
+    return "statusPending";
+
+  if(
+    v.includes("received")
+  )
+    return "statusReceived";
+
+  return "statusOther";
+
+}
+
+
+/* =====================================================
+   HISTORY - FORMAT DATE
+===================================================== */
+
+function formatDate(
+  value
+){
+
+  if(!value)
+    return "-";
+
+  const d =
+    new Date(value);
+
+  if(
+    Number.isNaN(
+      d.getTime()
+    )
+  )
+    return escapeHtml(value);
+
+  return d.toLocaleString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"2-digit",
+      year:"numeric",
+      hour:"2-digit",
+      minute:"2-digit"
+    }
+  );
+
+}
+
+
+/* =====================================================
+   HISTORY - LOAD
+===================================================== */
+
+async function loadApplicationHistory(){
+
+  if(
+    !retailer ||
+    !retailer.id
+  ){
+
+    return;
+
+  }
+
+  $("historyLoading")
+    .classList
+    .remove("hidden");
+
+  $("historyTableWrap")
+    .classList
+    .add("hidden");
+
+  $("historyEmpty")
+    .classList
+    .add("hidden");
+
+  $("historyCount")
+    .textContent =
+      "Loading application history...";
+
+  try{
+
+    /*
+      IMPORTANT:
+      retailer_id = current logged-in retailer.
+      RLS bhi isi security ko enforce karega.
+    */
+
+    const {
+      data,
+      error
+    } =
+      await sb
+        .from("applications")
+        .select(
+          `
+          id,
+          tr_number,
+          retailer_id,
+          customer_name_en,
+          customer_name_gu,
+          dob,
+          mobile,
+          service_name,
+          amount,
+          payment_status,
+          application_status,
+          utr_number,
+          customer_email,
+          remark,
+          extra_fields,
+          drive_folder_url,
+          created_at
+          `
+        )
+        .eq(
+          "retailer_id",
+          retailer.id
+        )
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        );
+
+
+    if(error)
+      throw error;
+
+
+    applicationHistory =
+      data || [];
+
+    filteredHistory =
+      [...applicationHistory];
+
+
+    $("historyLoading")
+      .classList
+      .add("hidden");
+
+
+    renderApplicationHistory();
+
+
+  }
+
+  catch(e){
+
+    console.error(
+      "Application history error:",
+      e
+    );
+
+    $("historyLoading")
+      .classList
+      .add("hidden");
+
+    $("historyCount")
+      .textContent =
+        "History could not be loaded.";
+
+    historyMsg(
+      "Application History error: " +
+      e.message,
+      "err"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   HISTORY - FILTER
+===================================================== */
+
+function filterHistory(){
+
+  const search =
+    $("historySearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  if(!search){
+
+    filteredHistory =
+      [...applicationHistory];
+
+  }
+
+  else{
+
+    filteredHistory =
+      applicationHistory.filter(
+        app => {
+
+          const text =
+            [
+              app.tr_number,
+              app.customer_name_en,
+              app.customer_name_gu,
+              app.service_name,
+              app.utr_number,
+              app.payment_status,
+              app.application_status,
+              app.mobile
+            ]
+            .join(" ")
+            .toLowerCase();
+
+          return text.includes(
+            search
+          );
+
+        }
+      );
+
+  }
+
+  renderApplicationHistory();
+
+}
+
+
+/* =====================================================
+   HISTORY - RENDER
+===================================================== */
+
+function renderApplicationHistory(){
+
+  const body =
+    $("historyBody");
+
+  body.innerHTML =
+    "";
+
+  const total =
+    filteredHistory.length;
+
+  $("historyCount")
+    .textContent =
+      total +
+      " application" +
+      (total === 1 ? "" : "s") +
+      " found";
+
+
+  if(!total){
+
+    $("historyTableWrap")
+      .classList
+      .add("hidden");
+
+    $("historyEmpty")
+      .classList
+      .remove("hidden");
+
+    return;
+
+  }
+
+
+  $("historyEmpty")
+    .classList
+    .add("hidden");
+
+  $("historyTableWrap")
+    .classList
+    .remove("hidden");
+
+
+  filteredHistory.forEach(
+    app => {
+
+      const tr =
+        document.createElement(
+          "tr"
+        );
+
+      const paymentStatus =
+        app.payment_status ||
+        "-";
+
+      const applicationStatus =
+        app.application_status ||
+        "-";
+
+
+      tr.innerHTML =
+        `
+        <td>
+
+          <div class="trLink">
+            ${escapeHtml(
+              app.tr_number || "-"
+            )}
+          </div>
+
+        </td>
+
+        <td>
+          ${formatDate(
+            app.created_at
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            app.service_name || "-"
+          )}
+        </td>
+
+        <td>
+
+          <b>
+            ${escapeHtml(
+              app.customer_name_en || "Applicant"
+            )}
+          </b>
+
+          ${
+            app.customer_name_gu
+              ?
+              `<br>
+               <span style="color:#607080">
+               ${escapeHtml(
+                 app.customer_name_gu
+               )}
+               </span>`
+              :
+              ""
+          }
+
+          ${
+            app.mobile
+              ?
+              `<br>
+               <span style="color:#607080">
+               ${escapeHtml(
+                 app.mobile
+               )}
+               </span>`
+              :
+              ""
+          }
+
+        </td>
+
+        <td>
+          <b>
+            ₹${Number(
+              app.amount || 0
+            )}
+          </b>
+        </td>
+
+        <td>
+          ${escapeHtml(
+            app.utr_number || "-"
+          )}
+        </td>
+
+        <td>
+
+          <span class="statusBadge ${
+            statusClass(
+              paymentStatus
+            )
+          }">
+
+            ${escapeHtml(
+              paymentStatus
+            )}
+
+          </span>
+
+        </td>
+
+        <td>
+
+          <span class="statusBadge ${
+            statusClass(
+              applicationStatus
+            )
+          }">
+
+            ${escapeHtml(
+              applicationStatus
+            )}
+
+          </span>
+
+        </td>
+
+        <td>
+
+          <button
+            class="viewBtn"
+            onclick="toggleApplicationDetails('${escapeAttr(app.id)}')">
+
+            View
+
+          </button>
+
+          ${
+            app.drive_folder_url
+              ?
+              `
+              <a
+                class="driveBtn"
+                href="${escapeAttr(
+                  app.drive_folder_url
+                )}"
+                target="_blank"
+                rel="noopener">
+
+                Documents
+
+              </a>
+              `
+              :
+              ""
+          }
+
+        </td>
+        `;
+
+
+      body.appendChild(
+        tr
+      );
+
+
+      /*
+        Detail row
+      */
+
+      const detailRow =
+        document.createElement(
+          "tr"
+        );
+
+      detailRow.id =
+        "details_" +
+        app.id;
+
+      detailRow.style.display =
+        "none";
+
+
+      const detailCell =
+        document.createElement(
+          "td"
+        );
+
+      detailCell.colSpan =
+        9;
+
+
+      detailCell.innerHTML =
+        `
+        <div class="detailsBox show">
+
+          <div class="detailGrid">
+
+            <div class="detailItem">
+
+              <div class="detailLabel">
+                Application ID
+              </div>
+
+              <div class="detailValue">
+                ${escapeHtml(
+                  app.id || "-"
+                )}
+              </div>
+
+            </div>
+
+
+            <div class="detailItem">
+
+              <div class="detailLabel">
+                TR Number
+              </div>
+
+              <div class="detailValue">
+                ${escapeHtml(
+                  app.tr_number || "-"
+                )}
+              </div>
+
+            </div>
+
+
+            <div class="detailItem">
+
+              <div class="detailLabel">
+                Customer Email
+              </div>
+
+              <div class="detailValue">
+                ${escapeHtml(
+                  app.customer_email || "-"
+                )}
+              </div>
+
+            </div>
+
+
+            <div class="detailItem">
+
+              <div class="detailLabel">
+                DOB
+              </div>
+
+              <div class="detailValue">
+                ${escapeHtml(
+                  app.dob || "-"
+                )}
+              </div>
+
+            </div>
+
+
+            <div class="detailItem">
+
+              <div class="detailLabel">
+                UTR Number
+              </div>
+
+              <div class="detailValue">
+                ${escapeHtml(
+                  app.utr_number || "-"
+                )}
+              </div>
+
+            </div>
+
+
+            <div class="detailItem">
+
+              <div class="detailLabel">
+                Remark
+              </div>
+
+              <div class="detailValue">
+                ${escapeHtml(
+                  app.remark || "-"
+                )}
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+        `;
+
+
+      detailRow.appendChild(
+        detailCell
+      );
+
+
+      body.appendChild(
+        detailRow
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   HISTORY - DETAILS
+===================================================== */
+
+function toggleApplicationDetails(
+  id
+){
+
+  const row =
+    $("details_" + id);
+
+  if(!row)
+    return;
+
+
+  if(
+    row.style.display ===
+    "none"
+  ){
+
+    row.style.display =
+      "table-row";
+
+  }
+
+  else{
+
+    row.style.display =
+      "none";
+
+  }
+
+}
+
+
+/* =====================================================
    AUTO LOGIN SESSION
 ===================================================== */
 
@@ -2846,7 +3220,8 @@ window.addEventListener(
       ){
 
         const {
-          data: pr
+          data: pr,
+          error
         } =
           await sb
             .from("profiles")
@@ -2858,6 +3233,18 @@ window.addEventListener(
               data.session.user.id
             )
             .maybeSingle();
+
+
+        if(error){
+
+          console.error(
+            "Profile error:",
+            error
+          );
+
+          return;
+
+        }
 
 
         if(
@@ -2875,6 +3262,13 @@ window.addEventListener(
 
           await loadServices();
 
+
+          /*
+            NEW:
+            Auto-login ke baad bhi history load.
+          */
+          await loadApplicationHistory();
+
         }
 
       }
@@ -2883,7 +3277,10 @@ window.addEventListener(
 
     catch(e){
 
-      console.error(e);
+      console.error(
+        "Session error:",
+        e
+      );
 
     }
 
