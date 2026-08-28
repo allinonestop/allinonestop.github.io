@@ -17,10 +17,12 @@
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
+
       background:
         radial-gradient(circle at 10% 10%, #7c5cff20, transparent 30%),
         radial-gradient(circle at 90% 15%, #00d2ff18, transparent 30%),
         linear-gradient(135deg, #eef2ff, #f8fbff 45%, #ecfeff);
+
       color: #172033;
       min-height: 100vh;
     }
@@ -51,7 +53,9 @@
       border-radius: 22px;
       padding: 25px;
       margin-bottom: 20px;
+
       box-shadow: 0 15px 45px rgba(38, 48, 80, 0.10);
+
       border: 1px solid #ffffff;
     }
 
@@ -75,19 +79,26 @@
 
     label {
       display: block;
+
       font-size: 13px;
       font-weight: 800;
+
       color: #475467;
+
       margin-bottom: 6px;
     }
 
     input,
     select {
       width: 100%;
+
       padding: 13px;
+
       border: 1px solid #d9deea;
       border-radius: 11px;
+
       background: white;
+
       margin-bottom: 15px;
     }
 
@@ -100,17 +111,25 @@
     button,
     .btn {
       padding: 11px 16px;
+
       border-radius: 11px;
+
       color: white;
+
       font-weight: 800;
-      background: linear-gradient(135deg, #5b5cf0, #287cff);
+
+      background:
+        linear-gradient(135deg, #5b5cf0, #287cff);
+
       text-decoration: none;
+
       display: inline-block;
     }
 
     button:hover,
     .btn:hover {
-      box-shadow: 0 8px 20px rgba(54, 88, 255, 0.20);
+      box-shadow:
+        0 8px 20px rgba(54, 88, 255, 0.20);
     }
 
     .logout {
@@ -118,11 +137,13 @@
     }
 
     .delete-btn {
-      background: linear-gradient(135deg, #dc2626, #ef4444);
+      background:
+        linear-gradient(135deg, #dc2626, #ef4444);
     }
 
     .password-btn {
-      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      background:
+        linear-gradient(135deg, #7c3aed, #4f46e5);
     }
 
     .small-btn {
@@ -132,37 +153,50 @@
 
     .save-btn {
       min-width: 75px;
-      background: linear-gradient(135deg, #4f46e5, #287cff);
+
+      background:
+        linear-gradient(135deg, #4f46e5, #287cff);
     }
 
     .save-btn.saved {
-      background: linear-gradient(135deg, #059669, #10b981);
+      background:
+        linear-gradient(135deg, #059669, #10b981);
     }
 
     .top {
       display: flex;
+
       justify-content: space-between;
       align-items: center;
+
       gap: 15px;
+
       flex-wrap: wrap;
     }
 
     .actions {
       display: flex;
+
       gap: 8px;
+
       flex-wrap: wrap;
+
       margin-top: 10px;
     }
 
     .grid {
       display: grid;
+
       grid-template-columns: 1fr 1fr;
+
       gap: 15px;
     }
 
     .divider {
       height: 1px;
+
       background: #eaecf0;
+
       margin: 22px 0;
     }
 
@@ -174,8 +208,11 @@
     .badge,
     .online {
       display: inline-block;
+
       padding: 6px 10px;
+
       border-radius: 999px;
+
       font-size: 12px;
       font-weight: 800;
     }
@@ -192,12 +229,17 @@
 
     .msg {
       padding: 13px;
+
       border-radius: 11px;
+
       margin-top: 14px;
+
       background: #ecfdf3;
       color: #087443;
+
       font-size: 14px;
       font-weight: 700;
+
       white-space: pre-wrap;
       word-break: break-word;
     }
@@ -214,32 +256,49 @@
 
     .id-box {
       background: #f8fafc;
+
       border: 1px solid #e4e7ec;
+
       border-radius: 13px;
+
       padding: 13px;
+
       margin-top: 5px;
     }
 
     .id-box input {
       margin-bottom: 5px;
+
       background: #f8fafc;
+
       color: #4f46e5;
+
       font-weight: 900;
+
       font-size: 18px;
     }
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+
+      grid-template-columns:
+        repeat(4, 1fr);
+
       gap: 15px;
+
       margin-bottom: 20px;
     }
 
     .stat {
       background: white;
+
       border-radius: 18px;
+
       padding: 20px;
-      box-shadow: 0 10px 30px rgba(38, 48, 80, 0.08);
+
+      box-shadow:
+        0 10px 30px rgba(38, 48, 80, 0.08);
+
       border: 1px solid #eef0f5;
     }
 
@@ -249,41 +308,56 @@
 
     .stat-number {
       font-size: 30px;
+
       font-weight: 900;
+
       margin-top: 8px;
+
       color: #4f46e5;
     }
 
     .stat-title {
       color: #667085;
+
       font-size: 13px;
+
       font-weight: 700;
     }
 
     .table-wrap {
       overflow-x: auto;
+
       border: 1px solid #eaecf0;
+
       border-radius: 14px;
+
       margin-top: 12px;
     }
 
     table {
       width: 100%;
+
       border-collapse: collapse;
+
       min-width: 850px;
     }
 
     th,
     td {
       padding: 11px;
+
       border-bottom: 1px solid #eaecf0;
+
       text-align: left;
+
       font-size: 13px;
+
       vertical-align: middle;
     }
 
     th {
       background: #f8fafc;
+
       color: #475467;
     }
 
@@ -294,32 +368,46 @@
 
     .loading {
       text-align: center;
+
       padding: 25px;
+
       color: #667085;
     }
 
     .login-box {
       max-width: 550px;
+
       margin: 70px auto;
     }
 
     .login-icon {
       width: 70px;
       height: 70px;
+
       border-radius: 20px;
+
       display: grid;
       place-items: center;
-      background: linear-gradient(135deg, #6366f1, #06b6d4);
+
+      background:
+        linear-gradient(135deg, #6366f1, #06b6d4);
+
       color: white;
+
       font-size: 34px;
+
       margin-bottom: 18px;
     }
 
     .status-pill {
       display: inline-block;
+
       padding: 5px 9px;
+
       border-radius: 999px;
+
       font-size: 11px;
+
       font-weight: 800;
     }
 
@@ -339,15 +427,35 @@
       color: #b42318;
     }
 
+    .section-title {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+    }
+
+    .empty {
+      text-align: center;
+
+      padding: 30px;
+
+      color: #667085;
+    }
+
     @media (max-width: 800px) {
+
       .stats {
         grid-template-columns: 1fr 1fr;
       }
+
     }
 
     @media (max-width: 700px) {
+
       .wrap {
         width: min(100% - 20px, 1200px);
+
         margin: 10px auto;
       }
 
@@ -366,6 +474,7 @@
       .login-box {
         margin: 25px auto;
       }
+
     }
   </style>
 </head>
@@ -380,13 +489,21 @@
 
   <div class="box login-box" id="loginBox">
 
-    <div class="login-icon">🔐</div>
+    <div class="login-icon">
+      🔐
+    </div>
 
-    <h1>Admin Login</h1>
+    <h1>
+      Admin Login
+    </h1>
 
-    <p>AllInOneStop management portal</p>
+    <p>
+      AllInOneStop management portal
+    </p>
 
-    <label for="email">Admin Email</label>
+    <label for="email">
+      Admin Email
+    </label>
 
     <input
       id="email"
@@ -395,7 +512,9 @@
       autocomplete="username"
     >
 
-    <label for="password">Admin Password</label>
+    <label for="password">
+      Admin Password
+    </label>
 
     <input
       id="password"
@@ -442,7 +561,9 @@
 
         <div>
 
-          <h1>🛠️ Admin Panel</h1>
+          <h1>
+            🛠️ Admin Panel
+          </h1>
 
           <div style="margin-top:8px">
 
@@ -493,7 +614,9 @@
 
       <div class="stat">
 
-        <div class="stat-icon">👥</div>
+        <div class="stat-icon">
+          👥
+        </div>
 
         <div
           class="stat-number"
@@ -511,7 +634,9 @@
 
       <div class="stat">
 
-        <div class="stat-icon">📋</div>
+        <div class="stat-icon">
+          📋
+        </div>
 
         <div
           class="stat-number"
@@ -529,7 +654,9 @@
 
       <div class="stat">
 
-        <div class="stat-icon">💰</div>
+        <div class="stat-icon">
+          💰
+        </div>
 
         <div
           class="stat-number"
@@ -547,7 +674,9 @@
 
       <div class="stat">
 
-        <div class="stat-icon">⏳</div>
+        <div class="stat-icon">
+          ⏳
+        </div>
 
         <div
           class="stat-number"
@@ -571,13 +700,16 @@
 
     <div class="box">
 
-      <h2>➕ Create New Retailer</h2>
+      <h2>
+        ➕ Create New Retailer
+      </h2>
 
       <p>
         Retailer account इसी admin panel से create होगा।
       </p>
 
       <div class="divider"></div>
+
 
       <div class="grid">
 
@@ -591,6 +723,7 @@
             id="retailerName"
             type="text"
             placeholder="Retailer full name"
+            autocomplete="name"
           >
 
         </div>
@@ -708,7 +841,9 @@
 
         <div>
 
-          <h2>👥 Retailer History</h2>
+          <h2>
+            👥 Retailer History
+          </h2>
 
           <p class="hint">
             सभी registered retailers
@@ -733,24 +868,43 @@
           <thead>
 
             <tr>
-              <th>Retailer ID</th>
-              <th>Name</th>
-              <th>Mobile</th>
-              <th>Retailer No.</th>
-              <th>Actions</th>
+
+              <th>
+                Retailer ID
+              </th>
+
+              <th>
+                Name
+              </th>
+
+              <th>
+                Mobile
+              </th>
+
+              <th>
+                Retailer No.
+              </th>
+
+              <th>
+                Actions
+              </th>
+
             </tr>
 
           </thead>
 
+
           <tbody id="retailerRows">
 
             <tr>
+
               <td
                 colspan="5"
                 class="loading"
               >
                 Loading retailers...
               </td>
+
             </tr>
 
           </tbody>
@@ -772,7 +926,9 @@
 
         <div>
 
-          <h2>📋 Applications</h2>
+          <h2>
+            📋 Applications
+          </h2>
 
           <p class="hint">
             Payment और application status
@@ -797,26 +953,51 @@
           <thead>
 
             <tr>
-              <th>TR Number</th>
-              <th>Service</th>
-              <th>Amount</th>
-              <th>Payment</th>
-              <th>Status</th>
-              <th>Remark</th>
-              <th>Save</th>
+
+              <th>
+                TR Number
+              </th>
+
+              <th>
+                Service
+              </th>
+
+              <th>
+                Amount
+              </th>
+
+              <th>
+                Payment
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Remark
+              </th>
+
+              <th>
+                Save
+              </th>
+
             </tr>
 
           </thead>
 
+
           <tbody id="applicationRows">
 
             <tr>
+
               <td
                 colspan="7"
                 class="loading"
               >
                 Loading applications...
               </td>
+
             </tr>
 
           </tbody>
@@ -837,6 +1018,18 @@
 /* =========================================================
    SUPABASE CONFIG
 ========================================================= */
+
+if (
+  !window.ALLINONESTOP_CONFIG ||
+  !window.ALLINONESTOP_CONFIG.SUPABASE_URL ||
+  !window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY
+) {
+
+  alert(
+    "config.js missing or Supabase configuration is incomplete."
+  );
+
+}
 
 const SUPABASE_URL =
   window.ALLINONESTOP_CONFIG.SUPABASE_URL;
@@ -869,11 +1062,13 @@ function escapeHtml(value) {
     .replace(/[&<>"']/g, function(char) {
 
       const map = {
+
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
         '"': "&quot;",
         "'": "&#039;"
+
       };
 
       return map[char];
@@ -959,7 +1154,8 @@ function randomRetailerCode() {
 function generateRetailerId() {
 
   const username =
-    "RET-" + randomRetailerCode();
+    "RET-" +
+    randomRetailerCode();
 
   const usernameInput =
     document.getElementById(
@@ -972,7 +1168,10 @@ function generateRetailerId() {
     );
 
   if (usernameInput) {
-    usernameInput.value = username;
+
+    usernameInput.value =
+      username;
+
   }
 
   if (
@@ -1047,6 +1246,7 @@ async function getAdminProfile(userId) {
       )
       .maybeSingle();
 
+
   if (error) {
 
     throw new Error(
@@ -1056,6 +1256,7 @@ async function getAdminProfile(userId) {
 
   }
 
+
   if (!data) {
 
     throw new Error(
@@ -1064,6 +1265,7 @@ async function getAdminProfile(userId) {
 
   }
 
+
   if (data.role !== "admin") {
 
     throw new Error(
@@ -1071,6 +1273,7 @@ async function getAdminProfile(userId) {
     );
 
   }
+
 
   return data;
 
@@ -1096,6 +1299,7 @@ async function login() {
       .getElementById("password")
       .value;
 
+
   if (!email) {
 
     showMessage(
@@ -1107,6 +1311,7 @@ async function login() {
     return;
 
   }
+
 
   if (!password) {
 
@@ -1120,6 +1325,7 @@ async function login() {
 
   }
 
+
   const button =
     document.getElementById(
       "loginBtn"
@@ -1129,6 +1335,7 @@ async function login() {
 
   button.textContent =
     "⏳ Logging in...";
+
 
   try {
 
@@ -1145,6 +1352,7 @@ async function login() {
 
         });
 
+
     if (error) {
 
       throw new Error(
@@ -1153,6 +1361,7 @@ async function login() {
       );
 
     }
+
 
     if (
       !data ||
@@ -1165,10 +1374,12 @@ async function login() {
 
     }
 
+
     const profile =
       await getAdminProfile(
         data.user.id
       );
+
 
     await openAdminPanel(
       profile,
@@ -1176,12 +1387,14 @@ async function login() {
     );
 
   }
+
   catch (error) {
 
     console.error(
       "ADMIN LOGIN ERROR:",
       error
     );
+
 
     showMessage(
       "loginMessage",
@@ -1191,6 +1404,7 @@ async function login() {
     );
 
   }
+
   finally {
 
     button.disabled = false;
@@ -1216,9 +1430,11 @@ async function openAdminPanel(
     .getElementById("loginBox")
     .classList.add("hidden");
 
+
   document
     .getElementById("adminPanel")
     .classList.remove("hidden");
+
 
   document
     .getElementById("adminName")
@@ -1229,6 +1445,7 @@ async function openAdminPanel(
         user.email ||
         "Admin"
       );
+
 
   await refreshDashboard();
 
@@ -1250,6 +1467,7 @@ async function restoreSession() {
       await supabaseClient.auth
         .getSession();
 
+
     if (error) {
 
       console.error(
@@ -1261,6 +1479,7 @@ async function restoreSession() {
 
     }
 
+
     if (
       !data ||
       !data.session
@@ -1270,13 +1489,16 @@ async function restoreSession() {
 
     }
 
+
     const user =
       data.session.user;
+
 
     const profile =
       await getAdminProfile(
         user.id
       );
+
 
     await openAdminPanel(
       profile,
@@ -1284,12 +1506,14 @@ async function restoreSession() {
     );
 
   }
+
   catch (error) {
 
     console.warn(
       "RESTORE SESSION:",
       error.message
     );
+
 
     await supabaseClient.auth.signOut();
 
@@ -1309,6 +1533,7 @@ async function logout() {
     await supabaseClient.auth.signOut();
 
   }
+
   catch (error) {
 
     console.error(
@@ -1332,10 +1557,12 @@ async function createRetailer() {
 
   clearMessage("createMessage");
 
+
   const button =
     document.getElementById(
       "createRetailerBtn"
     );
+
 
   const fullName =
     document
@@ -1343,11 +1570,13 @@ async function createRetailer() {
       .value
       .trim();
 
+
   const mobile =
     document
       .getElementById("retailerMobile")
       .value
       .trim();
+
 
   let username =
     document
@@ -1355,11 +1584,13 @@ async function createRetailer() {
       .value
       .trim();
 
+
   let retailerNumber =
     document
       .getElementById("retailerNumber")
       .value
       .trim();
+
 
   const password =
     document
@@ -1457,15 +1688,20 @@ async function createRetailer() {
 
       action: "create",
 
-      full_name: fullName,
+      full_name:
+        fullName,
 
-      mobile: mobile,
+      mobile:
+        mobile,
 
-      username: username,
+      username:
+        username,
 
-      retailer_number: retailerNumber,
+      retailer_number:
+        retailerNumber,
 
-      password: password
+      password:
+        password
 
     };
 
@@ -1522,24 +1758,28 @@ async function createRetailer() {
       data.username ||
       username;
 
+
     const createdNumber =
       data.retailer_number ||
       retailerNumber;
 
 
     showMessage(
+
       "createMessage",
 
       "Retailer created successfully.\n\n" +
+
       "Retailer ID: " +
       createdUsername +
       "\n" +
+
       "Retailer Number: " +
       createdNumber +
       "\n\n" +
-      "Password was saved securely in Supabase Authentication.",
 
-      false
+      "Password was saved securely in Supabase Authentication."
+
     );
 
 
@@ -1549,17 +1789,20 @@ async function createRetailer() {
       )
       .value = "";
 
+
     document
       .getElementById(
         "retailerMobile"
       )
       .value = "";
 
+
     document
       .getElementById(
         "retailerNumber"
       )
       .value = "";
+
 
     document
       .getElementById(
@@ -1574,6 +1817,7 @@ async function createRetailer() {
     await refreshDashboard();
 
   }
+
   catch (error) {
 
     console.error(
@@ -1581,16 +1825,20 @@ async function createRetailer() {
       error
     );
 
+
     showMessage(
+
       "createMessage",
 
       error?.message ||
       "Failed to create retailer.",
 
       true
+
     );
 
   }
+
   finally {
 
     button.disabled = false;
@@ -1613,10 +1861,12 @@ async function readFunctionError(error) {
     error?.message ||
     "Edge Function request failed.";
 
+
   try {
 
     const context =
       error?.context;
+
 
     if (
       context &&
@@ -1626,10 +1876,12 @@ async function readFunctionError(error) {
       const cloned =
         context.clone();
 
+
       const contentType =
         cloned.headers?.get(
           "content-type"
         ) || "";
+
 
       if (
         contentType.includes(
@@ -1639,6 +1891,7 @@ async function readFunctionError(error) {
 
         const body =
           await cloned.json();
+
 
         if (body) {
 
@@ -1650,13 +1903,18 @@ async function readFunctionError(error) {
         }
 
       }
+
       else {
 
         const text =
           await cloned.text();
 
+
         if (text) {
-          message = text;
+
+          message =
+            text;
+
         }
 
       }
@@ -1664,6 +1922,7 @@ async function readFunctionError(error) {
     }
 
   }
+
   catch (readerError) {
 
     console.warn(
@@ -1672,6 +1931,7 @@ async function readFunctionError(error) {
     );
 
   }
+
 
   return message;
 
@@ -1685,6 +1945,7 @@ function formatFunctionError(data) {
     data?.message ||
     "Edge Function request failed.";
 
+
   if (data?.details) {
 
     message +=
@@ -1692,6 +1953,7 @@ function formatFunctionError(data) {
       data.details;
 
   }
+
 
   return String(message);
 
@@ -1710,11 +1972,14 @@ async function callRetailerFunction(
 
   await getSession();
 
+
   const body = {
 
-    action: action,
+    action:
+      action,
 
-    user_id: userId
+    user_id:
+      userId
 
   };
 
@@ -1737,7 +2002,8 @@ async function callRetailerFunction(
     await supabaseClient.functions.invoke(
       RETAILER_FUNCTION,
       {
-        body: body
+        body:
+          body
       }
     );
 
@@ -1785,14 +2051,19 @@ async function resetRetailerPassword(
 
   const newPassword =
     prompt(
+
       "Retailer: " +
       retailerId +
+
       "\n\nEnter NEW password:"
+
     );
 
 
   if (newPassword === null) {
+
     return;
+
   }
 
 
@@ -1826,39 +2097,52 @@ async function resetRetailerPassword(
 
   const confirmed =
     confirm(
+
       "Reset password for " +
       retailerId +
       "?"
+
     );
 
 
   if (!confirmed) {
+
     return;
+
   }
 
 
   try {
 
     await callRetailerFunction(
+
       "reset_password",
+
       userId,
+
       trimmedPassword
+
     );
 
 
     alert(
+
       "Password updated successfully.\n\n" +
+
       "Retailer ID: " +
       retailerId
+
     );
 
   }
+
   catch (error) {
 
     console.error(
       "RESET PASSWORD ERROR:",
       error
     );
+
 
     alert(
       error?.message ||
@@ -1881,9 +2165,13 @@ async function deleteRetailer(
 
   const confirmation =
     prompt(
+
       "Delete retailer " +
       retailerId +
-      "?\n\nType DELETE to confirm."
+      "?\n\n" +
+
+      "Type DELETE to confirm."
+
     );
 
 
@@ -1900,8 +2188,11 @@ async function deleteRetailer(
   try {
 
     await callRetailerFunction(
+
       "delete",
+
       userId
+
     );
 
 
@@ -1913,6 +2204,7 @@ async function deleteRetailer(
     await refreshDashboard();
 
   }
+
   catch (error) {
 
     console.error(
@@ -1920,9 +2212,12 @@ async function deleteRetailer(
       error
     );
 
+
     alert(
+
       error?.message ||
       "Retailer deletion failed."
+
     );
 
   }
@@ -1943,11 +2238,18 @@ async function loadRetailers() {
 
 
   rows.innerHTML = `
+
     <tr>
-      <td colspan="5" class="loading">
+
+      <td
+        colspan="5"
+        class="loading"
+      >
         Loading retailers...
       </td>
+
     </tr>
+
   `;
 
 
@@ -1972,7 +2274,8 @@ async function loadRetailers() {
         .order(
           "full_name",
           {
-            ascending: true
+            ascending:
+              true
           }
         );
 
@@ -1992,11 +2295,18 @@ async function loadRetailers() {
     ) {
 
       rows.innerHTML = `
+
         <tr>
-          <td colspan="5" class="loading">
+
+          <td
+            colspan="5"
+            class="empty"
+          >
             No retailers found.
           </td>
+
         </tr>
+
       `;
 
       return;
@@ -2005,89 +2315,123 @@ async function loadRetailers() {
 
 
     rows.innerHTML =
-      data.map(
-        function(retailer) {
+      data
+        .map(
+          function(retailer) {
 
-          const retailerId =
-            retailer.retailer_number ||
-            "RET";
-
-
-          const userId =
-            escapeHtml(
-              retailer.id
-            );
+            const retailerId =
+              retailer.retailer_number ||
+              "RET";
 
 
-          const safeRetailerId =
-            escapeHtml(
-              retailerId
-            );
+            const userId =
+              escapeHtml(
+                retailer.id
+              );
 
 
-          return `
-            <tr>
+            const safeRetailerId =
+              escapeHtml(
+                retailerId
+              );
 
-              <td>
-                <strong>
-                  ${safeRetailerId}
-                </strong>
-              </td>
 
-              <td>
-                ${escapeHtml(
-                  retailer.full_name
-                )}
-              </td>
+            return `
 
-              <td>
-                ${escapeHtml(
-                  retailer.mobile
-                )}
-              </td>
+              <tr>
 
-              <td>
-                ${escapeHtml(
-                  retailer.retailer_number ||
-                  retailerId
-                )}
-              </td>
+                <td>
 
-              <td>
+                  <strong>
+                    ${safeRetailerId}
+                  </strong>
 
-                <div class="actions">
+                </td>
 
-                  <button
-                    type="button"
-                    class="small-btn password-btn"
-                    data-user-id="${userId}"
-                    data-retailer-id="${safeRetailerId}"
-                    onclick="resetFromButton(this)"
-                  >
-                    🔑 Reset Password
-                  </button>
 
-                  <button
-                    type="button"
-                    class="small-btn delete-btn"
-                    data-user-id="${userId}"
-                    data-retailer-id="${safeRetailerId}"
-                    onclick="deleteFromButton(this)"
-                  >
-                    🗑️ Delete
-                  </button>
+                <td>
 
-                </div>
+                  ${escapeHtml(
+                    retailer.full_name
+                  )}
 
-              </td>
+                </td>
 
-            </tr>
-          `;
 
-        }
-      ).join("");
+                <td>
+
+                  ${escapeHtml(
+                    retailer.mobile
+                  )}
+
+                </td>
+
+
+                <td>
+
+                  ${escapeHtml(
+                    retailer.retailer_number ||
+                    retailerId
+                  )}
+
+                </td>
+
+
+                <td>
+
+                  <div class="actions">
+
+                    <button
+
+                      type="button"
+
+                      class="small-btn password-btn"
+
+                      data-user-id="${userId}"
+
+                      data-retailer-id="${safeRetailerId}"
+
+                      onclick="resetFromButton(this)"
+
+                    >
+
+                      🔑 Reset Password
+
+                    </button>
+
+
+                    <button
+
+                      type="button"
+
+                      class="small-btn delete-btn"
+
+                      data-user-id="${userId}"
+
+                      data-retailer-id="${safeRetailerId}"
+
+                      onclick="deleteFromButton(this)"
+
+                    >
+
+                      🗑️ Delete
+
+                    </button>
+
+                  </div>
+
+                </td>
+
+              </tr>
+
+            `;
+
+          }
+        )
+        .join("");
 
   }
+
   catch (error) {
 
     console.error(
@@ -2097,14 +2441,23 @@ async function loadRetailers() {
 
 
     rows.innerHTML = `
+
       <tr>
-        <td colspan="5" class="loading">
+
+        <td
+          colspan="5"
+          class="loading"
+        >
+
           ${escapeHtml(
             error?.message ||
             "Could not load retailers."
           )}
+
         </td>
+
       </tr>
+
     `;
 
   }
@@ -2112,25 +2465,27 @@ async function loadRetailers() {
 }
 
 
-function resetFromButton(
-  button
-) {
+function resetFromButton(button) {
 
   resetRetailerPassword(
+
     button.dataset.userId,
+
     button.dataset.retailerId
+
   );
 
 }
 
 
-function deleteFromButton(
-  button
-) {
+function deleteFromButton(button) {
 
   deleteRetailer(
+
     button.dataset.userId,
+
     button.dataset.retailerId
+
   );
 
 }
@@ -2149,11 +2504,18 @@ async function loadApplications() {
 
 
   rows.innerHTML = `
+
     <tr>
-      <td colspan="7" class="loading">
+
+      <td
+        colspan="7"
+        class="loading"
+      >
         Loading applications...
       </td>
+
     </tr>
+
   `;
 
 
@@ -2169,13 +2531,19 @@ async function loadApplications() {
       await supabaseClient
         .from("applications")
         .select(
+
           "tr_number,service_name,amount,payment_status,application_status,remark"
+
         )
         .order(
+
           "created_at",
+
           {
-            ascending: false
+            ascending:
+              false
           }
+
         );
 
 
@@ -2194,11 +2562,18 @@ async function loadApplications() {
     ) {
 
       rows.innerHTML = `
+
         <tr>
-          <td colspan="7" class="loading">
+
+          <td
+            colspan="7"
+            class="empty"
+          >
             No applications yet.
           </td>
+
         </tr>
+
       `;
 
       return;
@@ -2207,167 +2582,233 @@ async function loadApplications() {
 
 
     rows.innerHTML =
-      data.map(
-        function(app, index) {
+      data
+        .map(
+          function(app, index) {
 
-          const tr =
-            String(
-              app.tr_number || ""
-            );
-
-
-          const key =
-            (
-              tr +
-              "-" +
-              index
-            ).replace(
-              /[^a-zA-Z0-9_-]/g,
-              "_"
-            );
+            const tr =
+              String(
+                app.tr_number ||
+                ""
+              );
 
 
-          const payment =
-            app.payment_status ||
-            "Pending";
+            const key =
+              (
+                tr +
+                "-" +
+                index
+              )
+              .replace(
+                /[^a-zA-Z0-9_-]/g,
+                "_"
+              );
 
 
-          const status =
-            app.application_status ||
-            "Received";
+            const payment =
+              app.payment_status ||
+              "Pending";
 
 
-          return `
-            <tr>
+            const status =
+              app.application_status ||
+              "Received";
 
-              <td>
-                <strong>
-                  ${escapeHtml(tr)}
-                </strong>
-              </td>
 
-              <td>
-                ${escapeHtml(
-                  app.service_name
-                )}
-              </td>
+            return `
 
-              <td>
-                ₹${escapeHtml(
-                  app.amount
-                )}
-              </td>
+              <tr>
 
-              <td>
+                <td>
 
-                <select
-                  id="payment-${key}"
-                >
+                  <strong>
+                    ${escapeHtml(tr)}
+                  </strong>
 
-                  <option
-                    value="Pending"
-                    ${payment === "Pending" ? "selected" : ""}
+                </td>
+
+
+                <td>
+
+                  ${escapeHtml(
+                    app.service_name
+                  )}
+
+                </td>
+
+
+                <td>
+
+                  ₹${escapeHtml(
+                    app.amount
+                  )}
+
+                </td>
+
+
+                <td>
+
+                  <select
+                    id="payment-${key}"
                   >
-                    Pending
-                  </option>
 
-                  <option
-                    value="Paid"
-                    ${payment === "Paid" ? "selected" : ""}
+                    <option
+                      value="Pending"
+                      ${
+                        payment === "Pending"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      Pending
+                    </option>
+
+
+                    <option
+                      value="Paid"
+                      ${
+                        payment === "Paid"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      Paid
+                    </option>
+
+
+                    <option
+                      value="Failed"
+                      ${
+                        payment === "Failed"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      Failed
+                    </option>
+
+                  </select>
+
+                </td>
+
+
+                <td>
+
+                  <select
+                    id="status-${key}"
                   >
-                    Paid
-                  </option>
 
-                  <option
-                    value="Failed"
-                    ${payment === "Failed" ? "selected" : ""}
+                    <option
+                      value="Received"
+                      ${
+                        status === "Received"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      Received
+                    </option>
+
+
+                    <option
+                      value="Verification"
+                      ${
+                        status === "Verification"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      Verification
+                    </option>
+
+
+                    <option
+                      value="Processing"
+                      ${
+                        status === "Processing"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      Processing
+                    </option>
+
+
+                    <option
+                      value="Completed"
+                      ${
+                        status === "Completed"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      Completed
+                    </option>
+
+
+                    <option
+                      value="Rejected"
+                      ${
+                        status === "Rejected"
+                          ? "selected"
+                          : ""
+                      }
+                    >
+                      Rejected
+                    </option>
+
+                  </select>
+
+                </td>
+
+
+                <td>
+
+                  <input
+                    id="remark-${key}"
+                    value="${escapeHtml(
+                      app.remark || ""
+                    )}"
+                    placeholder="Remark"
                   >
-                    Failed
-                  </option>
 
-                </select>
+                </td>
 
-              </td>
 
-              <td>
+                <td>
 
-                <select
-                  id="status-${key}"
-                >
+                  <button
 
-                  <option
-                    value="Received"
-                    ${status === "Received" ? "selected" : ""}
+                    type="button"
+
+                    id="save-${key}"
+
+                    class="small-btn save-btn"
+
+                    data-tr="${escapeHtml(tr)}"
+
+                    data-key="${escapeHtml(key)}"
+
+                    onclick="saveApplicationFromButton(this)"
+
                   >
-                    Received
-                  </option>
 
-                  <option
-                    value="Verification"
-                    ${status === "Verification" ? "selected" : ""}
-                  >
-                    Verification
-                  </option>
+                    💾 Save
 
-                  <option
-                    value="Processing"
-                    ${status === "Processing" ? "selected" : ""}
-                  >
-                    Processing
-                  </option>
+                  </button>
 
-                  <option
-                    value="Completed"
-                    ${status === "Completed" ? "selected" : ""}
-                  >
-                    Completed
-                  </option>
+                </td>
 
-                  <option
-                    value="Rejected"
-                    ${status === "Rejected" ? "selected" : ""}
-                  >
-                    Rejected
-                  </option>
+              </tr>
 
-                </select>
+            `;
 
-              </td>
-
-              <td>
-
-                <input
-                  id="remark-${key}"
-                  value="${escapeHtml(
-                    app.remark || ""
-                  )}"
-                  placeholder="Remark"
-                >
-
-              </td>
-
-              <td>
-
-                <button
-                  type="button"
-                  id="save-${key}"
-                  class="small-btn save-btn"
-                  data-tr="${escapeHtml(tr)}"
-                  data-key="${escapeHtml(key)}"
-                  onclick="saveApplicationFromButton(this)"
-                >
-                  💾 Save
-                </button>
-
-              </td>
-
-            </tr>
-          `;
-
-        }
-      ).join("");
+          }
+        )
+        .join("");
 
   }
+
   catch (error) {
 
     console.error(
@@ -2377,14 +2818,23 @@ async function loadApplications() {
 
 
     rows.innerHTML = `
+
       <tr>
-        <td colspan="7" class="loading">
+
+        <td
+          colspan="7"
+          class="loading"
+        >
+
           ${escapeHtml(
             error?.message ||
             "Could not load applications."
           )}
+
         </td>
+
       </tr>
+
     `;
 
   }
@@ -2396,29 +2846,40 @@ async function loadApplications() {
    SAVE BUTTON HANDLER
 ========================================================= */
 
-async function saveApplicationFromButton(button) {
+async function saveApplicationFromButton(
+  button
+) {
 
   if (!button) {
     return;
   }
 
+
   const trNumber =
-    button.dataset.tr || "";
+    button.dataset.tr ||
+    "";
+
 
   const key =
-    button.dataset.key || "";
+    button.dataset.key ||
+    "";
+
 
   await saveApplication(
+
     trNumber,
+
     key,
+
     button
+
   );
 
 }
 
 
 /* =========================================================
-   SAVE APPLICATION - FIXED
+   SAVE APPLICATION
 ========================================================= */
 
 async function saveApplication(
@@ -2448,8 +2909,13 @@ async function saveApplication(
   }
 
 
-  if (button.disabled) {
+  if (
+    button &&
+    button.disabled
+  ) {
+
     return;
+
   }
 
 
@@ -2508,7 +2974,8 @@ async function saveApplication(
 
     if (button) {
 
-      button.disabled = true;
+      button.disabled =
+        true;
 
       button.textContent =
         "⏳ Saving...";
@@ -2516,40 +2983,26 @@ async function saveApplication(
     }
 
 
-    /* ==========================================
-       CHECK ADMIN SESSION
-    ========================================== */
-
-    const session =
-      await getSession();
-
-
-    if (
-      !session ||
-      !session.user
-    ) {
-
-      throw new Error(
-        "Admin session expired. Please login again."
-      );
-
-    }
+    await getSession();
 
 
     console.log(
       "SAVE APPLICATION:",
       {
-        tr_number: trNumber,
-        payment_status: payment,
-        application_status: status,
-        remark: remark
+        tr_number:
+          trNumber,
+
+        payment_status:
+          payment,
+
+        application_status:
+          status,
+
+        remark:
+          remark
       }
     );
 
-
-    /* ==========================================
-       UPDATE DATABASE
-    ========================================== */
 
     const {
       data,
@@ -2587,24 +3040,17 @@ async function saveApplication(
     );
 
 
-    /* ==========================================
-       SUPABASE ERROR
-    ========================================== */
-
     if (error) {
 
       throw new Error(
+
         "Database update failed: " +
         error.message
+
       );
 
     }
 
-
-    /* ==========================================
-       IMPORTANT:
-       UPDATE SUCCESS BUT 0 ROWS
-    ========================================== */
 
     if (
       !data ||
@@ -2612,28 +3058,32 @@ async function saveApplication(
     ) {
 
       throw new Error(
+
         "Save failed: database ने कोई application update नहीं की.\n\n" +
+
         "Possible reason: Supabase RLS UPDATE policy missing है."
+
       );
 
     }
 
-
-    /* ==========================================
-       VERIFY SAVED DATA
-    ========================================== */
 
     const savedRow =
       data[0];
 
 
     if (
+
       savedRow.payment_status !==
       payment ||
+
       savedRow.application_status !==
       status ||
-      String(savedRow.remark || "") !==
-      remark
+
+      String(
+        savedRow.remark || ""
+      ) !== remark
+
     ) {
 
       throw new Error(
@@ -2642,10 +3092,6 @@ async function saveApplication(
 
     }
 
-
-    /* ==========================================
-       SUCCESS
-    ========================================== */
 
     if (button) {
 
@@ -2659,37 +3105,16 @@ async function saveApplication(
     }
 
 
-    /* Small success message */
-
-    console.log(
-      "APPLICATION SAVED SUCCESSFULLY:",
-      trNumber
-    );
-
-
-    /* ==========================================
-       REFRESH STATS ONLY
-       Don't reload table immediately because
-       that can make UX jump.
-    ========================================== */
-
     await loadStats();
 
-
-    /* ==========================================
-       SUCCESS MESSAGE
-    ========================================== */
 
     if (button) {
 
       setTimeout(
         function() {
 
-          if (!button.disabled) {
-            return;
-          }
-
-          button.disabled = false;
+          button.disabled =
+            false;
 
           button.textContent =
             oldButtonText;
@@ -2704,8 +3129,8 @@ async function saveApplication(
 
     }
 
-
   }
+
   catch (error) {
 
     console.error(
@@ -2716,7 +3141,8 @@ async function saveApplication(
 
     if (button) {
 
-      button.disabled = false;
+      button.disabled =
+        false;
 
       button.textContent =
         "❌ Retry";
@@ -2729,8 +3155,10 @@ async function saveApplication(
 
 
     alert(
+
       error?.message ||
       "Application status update failed."
+
     );
 
   }
@@ -2749,22 +3177,27 @@ async function loadStats() {
     await getSession();
 
 
-    /* ==========================================
-       RETAILER COUNT
-    ========================================== */
+    /* RETAILER COUNT */
 
     const {
       count,
-      error: retailerError
+      error:
+        retailerError
     } =
       await supabaseClient
         .from("profiles")
         .select(
+
           "id",
+
           {
-            count: "exact",
-            head: true
+            count:
+              "exact",
+
+            head:
+              true
           }
+
         )
         .eq(
           "role",
@@ -2787,13 +3220,13 @@ async function loadStats() {
         count || 0;
 
 
-    /* ==========================================
-       APPLICATIONS
-    ========================================== */
+    /* APPLICATIONS */
 
     const {
-      data: applications,
-      error: applicationError
+      data:
+        applications,
+      error:
+        applicationError
     } =
       await supabaseClient
         .from("applications")
@@ -2847,15 +3280,19 @@ async function loadStats() {
           function(item) {
 
             return (
+
               !item.payment_status ||
+
               item.payment_status ===
               "Pending"
+
             );
 
           }
         ).length;
 
   }
+
   catch (error) {
 
     console.error(
@@ -2892,6 +3329,7 @@ async function refreshDashboard() {
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
+
   function(event, session) {
 
     console.log(
@@ -2899,8 +3337,10 @@ supabaseClient.auth.onAuthStateChange(
       event
     );
 
+
     if (
-      event === "SIGNED_OUT"
+      event ===
+      "SIGNED_OUT"
     ) {
 
       if (
@@ -2917,6 +3357,7 @@ supabaseClient.auth.onAuthStateChange(
     }
 
   }
+
 );
 
 
@@ -2925,25 +3366,38 @@ supabaseClient.auth.onAuthStateChange(
 ========================================================= */
 
 document.addEventListener(
+
   "keydown",
+
   function(event) {
 
     if (
+
       event.key === "Enter" &&
+
       !document
-        .getElementById("loginBox")
-        .classList.contains("hidden")
+        .getElementById(
+          "loginBox"
+        )
+        .classList.contains(
+          "hidden"
+        )
+
     ) {
 
       const active =
         document.activeElement;
 
+
       if (
+
         active &&
+
         (
           active.id === "email" ||
           active.id === "password"
         )
+
       ) {
 
         event.preventDefault();
@@ -2955,6 +3409,7 @@ document.addEventListener(
     }
 
   }
+
 );
 
 
@@ -2963,7 +3418,9 @@ document.addEventListener(
 ========================================================= */
 
 document.addEventListener(
+
   "DOMContentLoaded",
+
   function() {
 
     generateRetailerId();
@@ -2971,6 +3428,7 @@ document.addEventListener(
     restoreSession();
 
   }
+
 );
 
 </script>
