@@ -1,104 +1,1482 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>AllInOneStop | All Online Services in One Place</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
+
+<meta name="description" content="AllInOneStop - All Online Services in One Place. Retailer portal, admin panel and application tracking.">
+<meta name="theme-color" content="#4f46e5">
+
+<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
 <style>
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:#172033;background:radial-gradient(circle at 10% 10%,#7c5cff25,transparent 30%),radial-gradient(circle at 90% 20%,#00d2ff20,transparent 30%),radial-gradient(circle at 50% 90%,#ff5d8f18,transparent 35%),#f7f9ff;min-height:100vh}
-a{text-decoration:none}.container{width:min(1180px,92%);margin:auto}
-.navbar{position:sticky;top:12px;z-index:20;margin:14px auto 0;width:min(1180px,92%);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:18px;background:#ffffffd1;border:1px solid #fff;box-shadow:0 15px 45px #262d501f;backdrop-filter:blur(18px);border-radius:22px}
-.brand{display:flex;align-items:center;gap:11px;color:#111827}.logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;font-size:24px;color:#fff;background:linear-gradient(135deg,#6d5dfc,#00b8ff);box-shadow:0 9px 24px #4669ff52}
-.brand strong{font-size:20px}.brand small{display:block;color:#697386;font-size:11px;margin-top:2px}
-.navlinks{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.navlinks a,.logout{border:0;cursor:pointer;padding:10px 14px;border-radius:12px;font-weight:700;font-size:13px;color:#334155;background:#f1f4fa;transition:.2s}
-.navlinks a:hover,.logout:hover{transform:translateY(-2px);background:#e8edfa}.navlinks .primary{color:#fff;background:linear-gradient(135deg,#635bff,#397cff);box-shadow:0 7px 18px #4b5bff38}.logout{display:none;background:#fff0f2;color:#d63355}
-.hero{position:relative;text-align:center;padding:82px 0 62px;overflow:hidden}.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;z-index:-1}.hero:before{width:280px;height:280px;background:#7b61ff22;left:-80px;top:50px}.hero:after{width:250px;height:250px;background:#00c6ff1e;right:-50px;top:0}
-.badge{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;background:#fff;border:1px solid #e8eaf3;color:#5b52c8;font-size:13px;font-weight:800;box-shadow:0 8px 25px #232a5014}
-.hero h1{margin:20px 0 12px;font-size:clamp(42px,7vw,76px);line-height:1;letter-spacing:-3px;background:linear-gradient(90deg,#4b43df,#7b4dff,#00aeea,#ec4899);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero h2{margin:0;color:#1e293b;font-size:clamp(20px,3vw,30px)}.hero p{max-width:680px;margin:18px auto 28px;color:#657188;font-size:17px;line-height:1.7}
-.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.big-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:14px;font-weight:800;color:#fff;background:linear-gradient(135deg,#6259ff,#287cff);box-shadow:0 12px 28px #4358ff40;transition:.2s;cursor:pointer}
-.big-btn:hover{transform:translateY(-3px);box-shadow:0 16px 32px #4358ff4d}.big-btn.light{color:#334155;background:#fff;border:1px solid #e6e9f1;box-shadow:0 10px 25px #232a5014}
-.section-title{text-align:center;margin:10px 0 30px}.section-title .mini{color:#6558d9;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:1.8px}.section-title h2{margin:8px 0;font-size:32px}.section-title p{color:#778197;margin:0}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.card{position:relative;overflow:hidden;min-height:330px;padding:28px;border-radius:25px;background:#ffffffe0;border:1px solid #fff;box-shadow:0 18px 45px #2d365f1c;transition:.25s}.card:hover{transform:translateY(-8px);box-shadow:0 25px 55px #2d365f29}
-.icon{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font-size:31px;margin-bottom:20px}.retailer .icon{background:#dcfce7}.admin .icon{background:#ede9fe}.tracking .icon{background:#cffafe}.card h3{font-size:24px;margin:0 0 10px}.card p{color:#68748a;line-height:1.65;min-height:78px}
-.card-btn{display:inline-flex;align-items:center;gap:7px;padding:11px 15px;border-radius:12px;color:#fff;font-weight:800;cursor:pointer}.retailer .card-btn{background:linear-gradient(135deg,#16a34a,#22c55e)}.admin .card-btn{background:linear-gradient(135deg,#6d28d9,#8b5cf6)}.tracking .card-btn{background:linear-gradient(135deg,#0891b2,#06b6d4)}
-.features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:65px 0}.feature{background:#fff;border:1px solid #edf0f6;border-radius:18px;padding:20px;box-shadow:0 10px 28px #28305012}.feature b{display:block;margin:8px 0 5px}.feature span{font-size:13px;color:#7a8498;line-height:1.5}.feature-icon{font-size:25px}
-.status{display:none;margin:0 auto 28px;max-width:620px;padding:12px 16px;border-radius:14px;background:#ecfdf5;color:#087443;border:1px solid #b7f0d0;font-size:13px;font-weight:700}
-footer{margin-top:55px;padding:28px 0;color:#7b8496;font-size:13px;text-align:center;border-top:1px solid #96a0b52e}
-@media(max-width:900px){.cards{grid-template-columns:1fr}.features{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.navbar{position:relative;top:0;flex-direction:column;align-items:flex-start}.hero{padding:55px 0 45px}.hero h1{letter-spacing:-2px}.features{grid-template-columns:1fr}.navlinks{justify-content:flex-start}}
+/* =========================================================
+   ALLINONESTOP - PREMIUM HOME PAGE
+   IMPORTANT:
+   Existing links, Supabase session and logout functionality
+   are preserved.
+========================================================= */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  color:#172033;
+  background:
+    radial-gradient(circle at 8% 8%,rgba(99,91,255,.15),transparent 28%),
+    radial-gradient(circle at 92% 12%,rgba(0,190,255,.13),transparent 27%),
+    radial-gradient(circle at 50% 95%,rgba(236,72,153,.10),transparent 32%),
+    #f7f9ff;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button,
+a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+.container{
+  width:min(1180px,92%);
+  margin:auto;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+.bg-orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(3px);
+  pointer-events:none;
+  z-index:-2;
+  opacity:.65;
+}
+
+.bg-orb.one{
+  width:230px;
+  height:230px;
+  left:-90px;
+  top:230px;
+  background:rgba(99,91,255,.10);
+}
+
+.bg-orb.two{
+  width:200px;
+  height:200px;
+  right:-80px;
+  top:520px;
+  background:rgba(0,194,255,.10);
+}
+
+.bg-orb.three{
+  width:180px;
+  height:180px;
+  left:45%;
+  bottom:-100px;
+  background:rgba(236,72,153,.08);
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar{
+  position:sticky;
+  top:12px;
+  z-index:100;
+  margin:14px auto 0;
+  width:min(1180px,92%);
+  min-height:72px;
+  padding:11px 14px 11px 16px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+
+  background:rgba(255,255,255,.82);
+  border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 18px 50px rgba(38,45,80,.13);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-radius:22px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  color:#111827;
+  flex-shrink:0;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  border-radius:16px;
+
+  display:grid;
+  place-items:center;
+
+  font-size:25px;
+  color:#fff;
+
+  background:linear-gradient(135deg,#655bff,#287cff 58%,#00c6ff);
+  box-shadow:0 10px 27px rgba(70,105,255,.30);
+}
+
+.brand strong{
+  display:block;
+  font-size:20px;
+  letter-spacing:-.3px;
+}
+
+.brand small{
+  display:block;
+  color:#697386;
+  font-size:10px;
+  margin-top:3px;
+  letter-spacing:.2px;
+}
+
+.navlinks{
+  display:flex;
+  gap:7px;
+  align-items:center;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.navlinks a,
+.logout{
+  border:1px solid transparent;
+  cursor:pointer;
+
+  padding:10px 13px;
+  border-radius:12px;
+
+  font-weight:800;
+  font-size:12.5px;
+  color:#334155;
+  background:#f1f4fa;
+
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+.navlinks a:hover,
+.logout:hover{
+  transform:translateY(-2px);
+  background:#e9edfa;
+}
+
+.navlinks .primary{
+  color:#fff;
+  background:linear-gradient(135deg,#635bff,#397cff);
+  box-shadow:0 8px 20px rgba(75,91,255,.24);
+}
+
+.navlinks .primary:hover{
+  background:linear-gradient(135deg,#564df5,#2f70f3);
+}
+
+.logout{
+  display:none;
+  background:#fff0f2;
+  color:#d63355;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+  position:relative;
+  text-align:center;
+  padding:82px 0 62px;
+  overflow:hidden;
+}
+
+.hero-glow{
+  position:absolute;
+  width:500px;
+  height:500px;
+  left:50%;
+  top:-180px;
+  transform:translateX(-50%);
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(99,91,255,.13),transparent 67%);
+  pointer-events:none;
+  z-index:-1;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  padding:9px 15px;
+  border-radius:999px;
+
+  background:rgba(255,255,255,.86);
+  border:1px solid #e8eaf3;
+
+  color:#5b52c8;
+  font-size:12.5px;
+  font-weight:900;
+
+  box-shadow:0 9px 27px rgba(35,42,80,.10);
+
+  animation:fadeDown .7s ease both;
+}
+
+.badge-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#22c55e;
+  box-shadow:0 0 0 5px rgba(34,197,94,.12);
+}
+
+.hero h1{
+  margin:22px 0 13px;
+
+  font-size:clamp(46px,7.2vw,82px);
+  line-height:.98;
+  letter-spacing:-4px;
+
+  background:linear-gradient(
+    90deg,
+    #4b43df 0%,
+    #7b4dff 35%,
+    #00aeea 68%,
+    #ec4899 100%
+  );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+
+  animation:fadeUp .75s ease both;
+}
+
+.hero h2{
+  margin:0;
+  color:#1e293b;
+  font-size:clamp(21px,3vw,31px);
+  letter-spacing:-.7px;
+
+  animation:fadeUp .85s ease both;
+}
+
+.hero p{
+  max-width:700px;
+  margin:18px auto 28px;
+
+  color:#657188;
+  font-size:16px;
+  line-height:1.75;
+
+  animation:fadeUp .95s ease both;
+}
+
+.hero-actions{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+
+  animation:fadeUp 1.05s ease both;
+}
+
+.big-btn{
+  position:relative;
+  overflow:hidden;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+
+  min-width:175px;
+  padding:14px 20px;
+
+  border-radius:14px;
+
+  font-weight:900;
+  font-size:13.5px;
+
+  color:#fff;
+  background:linear-gradient(135deg,#6259ff,#287cff);
+
+  box-shadow:0 12px 28px rgba(67,88,255,.24);
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.big-btn:before{
+  content:"";
+  position:absolute;
+  left:-100%;
+  top:0;
+  width:60%;
+  height:100%;
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.25),
+    transparent
+  );
+  transform:skewX(-20deg);
+  transition:left .55s ease;
+}
+
+.big-btn:hover:before{
+  left:140%;
+}
+
+.big-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 17px 34px rgba(67,88,255,.30);
+}
+
+.big-btn.light{
+  color:#334155;
+  background:rgba(255,255,255,.90);
+  border:1px solid #e6e9f1;
+  box-shadow:0 10px 25px rgba(35,42,80,.09);
+}
+
+.big-btn.light:hover{
+  background:#fff;
+  box-shadow:0 15px 30px rgba(35,42,80,.13);
+}
+
+/* =========================================================
+   SESSION STATUS
+========================================================= */
+
+.status{
+  display:none;
+
+  width:min(620px,100%);
+  margin:0 auto 25px;
+
+  padding:12px 16px;
+  border-radius:14px;
+
+  background:#ecfdf5;
+  color:#087443;
+  border:1px solid #b7f0d0;
+
+  font-size:13px;
+  font-weight:800;
+
+  box-shadow:0 8px 25px rgba(16,185,129,.08);
+}
+
+/* =========================================================
+   QUICK STATS
+========================================================= */
+
+.quick-stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+
+  margin:4px auto 72px;
+  max-width:900px;
+}
+
+.stat{
+  display:flex;
+  align-items:center;
+  gap:13px;
+
+  padding:18px 20px;
+
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(255,255,255,.95);
+  border-radius:18px;
+
+  box-shadow:0 12px 32px rgba(45,54,95,.09);
+}
+
+.stat-icon{
+  width:45px;
+  height:45px;
+  flex:0 0 45px;
+
+  display:grid;
+  place-items:center;
+
+  border-radius:14px;
+  font-size:21px;
+
+  background:#eef2ff;
+}
+
+.stat strong{
+  display:block;
+  font-size:14px;
+  color:#1f2937;
+}
+
+.stat span{
+  display:block;
+  margin-top:3px;
+  font-size:11.5px;
+  color:#7b8496;
+}
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.section-title{
+  text-align:center;
+  margin:10px 0 30px;
+}
+
+.section-title .mini{
+  color:#6558d9;
+  font-size:12px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+
+.section-title h2{
+  margin:8px 0 8px;
+  font-size:clamp(27px,4vw,35px);
+  letter-spacing:-1px;
+}
+
+.section-title p{
+  color:#778197;
+  margin:0;
+  font-size:14px;
+}
+
+/* =========================================================
+   PORTAL CARDS
+========================================================= */
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.card{
+  position:relative;
+  overflow:hidden;
+
+  min-height:340px;
+  padding:28px;
+
+  border-radius:26px;
+
+  background:rgba(255,255,255,.84);
+  border:1px solid rgba(255,255,255,.96);
+
+  box-shadow:0 18px 45px rgba(45,54,95,.11);
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+}
+
+.card:before{
+  content:"";
+  position:absolute;
+  width:170px;
+  height:170px;
+  right:-75px;
+  top:-75px;
+  border-radius:50%;
+  opacity:.65;
+  transition:transform .3s ease;
+}
+
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 26px 58px rgba(45,54,95,.18);
+}
+
+.card:hover:before{
+  transform:scale(1.25);
+}
+
+.retailer:before{
+  background:rgba(34,197,94,.10);
+}
+
+.admin:before{
+  background:rgba(139,92,246,.11);
+}
+
+.tracking:before{
+  background:rgba(6,182,212,.11);
+}
+
+.icon{
+  position:relative;
+  width:66px;
+  height:66px;
+
+  border-radius:21px;
+
+  display:grid;
+  place-items:center;
+
+  font-size:31px;
+  margin-bottom:21px;
+
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5);
+}
+
+.retailer .icon{
+  background:#dcfce7;
+}
+
+.admin .icon{
+  background:#ede9fe;
+}
+
+.tracking .icon{
+  background:#cffafe;
+}
+
+.card h3{
+  font-size:23px;
+  margin:0 0 10px;
+  letter-spacing:-.5px;
+}
+
+.card p{
+  color:#68748a;
+  line-height:1.65;
+  min-height:78px;
+  font-size:14px;
+}
+
+.card-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+
+  padding:12px 15px;
+  border-radius:12px;
+
+  color:#fff;
+  font-size:12.5px;
+  font-weight:900;
+
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+
+.card-btn:hover{
+  transform:translateY(-2px);
+}
+
+.retailer .card-btn{
+  background:linear-gradient(135deg,#16a34a,#22c55e);
+  box-shadow:0 9px 20px rgba(34,197,94,.18);
+}
+
+.admin .card-btn{
+  background:linear-gradient(135deg,#6d28d9,#8b5cf6);
+  box-shadow:0 9px 20px rgba(139,92,246,.18);
+}
+
+.tracking .card-btn{
+  background:linear-gradient(135deg,#0891b2,#06b6d4);
+  box-shadow:0 9px 20px rgba(6,182,212,.18);
+}
+
+/* =========================================================
+   TRACKING FEATURE BANNER
+========================================================= */
+
+.tracking-banner{
+  position:relative;
+  overflow:hidden;
+
+  margin:72px 0 0;
+  padding:31px 32px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+
+  border-radius:25px;
+
+  color:#fff;
+
+  background:
+    radial-gradient(circle at 90% 20%,rgba(255,255,255,.16),transparent 30%),
+    linear-gradient(135deg,#4338ca,#2563eb 58%,#0891b2);
+
+  box-shadow:0 20px 45px rgba(37,99,235,.20);
+}
+
+.tracking-banner:after{
+  content:"";
+  position:absolute;
+  width:230px;
+  height:230px;
+  right:-90px;
+  bottom:-120px;
+  border:35px solid rgba(255,255,255,.08);
+  border-radius:50%;
+}
+
+.banner-content{
+  position:relative;
+  z-index:1;
+}
+
+.banner-content small{
+  display:block;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:1.7px;
+  opacity:.8;
+  margin-bottom:7px;
+}
+
+.banner-content h3{
+  font-size:25px;
+  margin-bottom:7px;
+  letter-spacing:-.5px;
+}
+
+.banner-content p{
+  margin:0;
+  color:rgba(255,255,255,.78);
+  font-size:13px;
+  line-height:1.6;
+}
+
+.banner-btn{
+  position:relative;
+  z-index:2;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  white-space:nowrap;
+
+  padding:13px 19px;
+  border-radius:13px;
+
+  color:#1e3a8a;
+  background:#fff;
+
+  font-weight:900;
+  font-size:13px;
+
+  box-shadow:0 9px 22px rgba(0,0,0,.12);
+
+  transition:transform .2s ease;
+}
+
+.banner-btn:hover{
+  transform:translateY(-3px);
+}
+
+/* =========================================================
+   FEATURES
+========================================================= */
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin:24px 0 70px;
+}
+
+.feature{
+  background:rgba(255,255,255,.82);
+  border:1px solid #edf0f6;
+  border-radius:18px;
+  padding:20px;
+
+  box-shadow:0 10px 28px rgba(40,48,80,.07);
+
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+
+.feature:hover{
+  transform:translateY(-5px);
+  box-shadow:0 16px 35px rgba(40,48,80,.11);
+}
+
+.feature-icon{
+  font-size:25px;
+}
+
+.feature b{
+  display:block;
+  margin:8px 0 5px;
+  font-size:14px;
+}
+
+.feature span{
+  font-size:12.5px;
+  color:#7a8498;
+  line-height:1.5;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+  margin-top:25px;
+  padding:32px 0 30px;
+
+  color:#7b8496;
+  font-size:12px;
+  text-align:center;
+
+  border-top:1px solid rgba(150,160,181,.18);
+}
+
+.footer-brand{
+  font-weight:900;
+  color:#4f46e5;
+}
+
+.footer-sub{
+  margin-top:6px;
+  color:#9299a8;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes fadeDown{
+  from{
+    opacity:0;
+    transform:translateY(-10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(15px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:1000px){
+
+  .cards{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .tracking-card{
+    grid-column:1/-1;
+  }
+
+  .features{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+}
+
+@media(max-width:760px){
+
+  .navbar{
+    position:relative;
+    top:0;
+    flex-direction:column;
+    align-items:stretch;
+    padding:12px;
+  }
+
+  .brand{
+    justify-content:center;
+  }
+
+  .navlinks{
+    width:100%;
+    justify-content:center;
+  }
+
+  .navlinks a,
+  .logout{
+    flex:1 1 auto;
+    text-align:center;
+  }
+
+  .hero{
+    padding:55px 0 45px;
+  }
+
+  .hero h1{
+    letter-spacing:-3px;
+  }
+
+  .quick-stats{
+    grid-template-columns:1fr;
+    margin-bottom:55px;
+  }
+
+  .tracking-banner{
+    flex-direction:column;
+    align-items:flex-start;
+    padding:27px;
+  }
+
+  .banner-btn{
+    width:100%;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .container{
+    width:min(92%,520px);
+  }
+
+  .brand strong{
+    font-size:18px;
+  }
+
+  .brand small{
+    font-size:9.5px;
+  }
+
+  .logo{
+    width:45px;
+    height:45px;
+  }
+
+  .navlinks{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .navlinks .primary{
+    grid-column:1/-1;
+  }
+
+  .hero h1{
+    font-size:clamp(42px,15vw,65px);
+    letter-spacing:-3px;
+  }
+
+  .hero h2{
+    font-size:21px;
+    line-height:1.3;
+  }
+
+  .hero p{
+    font-size:14px;
+    line-height:1.7;
+  }
+
+  .hero-actions{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .big-btn{
+    width:100%;
+  }
+
+  .cards{
+    grid-template-columns:1fr;
+  }
+
+  .tracking-card{
+    grid-column:auto;
+  }
+
+  .card{
+    min-height:auto;
+  }
+
+  .card p{
+    min-height:auto;
+    margin-bottom:22px;
+  }
+
+  .features{
+    grid-template-columns:1fr;
+    margin-bottom:45px;
+  }
+
+  .tracking-banner{
+    margin-top:50px;
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  html{
+    scroll-behavior:auto;
+  }
+
+  *,
+  *:before,
+  *:after{
+    animation:none!important;
+    transition:none!important;
+  }
+
+}
 </style>
 </head>
+
 <body>
+
+<!-- Decorative background -->
+<div class="bg-orb one"></div>
+<div class="bg-orb two"></div>
+<div class="bg-orb three"></div>
+
+<!-- =======================================================
+     NAVBAR
+======================================================= -->
+
 <header class="navbar">
-<a class="brand" href="index.html"><div class="logo">🌐</div><div><strong>AllInOneStop</strong><small>All Online Services in One Place</small></div></a>
-<nav class="navlinks">
-<a href="index.html">🏠 Home</a>
-<a href="retailer.html">🏪 Retailer</a>
-<a href="admin.html">🔐 Admin</a>
-<a class="primary" href="tracking.html">🔎 Track Application</a>
-<button id="logoutBtn" class="logout" onclick="logout()">Logout</button>
-</nav>
+
+  <a class="brand" href="index.html">
+    <div class="logo">🌐</div>
+
+    <div>
+      <strong>AllInOneStop</strong>
+      <small>All Online Services in One Place</small>
+    </div>
+  </a>
+
+  <nav class="navlinks">
+
+    <a href="index.html">
+      🏠 Home
+    </a>
+
+    <a href="retailer.html">
+      🏪 Retailer
+    </a>
+
+    <a href="admin.html">
+      🔐 Admin
+    </a>
+
+    <a class="primary" href="tracking.html">
+      🔎 Track Application
+    </a>
+
+    <button
+      id="logoutBtn"
+      class="logout"
+      onclick="logout()">
+      Logout
+    </button>
+
+  </nav>
+
 </header>
 
+
 <main class="container">
+
+<!-- =======================================================
+     HERO
+======================================================= -->
+
 <section class="hero">
-<div class="badge">✨ Fast • Secure • Simple</div>
-<h1>AllInOneStop</h1>
-<h2>All Online Services in One Place</h2>
-<p>Manage retailer applications, admin work and application tracking from one simple and modern portal.</p>
-<div id="sessionStatus" class="status"></div>
-<div class="hero-actions">
-<a class="big-btn" href="retailer.html">🏪 Retailer Login</a>
-<a class="big-btn light" href="admin.html">🔐 Admin Login</a>
-<a class="big-btn light" href="tracking.html">🔎 Track Application</a>
-</div>
+
+  <div class="hero-glow"></div>
+
+  <div class="badge">
+    <span class="badge-dot"></span>
+    Fast • Secure • Simple
+  </div>
+
+  <h1>AllInOneStop</h1>
+
+  <h2>All Online Services in One Place</h2>
+
+  <p>
+    A simple and modern online portal for retailers,
+    administrators and application tracking.
+    Everything you need is just one click away.
+  </p>
+
+  <!-- Existing Supabase session status -->
+  <div id="sessionStatus" class="status"></div>
+
+  <div class="hero-actions">
+
+    <a class="big-btn" href="retailer.html">
+      🏪 Retailer Login
+    </a>
+
+    <a class="big-btn light" href="admin.html">
+      🔐 Admin Login
+    </a>
+
+    <a class="big-btn light" href="tracking.html">
+      🔎 Track Application
+    </a>
+
+  </div>
+
 </section>
+
+
+<!-- =======================================================
+     QUICK BENEFITS
+======================================================= -->
+
+<section class="quick-stats">
+
+  <div class="stat">
+    <div class="stat-icon">🔒</div>
+    <div>
+      <strong>Secure Portal</strong>
+      <span>Protected account access</span>
+    </div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-icon">⚡</div>
+    <div>
+      <strong>Fast Access</strong>
+      <span>Simple everyday workflow</span>
+    </div>
+  </div>
+
+  <div class="stat">
+    <div class="stat-icon">📱</div>
+    <div>
+      <strong>Mobile Friendly</strong>
+      <span>Phone, tablet & desktop</span>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- =======================================================
+     PORTALS
+======================================================= -->
 
 <section>
-<div class="section-title"><div class="mini">Our Portal</div><h2>Choose Your Service</h2><p>Everything you need is just one click away.</p></div>
-<div class="cards">
-<article class="card retailer"><div class="icon">🏪</div><h3>Retailer Portal</h3><p>Retailers can securely login, submit applications, upload required documents and check their application progress.</p><a class="card-btn" href="retailer.html">Open Retailer Portal →</a></article>
-<article class="card admin"><div class="icon">🔐</div><h3>Admin Panel</h3><p>Admin can manage retailers, applications, documents, payments and application status from the dashboard.</p><a class="card-btn" href="admin.html">Open Admin Panel →</a></article>
-<article class="card tracking"><div class="icon">🔎</div><h3>Application Tracking</h3><p>Enter your TR number and quickly check the current status and progress of your application.</p><a class="card-btn" href="tracking.html">Track Application →</a></article>
-</div>
+
+  <div class="section-title">
+
+    <div class="mini">
+      Our Portal
+    </div>
+
+    <h2>
+      Choose Your Portal
+    </h2>
+
+    <p>
+      Select the section you want to access.
+    </p>
+
+  </div>
+
+
+  <div class="cards">
+
+    <!-- Retailer -->
+    <article class="card retailer">
+
+      <div class="icon">
+        🏪
+      </div>
+
+      <h3>
+        Retailer Portal
+      </h3>
+
+      <p>
+        Retailers can securely login, submit applications,
+        upload required documents and check application progress.
+      </p>
+
+      <a class="card-btn" href="retailer.html">
+        Open Retailer Portal →
+      </a>
+
+    </article>
+
+
+    <!-- Admin -->
+    <article class="card admin">
+
+      <div class="icon">
+        🔐
+      </div>
+
+      <h3>
+        Admin Panel
+      </h3>
+
+      <p>
+        Admin can manage retailers, applications, documents,
+        payments and application status from the dashboard.
+      </p>
+
+      <a class="card-btn" href="admin.html">
+        Open Admin Panel →
+      </a>
+
+    </article>
+
+
+    <!-- Tracking -->
+    <article class="card tracking tracking-card">
+
+      <div class="icon">
+        🔎
+      </div>
+
+      <h3>
+        Application Tracking
+      </h3>
+
+      <p>
+        Use your TR number to quickly check the current
+        status and progress of your application.
+      </p>
+
+      <a class="card-btn" href="tracking.html">
+        Track Application →
+      </a>
+
+    </article>
+
+  </div>
+
 </section>
+
+
+<!-- =======================================================
+     TRACKING BANNER
+======================================================= -->
+
+<section class="tracking-banner">
+
+  <div class="banner-content">
+
+    <small>
+      Application Tracking
+    </small>
+
+    <h3>
+      Already submitted an application?
+    </h3>
+
+    <p>
+      Check your application status quickly using your TR number.
+    </p>
+
+  </div>
+
+  <a class="banner-btn" href="tracking.html">
+    🔎 Track Now →
+  </a>
+
+</section>
+
+
+<!-- =======================================================
+     FEATURES
+======================================================= -->
 
 <section class="features">
-<div class="feature"><div class="feature-icon">🔒</div><b>Secure Login</b><span>Supabase authentication keeps accounts protected.</span></div>
-<div class="feature"><div class="feature-icon">⚡</div><b>Fast Access</b><span>Simple pages designed for quick everyday use.</span></div>
-<div class="feature"><div class="feature-icon">📱</div><b>Mobile Friendly</b><span>Works smoothly on phone, tablet and desktop.</span></div>
-<div class="feature"><div class="feature-icon">📍</div><b>Easy Tracking</b><span>Track an application using its TR number.</span></div>
+
+  <div class="feature">
+
+    <div class="feature-icon">
+      🔒
+    </div>
+
+    <b>
+      Secure Login
+    </b>
+
+    <span>
+      Supabase authentication keeps accounts protected.
+    </span>
+
+  </div>
+
+
+  <div class="feature">
+
+    <div class="feature-icon">
+      ⚡
+    </div>
+
+    <b>
+      Fast Access
+    </b>
+
+    <span>
+      Simple pages designed for quick everyday use.
+    </span>
+
+  </div>
+
+
+  <div class="feature">
+
+    <div class="feature-icon">
+      📱
+    </div>
+
+    <b>
+      Mobile Friendly
+    </b>
+
+    <span>
+      Works smoothly on phone, tablet and desktop.
+    </span>
+
+  </div>
+
+
+  <div class="feature">
+
+    <div class="feature-icon">
+      📍
+    </div>
+
+    <b>
+      Easy Tracking
+    </b>
+
+    <span>
+      Track an application using its TR number.
+    </span>
+
+  </div>
+
 </section>
+
 </main>
-<footer>© <span id="year"></span> AllInOneStop • All Online Services in One Place</footer>
+
+
+<!-- =======================================================
+     FOOTER
+======================================================= -->
+
+<footer>
+
+  © <span id="year"></span>
+
+  <span class="footer-brand">
+    AllInOneStop
+  </span>
+
+  • All Online Services in One Place
+
+  <div class="footer-sub">
+    Fast • Secure • Simple
+  </div>
+
+</footer>
+
+
+<!-- =======================================================
+     EXISTING SUPABASE SESSION / LOGOUT
+     FUNCTIONALITY PRESERVED
+======================================================= -->
 
 <script>
-document.getElementById("year").textContent=new Date().getFullYear();
-const SUPABASE_URL=window.ALLINONESTOP_CONFIG.SUPABASE_URL;
-const SUPABASE_PUBLISHABLE_KEY=window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
-const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+
+/* ---------------------------------------------------------
+   SUPABASE CONFIG
+   Same configuration system as your original page.
+--------------------------------------------------------- */
+
+const SUPABASE_URL =
+  window.ALLINONESTOP_CONFIG.SUPABASE_URL;
+
+const SUPABASE_PUBLISHABLE_KEY =
+  window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* ---------------------------------------------------------
+   SHOW CURRENT SESSION
+--------------------------------------------------------- */
 
 async function showSession(){
- try{
-  const {data}=await supabaseClient.auth.getSession();
-  if(data.session?.user){
-   document.getElementById("sessionStatus").textContent="✅ Logged in as "+(data.session.user.email||"Logged-in user");
-   document.getElementById("sessionStatus").style.display="block";
-   document.getElementById("logoutBtn").style.display="inline-block";
+
+  try{
+
+    const {data} =
+      await supabaseClient.auth.getSession();
+
+    if(data.session?.user){
+
+      document.getElementById(
+        "sessionStatus"
+      ).textContent =
+        "✅ Logged in as " +
+        (
+          data.session.user.email ||
+          "Logged-in user"
+        );
+
+      document.getElementById(
+        "sessionStatus"
+      ).style.display = "block";
+
+      document.getElementById(
+        "logoutBtn"
+      ).style.display = "inline-block";
+
+    }
+
+  }catch(e){
+
+    console.error(e);
+
   }
- }catch(e){console.error(e)}
+
 }
-async function logout(){await supabaseClient.auth.signOut();location.reload()}
-supabaseClient.auth.onAuthStateChange((event,session)=>{
- const box=document.getElementById("sessionStatus"),btn=document.getElementById("logoutBtn");
- if(session?.user){box.textContent="✅ Logged in as "+(session.user.email||"Logged-in user");box.style.display="block";btn.style.display="inline-block"}
- else{box.style.display="none";btn.style.display="none"}
-});
+
+
+/* ---------------------------------------------------------
+   LOGOUT
+   Same functionality as original.
+--------------------------------------------------------- */
+
+async function logout(){
+
+  try{
+
+    await supabaseClient.auth.signOut();
+
+    location.reload();
+
+  }catch(e){
+
+    console.error(e);
+
+  }
+
+}
+
+
+/* ---------------------------------------------------------
+   AUTH STATE CHANGE
+   Same functionality as original.
+--------------------------------------------------------- */
+
+supabaseClient.auth.onAuthStateChange(
+  (event,session)=>{
+
+    const box =
+      document.getElementById(
+        "sessionStatus"
+      );
+
+    const btn =
+      document.getElementById(
+        "logoutBtn"
+      );
+
+    if(session?.user){
+
+      box.textContent =
+        "✅ Logged in as " +
+        (
+          session.user.email ||
+          "Logged-in user"
+        );
+
+      box.style.display = "block";
+
+      btn.style.display =
+        "inline-block";
+
+    }else{
+
+      box.style.display =
+        "none";
+
+      btn.style.display =
+        "none";
+
+    }
+
+  }
+);
+
+
+/* ---------------------------------------------------------
+   INITIAL SESSION CHECK
+--------------------------------------------------------- */
+
 showSession();
+
 </script>
+
 </body>
 </html>
+```
