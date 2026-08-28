@@ -20,12 +20,14 @@
 body{
   margin:0;
   font-family:Arial,sans-serif;
-  background:#f3f6fb;
+  background:radial-gradient(circle at 8% 5%,#6366f120,transparent 28%),radial-gradient(circle at 92% 12%,#06b6d41a,transparent 30%),linear-gradient(135deg,#eef2ff,#f8fbff 48%,#ecfeff);
   color:#172033;
+  min-height:100vh;
 }
 
 .top{
-  background:#0d47a1;
+  position:sticky;top:0;z-index:50;
+  background:linear-gradient(135deg,#0f2f7a,#1976d2 55%,#06b6d4);
   color:#fff;
   padding:15px 20px;
   display:flex;
@@ -44,6 +46,12 @@ body{
   margin-top:5px;
 }
 
+.top button{box-shadow:0 7px 20px rgba(0,0,0,.12)}
+.top button:hover{transform:translateY(-1px)}
+input:focus,select:focus,textarea:focus{outline:2px solid #c7d2fe;border-color:#6366f1;box-shadow:0 0 0 4px #6366f118}
+.sectionTitle{color:#243b70}
+
+
 .wrap{
   max-width:1200px;
   margin:20px auto;
@@ -51,12 +59,15 @@ body{
 }
 
 .card{
-  background:#fff;
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:18px;
-  box-shadow:0 3px 15px #00000012;
+  background:rgba(255,255,255,.97);
+  border-radius:20px;
+  padding:22px;
+  margin-bottom:20px;
+  box-shadow:0 16px 45px rgba(38,48,80,.10);
+  border:1px solid rgba(255,255,255,.9);
+  transition:transform .2s ease,box-shadow .2s ease;
 }
+.card:hover{transform:translateY(-2px);box-shadow:0 20px 55px rgba(38,48,80,.13)}
 
 h2{
   margin-top:0;
@@ -98,9 +109,9 @@ textarea{
 
 button{
   border:0;
-  border-radius:8px;
-  padding:11px 18px;
-  font-weight:700;
+  border-radius:11px;
+  padding:12px 18px;
+  font-weight:800;
   cursor:pointer;
 }
 
@@ -110,22 +121,22 @@ button:disabled{
 }
 
 .primary{
-  background:#1976d2;
+  background:linear-gradient(135deg,#4f46e5,#1976d2);
   color:#fff;
 }
 
 .success{
-  background:#2e7d32;
+  background:linear-gradient(135deg,#059669,#16a34a);
   color:#fff;
 }
 
 .danger{
-  background:#d32f2f;
+  background:linear-gradient(135deg,#dc2626,#ef4444);
   color:#fff;
 }
 
 .secondary{
-  background:#455a64;
+  background:linear-gradient(135deg,#475569,#334155);
   color:#fff;
 }
 
@@ -159,7 +170,7 @@ button:disabled{
 }
 
 .pay{
-  background:#fff8e1;
+  background:linear-gradient(135deg,#fff7ed,#fffbeb);
   border:1px solid #ffcc80;
   padding:15px;
   border-radius:8px;
@@ -204,7 +215,7 @@ button:disabled{
 }
 
 .serviceBox{
-  background:#eef6ff;
+  background:linear-gradient(135deg,#eef2ff,#ecfeff);
   border:1px solid #b9d7ff;
   padding:12px;
   border-radius:8px;
