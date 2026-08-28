@@ -1,1347 +1,379 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>AllInOneStop Admin Dashboard</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-
-<style>
-
-/* =========================================================
-   RESET
-========================================================= */
-
-*{
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f5f7fb;
-  color:#172033;
-  min-height:100vh;
-}
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-}
-
-button:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
-
-.hidden{
-  display:none!important;
-}
-
-a{
-  text-decoration:none;
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-.login-page{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:25px;
-
-  background:
-    radial-gradient(circle at 10% 10%,#6d4aff35,transparent 30%),
-    radial-gradient(circle at 90% 20%,#00c6ff25,transparent 30%),
-    linear-gradient(135deg,#eef2ff,#f8fbff,#ecfeff);
-}
-
-.login-box{
-  width:min(480px,100%);
-  background:#fff;
-  border-radius:25px;
-  padding:38px;
-  box-shadow:0 25px 70px rgba(25,35,70,.15);
-  border:1px solid #eef0f6;
-}
-
-.login-logo{
-  width:72px;
-  height:72px;
-  border-radius:22px;
-  display:grid;
-  place-items:center;
-  font-size:35px;
-  color:#fff;
-  background:linear-gradient(135deg,#7c3aed,#2563eb);
-  box-shadow:0 12px 30px rgba(79,70,229,.3);
-  margin-bottom:20px;
-}
-
-.login-box h1{
-  margin:0;
-  font-size:28px;
-  color:#111827;
-}
-
-.login-box p{
-  color:#667085;
-  margin:8px 0 28px;
-}
-
-.login-box label{
-  display:block;
-  margin:15px 0 7px;
-  font-size:13px;
-  font-weight:800;
-  color:#344054;
-}
-
-.login-box input{
-  width:100%;
-  padding:14px 15px;
-  border:1px solid #d9deea;
-  border-radius:12px;
-  outline:none;
-}
-
-.login-box input:focus{
-  border-color:#6366f1;
-  box-shadow:0 0 0 3px #6366f120;
-}
-
-.login-actions{
-  display:flex;
-  gap:10px;
-  margin-top:22px;
-}
-
-.login-actions button,
-.login-actions a{
-  flex:1;
-  text-align:center;
-}
-
-.primary-btn{
-  color:#fff;
-  background:linear-gradient(135deg,#5b5cf0,#287cff);
-  padding:12px 18px;
-  border-radius:11px;
-  font-weight:800;
-}
-
-.gray-btn{
-  color:#fff;
-  background:#475467;
-  padding:12px 18px;
-  border-radius:11px;
-  font-weight:800;
-}
-
-
-/* =========================================================
-   ADMIN APP
-========================================================= */
-
-.admin-app{
-  display:flex;
-  min-height:100vh;
-}
-
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-.sidebar{
-  width:245px;
-  min-width:245px;
-  background:
-    radial-gradient(circle at 50% 0%,#263a7b50,transparent 32%),
-    linear-gradient(180deg,#061334,#03102b 60%,#020c20);
-  color:#fff;
-  position:fixed;
-  top:0;
-  left:0;
-  bottom:0;
-  z-index:100;
-  padding:18px 13px;
-  display:flex;
-  flex-direction:column;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:4px 7px 22px;
-}
-
-.brand-logo{
-  width:47px;
-  height:47px;
-  border-radius:15px;
-  display:grid;
-  place-items:center;
-  font-size:24px;
-  background:linear-gradient(135deg,#a855f7,#2563eb);
-  box-shadow:0 8px 22px #0005;
-}
-
-.brand-title{
-  font-size:20px;
-  font-weight:900;
-}
-
-.brand-subtitle{
-  font-size:12px;
-  color:#b7c2dc;
-  margin-top:3px;
-}
-
-.sidebar-section{
-  font-size:10px;
-  color:#8290ae;
-  letter-spacing:.5px;
-  font-weight:800;
-  padding:16px 13px 8px;
-}
-
-.sidebar-link{
-  width:100%;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  color:#dce4f7;
-  padding:12px 12px;
-  border-radius:10px;
-  margin:2px 0;
-  font-size:14px;
-  transition:.2s;
-  cursor:pointer;
-}
-
-.sidebar-link:hover{
-  background:#ffffff10;
-  color:#fff;
-}
-
-.sidebar-link.active{
-  background:linear-gradient(135deg,#168ef5,#633bff);
-  color:#fff;
-  box-shadow:0 8px 20px #2648ff35;
-}
-
-.sidebar-icon{
-  width:22px;
-  text-align:center;
-  font-size:17px;
-}
-
-.sidebar-arrow{
-  margin-left:auto;
-  opacity:.7;
-}
-
-.sidebar-user{
-  margin-top:auto;
-  background:#ffffff0d;
-  border:1px solid #ffffff0d;
-  border-radius:14px;
-  padding:11px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.sidebar-user-avatar{
-  width:39px;
-  height:39px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,#2390ff,#1667db);
-  font-size:20px;
-}
-
-.sidebar-user-name{
-  font-size:13px;
-  font-weight:800;
-}
-
-.sidebar-user-role{
-  color:#10d987;
-  font-size:11px;
-  margin-top:3px;
-}
-
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-.main{
-  margin-left:245px;
-  width:calc(100% - 245px);
-  min-width:0;
-}
-
-.topbar{
-  height:80px;
-  background:#fff;
-  border-bottom:1px solid #e9edf4;
-  display:flex;
-  align-items:center;
-  padding:0 25px;
-  gap:20px;
-  position:sticky;
-  top:0;
-  z-index:50;
-}
-
-.menu-btn{
-  width:38px;
-  height:38px;
-  border-radius:9px;
-  background:#fff;
-  color:#172033;
-  font-size:22px;
-}
-
-.page-title{
-  flex:1;
-}
-
-.page-title h1{
-  margin:0;
-  font-size:24px;
-  color:#0f1d3b;
-}
-
-.page-title p{
-  margin:4px 0 0;
-  color:#667085;
-  font-size:12px;
-}
-
-.search-box{
-  width:235px;
-  position:relative;
-}
-
-.search-box input{
-  width:100%;
-  padding:11px 38px 11px 14px;
-  border:1px solid #dce2ec;
-  border-radius:10px;
-  outline:none;
-  background:#fff;
-}
-
-.search-box span{
-  position:absolute;
-  right:13px;
-  top:10px;
-  color:#667085;
-}
-
-.notification{
-  position:relative;
-  font-size:22px;
-  padding:7px;
-}
-
-.notification-badge{
-  position:absolute;
-  top:0;
-  right:0;
-  width:17px;
-  height:17px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:#ef3f58;
-  color:#fff;
-  font-size:9px;
-  font-weight:900;
-}
-
-.top-user{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.top-avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,#2388ff,#1261db);
-  color:#fff;
-  font-size:21px;
-}
-
-.top-user-name{
-  font-size:13px;
-  font-weight:900;
-}
-
-.top-user-role{
-  font-size:11px;
-  color:#667085;
-  margin-top:3px;
-}
-
-
-/* =========================================================
-   CONTENT
-========================================================= */
-
-.content{
-  padding:22px;
-}
-
-.dashboard-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:18px;
-}
-
-.dashboard-header h2{
-  margin:0;
-  font-size:20px;
-  color:#172033;
-}
-
-.dashboard-header p{
-  margin:5px 0 0;
-  font-size:12px;
-  color:#667085;
-}
-
-
-/* =========================================================
-   STATS
-========================================================= */
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:16px;
-  margin-bottom:20px;
-}
-
-.stat{
-  background:#fff;
-  border-radius:15px;
-  padding:18px;
-  border:1px solid #e9edf5;
-  box-shadow:0 7px 25px rgba(24,38,72,.055);
-  position:relative;
-  overflow:hidden;
-}
-
-.stat-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.stat-icon{
-  width:45px;
-  height:45px;
-  border-radius:13px;
-  display:grid;
-  place-items:center;
-  font-size:23px;
-}
-
-.stat-purple .stat-icon{
-  background:#eee7ff;
-  color:#693cff;
-}
-
-.stat-blue .stat-icon{
-  background:#e3f0ff;
-  color:#1672df;
-}
-
-.stat-green .stat-icon{
-  background:#e3faf1;
-  color:#00a86b;
-}
-
-.stat-orange .stat-icon{
-  background:#fff1dd;
-  color:#f08a00;
-}
-
-.stat-red .stat-icon{
-  background:#ffe7eb;
-  color:#ed4056;
-}
-
-.stat-title{
-  color:#667085;
-  font-size:12px;
-  font-weight:700;
-  margin-top:12px;
-}
-
-.stat-number{
-  color:#101d38;
-  font-size:27px;
-  font-weight:900;
-  margin-top:5px;
-}
-
-.stat-bottom{
-  font-size:10px;
-  color:#667085;
-  margin-top:7px;
-}
-
-.stat-bottom.up{
-  color:#00a86b;
-}
-
-
-/* =========================================================
-   GRID
-========================================================= */
-
-.dashboard-grid{
-  display:grid;
-  grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);
-  gap:18px;
-  margin-bottom:18px;
-}
-
-.card{
-  background:#fff;
-  border:1px solid #e8ecf3;
-  border-radius:15px;
-  box-shadow:0 7px 25px rgba(24,38,72,.05);
-  padding:18px;
-}
-
-.card-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:15px;
-}
-
-.card-header h3{
-  margin:0;
-  font-size:15px;
-  color:#172033;
-}
-
-.card-header p{
-  margin:4px 0 0;
-  font-size:11px;
-  color:#667085;
-}
-
-.select-small{
-  border:1px solid #dce2ec;
-  border-radius:8px;
-  padding:7px 10px;
-  color:#344054;
-  background:#fff;
-}
-
-
-/* =========================================================
-   APPLICATION OVERVIEW
-========================================================= */
-
-.chart-area{
-  height:245px;
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  padding:8px 5px 30px 42px;
-}
-
-.chart-grid{
-  position:absolute;
-  left:42px;
-  right:5px;
-  top:10px;
-  bottom:35px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.grid-line{
-  border-top:1px dashed #e2e7ef;
-  width:100%;
-}
-
-.chart-y{
-  position:absolute;
-  left:0;
-  top:5px;
-  bottom:32px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  color:#7b879d;
-  font-size:10px;
-}
-
-.chart-bars{
-  position:absolute;
-  left:43px;
-  right:7px;
-  bottom:35px;
-  top:18px;
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-around;
-  gap:9px;
-}
-
-.chart-column{
-  height:100%;
-  flex:1;
-  display:flex;
-  align-items:flex-end;
-  gap:2px;
-}
-
-.chart-line-blue,
-.chart-line-green,
-.chart-line-orange,
-.chart-line-red{
-  border-radius:8px 8px 0 0;
-  width:22%;
-  min-height:4px;
-}
-
-.chart-line-blue{
-  height:75%;
-  background:#287cff;
-}
-
-.chart-line-green{
-  height:55%;
-  background:#10b981;
-}
-
-.chart-line-orange{
-  height:34%;
-  background:#f59e0b;
-}
-
-.chart-line-red{
-  height:12%;
-  background:#ef4057;
-}
-
-.chart-labels{
-  position:absolute;
-  left:43px;
-  right:5px;
-  bottom:5px;
-  display:flex;
-  justify-content:space-around;
-  color:#667085;
-  font-size:10px;
-}
-
-.legend{
-  display:flex;
-  gap:15px;
-  flex-wrap:wrap;
-  margin-bottom:8px;
-}
-
-.legend-item{
-  font-size:11px;
-  color:#475467;
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-
-.legend-dot{
-  width:9px;
-  height:9px;
-  border-radius:50%;
-}
-
-.blue{
-  background:#287cff;
-}
-
-.green{
-  background:#10b981;
-}
-
-.orange{
-  background:#f59e0b;
-}
-
-.red{
-  background:#ef4057;
-}
-
-
-/* =========================================================
-   QUICK ACTIONS
-========================================================= */
-
-.quick-actions{
-  display:flex;
-  flex-direction:column;
-  gap:9px;
-}
-
-.quick-btn{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:11px 13px;
-  border-radius:9px;
-  border:1px solid #e2e7ef;
-  background:#fff;
-  color:#344054;
-  font-size:12px;
-  font-weight:800;
-  text-align:left;
-}
-
-.quick-btn:hover{
-  background:#f8faff;
-  border-color:#cdd6ff;
-}
-
-.quick-icon{
-  font-size:16px;
-}
-
-
-/* =========================================================
-   DISTRIBUTION
-========================================================= */
-
-.distribution{
-  display:flex;
-  align-items:center;
-  gap:25px;
-}
-
-.donut{
-  width:155px;
-  height:155px;
-  min-width:155px;
-  border-radius:50%;
-  background:
-    conic-gradient(
-      #287cff 0deg 130deg,
-      #10b981 130deg 235deg,
-      #f59e0b 235deg 300deg,
-      #ef4057 300deg 345deg,
-      #a5b4fc 345deg 360deg
-    );
-  display:grid;
-  place-items:center;
-  position:relative;
-}
-
-.donut::after{
-  content:"";
-  width:90px;
-  height:90px;
-  border-radius:50%;
-  background:#fff;
-  position:absolute;
-}
-
-.donut-text{
-  position:absolute;
-  z-index:2;
-  text-align:center;
-}
-
-.donut-total{
-  font-size:23px;
-  font-weight:900;
-  color:#172033;
-}
-
-.donut-label{
-  font-size:10px;
-  color:#667085;
-}
-
-.distribution-list{
-  flex:1;
-}
-
-.distribution-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin:12px 0;
-  font-size:11px;
-}
-
-.distribution-name{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  color:#344054;
-}
-
-.distribution-value{
-  font-weight:800;
-  color:#475467;
-}
-
-
-/* =========================================================
-   QUICK / ANNOUNCEMENT
-========================================================= */
-
-.bottom-grid{
-  display:grid;
-  grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);
-  gap:18px;
-  margin-bottom:18px;
-}
-
-.announcement{
-  border:1px solid #e2e7ef;
-  border-radius:12px;
-  padding:15px;
-  display:flex;
-  align-items:flex-start;
-  gap:13px;
-}
-
-.announcement-icon{
-  width:43px;
-  height:43px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,#4f46e5,#6366f1);
-  color:#fff;
-  font-size:19px;
-}
-
-.announcement h4{
-  margin:0;
-  font-size:13px;
-}
-
-.announcement p{
-  margin:6px 0 0;
-  font-size:11px;
-  line-height:1.5;
-  color:#667085;
-}
-
-.announcement-date{
-  margin-left:auto;
-  white-space:nowrap;
-  font-size:10px;
-  color:#667085;
-}
-
-
-/* =========================================================
-   MAIN BOXES
-========================================================= */
-
-.box{
-  background:#fff;
-  border-radius:15px;
-  border:1px solid #e8ecf3;
-  box-shadow:0 7px 25px rgba(24,38,72,.05);
-  padding:20px;
-  margin-bottom:18px;
-}
-
-.box-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:17px;
-}
-
-.box-title h2{
-  margin:0;
-  font-size:17px;
-  color:#172033;
-}
-
-.box-title p{
-  margin:5px 0 0;
-  color:#667085;
-  font-size:11px;
-}
-
-
-/* =========================================================
-   FORM
-========================================================= */
-
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.form-group label{
-  display:block;
-  font-size:12px;
-  font-weight:800;
-  color:#475467;
-  margin-bottom:6px;
-}
-
-.form-group input,
-.form-group select{
-  width:100%;
-  padding:11px 12px;
-  border:1px solid #d9deea;
-  border-radius:9px;
-  background:#fff;
-  outline:none;
-}
-
-.form-group input:focus,
-.form-group select:focus{
-  border-color:#6366f1;
-  box-shadow:0 0 0 3px #6366f115;
-}
-
-.hint{
-  font-size:10px;
-  color:#667085;
-  margin-top:5px;
-}
-
-.id-box{
-  margin-top:15px;
-  padding:14px;
-  border:1px dashed #cfd6e5;
-  border-radius:10px;
-  background:#f8fafc;
-}
-
-.id-box input{
-  width:100%;
-  padding:11px;
-  margin-top:5px;
-  border:1px solid #d9deea;
-  border-radius:9px;
-  color:#4f46e5;
-  font-weight:900;
-  background:#fff;
-}
-
-.form-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:17px;
-}
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.btn{
-  display:inline-block;
-  padding:10px 14px;
-  border-radius:9px;
-  font-weight:800;
-  font-size:12px;
-  color:#fff;
-  background:linear-gradient(135deg,#5b5cf0,#287cff);
-}
-
-.btn:hover,
-.primary-btn:hover{
-  box-shadow:0 7px 18px rgba(54,88,255,.18);
-}
-
-.refresh-btn{
-  padding:9px 12px;
-  border-radius:9px;
-  color:#344054;
-  background:#fff;
-  border:1px solid #dce2ec;
-  font-size:11px;
-  font-weight:800;
-}
-
-.logout-btn{
-  background:#475467;
-}
-
-.password-btn{
-  background:linear-gradient(135deg,#7c3aed,#4f46e5);
-}
-
-.delete-btn{
-  background:linear-gradient(135deg,#dc2626,#ef4444);
-}
-
-.save-btn{
-  background:linear-gradient(135deg,#4f46e5,#287cff);
-}
-
-.save-btn.saved{
-  background:linear-gradient(135deg,#059669,#10b981);
-}
-
-
-/* =========================================================
-   TABLE
-========================================================= */
-
-.table-wrap{
-  overflow-x:auto;
-  border:1px solid #e7ebf2;
-  border-radius:10px;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:850px;
-}
-
-th,
-td{
-  padding:12px;
-  border-bottom:1px solid #edf0f5;
-  text-align:left;
-  font-size:11px;
-  vertical-align:middle;
-}
-
-th{
-  background:#f8fafc;
-  color:#667085;
-  font-size:10px;
-  text-transform:uppercase;
-  letter-spacing:.2px;
-}
-
-td{
-  color:#344054;
-}
-
-tbody tr:hover{
-  background:#fafbff;
-}
-
-td input,
-td select{
-  margin:0;
-  padding:8px;
-  border:1px solid #dce2ec;
-  border-radius:7px;
-  background:#fff;
-  min-width:110px;
-}
-
-td input:focus,
-td select:focus{
-  outline:none;
-  border-color:#6366f1;
-}
-
-.table-actions{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-}
-
-.small-btn{
-  padding:7px 9px;
-  border-radius:7px;
-  color:#fff;
-  font-size:10px;
-  font-weight:800;
-}
-
-.loading{
-  text-align:center;
-  padding:25px;
-  color:#667085;
-}
-
-.empty{
-  text-align:center;
-  padding:30px;
-  color:#667085;
-}
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-.status-pill{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:10px;
-  font-weight:900;
-}
-
-.paid{
-  background:#e8faf2;
-  color:#087443;
-}
-
-.pending{
-  background:#fff6df;
-  color:#92400e;
-}
-
-.failed,
-.rejected{
-  background:#fff0f1;
-  color:#b42318;
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-.msg{
-  padding:12px;
-  border-radius:9px;
-  margin-top:13px;
-  background:#ecfdf3;
-  color:#087443;
-  font-size:12px;
-  font-weight:700;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
-
-.msg.error{
-  background:#fef2f2;
-  color:#b42318;
-}
-
-.msg.warning{
-  background:#fffbeb;
-  color:#92400e;
-}
-
-
-/* =========================================================
-   FOOTER
-========================================================= */
-
-.footer{
-  display:flex;
-  justify-content:space-between;
-  padding:15px 4px 3px;
-  color:#667085;
-  font-size:10px;
-}
-
-
-/* =========================================================
-   MOBILE SIDEBAR
-========================================================= */
-
-.mobile-overlay{
-  display:none;
-}
-
-@media(max-width:1200px){
-
-  .stats{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-}
-
-@media(max-width:950px){
-
-  .dashboard-grid,
-  .bottom-grid{
-    grid-template-columns:1fr;
-  }
-
-  .search-box{
-    width:180px;
-  }
-
-}
-
-@media(max-width:800px){
-
-  .sidebar{
-    transform:translateX(-100%);
-    transition:.25s;
-  }
-
-  .sidebar.open{
-    transform:translateX(0);
-  }
-
-  .mobile-overlay{
-    position:fixed;
-    inset:0;
-    background:#0008;
-    z-index:90;
-  }
-
-  .mobile-overlay.show{
-    display:block;
-  }
-
-  .main{
-    margin-left:0;
-    width:100%;
-  }
-
-  .topbar{
-    padding:0 15px;
-  }
-
-  .top-user-name,
-  .top-user-role{
-    display:none;
-  }
-
-  .search-box{
-    width:150px;
-  }
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-
-}
-
-@media(max-width:550px){
-
-  .content{
-    padding:12px;
-  }
-
-  .topbar{
-    height:70px;
-    gap:8px;
-  }
-
-  .page-title h1{
-    font-size:18px;
-  }
-
-  .page-title p{
-    display:none;
-  }
-
-  .search-box{
-    display:none;
-  }
-
-  .stats{
-    grid-template-columns:1fr;
-  }
-
-  .distribution{
-    flex-direction:column;
-  }
-
-  .dashboard-header{
-    align-items:flex-start;
-  }
-
-  .box,
-  .card{
-    padding:14px;
-  }
-
-  .login-box{
-    padding:25px;
-  }
-
-  .footer{
-    flex-direction:column;
-    gap:6px;
-  }
-
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AllInOneStop Admin Panel</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, #7c5cff20, transparent 30%),
+        radial-gradient(circle at 90% 15%, #00d2ff18, transparent 30%),
+        linear-gradient(135deg, #eef2ff, #f8fbff 45%, #ecfeff);
+      color: #172033;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .wrap {
+      width: min(1200px, calc(100% - 30px));
+      margin: 25px auto;
+    }
+
+    .box {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 22px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 15px 45px rgba(38, 48, 80, 0.10);
+      border: 1px solid #ffffff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    h1 {
+      margin: 0;
+      color: #4f46e5;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #172033;
+    }
+
+    p {
+      color: #667085;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: #475467;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d9deea;
+      border-radius: 11px;
+      background: white;
+      margin-bottom: 15px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 2px solid #c7d2fe;
+      border-color: #6366f1;
+    }
+
+    button,
+    .btn {
+      padding: 11px 16px;
+      border-radius: 11px;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, #5b5cf0, #287cff);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    button:hover,
+    .btn:hover {
+      box-shadow: 0 8px 20px rgba(54, 88, 255, 0.20);
+    }
+
+    .logout {
+      background: linear-gradient(135deg,#334155,#475569);
+      color:#fff !important;
+    }
+
+    .delete-btn {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+    }
+
+    .password-btn {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    }
+
+    .small-btn {
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #eaecf0;
+      margin: 22px 0;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #667085;
+    }
+
+    .badge,
+    .online {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .badge {
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+
+    .online {
+      background: #ecfdf3;
+      color: #087443;
+    }
+
+    .msg {
+      padding: 13px;
+      border-radius: 11px;
+      margin-top: 14px;
+      background: #ecfdf3;
+      color: #087443;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg.error {
+      background: #fef2f2;
+      color: #b42318;
+    }
+
+    .msg.warning {
+      background: #fffbeb;
+      color: #92400e;
+    }
+
+    .id-box {
+      background: #f8fafc;
+      border: 1px solid #e4e7ec;
+      border-radius: 13px;
+      padding: 13px;
+      margin-top: 5px;
+    }
+
+    .id-box input {
+      margin-bottom: 5px;
+      background: #f8fafc;
+      color: #4f46e5;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(38, 48, 80, 0.08);
+      border: 1px solid #eef0f5;
+    }
+
+    .stat-icon {
+      font-size: 27px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 900;
+      margin-top: 8px;
+      color: #4f46e5;
+    }
+
+    .stat-title {
+      color: #667085;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #eaecf0;
+      border-radius: 14px;
+      margin-top: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      padding: 11px;
+      border-bottom: 1px solid #eaecf0;
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475467;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 25px;
+      color: #667085;
+    }
+
+    .login-box {
+      max-width: 550px;
+      margin: 70px auto;
+    }
+
+    .login-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      color: white;
+      font-size: 34px;
+      margin-bottom: 18px;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .paid {
+      background: #ecfdf3;
+      color: #087443;
+    }
+
+    .pending {
+      background: #fffbeb;
+      color: #92400e;
+    }
+
+    .failed,
+    .rejected {
+      background: #fef2f2;
+      color: #b42318;
+    }
+
+    @media (max-width: 800px) {
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .wrap {
+        width: min(100% - 20px, 1200px);
+        margin: 10px auto;
+      }
+
+      .box {
+        padding: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .login-box {
+        margin: 25px auto;
+      }
+    }
+  </style>
 </head>
-
 
 <body>
 
+<div class="wrap">
 
-<!-- =========================================================
-     LOGIN PAGE
-========================================================= -->
+  <!-- =====================================================
+       LOGIN
+  ====================================================== -->
 
-<div id="loginPage" class="login-page">
+  <div class="box login-box" id="loginBox">
 
-  <div class="login-box">
-
-    <div class="login-logo">
-      🌐
-    </div>
+    <div class="login-icon">🔐</div>
 
     <h1>Admin Login</h1>
 
-    <p>
-      AllInOneStop management portal
-    </p>
+    <p>AllInOneStop management portal</p>
 
-
-    <label for="email">
-      Admin Email
-    </label>
+    <label for="email">Admin Email</label>
 
     <input
       id="email"
@@ -1350,10 +382,7 @@ td select:focus{
       autocomplete="username"
     >
 
-
-    <label for="password">
-      Admin Password
-    </label>
+    <label for="password">Admin Password</label>
 
     <input
       id="password"
@@ -1362,21 +391,19 @@ td select:focus{
       autocomplete="current-password"
     >
 
-
-    <div class="login-actions">
+    <div class="actions">
 
       <button
         id="loginBtn"
         type="button"
-        class="primary-btn"
         onclick="login()"
       >
         🔐 Login
       </button>
 
       <a
+        class="btn logout"
         href="index.html"
-        class="gray-btn"
       >
         🏠 Home
       </a>
@@ -1387,43 +414,59 @@ td select:focus{
 
   </div>
 
-</div>
 
+  <!-- =====================================================
+       ADMIN PANEL
+  ====================================================== -->
 
+  <div id="adminPanel" class="hidden">
 
-<!-- =========================================================
-     ADMIN APP
-========================================================= -->
+    <!-- HEADER -->
 
-<div
-  id="adminPanel"
-  class="admin-app hidden"
->
+    <div class="box">
 
+      <div class="top">
 
-  <!-- =======================================================
-       SIDEBAR
-  ======================================================== -->
+        <div>
 
-  <aside
-    id="sidebar"
-    class="sidebar"
-  >
+          <h1>🛠️ Admin Panel</h1>
 
-    <div class="brand">
+          <div style="margin-top:8px">
 
-      <div class="brand-logo">
-        🌐
-      </div>
+            <span class="online">
+              ● Admin Online
+            </span>
 
-      <div>
+            <span
+              id="adminName"
+              class="badge"
+            >
+              Admin
+            </span>
 
-        <div class="brand-title">
-          AllInOneStop
+          </div>
+
         </div>
 
-        <div class="brand-subtitle">
-          Admin Panel
+        <div class="actions">
+
+          <a
+            class="btn logout"
+            href="index.html"
+          >
+            🏠 Home
+          </a>
+
+          <button
+            type="button"
+            class="logout"
+            id="adminLogoutBtn"
+            onclick="logout()"
+            title="Logout from Admin Panel"
+          >
+            🚪 Logout
+          </button>
+
         </div>
 
       </div>
@@ -1431,1334 +474,364 @@ td select:focus{
     </div>
 
 
-    <div class="sidebar-link active">
+    <!-- =================================================
+         STATS
+    ================================================== -->
 
-      <span class="sidebar-icon">🏠</span>
+    <div class="stats">
 
-      <span>Dashboard</span>
+      <div class="stat">
 
-    </div>
-
-
-    <div class="sidebar-section">
-      APPLICATION MANAGEMENT
-    </div>
-
-
-    <div
-      class="sidebar-link"
-      onclick="scrollToSection('applicationsSection')"
-    >
-
-      <span class="sidebar-icon">📋</span>
-
-      <span>Applications</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div
-      class="sidebar-link"
-      onclick="scrollToSection('applicationsSection')"
-    >
-
-      <span class="sidebar-icon">📄</span>
-
-      <span>Documents</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div
-      class="sidebar-link"
-      onclick="scrollToSection('applicationsSection')"
-    >
-
-      <span class="sidebar-icon">💳</span>
-
-      <span>Payments</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div
-      class="sidebar-link"
-      onclick="scrollToSection('applicationsSection')"
-    >
-
-      <span class="sidebar-icon">◉</span>
-
-      <span>Application Status</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-section">
-      RETAILER MANAGEMENT
-    </div>
-
-
-    <div
-      class="sidebar-link"
-      onclick="scrollToSection('retailersSection')"
-    >
-
-      <span class="sidebar-icon">👥</span>
-
-      <span>Retailers</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div
-      class="sidebar-link"
-      onclick="scrollToSection('createRetailerSection')"
-    >
-
-      <span class="sidebar-icon">👤</span>
-
-      <span>Retailer Requests</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-link">
-
-      <span class="sidebar-icon">⚙️</span>
-
-      <span>Roles & Permissions</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-section">
-      SERVICE MANAGEMENT
-    </div>
-
-
-    <div class="sidebar-link">
-
-      <span class="sidebar-icon">⚙</span>
-
-      <span>Services</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-link">
-
-      <span class="sidebar-icon">▦</span>
-
-      <span>Categories</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-link">
-
-      <span class="sidebar-icon">◈</span>
-
-      <span>Service Requests</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-section">
-      SYSTEM
-    </div>
-
-
-    <div class="sidebar-link">
-
-      <span class="sidebar-icon">🔔</span>
-
-      <span>Notifications</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-link">
-
-      <span class="sidebar-icon">▣</span>
-
-      <span>Activity Logs</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-link">
-
-      <span class="sidebar-icon">⚙</span>
-
-      <span>Settings</span>
-
-      <span class="sidebar-arrow">›</span>
-
-    </div>
-
-
-    <div class="sidebar-user">
-
-      <div class="sidebar-user-avatar">
-        👤
-      </div>
-
-      <div>
+        <div class="stat-icon">👥</div>
 
         <div
-          id="sidebarAdminName"
-          class="sidebar-user-name"
+          class="stat-number"
+          id="totalRetailers"
         >
-          Admin User
+          0
         </div>
 
-        <div class="sidebar-user-role">
-          Super Admin
+        <div class="stat-title">
+          Total Retailers
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">📋</div>
+
+        <div
+          class="stat-number"
+          id="totalApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Total Applications
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">💰</div>
+
+        <div
+          class="stat-number"
+          id="paidApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Paid Applications
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">⏳</div>
+
+        <div
+          class="stat-number"
+          id="pendingApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Pending Applications
         </div>
 
       </div>
 
     </div>
 
-  </aside>
+
+    <!-- =================================================
+         CREATE RETAILER
+    ================================================== -->
+
+    <div class="box">
+
+      <h2>➕ Create New Retailer</h2>
+
+      <p>
+        Retailer account इसी admin panel से create होगा।
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="grid">
+
+        <div>
+
+          <label for="retailerName">
+            Retailer Full Name
+          </label>
+
+          <input
+            id="retailerName"
+            type="text"
+            placeholder="Retailer full name"
+          >
+
+        </div>
 
 
-  <div
-    id="mobileOverlay"
-    class="mobile-overlay"
-    onclick="closeSidebar()"
-  ></div>
+        <div>
+
+          <label for="retailerMobile">
+            Mobile Number
+          </label>
+
+          <input
+            id="retailerMobile"
+            type="tel"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="10 digit mobile number"
+          >
+
+        </div>
 
 
-  <!-- =======================================================
-       MAIN
-  ======================================================== -->
+        <div>
 
-  <main class="main">
+          <label for="retailerNumber">
+            Retailer Number
+          </label>
+
+          <input
+            id="retailerNumber"
+            type="text"
+            placeholder="Optional"
+          >
+
+          <div class="hint">
+            खाली छोड़ने पर Auto Generated ID ही Retailer Number बनेगा।
+          </div>
+
+        </div>
 
 
-    <!-- TOP BAR -->
+        <div>
 
-    <header class="topbar">
+          <label for="retailerPassword">
+            Retailer Password
+          </label>
 
-      <button
-        type="button"
-        class="menu-btn"
-        onclick="toggleSidebar()"
-      >
-        ☰
-      </button>
+          <input
+            id="retailerPassword"
+            type="password"
+            placeholder="Enter password manually"
+            autocomplete="new-password"
+          >
 
+          <div class="hint">
+            Minimum 6 characters
+          </div>
 
-      <div class="page-title">
-
-        <h1>
-          Dashboard 👋
-        </h1>
-
-        <p>
-          Welcome back, Admin! Here's what's happening today.
-        </p>
+        </div>
 
       </div>
 
 
-      <div class="search-box">
+      <div class="id-box">
+
+        <label for="retailerUsername">
+          Auto Generated Retailer ID
+        </label>
 
         <input
-          id="globalSearch"
+          id="retailerUsername"
           type="text"
-          placeholder="Search anything..."
-          oninput="globalSearch()"
+          readonly
         >
 
-        <span>
-          🔍
-        </span>
-
-      </div>
-
-
-      <div class="notification">
-
-        🔔
-
-        <span class="notification-badge">
-          5
-        </span>
-
-      </div>
-
-
-      <div class="top-user">
-
-        <div class="top-avatar">
-          👤
-        </div>
-
-        <div>
-
-          <div
-            id="adminNameTop"
-            class="top-user-name"
-          >
-            Admin User
-          </div>
-
-          <div class="top-user-role">
-            Super Admin
-          </div>
-
+        <div class="hint">
+          यही Retailer ID login के लिए use होगी।
         </div>
 
       </div>
 
-    </header>
+
+      <div class="actions">
+
+        <button
+          type="button"
+          onclick="generateRetailerId()"
+        >
+          🔄 Generate ID
+        </button>
+
+        <button
+          type="button"
+          id="createRetailerBtn"
+          onclick="createRetailer()"
+        >
+          👤 Create Retailer
+        </button>
+
+      </div>
 
 
-    <!-- =====================================================
-         CONTENT
-    ====================================================== -->
+      <div id="createMessage"></div>
 
-    <div class="content">
+    </div>
 
 
-      <!-- DASHBOARD HEADER -->
+    <!-- =================================================
+         RETAILER HISTORY
+    ================================================== -->
 
-      <div class="dashboard-header">
+    <div class="box">
+
+      <div class="top">
 
         <div>
 
-          <h2>
-            Overview
-          </h2>
+          <h2>👥 Retailer History</h2>
 
-          <p>
-            Monitor your AllInOneStop portal
+          <p class="hint">
+            सभी registered retailers
           </p>
 
         </div>
 
         <button
           type="button"
-          class="refresh-btn"
-          onclick="refreshDashboard()"
+          onclick="loadRetailers()"
         >
-          🔄 Refresh Dashboard
+          🔄 Refresh
         </button>
 
       </div>
 
 
-      <!-- ===================================================
-           STATS
-      ==================================================== -->
+      <div class="table-wrap">
 
-      <div class="stats">
+        <table>
 
+          <thead>
 
-        <div class="stat stat-purple">
+            <tr>
+              <th>Retailer ID</th>
+              <th>Name</th>
+              <th>Mobile</th>
+              <th>Retailer No.</th>
+              <th>Actions</th>
+            </tr>
 
-          <div class="stat-top">
+          </thead>
 
-            <div>
+          <tbody id="retailerRows">
 
-              <div class="stat-title">
-                Total Applications
-              </div>
-
-              <div
-                id="totalApplications"
-                class="stat-number"
+            <tr>
+              <td
+                colspan="5"
+                class="loading"
               >
-                0
-              </div>
+                Loading retailers...
+              </td>
+            </tr>
 
-            </div>
+          </tbody>
 
-            <div class="stat-icon">
-              📋
-            </div>
-
-          </div>
-
-          <div class="stat-bottom up">
-            ↑ All applications
-          </div>
-
-        </div>
-
-
-        <div class="stat stat-blue">
-
-          <div class="stat-top">
-
-            <div>
-
-              <div class="stat-title">
-                Pending Applications
-              </div>
-
-              <div
-                id="pendingApplications"
-                class="stat-number"
-              >
-                0
-              </div>
-
-            </div>
-
-            <div class="stat-icon">
-              🕐
-            </div>
-
-          </div>
-
-          <div class="stat-bottom">
-            Awaiting payment/review
-          </div>
-
-        </div>
-
-
-        <div class="stat stat-orange">
-
-          <div class="stat-top">
-
-            <div>
-
-              <div class="stat-title">
-                Approved Applications
-              </div>
-
-              <div
-                id="approvedApplications"
-                class="stat-number"
-              >
-                0
-              </div>
-
-            </div>
-
-            <div class="stat-icon">
-              ✓
-            </div>
-
-          </div>
-
-          <div class="stat-bottom up">
-            ↑ Completed/approved
-          </div>
-
-        </div>
-
-
-        <div class="stat stat-green">
-
-          <div class="stat-top">
-
-            <div>
-
-              <div class="stat-title">
-                Total Retailers
-              </div>
-
-              <div
-                id="totalRetailers"
-                class="stat-number"
-              >
-                0
-              </div>
-
-            </div>
-
-            <div class="stat-icon">
-              👥
-            </div>
-
-          </div>
-
-          <div class="stat-bottom up">
-            ↑ Registered retailers
-          </div>
-
-        </div>
-
-
-        <div class="stat stat-red">
-
-          <div class="stat-top">
-
-            <div>
-
-              <div class="stat-title">
-                Total Services
-              </div>
-
-              <div
-                id="totalServices"
-                class="stat-number"
-              >
-                0
-              </div>
-
-            </div>
-
-            <div class="stat-icon">
-              ▦
-            </div>
-
-          </div>
-
-          <div class="stat-bottom">
-            Active services
-          </div>
-
-        </div>
-
+        </table>
 
       </div>
-
-
-      <!-- ===================================================
-           CHART + QUICK ACTIONS
-      ==================================================== -->
-
-      <div class="dashboard-grid">
-
-
-        <!-- APPLICATION OVERVIEW -->
-
-        <div class="card">
-
-          <div class="card-header">
-
-            <div>
-
-              <h3>
-                Application Overview
-              </h3>
-
-              <p>
-                Application activity
-              </p>
-
-            </div>
-
-            <select class="select-small">
-              <option>This Month</option>
-              <option>Last Month</option>
-              <option>This Year</option>
-            </select>
-
-          </div>
-
-
-          <div class="legend">
-
-            <div class="legend-item">
-              <span class="legend-dot blue"></span>
-              Submitted
-            </div>
-
-            <div class="legend-item">
-              <span class="legend-dot green"></span>
-              Approved
-            </div>
-
-            <div class="legend-item">
-              <span class="legend-dot red"></span>
-              Rejected
-            </div>
-
-            <div class="legend-item">
-              <span class="legend-dot orange"></span>
-              Pending
-            </div>
-
-          </div>
-
-
-          <div class="chart-area">
-
-            <div class="chart-grid">
-
-              <div class="grid-line"></div>
-              <div class="grid-line"></div>
-              <div class="grid-line"></div>
-              <div class="grid-line"></div>
-              <div class="grid-line"></div>
-
-            </div>
-
-
-            <div class="chart-y">
-
-              <span>150</span>
-              <span>120</span>
-              <span>90</span>
-              <span>60</span>
-              <span>30</span>
-              <span>0</span>
-
-            </div>
-
-
-            <div class="chart-bars">
-
-              <div class="chart-column">
-
-                <div class="chart-line-blue"></div>
-                <div class="chart-line-green"></div>
-                <div class="chart-line-orange"></div>
-                <div class="chart-line-red"></div>
-
-              </div>
-
-              <div class="chart-column">
-
-                <div class="chart-line-blue" style="height:82%"></div>
-                <div class="chart-line-green" style="height:59%"></div>
-                <div class="chart-line-orange" style="height:29%"></div>
-                <div class="chart-line-red" style="height:8%"></div>
-
-              </div>
-
-              <div class="chart-column">
-
-                <div class="chart-line-blue" style="height:68%"></div>
-                <div class="chart-line-green" style="height:49%"></div>
-                <div class="chart-line-orange" style="height:34%"></div>
-                <div class="chart-line-red" style="height:10%"></div>
-
-              </div>
-
-              <div class="chart-column">
-
-                <div class="chart-line-blue" style="height:75%"></div>
-                <div class="chart-line-green" style="height:53%"></div>
-                <div class="chart-line-orange" style="height:31%"></div>
-                <div class="chart-line-red" style="height:9%"></div>
-
-              </div>
-
-              <div class="chart-column">
-
-                <div class="chart-line-blue" style="height:89%"></div>
-                <div class="chart-line-green" style="height:64%"></div>
-                <div class="chart-line-orange" style="height:39%"></div>
-                <div class="chart-line-red" style="height:12%"></div>
-
-              </div>
-
-              <div class="chart-column">
-
-                <div class="chart-line-blue" style="height:78%"></div>
-                <div class="chart-line-green" style="height:58%"></div>
-                <div class="chart-line-orange" style="height:42%"></div>
-                <div class="chart-line-red" style="height:15%"></div>
-
-              </div>
-
-              <div class="chart-column">
-
-                <div class="chart-line-blue" style="height:94%"></div>
-                <div class="chart-line-green" style="height:69%"></div>
-                <div class="chart-line-orange" style="height:46%"></div>
-                <div class="chart-line-red" style="height:17%"></div>
-
-              </div>
-
-            </div>
-
-
-            <div class="chart-labels">
-
-              <span>01</span>
-              <span>05</span>
-              <span>10</span>
-              <span>15</span>
-              <span>20</span>
-              <span>25</span>
-              <span>31</span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- QUICK ACTIONS -->
-
-        <div class="card">
-
-          <div class="card-header">
-
-            <div>
-
-              <h3>
-                Quick Actions
-              </h3>
-
-              <p>
-                Common admin tasks
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="quick-actions">
-
-            <button
-              type="button"
-              class="quick-btn"
-              onclick="scrollToSection('createRetailerSection')"
-            >
-
-              <span class="quick-icon">＋</span>
-
-              Add New Retailer
-
-            </button>
-
-
-            <button
-              type="button"
-              class="quick-btn"
-              onclick="scrollToSection('retailersSection')"
-            >
-
-              <span class="quick-icon">👤</span>
-
-              View Retailers
-
-            </button>
-
-
-            <button
-              type="button"
-              class="quick-btn"
-              onclick="scrollToSection('applicationsSection')"
-            >
-
-              <span class="quick-icon">▣</span>
-
-              View All Applications
-
-            </button>
-
-
-            <button
-              type="button"
-              class="quick-btn"
-              onclick="filterApplications('Pending')"
-            >
-
-              <span class="quick-icon">🕐</span>
-
-              Pending Applications
-
-            </button>
-
-
-            <button
-              type="button"
-              class="quick-btn"
-              onclick="filterApplications('Completed')"
-            >
-
-              <span class="quick-icon">✓</span>
-
-              Completed Applications
-
-            </button>
-
-
-            <button
-              type="button"
-              class="quick-btn"
-              onclick="loadApplications()"
-            >
-
-              <span class="quick-icon">🔄</span>
-
-              Refresh Applications
-
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ===================================================
-           DISTRIBUTION + ANNOUNCEMENT
-      ==================================================== -->
-
-      <div class="bottom-grid">
-
-
-        <div class="card">
-
-          <div class="card-header">
-
-            <div>
-
-              <h3>
-                Application Status Distribution
-              </h3>
-
-              <p>
-                Current application status
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="distribution">
-
-            <div class="donut">
-
-              <div class="donut-text">
-
-                <div
-                  id="donutTotal"
-                  class="donut-total"
-                >
-                  0
-                </div>
-
-                <div class="donut-label">
-                  Total
-                </div>
-
-              </div>
-
-            </div>
-
-
-            <div class="distribution-list">
-
-
-              <div class="distribution-row">
-
-                <div class="distribution-name">
-
-                  <span class="legend-dot orange"></span>
-
-                  Pending
-
-                </div>
-
-                <div
-                  id="distPending"
-                  class="distribution-value"
-                >
-                  0
-                </div>
-
-              </div>
-
-
-              <div class="distribution-row">
-
-                <div class="distribution-name">
-
-                  <span class="legend-dot green"></span>
-
-                  Completed
-
-                </div>
-
-                <div
-                  id="distCompleted"
-                  class="distribution-value"
-                >
-                  0
-                </div>
-
-              </div>
-
-
-              <div class="distribution-row">
-
-                <div class="distribution-name">
-
-                  <span class="legend-dot red"></span>
-
-                  Rejected
-
-                </div>
-
-                <div
-                  id="distRejected"
-                  class="distribution-value"
-                >
-                  0
-                </div>
-
-              </div>
-
-
-              <div class="distribution-row">
-
-                <div class="distribution-name">
-
-                  <span class="legend-dot blue"></span>
-
-                  Other
-
-                </div>
-
-                <div
-                  id="distOther"
-                  class="distribution-value"
-                >
-                  0
-                </div>
-
-              </div>
-
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-header">
-
-            <div>
-
-              <h3>
-                Latest Announcement
-              </h3>
-
-            </div>
-
-          </div>
-
-
-          <div class="announcement">
-
-            <div class="announcement-icon">
-              📢
-            </div>
-
-            <div>
-
-              <h4>
-                AllInOneStop Admin Panel
-              </h4>
-
-              <p>
-                Dashboard is ready. Manage retailers,
-                applications, payments and application
-                status from this panel.
-              </p>
-
-            </div>
-
-            <div class="announcement-date">
-              Today
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ===================================================
-           CREATE RETAILER
-      ==================================================== -->
-
-      <section
-        id="createRetailerSection"
-        class="box"
-      >
-
-        <div class="box-title">
-
-          <div>
-
-            <h2>
-              ➕ Create New Retailer
-            </h2>
-
-            <p>
-              Retailer account isi admin panel se create hoga.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="form-grid">
-
-
-          <div class="form-group">
-
-            <label for="retailerName">
-              Retailer Full Name
-            </label>
-
-            <input
-              id="retailerName"
-              type="text"
-              placeholder="Retailer full name"
-              autocomplete="name"
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="retailerMobile">
-              Mobile Number
-            </label>
-
-            <input
-              id="retailerMobile"
-              type="tel"
-              maxlength="10"
-              inputmode="numeric"
-              placeholder="10 digit mobile number"
-            >
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="retailerNumber">
-              Retailer Number
-            </label>
-
-            <input
-              id="retailerNumber"
-              type="text"
-              placeholder="Optional"
-            >
-
-            <div class="hint">
-              Empty छोड़ने पर Auto Generated ID retailer number बनेगा।
-            </div>
-
-          </div>
-
-
-          <div class="form-group">
-
-            <label for="retailerPassword">
-              Retailer Password
-            </label>
-
-            <input
-              id="retailerPassword"
-              type="password"
-              placeholder="Enter password manually"
-              autocomplete="new-password"
-            >
-
-            <div class="hint">
-              Minimum 6 characters
-            </div>
-
-          </div>
-
-
-        </div>
-
-
-        <div class="id-box">
-
-          <label for="retailerUsername">
-            Auto Generated Retailer ID
-          </label>
-
-          <input
-            id="retailerUsername"
-            type="text"
-            readonly
-          >
-
-          <div class="hint">
-            यही Retailer ID retailer login के लिए use होगी।
-          </div>
-
-        </div>
-
-
-        <div class="form-actions">
-
-          <button
-            type="button"
-            class="btn"
-            onclick="generateRetailerId()"
-          >
-            🔄 Generate ID
-          </button>
-
-
-          <button
-            type="button"
-            id="createRetailerBtn"
-            class="btn"
-            onclick="createRetailer()"
-          >
-            👤 Create Retailer
-          </button>
-
-        </div>
-
-
-        <div id="createMessage"></div>
-
-      </section>
-
-
-      <!-- ===================================================
-           RETAILERS
-      ==================================================== -->
-
-      <section
-        id="retailersSection"
-        class="box"
-      >
-
-        <div class="box-title">
-
-          <div>
-
-            <h2>
-              👥 Retailer History
-            </h2>
-
-            <p>
-              All registered retailers
-            </p>
-
-          </div>
-
-
-          <button
-            type="button"
-            class="refresh-btn"
-            onclick="loadRetailers()"
-          >
-            🔄 Refresh
-          </button>
-
-        </div>
-
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>Retailer ID</th>
-                <th>Name</th>
-                <th>Mobile</th>
-                <th>Retailer No.</th>
-                <th>Actions</th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody id="retailerRows">
-
-              <tr>
-
-                <td
-                  colspan="5"
-                  class="loading"
-                >
-                  Loading retailers...
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </section>
-
-
-      <!-- ===================================================
-           APPLICATIONS
-      ==================================================== -->
-
-      <section
-        id="applicationsSection"
-        class="box"
-      >
-
-        <div class="box-title">
-
-          <div>
-
-            <h2>
-              📋 Applications
-            </h2>
-
-            <p>
-              Payment और application status manage करें
-            </p>
-
-          </div>
-
-
-          <button
-            type="button"
-            class="refresh-btn"
-            onclick="loadApplications()"
-          >
-            🔄 Refresh
-          </button>
-
-        </div>
-
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-
-                <th>TR Number</th>
-                <th>Service</th>
-                <th>Amount</th>
-                <th>Payment</th>
-                <th>Status</th>
-                <th>Remark</th>
-                <th>Save</th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody id="applicationRows">
-
-              <tr>
-
-                <td
-                  colspan="7"
-                  class="loading"
-                >
-                  Loading applications...
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </section>
-
-
-      <!-- FOOTER -->
-
-      <div class="footer">
-
-        <span>
-          © 2026 AllInOneStop Admin Panel. All rights reserved.
-        </span>
-
-        <span>
-          Version 2.0.0
-        </span>
-
-      </div>
-
 
     </div>
 
-  </main>
+
+    <!-- =================================================
+         APPLICATIONS
+    ================================================== -->
+
+    <div class="box">
+
+      <div class="top">
+
+        <div>
+
+          <h2>📋 Applications</h2>
+
+          <p class="hint">
+            Payment और application status
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          onclick="loadApplications()"
+        >
+          🔄 Refresh
+        </button>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>TR Number</th>
+              <th>Service</th>
+              <th>Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Remark</th>
+              <th>Save</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="applicationRows">
+
+            <tr>
+              <td
+                colspan="7"
+                class="loading"
+              >
+                Loading applications...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
 
 </div>
-
 
 
 <script>
 
 /* =========================================================
    SUPABASE CONFIG
-   EXISTING CONFIG SYSTEM PRESERVED
 ========================================================= */
 
-if(
-  !window.ALLINONESTOP_CONFIG ||
-  !window.ALLINONESTOP_CONFIG.SUPABASE_URL ||
-  !window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY
-){
-
-  alert(
-    "config.js missing or Supabase configuration is incomplete."
-  );
-
-}
-
-
 const SUPABASE_URL =
-  window.ALLINONESTOP_CONFIG.SUPABASE_URL;
-
+  "https://dixsmucrgnyuvudhymdj.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-  window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
-
+  "sb_publishable_Z5T2Fbbr0RPMZds67p7-9Q_Yw2-jMVn";
 
 const supabaseClient =
   window.supabase.createClient(
@@ -2779,17 +852,17 @@ const RETAILER_FUNCTION =
    HELPERS
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(value) {
 
   return String(value ?? "")
-    .replace(/[&<>"']/g,function(char){
+    .replace(/[&<>"']/g, function(char) {
 
-      const map={
-        "&":"&amp;",
-        "<":"&lt;",
-        ">":"&gt;",
-        '"':"&quot;",
-        "'":"&#039;"
+      const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
       };
 
       return map[char];
@@ -2802,108 +875,45 @@ function escapeHtml(value){
 function showMessage(
   elementId,
   text,
-  isError=false,
-  isWarning=false
-){
+  isError = false,
+  isWarning = false
+) {
 
   const element =
     document.getElementById(elementId);
 
-  if(!element){
+  if (!element) {
     return;
   }
 
-  let className="msg";
+  let className = "msg";
 
-  if(isError){
-    className+=" error";
+  if (isError) {
+    className += " error";
   }
 
-  if(isWarning){
-    className+=" warning";
+  if (isWarning) {
+    className += " warning";
   }
 
   element.innerHTML =
-    '<div class="'+className+'">'+
-    escapeHtml(text)+
+    '<div class="' +
+    className +
+    '">' +
+    escapeHtml(text) +
     '</div>';
 
 }
 
 
-function clearMessage(elementId){
+function clearMessage(elementId) {
 
   const element =
     document.getElementById(elementId);
 
-  if(element){
-    element.innerHTML="";
+  if (element) {
+    element.innerHTML = "";
   }
-
-}
-
-
-/* =========================================================
-   MOBILE SIDEBAR
-========================================================= */
-
-function toggleSidebar(){
-
-  const sidebar =
-    document.getElementById("sidebar");
-
-  const overlay =
-    document.getElementById("mobileOverlay");
-
-  if(!sidebar){
-    return;
-  }
-
-  sidebar.classList.toggle("open");
-
-  if(overlay){
-    overlay.classList.toggle(
-      "show"
-    );
-  }
-
-}
-
-
-function closeSidebar(){
-
-  const sidebar =
-    document.getElementById("sidebar");
-
-  const overlay =
-    document.getElementById("mobileOverlay");
-
-  if(sidebar){
-    sidebar.classList.remove("open");
-  }
-
-  if(overlay){
-    overlay.classList.remove("show");
-  }
-
-}
-
-
-function scrollToSection(id){
-
-  const element =
-    document.getElementById(id);
-
-  if(element){
-
-    element.scrollIntoView({
-      behavior:"smooth",
-      block:"start"
-    });
-
-  }
-
-  closeSidebar();
 
 }
 
@@ -2912,19 +922,19 @@ function scrollToSection(id){
    RETAILER ID
 ========================================================= */
 
-function randomRetailerCode(){
+function randomRetailerCode() {
 
   const chars =
     "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-  let result="";
+  let result = "";
 
-  for(let i=0;i<6;i++){
+  for (let i = 0; i < 6; i++) {
 
     result +=
       chars[
         Math.floor(
-          Math.random()*chars.length
+          Math.random() * chars.length
         )
       ];
 
@@ -2935,36 +945,29 @@ function randomRetailerCode(){
 }
 
 
-function generateRetailerId(){
+function generateRetailerId() {
 
   const username =
-    "RET-"+randomRetailerCode();
-
+    "RET-" + randomRetailerCode();
 
   const usernameInput =
     document.getElementById(
       "retailerUsername"
     );
 
-
   const numberInput =
     document.getElementById(
       "retailerNumber"
     );
 
-
-  if(usernameInput){
-
-    usernameInput.value =
-      username;
-
+  if (usernameInput) {
+    usernameInput.value = username;
   }
 
-
-  if(
+  if (
     numberInput &&
     !numberInput.value.trim()
-  ){
+  ) {
 
     numberInput.value =
       username;
@@ -2978,7 +981,7 @@ function generateRetailerId(){
    SESSION
 ========================================================= */
 
-async function getSession(){
+async function getSession() {
 
   const {
     data,
@@ -2986,22 +989,20 @@ async function getSession(){
   } =
     await supabaseClient.auth.getSession();
 
-
-  if(error){
+  if (error) {
 
     throw new Error(
-      "Session error: "+
+      "Session error: " +
       error.message
     );
 
   }
 
-
-  if(
+  if (
     !data ||
     !data.session ||
     !data.session.access_token
-  ){
+  ) {
 
     throw new Error(
       "Admin session expired. Please login again."
@@ -3009,17 +1010,16 @@ async function getSession(){
 
   }
 
-
   return data.session;
 
 }
 
 
 /* =========================================================
-   ADMIN PROFILE
+   CHECK ADMIN PROFILE
 ========================================================= */
 
-async function getAdminProfile(userId){
+async function getAdminProfile(userId) {
 
   const {
     data,
@@ -3036,18 +1036,16 @@ async function getAdminProfile(userId){
       )
       .maybeSingle();
 
-
-  if(error){
+  if (error) {
 
     throw new Error(
-      "Admin profile check failed: "+
+      "Admin profile check failed: " +
       error.message
     );
 
   }
 
-
-  if(!data){
+  if (!data) {
 
     throw new Error(
       "Admin profile not found."
@@ -3055,15 +1053,13 @@ async function getAdminProfile(userId){
 
   }
 
-
-  if(data.role!=="admin"){
+  if (data.role !== "admin") {
 
     throw new Error(
       "This account is not an admin account."
     );
 
   }
-
 
   return data;
 
@@ -3074,10 +1070,9 @@ async function getAdminProfile(userId){
    LOGIN
 ========================================================= */
 
-async function login(){
+async function login() {
 
   clearMessage("loginMessage");
-
 
   const email =
     document
@@ -3085,14 +1080,12 @@ async function login(){
       .value
       .trim();
 
-
   const password =
     document
       .getElementById("password")
       .value;
 
-
-  if(!email){
+  if (!email) {
 
     showMessage(
       "loginMessage",
@@ -3104,8 +1097,7 @@ async function login(){
 
   }
 
-
-  if(!password){
+  if (!password) {
 
     showMessage(
       "loginMessage",
@@ -3117,20 +1109,17 @@ async function login(){
 
   }
 
-
   const button =
     document.getElementById(
       "loginBtn"
     );
 
+  button.disabled = true;
 
-  button.disabled=true;
-
-  button.textContent=
+  button.textContent =
     "⏳ Logging in...";
 
-
-  try{
+  try {
 
     const {
       data,
@@ -3139,27 +1128,25 @@ async function login(){
       await supabaseClient.auth
         .signInWithPassword({
 
-          email:email,
+          email: email,
 
-          password:password
+          password: password
 
         });
 
-
-    if(error){
+    if (error) {
 
       throw new Error(
-        "Login failed: "+
+        "Login failed: " +
         error.message
       );
 
     }
 
-
-    if(
+    if (
       !data ||
       !data.user
-    ){
+    ) {
 
       throw new Error(
         "Login failed. User account not found."
@@ -3167,12 +1154,10 @@ async function login(){
 
     }
 
-
     const profile =
       await getAdminProfile(
         data.user.id
       );
-
 
     await openAdminPanel(
       profile,
@@ -3180,14 +1165,12 @@ async function login(){
     );
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "ADMIN LOGIN ERROR:",
       error
     );
-
 
     showMessage(
       "loginMessage",
@@ -3197,12 +1180,11 @@ async function login(){
     );
 
   }
+  finally {
 
-  finally{
+    button.disabled = false;
 
-    button.disabled=false;
-
-    button.textContent=
+    button.textContent =
       "🔐 Login";
 
   }
@@ -3217,51 +1199,25 @@ async function login(){
 async function openAdminPanel(
   profile,
   user
-){
+) {
 
   document
-    .getElementById("loginPage")
+    .getElementById("loginBox")
     .classList.add("hidden");
-
 
   document
     .getElementById("adminPanel")
     .classList.remove("hidden");
 
-
-  const name =
-    profile.full_name ||
-    user.email ||
-    "Admin";
-
-
-  const adminName =
-    document.getElementById(
-      "adminNameTop"
-    );
-
-
-  const sidebarAdminName =
-    document.getElementById(
-      "sidebarAdminName"
-    );
-
-
-  if(adminName){
-
-    adminName.textContent =
-      name;
-
-  }
-
-
-  if(sidebarAdminName){
-
-    sidebarAdminName.textContent =
-      name;
-
-  }
-
+  document
+    .getElementById("adminName")
+    .textContent =
+      "👤 " +
+      (
+        profile.full_name ||
+        user.email ||
+        "Admin"
+      );
 
   await refreshDashboard();
 
@@ -3272,9 +1228,9 @@ async function openAdminPanel(
    RESTORE SESSION
 ========================================================= */
 
-async function restoreSession(){
+async function restoreSession() {
 
-  try{
+  try {
 
     const {
       data,
@@ -3283,8 +1239,7 @@ async function restoreSession(){
       await supabaseClient.auth
         .getSession();
 
-
-    if(error){
+    if (error) {
 
       console.error(
         "SESSION ERROR:",
@@ -3295,26 +1250,22 @@ async function restoreSession(){
 
     }
 
-
-    if(
+    if (
       !data ||
       !data.session
-    ){
+    ) {
 
       return;
 
     }
 
-
     const user =
       data.session.user;
-
 
     const profile =
       await getAdminProfile(
         user.id
       );
-
 
     await openAdminPanel(
       profile,
@@ -3322,14 +1273,12 @@ async function restoreSession(){
     );
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.warn(
       "RESTORE SESSION:",
       error.message
     );
-
 
     await supabaseClient.auth.signOut();
 
@@ -3342,15 +1291,14 @@ async function restoreSession(){
    LOGOUT
 ========================================================= */
 
-async function logout(){
+async function logout() {
 
-  try{
+  try {
 
     await supabaseClient.auth.signOut();
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "LOGOUT ERROR:",
@@ -3359,7 +1307,7 @@ async function logout(){
 
   }
 
-  window.location.href=
+  window.location.href =
     "admin.html";
 
 }
@@ -3367,19 +1315,16 @@ async function logout(){
 
 /* =========================================================
    CREATE RETAILER
-   EXISTING FUNCTION PRESERVED
 ========================================================= */
 
-async function createRetailer(){
+async function createRetailer() {
 
   clearMessage("createMessage");
-
 
   const button =
     document.getElementById(
       "createRetailerBtn"
     );
-
 
   const fullName =
     document
@@ -3387,13 +1332,11 @@ async function createRetailer(){
       .value
       .trim();
 
-
   const mobile =
     document
       .getElementById("retailerMobile")
       .value
       .trim();
-
 
   let username =
     document
@@ -3401,13 +1344,11 @@ async function createRetailer(){
       .value
       .trim();
 
-
   let retailerNumber =
     document
       .getElementById("retailerNumber")
       .value
       .trim();
-
 
   const password =
     document
@@ -3415,7 +1356,9 @@ async function createRetailer(){
       .value;
 
 
-  if(!fullName){
+  /* ================= VALIDATION ================= */
+
+  if (!fullName) {
 
     showMessage(
       "createMessage",
@@ -3428,7 +1371,7 @@ async function createRetailer(){
   }
 
 
-  if(!/^\d{10}$/.test(mobile)){
+  if (!/^\d{10}$/.test(mobile)) {
 
     showMessage(
       "createMessage",
@@ -3441,7 +1384,7 @@ async function createRetailer(){
   }
 
 
-  if(!username){
+  if (!username) {
 
     generateRetailerId();
 
@@ -3456,7 +1399,7 @@ async function createRetailer(){
   }
 
 
-  if(!retailerNumber){
+  if (!retailerNumber) {
 
     retailerNumber =
       username;
@@ -3464,7 +1407,7 @@ async function createRetailer(){
   }
 
 
-  if(!password){
+  if (!password) {
 
     showMessage(
       "createMessage",
@@ -3477,7 +1420,7 @@ async function createRetailer(){
   }
 
 
-  if(password.length<6){
+  if (password.length < 6) {
 
     showMessage(
       "createMessage",
@@ -3490,35 +1433,38 @@ async function createRetailer(){
   }
 
 
-  button.disabled=true;
+  button.disabled = true;
 
-  button.textContent=
+  button.textContent =
     "⏳ Creating...";
 
 
-  try{
+  try {
+
+    /* ============================================
+       CHECK ADMIN SESSION
+    ============================================ */
 
     await getSession();
 
 
-    const requestBody={
+    /* ============================================
+       REQUEST
+    ============================================ */
 
-      action:"create",
+    const requestBody = {
 
-      full_name:
-        fullName,
+      action: "create",
 
-      mobile:
-        mobile,
+      full_name: fullName,
 
-      username:
-        username,
+      mobile: mobile,
 
-      retailer_number:
-        retailerNumber,
+      username: username,
 
-      password:
-        password
+      retailer_number: retailerNumber,
+
+      password: password
 
     };
 
@@ -3527,10 +1473,14 @@ async function createRetailer(){
       "CREATE RETAILER REQUEST:",
       {
         ...requestBody,
-        password:"[HIDDEN]"
+        password: "[HIDDEN]"
       }
     );
 
+
+    /* ============================================
+       EDGE FUNCTION
+    ============================================ */
 
     const {
       data,
@@ -3539,12 +1489,12 @@ async function createRetailer(){
       await supabaseClient.functions.invoke(
         RETAILER_FUNCTION,
         {
-          body:requestBody
+          body: requestBody
         }
       );
 
 
-    if(error){
+    if (error) {
 
       throw new Error(
         await readFunctionError(error)
@@ -3553,7 +1503,7 @@ async function createRetailer(){
     }
 
 
-    if(!data){
+    if (!data) {
 
       throw new Error(
         "Edge Function returned empty response."
@@ -3562,7 +1512,7 @@ async function createRetailer(){
     }
 
 
-    if(data.error){
+    if (data.error) {
 
       throw new Error(
         formatFunctionError(data)
@@ -3571,10 +1521,13 @@ async function createRetailer(){
     }
 
 
+    /* ============================================
+       SUCCESS
+    ============================================ */
+
     const createdUsername =
       data.username ||
       username;
-
 
     const createdNumber =
       data.retailer_number ||
@@ -3584,43 +1537,46 @@ async function createRetailer(){
     showMessage(
       "createMessage",
 
-      "Retailer created successfully.\n\n"+
-      "Retailer ID: "+
-      createdUsername+
-      "\n"+
-      "Retailer Number: "+
-      createdNumber+
-      "\n\n"+
-      "Password was saved securely in Supabase Authentication."
+      "Retailer created successfully.\n\n" +
+      "Retailer ID: " +
+      createdUsername +
+      "\n" +
+      "Retailer Number: " +
+      createdNumber +
+      "\n\n" +
+      "Password was saved securely in Supabase Authentication.",
+
+      false
     );
 
+
+    /* ============================================
+       CLEAR FORM
+    ============================================ */
 
     document
       .getElementById(
         "retailerName"
       )
-      .value="";
-
+      .value = "";
 
     document
       .getElementById(
         "retailerMobile"
       )
-      .value="";
-
+      .value = "";
 
     document
       .getElementById(
         "retailerNumber"
       )
-      .value="";
-
+      .value = "";
 
     document
       .getElementById(
         "retailerPassword"
       )
-      .value="";
+      .value = "";
 
 
     generateRetailerId();
@@ -3629,29 +1585,28 @@ async function createRetailer(){
     await refreshDashboard();
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "CREATE RETAILER ERROR:",
       error
     );
 
-
     showMessage(
       "createMessage",
+
       error?.message ||
       "Failed to create retailer.",
+
       true
     );
 
   }
+  finally {
 
-  finally{
+    button.disabled = false;
 
-    button.disabled=false;
-
-    button.textContent=
+    button.textContent =
       "👤 Create Retailer";
 
   }
@@ -3663,45 +1618,40 @@ async function createRetailer(){
    EDGE FUNCTION ERROR READER
 ========================================================= */
 
-async function readFunctionError(error){
+async function readFunctionError(error) {
 
   let message =
     error?.message ||
     "Edge Function request failed.";
 
-
-  try{
+  try {
 
     const context =
       error?.context;
 
-
-    if(
+    if (
       context &&
-      typeof context.clone==="function"
-    ){
+      typeof context.clone === "function"
+    ) {
 
       const cloned =
         context.clone();
-
 
       const contentType =
         cloned.headers?.get(
           "content-type"
         ) || "";
 
-
-      if(
+      if (
         contentType.includes(
           "application/json"
         )
-      ){
+      ) {
 
         const body =
           await cloned.json();
 
-
-        if(body){
+        if (body) {
 
           message =
             formatFunctionError(
@@ -3711,18 +1661,13 @@ async function readFunctionError(error){
         }
 
       }
-
-      else{
+      else {
 
         const text =
           await cloned.text();
 
-
-        if(text){
-
-          message =
-            text;
-
+        if (text) {
+          message = text;
         }
 
       }
@@ -3730,8 +1675,7 @@ async function readFunctionError(error){
     }
 
   }
-
-  catch(readerError){
+  catch (readerError) {
 
     console.warn(
       "Could not read Edge Function error:",
@@ -3740,28 +1684,25 @@ async function readFunctionError(error){
 
   }
 
-
   return message;
 
 }
 
 
-function formatFunctionError(data){
+function formatFunctionError(data) {
 
   let message =
     data?.error ||
     data?.message ||
     "Edge Function request failed.";
 
-
-  if(data?.details){
+  if (data?.details) {
 
     message +=
-      "\nDetails: "+
+      "\nDetails: " +
       data.details;
 
   }
-
 
   return String(message);
 
@@ -3775,29 +1716,41 @@ function formatFunctionError(data){
 async function callRetailerFunction(
   action,
   userId,
-  password=""
-){
+  password = ""
+) {
 
   await getSession();
 
 
-  const body={
+  const body = {
 
-    action:action,
+    action: action,
 
-    user_id:userId
+    user_id: userId
 
   };
 
 
-  if(
-    action==="reset_password"
-  ){
+  if (
+    action ===
+    "reset_password"
+  ) {
 
-    body.password=
+    body.password =
       password;
 
   }
+
+
+  console.log(
+    "CALLING RETAILER FUNCTION:",
+    RETAILER_FUNCTION
+  );
+
+  console.log(
+    "ACTION:",
+    action
+  );
 
 
   const {
@@ -3807,12 +1760,12 @@ async function callRetailerFunction(
     await supabaseClient.functions.invoke(
       RETAILER_FUNCTION,
       {
-        body:body
+        body: body
       }
     );
 
 
-  if(error){
+  if (error) {
 
     throw new Error(
       await readFunctionError(error)
@@ -3821,7 +1774,7 @@ async function callRetailerFunction(
   }
 
 
-  if(!data){
+  if (!data) {
 
     throw new Error(
       "Edge Function returned empty response."
@@ -3830,7 +1783,7 @@ async function callRetailerFunction(
   }
 
 
-  if(data.error){
+  if (data.error) {
 
     throw new Error(
       formatFunctionError(data)
@@ -3851,20 +1804,18 @@ async function callRetailerFunction(
 async function resetRetailerPassword(
   userId,
   retailerId
-){
+) {
 
   const newPassword =
     prompt(
-      "Retailer: "+
-      retailerId+
+      "Retailer: " +
+      retailerId +
       "\n\nEnter NEW password:"
     );
 
 
-  if(newPassword===null){
-
+  if (newPassword === null) {
     return;
-
   }
 
 
@@ -3872,7 +1823,7 @@ async function resetRetailerPassword(
     newPassword.trim();
 
 
-  if(!trimmedPassword){
+  if (!trimmedPassword) {
 
     alert(
       "Password cannot be empty."
@@ -3883,7 +1834,9 @@ async function resetRetailerPassword(
   }
 
 
-  if(trimmedPassword.length<6){
+  if (
+    trimmedPassword.length < 6
+  ) {
 
     alert(
       "Password must be at least 6 characters."
@@ -3896,20 +1849,18 @@ async function resetRetailerPassword(
 
   const confirmed =
     confirm(
-      "Reset password for "+
-      retailerId+
+      "Reset password for " +
+      retailerId +
       "?"
     );
 
 
-  if(!confirmed){
-
+  if (!confirmed) {
     return;
-
   }
 
 
-  try{
+  try {
 
     await callRetailerFunction(
       "reset_password",
@@ -3918,21 +1869,25 @@ async function resetRetailerPassword(
     );
 
 
+    /*
+      IMPORTANT:
+      New password is deliberately NOT
+      displayed anywhere after reset.
+    */
+
     alert(
-      "Password updated successfully.\n\n"+
-      "Retailer ID: "+
+      "Password updated successfully.\n\n" +
+      "Retailer ID: " +
       retailerId
     );
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "RESET PASSWORD ERROR:",
       error
     );
-
 
     alert(
       error?.message ||
@@ -3951,27 +1906,27 @@ async function resetRetailerPassword(
 async function deleteRetailer(
   userId,
   retailerId
-){
+) {
 
   const confirmation =
     prompt(
-      "Delete retailer "+
-      retailerId+
-      "?\n\n"+
-      "Type DELETE to confirm."
+      "Delete retailer " +
+      retailerId +
+      "?\n\nType DELETE to confirm."
     );
 
 
-  if(
-    confirmation!=="DELETE"
-  ){
+  if (
+    confirmation !==
+    "DELETE"
+  ) {
 
     return;
 
   }
 
 
-  try{
+  try {
 
     await callRetailerFunction(
       "delete",
@@ -3987,14 +1942,12 @@ async function deleteRetailer(
     await refreshDashboard();
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "DELETE RETAILER ERROR:",
       error
     );
-
 
     alert(
       error?.message ||
@@ -4010,7 +1963,7 @@ async function deleteRetailer(
    LOAD RETAILERS
 ========================================================= */
 
-async function loadRetailers(){
+async function loadRetailers() {
 
   const rows =
     document.getElementById(
@@ -4018,20 +1971,16 @@ async function loadRetailers(){
     );
 
 
-  rows.innerHTML=`
-
+  rows.innerHTML = `
     <tr>
-
       <td colspan="5" class="loading">
         Loading retailers...
       </td>
-
     </tr>
-
   `;
 
 
-  try{
+  try {
 
     await getSession();
 
@@ -4052,12 +2001,12 @@ async function loadRetailers(){
         .order(
           "full_name",
           {
-            ascending:true
+            ascending: true
           }
         );
 
 
-    if(error){
+    if (error) {
 
       throw new Error(
         error.message
@@ -4066,24 +2015,17 @@ async function loadRetailers(){
     }
 
 
-    if(
+    if (
       !data ||
-      data.length===0
-    ){
+      data.length === 0
+    ) {
 
-      rows.innerHTML=`
-
+      rows.innerHTML = `
         <tr>
-
-          <td
-            colspan="5"
-            class="empty"
-          >
+          <td colspan="5" class="loading">
             No retailers found.
           </td>
-
         </tr>
-
       `;
 
       return;
@@ -4092,95 +2034,90 @@ async function loadRetailers(){
 
 
     rows.innerHTML =
-      data
-        .map(
-          function(retailer){
+      data.map(
+        function(retailer) {
 
-            const retailerId =
-              retailer.retailer_number ||
-              "RET";
-
-
-            const userId =
-              escapeHtml(
-                retailer.id
-              );
+          const retailerId =
+            retailer.retailer_number ||
+            "RET";
 
 
-            const safeRetailerId =
-              escapeHtml(
-                retailerId
-              );
+          const userId =
+            escapeHtml(
+              retailer.id
+            );
 
 
-            return `
+          const safeRetailerId =
+            escapeHtml(
+              retailerId
+            );
 
-              <tr>
 
-                <td>
-                  <strong>
-                    ${safeRetailerId}
-                  </strong>
-                </td>
+          return `
+            <tr>
 
-                <td>
-                  ${escapeHtml(
-                    retailer.full_name
-                  )}
-                </td>
+              <td>
+                <strong>
+                  ${safeRetailerId}
+                </strong>
+              </td>
 
-                <td>
-                  ${escapeHtml(
-                    retailer.mobile
-                  )}
-                </td>
+              <td>
+                ${escapeHtml(
+                  retailer.full_name
+                )}
+              </td>
 
-                <td>
-                  ${escapeHtml(
-                    retailer.retailer_number ||
-                    retailerId
-                  )}
-                </td>
+              <td>
+                ${escapeHtml(
+                  retailer.mobile
+                )}
+              </td>
 
-                <td>
+              <td>
+                ${escapeHtml(
+                  retailer.retailer_number ||
+                  retailerId
+                )}
+              </td>
 
-                  <div class="table-actions">
+              <td>
 
-                    <button
-                      type="button"
-                      class="small-btn password-btn"
-                      data-user-id="${userId}"
-                      data-retailer-id="${safeRetailerId}"
-                      onclick="resetFromButton(this)"
-                    >
-                      🔑 Reset
-                    </button>
+                <div class="actions">
 
-                    <button
-                      type="button"
-                      class="small-btn delete-btn"
-                      data-user-id="${userId}"
-                      data-retailer-id="${safeRetailerId}"
-                      onclick="deleteFromButton(this)"
-                    >
-                      🗑️ Delete
-                    </button>
+                  <button
+                    type="button"
+                    class="small-btn password-btn"
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    onclick="resetFromButton(this)"
+                  >
+                    🔑 Reset Password
+                  </button>
 
-                  </div>
+                  <button
+                    type="button"
+                    class="small-btn delete-btn"
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    onclick="deleteFromButton(this)"
+                  >
+                    🗑️ Delete
+                  </button>
 
-                </td>
+                </div>
 
-              </tr>
+              </td>
 
-            `;
+            </tr>
+          `;
 
-          }
-        )
-        .join("");
+        }
+      ).join("");
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "LOAD RETAILERS ERROR:",
@@ -4188,24 +2125,15 @@ async function loadRetailers(){
     );
 
 
-    rows.innerHTML=`
-
+    rows.innerHTML = `
       <tr>
-
-        <td
-          colspan="5"
-          class="loading"
-        >
-
+        <td colspan="5" class="loading">
           ${escapeHtml(
             error?.message ||
             "Could not load retailers."
           )}
-
         </td>
-
       </tr>
-
     `;
 
   }
@@ -4213,7 +2141,9 @@ async function loadRetailers(){
 }
 
 
-function resetFromButton(button){
+function resetFromButton(
+  button
+) {
 
   resetRetailerPassword(
     button.dataset.userId,
@@ -4223,7 +2153,9 @@ function resetFromButton(button){
 }
 
 
-function deleteFromButton(button){
+function deleteFromButton(
+  button
+) {
 
   deleteRetailer(
     button.dataset.userId,
@@ -4237,7 +2169,7 @@ function deleteFromButton(button){
    LOAD APPLICATIONS
 ========================================================= */
 
-async function loadApplications(){
+async function loadApplications() {
 
   const rows =
     document.getElementById(
@@ -4245,23 +2177,16 @@ async function loadApplications(){
     );
 
 
-  rows.innerHTML=`
-
+  rows.innerHTML = `
     <tr>
-
-      <td
-        colspan="7"
-        class="loading"
-      >
+      <td colspan="7" class="loading">
         Loading applications...
       </td>
-
     </tr>
-
   `;
 
 
-  try{
+  try {
 
     await getSession();
 
@@ -4278,12 +2203,12 @@ async function loadApplications(){
         .order(
           "created_at",
           {
-            ascending:false
+            ascending: false
           }
         );
 
 
-    if(error){
+    if (error) {
 
       throw new Error(
         error.message
@@ -4292,262 +2217,187 @@ async function loadApplications(){
     }
 
 
-    if(
+    if (
       !data ||
-      data.length===0
-    ){
+      data.length === 0
+    ) {
 
-      rows.innerHTML=`
-
+      rows.innerHTML = `
         <tr>
-
-          <td
-            colspan="7"
-            class="empty"
-          >
+          <td colspan="7" class="loading">
             No applications yet.
           </td>
-
         </tr>
-
       `;
-
-      updateApplicationDistribution([]);
 
       return;
 
     }
 
 
-    window.__ALL_APPLICATIONS =
-      data;
-
-
-    updateApplicationDistribution(
-      data
-    );
-
-
     rows.innerHTML =
-      data
-        .map(
-          function(app,index){
+      data.map(
+        function(app, index) {
 
-            const tr =
-              String(
-                app.tr_number ||
-                ""
-              );
+          const tr =
+            String(
+              app.tr_number || ""
+            );
 
 
-            const key =
-              (
-                tr+
-                "-"+
-                index
-              )
-              .replace(
-                /[^a-zA-Z0-9_-]/g,
-                "_"
-              );
+          const key =
+            (
+              tr +
+              "-" +
+              index
+            ).replace(
+              /[^a-zA-Z0-9_-]/g,
+              "_"
+            );
 
 
-            const payment =
-              app.payment_status ||
-              "Pending";
+          const payment =
+            app.payment_status ||
+            "Pending";
 
 
-            const status =
-              app.application_status ||
-              "Received";
+          const status =
+            app.application_status ||
+            "Received";
 
 
-            return `
+          return `
+            <tr>
 
-              <tr>
+              <td>
+                <strong>
+                  ${escapeHtml(tr)}
+                </strong>
+              </td>
 
-                <td>
+              <td>
+                ${escapeHtml(
+                  app.service_name
+                )}
+              </td>
 
-                  <strong>
-                    ${escapeHtml(tr)}
-                  </strong>
+              <td>
+                ₹${escapeHtml(
+                  app.amount
+                )}
+              </td>
 
-                </td>
+              <td>
 
+                <select
+                  id="payment-${key}"
+                >
 
-                <td>
-
-                  ${escapeHtml(
-                    app.service_name
-                  )}
-
-                </td>
-
-
-                <td>
-
-                  ₹${escapeHtml(
-                    app.amount
-                  )}
-
-                </td>
-
-
-                <td>
-
-                  <select
-                    id="payment-${key}"
+                  <option
+                    value="Pending"
+                    ${payment === "Pending" ? "selected" : ""}
                   >
+                    Pending
+                  </option>
 
-                    <option
-                      value="Pending"
-                      ${
-                        payment==="Pending"
-                        ?"selected"
-                        :""
-                      }
-                    >
-                      Pending
-                    </option>
-
-
-                    <option
-                      value="Paid"
-                      ${
-                        payment==="Paid"
-                        ?"selected"
-                        :""
-                      }
-                    >
-                      Paid
-                    </option>
-
-
-                    <option
-                      value="Failed"
-                      ${
-                        payment==="Failed"
-                        ?"selected"
-                        :""
-                      }
-                    >
-                      Failed
-                    </option>
-
-                  </select>
-
-                </td>
-
-
-                <td>
-
-                  <select
-                    id="status-${key}"
+                  <option
+                    value="Paid"
+                    ${payment === "Paid" ? "selected" : ""}
                   >
+                    Paid
+                  </option>
 
-                    <option
-                      value="Received"
-                      ${
-                        status==="Received"
-                        ?"selected"
-                        :""
-                      }
-                    >
-                      Received
-                    </option>
-
-
-                    <option
-                      value="Verification"
-                      ${
-                        status==="Verification"
-                        ?"selected"
-                        :""
-                      }
-                    >
-                      Verification
-                    </option>
-
-
-                    <option
-                      value="Processing"
-                      ${
-                        status==="Processing"
-                        ?"selected"
-                        :""
-                      }
-                    >
-                      Processing
-                    </option>
-
-
-                    <option
-                      value="Completed"
-                      ${
-                        status==="Completed"
-                        ?"selected"
-                        :""
-                      }
-                    >
-                      Completed
-                    </option>
-
-
-                    <option
-                      value="Rejected"
-                      ${
-                        status==="Rejected"
-                        ?"selected"
-                        :""
-                      }
-                    >
-                      Rejected
-                    </option>
-
-                  </select>
-
-                </td>
-
-
-                <td>
-
-                  <input
-                    id="remark-${key}"
-                    value="${escapeHtml(
-                      app.remark || ""
-                    )}"
-                    placeholder="Remark"
+                  <option
+                    value="Failed"
+                    ${payment === "Failed" ? "selected" : ""}
                   >
+                    Failed
+                  </option>
 
-                </td>
+                </select>
 
+              </td>
 
-                <td>
+              <td>
 
-                  <button
-                    type="button"
-                    id="save-${key}"
-                    class="small-btn save-btn"
-                    data-tr="${escapeHtml(tr)}"
-                    data-key="${escapeHtml(key)}"
-                    onclick="saveApplicationFromButton(this)"
+                <select
+                  id="status-${key}"
+                >
+
+                  <option
+                    value="Received"
+                    ${status === "Received" ? "selected" : ""}
                   >
-                    💾 Save
-                  </button>
+                    Received
+                  </option>
 
-                </td>
+                  <option
+                    value="Verification"
+                    ${status === "Verification" ? "selected" : ""}
+                  >
+                    Verification
+                  </option>
 
-              </tr>
+                  <option
+                    value="Processing"
+                    ${status === "Processing" ? "selected" : ""}
+                  >
+                    Processing
+                  </option>
 
-            `;
+                  <option
+                    value="Completed"
+                    ${status === "Completed" ? "selected" : ""}
+                  >
+                    Completed
+                  </option>
 
-          }
-        )
-        .join("");
+                  <option
+                    value="Rejected"
+                    ${status === "Rejected" ? "selected" : ""}
+                  >
+                    Rejected
+                  </option>
+
+                </select>
+
+              </td>
+
+              <td>
+
+                <input
+                  id="remark-${key}"
+                  value="${escapeHtml(
+                    app.remark || ""
+                  )}"
+                  placeholder="Remark"
+                >
+
+              </td>
+
+              <td>
+
+                <button
+                  type="button"
+                  class="small-btn"
+                  onclick="saveApplication(
+                    ${JSON.stringify(tr)},
+                    ${JSON.stringify(key)}
+                  )"
+                >
+                  💾 Save
+                </button>
+
+              </td>
+
+            </tr>
+          `;
+
+        }
+      ).join("");
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "LOAD APPLICATIONS ERROR:",
@@ -4555,178 +2405,18 @@ async function loadApplications(){
     );
 
 
-    rows.innerHTML=`
-
+    rows.innerHTML = `
       <tr>
-
-        <td
-          colspan="7"
-          class="loading"
-        >
-
+        <td colspan="7" class="loading">
           ${escapeHtml(
             error?.message ||
             "Could not load applications."
           )}
-
         </td>
-
       </tr>
-
     `;
 
   }
-
-}
-
-
-/* =========================================================
-   APPLICATION DISTRIBUTION
-========================================================= */
-
-function updateApplicationDistribution(data){
-
-  const list =
-    data || [];
-
-
-  const total =
-    list.length;
-
-
-  let pending=0;
-  let completed=0;
-  let rejected=0;
-  let other=0;
-
-
-  list.forEach(function(item){
-
-    const status =
-      String(
-        item.application_status ||
-        ""
-      )
-      .toLowerCase();
-
-
-    if(
-      status==="completed"
-    ){
-
-      completed++;
-
-    }
-
-    else if(
-      status==="rejected"
-    ){
-
-      rejected++;
-
-    }
-
-    else if(
-      status==="pending" ||
-      status==="received" ||
-      status==="verification" ||
-      status==="processing"
-    ){
-
-      pending++;
-
-    }
-
-    else{
-
-      other++;
-
-    }
-
-  });
-
-
-  const totalEl =
-    document.getElementById(
-      "donutTotal"
-    );
-
-
-  const pendingEl =
-    document.getElementById(
-      "distPending"
-    );
-
-
-  const completedEl =
-    document.getElementById(
-      "distCompleted"
-    );
-
-
-  const rejectedEl =
-    document.getElementById(
-      "distRejected"
-    );
-
-
-  const otherEl =
-    document.getElementById(
-      "distOther"
-    );
-
-
-  if(totalEl){
-    totalEl.textContent=total;
-  }
-
-  if(pendingEl){
-    pendingEl.textContent=pending;
-  }
-
-  if(completedEl){
-    completedEl.textContent=completed;
-  }
-
-  if(rejectedEl){
-    rejectedEl.textContent=rejected;
-  }
-
-  if(otherEl){
-    otherEl.textContent=other;
-  }
-
-}
-
-
-/* =========================================================
-   SAVE BUTTON HANDLER
-========================================================= */
-
-async function saveApplicationFromButton(
-  button
-){
-
-  if(!button){
-    return;
-  }
-
-
-  const trNumber =
-    button.dataset.tr ||
-    "";
-
-
-  const key =
-    button.dataset.key ||
-    "";
-
-
-  await saveApplication(
-    trNumber,
-    key,
-    button
-  );
 
 }
 
@@ -4737,120 +2427,58 @@ async function saveApplicationFromButton(
 
 async function saveApplication(
   trNumber,
-  key,
-  button
-){
+  key
+) {
 
-  if(!trNumber){
-
-    alert(
-      "TR Number missing. Cannot save."
-    );
-
-    return;
-
-  }
-
-
-  if(!button){
-
-    button =
-      document.getElementById(
-        "save-"+key
-      );
-
-  }
-
-
-  if(
-    button &&
-    button.disabled
-  ){
-
-    return;
-
-  }
-
-
-  const paymentElement =
-    document.getElementById(
-      "payment-"+key
-    );
-
-
-  const statusElement =
-    document.getElementById(
-      "status-"+key
-    );
-
-
-  const remarkElement =
-    document.getElementById(
-      "remark-"+key
-    );
-
-
-  if(
-    !paymentElement ||
-    !statusElement ||
-    !remarkElement
-  ){
-
-    alert(
-      "Application form fields not found."
-    );
-
-    return;
-
-  }
-
-
-  const payment =
-    paymentElement.value;
-
-
-  const status =
-    statusElement.value;
-
-
-  const remark =
-    remarkElement.value.trim();
-
-
-  const oldButtonText =
-    button
-      ? button.textContent
-      : "💾 Save";
-
-
-  try{
-
-    if(button){
-
-      button.disabled=true;
-
-      button.textContent=
-        "⏳ Saving...";
-
-    }
-
+  try {
 
     await getSession();
 
 
-    console.log(
-      "SAVE APPLICATION:",
-      {
-        tr_number:trNumber,
-        payment_status:payment,
-        application_status:status,
-        remark:remark
-      }
-    );
+    const paymentElement =
+      document.getElementById(
+        "payment-" + key
+      );
+
+
+    const statusElement =
+      document.getElementById(
+        "status-" + key
+      );
+
+
+    const remarkElement =
+      document.getElementById(
+        "remark-" + key
+      );
+
+
+    if (
+      !paymentElement ||
+      !statusElement ||
+      !remarkElement
+    ) {
+
+      throw new Error(
+        "Application form fields not found."
+      );
+
+    }
+
+
+    const payment =
+      paymentElement.value;
+
+
+    const status =
+      statusElement.value;
+
+
+    const remark =
+      remarkElement.value.trim();
 
 
     const {
-      data,
       error
     } =
       await supabaseClient
@@ -4870,92 +2498,27 @@ async function saveApplication(
         .eq(
           "tr_number",
           trNumber
-        )
-        .select(
-          "tr_number,payment_status,application_status,remark"
         );
 
 
-    if(error){
+    if (error) {
 
       throw new Error(
-        "Database update failed: "+
         error.message
       );
 
     }
 
 
-    if(
-      !data ||
-      data.length===0
-    ){
-
-      throw new Error(
-        "Save failed: database ने कोई application update नहीं की.\n\n"+
-        "Possible reason: Supabase RLS UPDATE policy missing है."
-      );
-
-    }
+    alert(
+      "Application status updated successfully."
+    );
 
 
-    const savedRow =
-      data[0];
-
-
-    if(
-      savedRow.payment_status!==payment ||
-      savedRow.application_status!==status ||
-      String(
-        savedRow.remark || ""
-      )!==remark
-    ){
-
-      throw new Error(
-        "Database update verification failed."
-      );
-
-    }
-
-
-    if(button){
-
-      button.textContent=
-        "✅ Saved";
-
-      button.classList.add(
-        "saved"
-      );
-
-    }
-
-
-    await loadStats();
-
-
-    if(button){
-
-      setTimeout(
-        function(){
-
-          button.disabled=false;
-
-          button.textContent=
-            oldButtonText;
-
-          button.classList.remove(
-            "saved"
-          );
-
-        },
-        1500
-      );
-
-    }
+    await refreshDashboard();
 
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "SAVE APPLICATION ERROR:",
@@ -4963,23 +2526,9 @@ async function saveApplication(
     );
 
 
-    if(button){
-
-      button.disabled=false;
-
-      button.textContent=
-        "❌ Retry";
-
-      button.classList.remove(
-        "saved"
-      );
-
-    }
-
-
     alert(
       error?.message ||
-      "Application status update failed."
+      "Status update failed."
     );
 
   }
@@ -4991,29 +2540,28 @@ async function saveApplication(
    LOAD STATS
 ========================================================= */
 
-async function loadStats(){
+async function loadStats() {
 
-  try{
+  try {
 
     await getSession();
 
 
-    /* ================================================
+    /* ============================================
        RETAILER COUNT
-    ================================================= */
+    ============================================ */
 
     const {
       count,
-      error:
-        retailerError
+      error: retailerError
     } =
       await supabaseClient
         .from("profiles")
         .select(
           "id",
           {
-            count:"exact",
-            head:true
+            count: "exact",
+            head: true
           }
         )
         .eq(
@@ -5022,7 +2570,7 @@ async function loadStats(){
         );
 
 
-    if(retailerError){
+    if (retailerError) {
 
       throw retailerError;
 
@@ -5037,22 +2585,22 @@ async function loadStats(){
         count || 0;
 
 
-    /* ================================================
+    /* ============================================
        APPLICATIONS
-    ================================================= */
+    ============================================ */
 
     const {
-      data:applications,
-      error:applicationError
+      data: applications,
+      error: applicationError
     } =
       await supabaseClient
         .from("applications")
         .select(
-          "payment_status,application_status"
+          "payment_status"
         );
 
 
-    if(applicationError){
+    if (applicationError) {
 
       throw applicationError;
 
@@ -5077,10 +2625,10 @@ async function loadStats(){
       )
       .textContent =
         list.filter(
-          function(item){
+          function(item) {
 
-            return(
-              item.payment_status===
+            return (
+              item.payment_status ===
               "Paid"
             );
 
@@ -5094,59 +2642,19 @@ async function loadStats(){
       )
       .textContent =
         list.filter(
-          function(item){
+          function(item) {
 
-            return(
+            return (
               !item.payment_status ||
-              item.payment_status===
+              item.payment_status ===
               "Pending"
             );
 
           }
         ).length;
 
-
-    const approved =
-      list.filter(
-        function(item){
-
-          const status =
-            String(
-              item.application_status ||
-              ""
-            ).toLowerCase();
-
-
-          return(
-            status==="completed" ||
-            status==="approved"
-          );
-
-        }
-      ).length;
-
-
-    const approvedElement =
-      document.getElementById(
-        "approvedApplications"
-      );
-
-
-    if(approvedElement){
-
-      approvedElement.textContent=
-        approved;
-
-    }
-
-
-    updateApplicationDistribution(
-      list
-    );
-
   }
-
-  catch(error){
+  catch (error) {
 
     console.error(
       "LOAD STATS ERROR:",
@@ -5159,79 +2667,10 @@ async function loadStats(){
 
 
 /* =========================================================
-   LOAD SERVICES COUNT
-========================================================= */
-
-async function loadServicesCount(){
-
-  try{
-
-    await getSession();
-
-
-    const {
-      count,
-      error
-    } =
-      await supabaseClient
-        .from("services")
-        .select(
-          "id",
-          {
-            count:"exact",
-            head:true
-          }
-        )
-        .eq(
-          "active",
-          true
-        );
-
-
-    if(error){
-
-      console.warn(
-        "SERVICE COUNT ERROR:",
-        error
-      );
-
-      return;
-
-    }
-
-
-    const element =
-      document.getElementById(
-        "totalServices"
-      );
-
-
-    if(element){
-
-      element.textContent =
-        count || 0;
-
-    }
-
-  }
-
-  catch(error){
-
-    console.warn(
-      "LOAD SERVICES COUNT:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
    REFRESH DASHBOARD
 ========================================================= */
 
-async function refreshDashboard(){
+async function refreshDashboard() {
 
   await Promise.allSettled([
 
@@ -5239,123 +2678,9 @@ async function refreshDashboard(){
 
     loadApplications(),
 
-    loadStats(),
-
-    loadServicesCount()
+    loadStats()
 
   ]);
-
-}
-
-
-/* =========================================================
-   GLOBAL SEARCH
-========================================================= */
-
-function globalSearch(){
-
-  const input =
-    document.getElementById(
-      "globalSearch"
-    );
-
-
-  if(!input){
-    return;
-  }
-
-
-  const query =
-    input.value
-      .trim()
-      .toLowerCase();
-
-
-  const rows =
-    document.querySelectorAll(
-      "#retailerRows tr,#applicationRows tr"
-    );
-
-
-  rows.forEach(function(row){
-
-    if(!query){
-
-      row.style.display="";
-
-      return;
-
-    }
-
-
-    const text =
-      row.textContent
-        .toLowerCase();
-
-
-    row.style.display =
-      text.includes(query)
-      ? ""
-      : "none";
-
-  });
-
-}
-
-
-/* =========================================================
-   APPLICATION FILTER
-========================================================= */
-
-function filterApplications(status){
-
-  const rows =
-    document.querySelectorAll(
-      "#applicationRows tr"
-    );
-
-
-  rows.forEach(function(row){
-
-    const text =
-      row.textContent
-        .toLowerCase();
-
-
-    if(
-      status==="Pending"
-    ){
-
-      row.style.display =
-        text.includes("pending")
-        ? ""
-        :"none";
-
-    }
-
-    else if(
-      status==="Completed"
-    ){
-
-      row.style.display =
-        text.includes("completed")
-        ? ""
-        :"none";
-
-    }
-
-    else{
-
-      row.style.display="";
-
-    }
-
-  });
-
-
-  scrollToSection(
-    "applicationsSection"
-  );
 
 }
 
@@ -5365,28 +2690,22 @@ function filterApplications(status){
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-  function(event,session){
+  function(event, session) {
 
     console.log(
       "AUTH EVENT:",
       event
     );
 
+    if (
+      event === "SIGNED_OUT" &&
+      !window.location.pathname.endsWith(
+        "admin.html"
+      )
+    ) {
 
-    if(
-      event==="SIGNED_OUT"
-    ){
-
-      if(
-        !window.location.pathname.endsWith(
-          "admin.html"
-        )
-      ){
-
-        window.location.href=
-          "admin.html";
-
-      }
+      window.location.href =
+        "admin.html";
 
     }
 
@@ -5400,26 +2719,25 @@ supabaseClient.auth.onAuthStateChange(
 
 document.addEventListener(
   "keydown",
-  function(event){
+  function(event) {
 
-    if(
-      event.key==="Enter" &&
+    if (
+      event.key === "Enter" &&
       !document
-        .getElementById("loginPage")
+        .getElementById("loginBox")
         .classList.contains("hidden")
-    ){
+    ) {
 
       const active =
         document.activeElement;
 
-
-      if(
+      if (
         active &&
         (
-          active.id==="email" ||
-          active.id==="password"
+          active.id === "email" ||
+          active.id === "password"
         )
-      ){
+      ) {
 
         event.preventDefault();
 
@@ -5439,7 +2757,7 @@ document.addEventListener(
 
 document.addEventListener(
   "DOMContentLoaded",
-  function(){
+  function() {
 
     generateRetailerId();
 
@@ -5452,3 +2770,4 @@ document.addEventListener(
 
 </body>
 </html>
+```
