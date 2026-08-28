@@ -529,7 +529,7 @@ table{
 
   border-collapse:collapse;
 
-  min-width:1100px;
+  min-width:1250px;
 
 }
 
@@ -778,6 +778,28 @@ th{
   background:#fef2f2;
 
   color:#b42318;
+
+}
+
+.application-delete{
+
+  background:
+    linear-gradient(
+      135deg,
+      #b91c1c,
+      #ef4444
+    );
+
+}
+
+.application-delete:hover{
+
+  background:
+    linear-gradient(
+      135deg,
+      #991b1b,
+      #dc2626
+    );
 
 }
 
@@ -1298,7 +1320,7 @@ th{
       </h2>
 
       <p class="hint">
-        Payment और application status
+        Payment, application status और application delete
       </p>
 
     </div>
@@ -1349,6 +1371,10 @@ th{
             Save
           </th>
 
+          <th>
+            Delete
+          </th>
+
         </tr>
 
       </thead>
@@ -1359,7 +1385,7 @@ th{
         <tr>
 
           <td
-            colspan="7"
+            colspan="8"
             class="loading"
           >
             Loading applications...
@@ -2710,8 +2736,6 @@ async function loadRetailers(){
       ).join("");
 
 
-    /* Load private photo URLs */
-
     for(
       const retailer of data
     ){
@@ -3647,6 +3671,9 @@ async function deleteRetailer(
 
 /* =========================================================
    LOAD APPLICATIONS
+   UPDATED:
+   - id included
+   - Delete button added
 ========================================================= */
 
 async function loadApplications(){
@@ -3662,7 +3689,7 @@ async function loadApplications(){
     <tr>
 
       <td
-        colspan="7"
+        colspan="8"
         class="loading"
       >
         Loading applications...
@@ -3685,7 +3712,7 @@ async function loadApplications(){
       await supabaseClient
         .from("applications")
         .select(
-          "tr_number,service_name,amount,payment_status,application_status,remark"
+          "id,tr_number,service_name,amount,payment_status,application_status,remark"
         )
         .order(
           "created_at",
@@ -3711,7 +3738,7 @@ async function loadApplications(){
         <tr>
 
           <td
-            colspan="7"
+            colspan="8"
             class="loading"
           >
             No applications yet.
@@ -3729,6 +3756,12 @@ async function loadApplications(){
     rows.innerHTML =
       data.map(
         function(app,index){
+
+          const applicationId =
+            String(
+              app.id || ""
+            );
+
 
           const tr =
             String(
@@ -3912,11 +3945,27 @@ async function loadApplications(){
                   type="button"
                   class="small-btn"
                   onclick='saveApplication(
-                    ${JSON.stringify(tr)},
+                    ${JSON.stringify(applicationId)},
                     ${JSON.stringify(key)}
                   )'
                 >
                   💾 Save
+                </button>
+
+              </td>
+
+
+              <td>
+
+                <button
+                  type="button"
+                  class="small-btn application-delete"
+                  onclick='deleteApplication(
+                    ${JSON.stringify(applicationId)},
+                    ${JSON.stringify(tr)}
+                  )'
+                >
+                  🗑️ Delete
                 </button>
 
               </td>
@@ -3932,6 +3981,7 @@ async function loadApplications(){
   catch(error){
 
     console.error(
+      "LOAD APPLICATIONS ERROR:",
       error
     );
 
@@ -3941,7 +3991,7 @@ async function loadApplications(){
       <tr>
 
         <td
-          colspan="7"
+          colspan="8"
           class="loading"
         >
 
@@ -3963,10 +4013,12 @@ async function loadApplications(){
 
 /* =========================================================
    SAVE APPLICATION
+   UPDATED:
+   Uses application ID instead of TR number
 ========================================================= */
 
 async function saveApplication(
-  trNumber,
+  applicationId,
   key
 ){
 
@@ -3975,29 +4027,56 @@ async function saveApplication(
     await getSession();
 
 
+    if(!applicationId){
+
+      throw new Error(
+        "Application ID is missing."
+      );
+
+    }
+
+
+    const paymentElement =
+      document.getElementById(
+        "payment-" + key
+      );
+
+
+    const statusElement =
+      document.getElementById(
+        "status-" + key
+      );
+
+
+    const remarkElement =
+      document.getElementById(
+        "remark-" + key
+      );
+
+
+    if(
+      !paymentElement ||
+      !statusElement ||
+      !remarkElement
+    ){
+
+      throw new Error(
+        "Application fields not found. Please refresh the page."
+      );
+
+    }
+
+
     const payment =
-      document
-        .getElementById(
-          "payment-" + key
-        )
-        .value;
+      paymentElement.value;
 
 
     const status =
-      document
-        .getElementById(
-          "status-" + key
-        )
-        .value;
+      statusElement.value;
 
 
     const remark =
-      document
-        .getElementById(
-          "remark-" + key
-        )
-        .value
-        .trim();
+      remarkElement.value.trim();
 
 
     const {
@@ -4018,8 +4097,8 @@ async function saveApplication(
 
         })
         .eq(
-          "tr_number",
-          trNumber
+          "id",
+          applicationId
         );
 
 
@@ -4043,12 +4122,132 @@ async function saveApplication(
   catch(error){
 
     console.error(
+      "SAVE APPLICATION ERROR:",
       error
     );
 
     alert(
       error?.message ||
       "Status update failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DELETE APPLICATION
+   NEW
+========================================================= */
+
+async function deleteApplication(
+  applicationId,
+  trNumber
+){
+
+  if(!applicationId){
+
+    alert(
+      "Application ID missing. Please refresh the page."
+    );
+
+    return;
+
+  }
+
+
+  const confirmation =
+    prompt(
+      "⚠️ DELETE APPLICATION\n\n" +
+      "TR Number: " +
+      trNumber +
+      "\n\n" +
+      "This application will be permanently deleted.\n" +
+      "This action cannot be undone.\n\n" +
+      "Type DELETE to confirm."
+    );
+
+
+  if(
+    confirmation !==
+    "DELETE"
+  ){
+
+    return;
+
+  }
+
+
+  try{
+
+    await getSession();
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("applications")
+        .delete()
+        .eq(
+          "id",
+          applicationId
+        );
+
+
+    if(error){
+
+      throw new Error(
+        error.message
+      );
+
+    }
+
+
+    alert(
+      "Application deleted successfully.\n\n" +
+      "TR Number: " +
+      trNumber
+    );
+
+
+    await refreshDashboard();
+
+  }
+  catch(error){
+
+    console.error(
+      "DELETE APPLICATION ERROR:",
+      error
+    );
+
+
+    let message =
+      error?.message ||
+      "Application deletion failed.";
+
+
+    if(
+      message.toLowerCase().includes(
+        "row-level security"
+      ) ||
+      message.toLowerCase().includes(
+        "permission"
+      ) ||
+      message.toLowerCase().includes(
+        "not allowed"
+      )
+    ){
+
+      message +=
+        "\n\nPlease add the Admin DELETE RLS policy to the applications table.";
+
+    }
+
+
+    alert(
+      message
     );
 
   }
