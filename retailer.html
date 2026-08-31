@@ -460,6 +460,45 @@ button:disabled{
   color:#fff;
 }
 
+
+/* =====================================================
+   RETAILER PROFILE
+===================================================== */
+.profileCard{margin-bottom:20px}
+.profileHeader{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.profileHeader h2{margin:0}
+.profileGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin-top:15px}
+.profileItem{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px}
+.profileLabel{font-size:12px;color:#64748b;margin-bottom:5px;font-weight:700}
+.profileValue{font-size:15px;font-weight:700;word-break:break-word}
+.profilePhoto{width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #dbeafe;background:#e0f2fe;display:flex;align-items:center;justify-content:center;font-size:28px;color:#1976d2;font-weight:800}
+.profilePhotoWrap{display:flex;align-items:center;gap:15px}
+.profileEditRow{display:none;margin-top:15px;padding:15px;background:#eef6ff;border:1px solid #bfdbfe;border-radius:12px}
+.profileEditRow.show{display:block}
+.profileEditActions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.lockedInput{background:#f1f5f9!important;color:#64748b;cursor:not-allowed}
+
+/* =====================================================
+   THREE APPLICATION STATUS BOXES
+===================================================== */
+.statusBoxes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:15px 0 18px}
+.statusBox{border:2px solid #e2e8f0;border-radius:16px;padding:18px;background:#fff;cursor:pointer;transition:.2s;box-shadow:0 7px 20px rgba(38,48,80,.07)}
+.statusBox:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(38,48,80,.11)}
+.statusBox.active{transform:translateY(-2px);box-shadow:0 12px 30px rgba(38,48,80,.13)}
+.statusBox.pending{border-color:#f59e0b;background:#fffbeb}
+.statusBox.failed{border-color:#ef4444;background:#fff1f2}
+.statusBox.successBox{border-color:#22c55e;background:#f0fdf4}
+.statusBoxTitle{font-weight:800;font-size:15px}
+.statusBoxCount{font-size:30px;font-weight:900;margin-top:6px}
+.statusBoxNote{font-size:11px;color:#64748b;margin-top:4px}
+.statusBox.pending .statusBoxCount{color:#b45309}
+.statusBox.failed .statusBoxCount{color:#dc2626}
+.statusBox.successBox .statusBoxCount{color:#15803d}
+.statusFilterNote{font-size:13px;color:#64748b;margin:-5px 0 12px}
+.statusBadgePending{background:#fff3cd;color:#856404}
+.statusBadgeFailed{background:#ffebee;color:#b71c1c}
+.statusBadgeSuccess{background:#e8f5e9;color:#1b5e20}
+
 @media(max-width:700px){
 
   .grid{
@@ -585,111 +624,95 @@ button:disabled{
   </div>
 
 
+    <!-- ===================================================
+       RETAILER PROFILE
+  ==================================================== -->
+  <div class="card profileCard">
+    <div class="profileHeader">
+      <div class="profilePhotoWrap">
+        <div id="profilePhoto" class="profilePhoto">R</div>
+        <div>
+          <h2>My Profile</h2>
+          <div class="smallNote">View your retailer profile. Only Retailer Number can be edited.</div>
+        </div>
+      </div>
+      <button class="primary" id="editProfileBtn" onclick="toggleProfileEdit()">Edit Retailer Number</button>
+    </div>
+
+    <div class="profileGrid">
+      <div class="profileItem"><div class="profileLabel">Full Name</div><div id="profileFullName" class="profileValue">-</div></div>
+      <div class="profileItem"><div class="profileLabel">DOB</div><div id="profileDob" class="profileValue">-</div></div>
+      <div class="profileItem"><div class="profileLabel">Address</div><div id="profileAddress" class="profileValue">-</div></div>
+      <div class="profileItem"><div class="profileLabel">Email</div><div id="profileEmail" class="profileValue">-</div></div>
+      <div class="profileItem"><div class="profileLabel">Retailer Number</div><div id="profileRetailerNumber" class="profileValue">-</div></div>
+      <div class="profileItem"><div class="profileLabel">Username / Retailer ID</div><div id="profileUsername" class="profileValue">🔒 -</div></div>
+      <div class="profileItem"><div class="profileLabel">Mobile Number</div><div id="profileMobile" class="profileValue">🔒 -</div></div>
+    </div>
+
+    <div id="profileEditRow" class="profileEditRow">
+      <label for="retailerNumberEdit">Retailer Number</label>
+      <input id="retailerNumberEdit" type="text" maxlength="50" placeholder="Enter Retailer Number">
+      <div class="profileEditActions">
+        <button class="success" id="saveRetailerNumberBtn" onclick="saveRetailerNumber()">Save</button>
+        <button class="secondary" onclick="toggleProfileEdit(false)">Cancel</button>
+      </div>
+      <div id="profileMsg" class="status"></div>
+    </div>
+  </div>
+
   <!-- ===================================================
        APPLICATION HISTORY
   ==================================================== -->
-
   <div class="card">
-
     <div class="historyHeader">
-
       <div>
-        <h2>Application History</h2>
-
-        <div
-          id="historyCount"
-          class="historyCount">
-          Loading application history...
-        </div>
+        <h2>Applications</h2>
+        <div id="historyCount" class="historyCount">Loading applications...</div>
       </div>
-
       <div class="historyTools">
-
-        <input
-          id="historySearch"
-          type="search"
-          placeholder="Search TR / customer / service..."
-          oninput="filterHistory()">
-
-        <button
-          class="refreshBtn"
-          onclick="loadApplicationHistory()">
-
-          Refresh
-
-        </button>
-
+        <input id="historySearch" type="search" placeholder="Search TR / customer / service..." oninput="filterHistory()">
+        <button class="refreshBtn" onclick="loadApplicationHistory()">Refresh</button>
       </div>
-
     </div>
 
+    <div id="historyMsg" class="status"></div>
 
-    <div
-      id="historyMsg"
-      class="status">
+    <div class="statusBoxes">
+      <div id="statusBoxPending" class="statusBox pending active" onclick="selectStatusBox('pending')">
+        <div class="statusBoxTitle">⏳ Pending</div>
+        <div id="pendingCount" class="statusBoxCount">0</div>
+        <div class="statusBoxNote">Received / Processing applications</div>
+      </div>
+      <div id="statusBoxFailed" class="statusBox failed" onclick="selectStatusBox('failed')">
+        <div class="statusBoxTitle">❌ Failed</div>
+        <div id="failedCount" class="statusBoxCount">0</div>
+        <div class="statusBoxNote">Rejected / Cancelled applications</div>
+      </div>
+      <div id="statusBoxSuccess" class="statusBox successBox" onclick="selectStatusBox('success')">
+        <div class="statusBoxTitle">✅ Success</div>
+        <div id="successCount" class="statusBoxCount">0</div>
+        <div class="statusBoxNote">Completed / Approved applications</div>
+      </div>
     </div>
 
+    <div id="statusFilterNote" class="statusFilterNote">Showing: Pending</div>
 
-    <div
-      id="historyLoading"
-      class="historyLoading">
+    <div id="historyLoading" class="historyLoading">Loading application history...</div>
+    <div id="historyEmpty" class="historyEmpty hidden">No applications found in this status.</div>
 
-      Loading application history...
-
-    </div>
-
-
-    <div
-      id="historyEmpty"
-      class="historyEmpty hidden">
-
-      No applications found.
-
-    </div>
-
-
-    <div
-      id="historyTableWrap"
-      class="historyTableWrap hidden">
-
+    <div id="historyTableWrap" class="historyTableWrap hidden">
       <table class="historyTable">
-
         <thead>
-
           <tr>
-
-            <th>TR Number</th>
-
-            <th>Date</th>
-
-            <th>Service</th>
-
-            <th>Customer</th>
-
-            <th>Amount</th>
-
-            <th>UTR</th>
-
-            <th>Payment</th>
-
-            <th>Application</th>
-
-            <th>Action</th>
-
+            <th>TR Number</th><th>Date</th><th>Service</th><th>Customer</th><th>Amount</th><th>UTR</th><th>Payment</th><th>Application</th><th>Action</th>
           </tr>
-
         </thead>
-
         <tbody id="historyBody"></tbody>
-
       </table>
-
     </div>
-
   </div>
 
-
-  <!-- ===================================================
+<!-- ===================================================
        SERVICE
   ==================================================== -->
 
@@ -975,6 +998,7 @@ let retailer = null;
 /* Application history */
 let applicationHistory = [];
 let filteredHistory = [];
+let activeStatusBox = "pending";
 
 
 /* =====================================================
@@ -1108,7 +1132,7 @@ async function login(){
       await sb
         .from("profiles")
         .select(
-          "id,full_name,mobile,retailer_number,role"
+          "*"
         )
         .eq(
           "id",
@@ -1176,6 +1200,96 @@ async function login(){
 
 }
 
+
+/* =====================================================
+   RETAILER PROFILE
+===================================================== */
+function profileValue(keys, authUser=null){
+  for(const key of keys){
+    if(retailer && retailer[key] !== undefined && retailer[key] !== null && String(retailer[key]).trim() !== "") return retailer[key];
+    if(authUser && authUser.user_metadata && authUser.user_metadata[key] !== undefined && authUser.user_metadata[key] !== null && String(authUser.user_metadata[key]).trim() !== "") return authUser.user_metadata[key];
+  }
+  return "";
+}
+
+function renderRetailerProfile(authUser=null){
+  const fullName = profileValue(["full_name","name"], authUser) || "-";
+  const dob = profileValue(["dob","date_of_birth","birth_date"], authUser) || "-";
+  const address = profileValue(["address","full_address","residential_address"], authUser) || "-";
+  const email = (authUser && authUser.email) || profileValue(["email"], authUser) || "-";
+  const rn = retailer?.retailer_number || "-";
+  const mobile = retailer?.mobile || profileValue(["phone","mobile_number"], authUser) || "-";
+  const username = (authUser?.user_metadata?.username || retailer?.username || retailer?.retailer_id || "") || "-";
+  const photo = profileValue(["photo_url","avatar_url","profile_photo","photo"], authUser);
+
+  $("profileFullName").textContent = fullName;
+  $("profileDob").textContent = dob;
+  $("profileAddress").textContent = address;
+  $("profileEmail").textContent = email;
+  $("profileRetailerNumber").textContent = rn;
+  $("profileUsername").textContent = "🔒 " + username;
+  $("profileMobile").textContent = "🔒 " + mobile;
+  $("retailerNumberEdit").value = retailer?.retailer_number || "";
+
+  const photoBox = $("profilePhoto");
+  if(photo){
+    photoBox.innerHTML = `<img src="${escapeAttr(photo)}" alt="Profile Photo" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  }else{
+    const initials = String(fullName).split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "R";
+    photoBox.textContent = initials;
+  }
+}
+
+function toggleProfileEdit(force){
+  const row = $("profileEditRow");
+  const show = force === undefined ? !row.classList.contains("show") : !!force;
+  row.classList.toggle("show", show);
+  if(show){
+    $("retailerNumberEdit").value = retailer?.retailer_number || "";
+    $("retailerNumberEdit").focus();
+  }
+}
+
+async function saveRetailerNumber(){
+  if(!retailer?.id){
+    profileMsg("Retailer profile not loaded.","err");
+    return;
+  }
+  const value = $("retailerNumberEdit").value.trim();
+  if(!value){
+    profileMsg("Retailer Number required.","err");
+    return;
+  }
+  const btn = $("saveRetailerNumberBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+  try{
+    const {data,error} = await sb
+      .from("profiles")
+      .update({retailer_number:value})
+      .eq("id",retailer.id)
+      .select("*")
+      .single();
+    if(error) throw error;
+    retailer = data || {...retailer, retailer_number:value};
+    renderRetailerProfile();
+    $("retailerInfo").textContent = (retailer.full_name || "") + " | Retailer ID: " + (retailer.retailer_number || "");
+    profileMsg("Retailer Number updated successfully.","ok");
+    setTimeout(()=>toggleProfileEdit(false),900);
+  }catch(e){
+    console.error("Profile update error:",e);
+    profileMsg(e.message || "Retailer Number update failed.","err");
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Save";
+  }
+}
+
+function profileMsg(text,type="inf"){
+  const e=$("profileMsg");
+  e.className="status "+type;
+  e.textContent=text;
+}
 
 /* =====================================================
    SHOW APP
@@ -1283,6 +1397,10 @@ async function logout(){
   $("historyEmpty").classList.remove("hidden");
   $("historyLoading").classList.add("hidden");
   $("historyCount").textContent = "0 applications found";
+  $("pendingCount").textContent = "0";
+  $("failedCount").textContent = "0";
+  $("successCount").textContent = "0";
+  selectStatusBox("pending");
 
   $("service").innerHTML =
     '<option value="">Select Service</option>';
@@ -2495,7 +2613,7 @@ async function submitApplication(){
         "Pending",
 
       applicationStatus:
-        "Received"
+        "Pending"
 
     };
 
@@ -2656,52 +2774,28 @@ function escapeAttr(
 
 
 /* =====================================================
-   HISTORY - STATUS CLASS
+   HISTORY - NORMALIZE STATUS
 ===================================================== */
-
-function statusClass(
-  value
-){
-
-  const v =
-    String(
-      value || ""
-    )
-    .toLowerCase()
-    .trim();
-
-  if(
-    v.includes("complete") ||
-    v.includes("approved") ||
-    v.includes("success")
-  )
-    return "statusCompleted";
-
-  if(
-    v.includes("reject") ||
-    v.includes("cancel")
-  )
-    return "statusRejected";
-
-  if(
-    v.includes("process")
-  )
-    return "statusProcessing";
-
-  if(
-    v.includes("pending")
-  )
-    return "statusPending";
-
-  if(
-    v.includes("received")
-  )
-    return "statusReceived";
-
-  return "statusOther";
-
+function normalizeApplicationStatus(value){
+  const v = String(value || "").toLowerCase().trim();
+  if(v.includes("complete") || v.includes("approved") || v.includes("success")) return "success";
+  if(v.includes("reject") || v.includes("cancel") || v.includes("failed") || v.includes("fail")) return "failed";
+  return "pending";
 }
 
+function statusLabel(value){
+  const s=normalizeApplicationStatus(value);
+  if(s === "success") return "Success";
+  if(s === "failed") return "Failed";
+  return "Pending";
+}
+
+function statusClass(value){
+  const s=normalizeApplicationStatus(value);
+  if(s === "success") return "statusBadgeSuccess";
+  if(s === "failed") return "statusBadgeFailed";
+  return "statusBadgePending";
+}
 
 /* =====================================================
    HISTORY - FORMAT DATE
@@ -2914,409 +3008,107 @@ async function loadApplicationHistory(){
 
 
 /* =====================================================
-   HISTORY - FILTER
+   HISTORY - STATUS BOXES
 ===================================================== */
-
-function filterHistory(){
-
-  const search =
-    $("historySearch")
-      .value
-      .trim()
-      .toLowerCase();
-
-
-  if(!search){
-
-    filteredHistory =
-      [...applicationHistory];
-
-  }
-
-  else{
-
-    filteredHistory =
-      applicationHistory.filter(
-        app => {
-
-          const text =
-            [
-              app.tr_number,
-              app.customer_name_en,
-              app.customer_name_gu,
-              app.service_name,
-              app.utr_number,
-              app.payment_status,
-              app.application_status,
-              app.mobile
-            ]
-            .join(" ")
-            .toLowerCase();
-
-          return text.includes(
-            search
-          );
-
-        }
-      );
-
-  }
-
+function selectStatusBox(status){
+  if(!["pending","failed","success"].includes(status)) status="pending";
+  activeStatusBox=status;
+  ["pending","failed","success"].forEach(s=>{
+    const el=$(s === "pending" ? "statusBoxPending" : s === "failed" ? "statusBoxFailed" : "statusBoxSuccess");
+    el.classList.toggle("active",s===status);
+  });
+  $("statusFilterNote").textContent = "Showing: " + (status === "pending" ? "Pending" : status === "failed" ? "Failed" : "Success");
   renderApplicationHistory();
-
 }
 
+function updateStatusCounts(){
+  const counts={pending:0,failed:0,success:0};
+  applicationHistory.forEach(app=>counts[normalizeApplicationStatus(app.application_status)]++);
+  $("pendingCount").textContent=counts.pending;
+  $("failedCount").textContent=counts.failed;
+  $("successCount").textContent=counts.success;
+}
+
+/* =====================================================
+   HISTORY - FILTER
+===================================================== */
+function filterHistory(){
+  const search=$("historySearch").value.trim().toLowerCase();
+  let base=applicationHistory.filter(app=>normalizeApplicationStatus(app.application_status)===activeStatusBox);
+  if(search){
+    base=base.filter(app=>{
+      const text=[app.tr_number,app.customer_name_en,app.customer_name_gu,app.service_name,app.utr_number,app.payment_status,app.application_status,app.mobile].join(" ").toLowerCase();
+      return text.includes(search);
+    });
+  }
+  filteredHistory=base;
+  renderApplicationHistory();
+}
 
 /* =====================================================
    HISTORY - RENDER
 ===================================================== */
-
 function renderApplicationHistory(){
+  const body=$("historyBody");
+  body.innerHTML="";
 
-  const body =
-    $("historyBody");
+  updateStatusCounts();
 
-  body.innerHTML =
-    "";
-
-  const total =
-    filteredHistory.length;
-
-  $("historyCount")
-    .textContent =
-      total +
-      " application" +
-      (total === 1 ? "" : "s") +
-      " found";
-
-
-  if(!total){
-
-    $("historyTableWrap")
-      .classList
-      .add("hidden");
-
-    $("historyEmpty")
-      .classList
-      .remove("hidden");
-
-    return;
-
+  const search=$("historySearch").value.trim().toLowerCase();
+  filteredHistory=applicationHistory.filter(app=>normalizeApplicationStatus(app.application_status)===activeStatusBox);
+  if(search){
+    filteredHistory=filteredHistory.filter(app=>{
+      const text=[app.tr_number,app.customer_name_en,app.customer_name_gu,app.service_name,app.utr_number,app.payment_status,app.application_status,app.mobile].join(" ").toLowerCase();
+      return text.includes(search);
+    });
   }
 
-
-  $("historyEmpty")
-    .classList
-    .add("hidden");
-
-  $("historyTableWrap")
-    .classList
-    .remove("hidden");
-
-
-  filteredHistory.forEach(
-    app => {
-
-      const tr =
-        document.createElement(
-          "tr"
-        );
-
-      const paymentStatus =
-        app.payment_status ||
-        "-";
-
-      const applicationStatus =
-        app.application_status ||
-        "-";
-
-
-      tr.innerHTML =
-        `
-        <td>
-
-          <div class="trLink">
-            ${escapeHtml(
-              app.tr_number || "-"
-            )}
-          </div>
-
-        </td>
-
-        <td>
-          ${formatDate(
-            app.created_at
-          )}
-        </td>
-
-        <td>
-          ${escapeHtml(
-            app.service_name || "-"
-          )}
-        </td>
-
-        <td>
-
-          <b>
-            ${escapeHtml(
-              app.customer_name_en || "Applicant"
-            )}
-          </b>
-
-          ${
-            app.customer_name_gu
-              ?
-              `<br>
-               <span style="color:#607080">
-               ${escapeHtml(
-                 app.customer_name_gu
-               )}
-               </span>`
-              :
-              ""
-          }
-
-          ${
-            app.mobile
-              ?
-              `<br>
-               <span style="color:#607080">
-               ${escapeHtml(
-                 app.mobile
-               )}
-               </span>`
-              :
-              ""
-          }
-
-        </td>
-
-        <td>
-          <b>
-            ₹${Number(
-              app.amount || 0
-            )}
-          </b>
-        </td>
-
-        <td>
-          ${escapeHtml(
-            app.utr_number || "-"
-          )}
-        </td>
-
-        <td>
-
-          <span class="statusBadge ${
-            statusClass(
-              paymentStatus
-            )
-          }">
-
-            ${escapeHtml(
-              paymentStatus
-            )}
-
-          </span>
-
-        </td>
-
-        <td>
-
-          <span class="statusBadge ${
-            statusClass(
-              applicationStatus
-            )
-          }">
-
-            ${escapeHtml(
-              applicationStatus
-            )}
-
-          </span>
-
-        </td>
-
-        <td>
-
-          <button
-            class="viewBtn"
-            onclick="toggleApplicationDetails('${escapeAttr(app.id)}')">
-
-            View
-
-          </button>
-
-          ${
-            app.drive_folder_url
-              ?
-              `
-              <a
-                class="driveBtn"
-                href="${escapeAttr(
-                  app.drive_folder_url
-                )}"
-                target="_blank"
-                rel="noopener">
-
-                Documents
-
-              </a>
-              `
-              :
-              ""
-          }
-
-        </td>
-        `;
-
-
-      body.appendChild(
-        tr
-      );
-
-
-      /*
-        Detail row
-      */
-
-      const detailRow =
-        document.createElement(
-          "tr"
-        );
-
-      detailRow.id =
-        "details_" +
-        app.id;
-
-      detailRow.style.display =
-        "none";
-
-
-      const detailCell =
-        document.createElement(
-          "td"
-        );
-
-      detailCell.colSpan =
-        9;
-
-
-      detailCell.innerHTML =
-        `
-        <div class="detailsBox show">
-
-          <div class="detailGrid">
-
-            <div class="detailItem">
-
-              <div class="detailLabel">
-                Application ID
-              </div>
-
-              <div class="detailValue">
-                ${escapeHtml(
-                  app.id || "-"
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="detailItem">
-
-              <div class="detailLabel">
-                TR Number
-              </div>
-
-              <div class="detailValue">
-                ${escapeHtml(
-                  app.tr_number || "-"
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="detailItem">
-
-              <div class="detailLabel">
-                Customer Email
-              </div>
-
-              <div class="detailValue">
-                ${escapeHtml(
-                  app.customer_email || "-"
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="detailItem">
-
-              <div class="detailLabel">
-                DOB
-              </div>
-
-              <div class="detailValue">
-                ${escapeHtml(
-                  app.dob || "-"
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="detailItem">
-
-              <div class="detailLabel">
-                UTR Number
-              </div>
-
-              <div class="detailValue">
-                ${escapeHtml(
-                  app.utr_number || "-"
-                )}
-              </div>
-
-            </div>
-
-
-            <div class="detailItem">
-
-              <div class="detailLabel">
-                Remark
-              </div>
-
-              <div class="detailValue">
-                ${escapeHtml(
-                  app.remark || "-"
-                )}
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-        `;
-
-
-      detailRow.appendChild(
-        detailCell
-      );
-
-
-      body.appendChild(
-        detailRow
-      );
-
-    }
-  );
-
+  const total=filteredHistory.length;
+  const overall=applicationHistory.length;
+  $("historyCount").textContent = overall + " total application" + (overall===1?"":"s") + " • " + total + " " + (activeStatusBox==="pending"?"Pending":activeStatusBox==="failed"?"Failed":"Success");
+
+  if(!total){
+    $("historyTableWrap").classList.add("hidden");
+    $("historyEmpty").classList.remove("hidden");
+    return;
+  }
+
+  $("historyEmpty").classList.add("hidden");
+  $("historyTableWrap").classList.remove("hidden");
+
+  filteredHistory.forEach(app=>{
+    const tr=document.createElement("tr");
+    const paymentStatus=app.payment_status||"-";
+    const applicationStatus=statusLabel(app.application_status);
+    tr.innerHTML=`
+      <td><div class="trLink">${escapeHtml(app.tr_number||"-")}</div></td>
+      <td>${formatDate(app.created_at)}</td>
+      <td>${escapeHtml(app.service_name||"-")}</td>
+      <td><b>${escapeHtml(app.customer_name_en||"Applicant")}</b>${app.customer_name_gu?`<br><span style="color:#607080">${escapeHtml(app.customer_name_gu)}</span>`:""}${app.mobile?`<br><span style="color:#607080">${escapeHtml(app.mobile)}</span>`:""}</td>
+      <td><b>₹${Number(app.amount||0)}</b></td>
+      <td>${escapeHtml(app.utr_number||"-")}</td>
+      <td><span class="statusBadge ${statusClass(paymentStatus)}">${escapeHtml(paymentStatus)}</span></td>
+      <td><span class="statusBadge ${statusClass(app.application_status)}">${applicationStatus}</span></td>
+      <td><button class="viewBtn" onclick="toggleApplicationDetails('${escapeAttr(app.id)}')">View</button>${app.drive_folder_url?` <a class="driveBtn" href="${escapeAttr(app.drive_folder_url)}" target="_blank" rel="noopener">Documents</a>`:""}</td>`;
+    body.appendChild(tr);
+
+    const detailRow=document.createElement("tr");
+    detailRow.id="details_"+app.id;
+    detailRow.style.display="none";
+    const detailCell=document.createElement("td");
+    detailCell.colSpan=9;
+    detailCell.innerHTML=`<div class="detailsBox show"><div class="detailGrid">
+      <div class="detailItem"><div class="detailLabel">Application ID</div><div class="detailValue">${escapeHtml(app.id||"-")}</div></div>
+      <div class="detailItem"><div class="detailLabel">TR Number</div><div class="detailValue">${escapeHtml(app.tr_number||"-")}</div></div>
+      <div class="detailItem"><div class="detailLabel">Customer Email</div><div class="detailValue">${escapeHtml(app.customer_email||"-")}</div></div>
+      <div class="detailItem"><div class="detailLabel">DOB</div><div class="detailValue">${escapeHtml(app.dob||"-")}</div></div>
+      <div class="detailItem"><div class="detailLabel">UTR Number</div><div class="detailValue">${escapeHtml(app.utr_number||"-")}</div></div>
+      <div class="detailItem"><div class="detailLabel">Remark</div><div class="detailValue">${escapeHtml(app.remark||"-")}</div></div>
+    </div></div>`;
+    detailRow.appendChild(detailCell);
+    body.appendChild(detailRow);
+  });
 }
-
 
 /* =====================================================
    HISTORY - DETAILS
@@ -3381,7 +3173,7 @@ window.addEventListener(
           await sb
             .from("profiles")
             .select(
-              "id,full_name,mobile,retailer_number,role"
+              "*"
             )
             .eq(
               "id",
