@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -7,14 +6,13 @@
 <meta charset="UTF-8">
 
 <meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
-
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
 >
 
 <title>AllInOneStop Admin Panel</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
 
 <style>
 
@@ -23,8 +21,13 @@ content="width=device-width, initial-scale=1.0"
 }
 
 body{
+
   margin:0;
-  font-family:Arial,Helvetica,sans-serif;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
 
   background:
     radial-gradient(
@@ -32,11 +35,13 @@ body{
       #7c5cff20,
       transparent 30%
     ),
+
     radial-gradient(
       circle at 90% 15%,
       #00d2ff18,
       transparent 30%
     ),
+
     linear-gradient(
       135deg,
       #eef2ff,
@@ -45,97 +50,167 @@ body{
     );
 
   color:#172033;
+
   min-height:100vh;
+
 }
 
 button,
 input,
 select,
 textarea{
+
   font:inherit;
+
 }
 
 button{
+
   border:0;
+
   cursor:pointer;
+
 }
 
 button:disabled{
+
   opacity:.6;
+
   cursor:not-allowed;
+
 }
 
 .wrap{
-  width:min(1200px,calc(100% - 30px));
+
+  width:
+    min(
+      1200px,
+      calc(100% - 30px)
+    );
+
   margin:25px auto;
+
 }
 
 .box{
-  background:rgba(255,255,255,.96);
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      .96
+    );
+
   border-radius:22px;
+
   padding:25px;
+
   margin-bottom:20px;
 
   box-shadow:
-    0 15px 45px rgba(38,48,80,.10);
+    0 15px 45px
+    rgba(
+      38,
+      48,
+      80,
+      .10
+    );
 
-  border:1px solid #fff;
+  border:
+    1px solid #fff;
+
 }
 
 .hidden{
+
   display:none !important;
+
 }
 
 h1{
+
   margin:0;
+
   color:#4f46e5;
+
 }
 
 h2{
+
   margin-top:0;
+
   color:#172033;
+
 }
 
 p{
+
   color:#667085;
+
 }
 
 label{
+
   display:block;
+
   font-size:13px;
+
   font-weight:800;
+
   color:#475467;
+
   margin-bottom:6px;
+
 }
 
 input,
 select,
 textarea{
+
   width:100%;
+
   padding:13px;
-  border:1px solid #d9deea;
+
+  border:
+    1px solid #d9deea;
+
   border-radius:11px;
+
   background:#fff;
+
   margin-bottom:15px;
+
 }
 
 textarea{
+
   min-height:90px;
+
   resize:vertical;
+
 }
 
 input:focus,
 select:focus,
 textarea:focus{
-  outline:2px solid #c7d2fe;
+
+  outline:
+    2px solid #c7d2fe;
+
   border-color:#6366f1;
+
 }
 
 button,
 .btn{
+
   padding:11px 16px;
+
   border-radius:11px;
+
   color:#fff;
+
   font-weight:800;
 
   background:
@@ -146,16 +221,27 @@ button,
     );
 
   text-decoration:none;
+
   display:inline-block;
+
 }
 
 button:hover,
 .btn:hover{
+
   box-shadow:
-    0 8px 20px rgba(54,88,255,.20);
+    0 8px 20px
+    rgba(
+      54,
+      88,
+      255,
+      .20
+    );
+
 }
 
 .logout{
+
   background:
     linear-gradient(
       135deg,
@@ -164,218 +250,341 @@ button:hover,
     );
 
   color:#fff !important;
+
 }
 
 .delete-btn{
+
   background:
     linear-gradient(
       135deg,
       #dc2626,
       #ef4444
     );
+
 }
 
 .password-btn{
+
   background:
     linear-gradient(
       135deg,
       #7c3aed,
       #4f46e5
     );
+
 }
 
 .edit-btn{
+
   background:
     linear-gradient(
       135deg,
       #0891b2,
       #2563eb
     );
+
 }
 
 .small-btn{
-  padding:7px 10px;
-  font-size:12px;
-}
 
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
+  padding:7px 10px;
+
+  font-size:12px;
+
 }
 
 .top{
+
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
+
   gap:15px;
+
   flex-wrap:wrap;
+
+}
+
+.actions{
+
+  display:flex;
+
+  gap:8px;
+
+  flex-wrap:wrap;
+
+  margin-top:10px;
+
 }
 
 .grid{
+
   display:grid;
-  grid-template-columns:1fr 1fr;
+
+  grid-template-columns:
+    1fr 1fr;
+
   gap:15px;
+
 }
 
 .divider{
+
   height:1px;
+
   background:#eaecf0;
+
   margin:22px 0;
+
 }
 
 .hint{
+
   font-size:12px;
+
   color:#667085;
+
 }
 
 .badge,
 .online{
+
   display:inline-block;
+
   padding:6px 10px;
+
   border-radius:999px;
+
   font-size:12px;
+
   font-weight:800;
+
 }
 
 .badge{
+
   background:#eef2ff;
+
   color:#4f46e5;
+
 }
 
 .online{
+
   background:#ecfdf3;
+
   color:#087443;
+
 }
 
 .msg{
+
   padding:13px;
+
   border-radius:11px;
+
   margin-top:14px;
+
   background:#ecfdf3;
+
   color:#087443;
+
   font-size:14px;
+
   font-weight:700;
+
   white-space:pre-wrap;
+
   word-break:break-word;
+
 }
 
 .msg.error{
+
   background:#fef2f2;
+
   color:#b42318;
+
 }
 
 .msg.warning{
+
   background:#fffbeb;
+
   color:#92400e;
+
 }
 
-/* =====================================================
-   ONLY 3 DASHBOARD BOXES
-===================================================== */
+.id-box{
+
+  background:#f8fafc;
+
+  border:
+    1px solid #e4e7ec;
+
+  border-radius:13px;
+
+  padding:13px;
+
+  margin-top:5px;
+
+}
+
+.id-box input{
+
+  margin-bottom:5px;
+
+  background:#f8fafc;
+
+  color:#4f46e5;
+
+  font-weight:900;
+
+  font-size:18px;
+
+}
 
 .stats{
+
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+
+  grid-template-columns:
+    repeat(4,1fr);
+
   gap:15px;
+
   margin-bottom:20px;
+
 }
 
 .stat{
+
   background:#fff;
+
   border-radius:18px;
-  padding:22px;
+
+  padding:20px;
 
   box-shadow:
-    0 10px 30px rgba(38,48,80,.08);
+    0 10px 30px
+    rgba(
+      38,
+      48,
+      80,
+      .08
+    );
 
-  border:1px solid #eef0f5;
+  border:
+    1px solid #eef0f5;
+
 }
 
 .stat-icon{
-  font-size:30px;
+
+  font-size:27px;
+
 }
 
 .stat-number{
-  font-size:32px;
+
+  font-size:30px;
+
   font-weight:900;
+
   margin-top:8px;
+
+  color:#4f46e5;
+
 }
 
 .stat-title{
-  font-size:14px;
-  font-weight:800;
-  margin-top:4px;
-}
 
-.stat.pending-stat .stat-number{
-  color:#d97706;
-}
+  color:#667085;
 
-.stat.pending-stat .stat-title{
-  color:#92400e;
-}
+  font-size:13px;
 
-.stat.success-stat .stat-number{
-  color:#059669;
-}
+  font-weight:700;
 
-.stat.success-stat .stat-title{
-  color:#047857;
-}
-
-.stat.failed-stat .stat-number{
-  color:#dc2626;
-}
-
-.stat.failed-stat .stat-title{
-  color:#b91c1c;
 }
 
 .table-wrap{
+
   overflow-x:auto;
-  border:1px solid #eaecf0;
+
+  border:
+    1px solid #eaecf0;
+
   border-radius:14px;
+
   margin-top:12px;
+
 }
 
 table{
+
   width:100%;
+
   border-collapse:collapse;
+
   min-width:1250px;
+
 }
 
 th,
 td{
+
   padding:11px;
-  border-bottom:1px solid #eaecf0;
+
+  border-bottom:
+    1px solid #eaecf0;
+
   text-align:left;
+
   font-size:13px;
+
   vertical-align:middle;
+
 }
 
 th{
+
   background:#f8fafc;
+
   color:#475467;
+
 }
 
 .loading{
+
   text-align:center;
+
   padding:25px;
+
   color:#667085;
+
 }
 
 .login-box{
+
   max-width:550px;
+
   margin:70px auto;
+
 }
 
 .login-icon{
+
   width:70px;
+
   height:70px;
+
   border-radius:20px;
+
   display:grid;
+
   place-items:center;
 
   background:
@@ -386,129 +595,221 @@ th{
     );
 
   color:#fff;
+
   font-size:34px;
+
   margin-bottom:18px;
+
 }
 
 .photo-cell{
+
   width:60px;
+
 }
 
 .retailer-photo{
+
   width:48px;
+
   height:48px;
+
   border-radius:50%;
+
   object-fit:cover;
-  border:2px solid #e0e7ff;
+
+  border:
+    2px solid #e0e7ff;
+
   background:#f1f5f9;
+
 }
 
 .photo-placeholder{
+
   width:48px;
+
   height:48px;
+
   border-radius:50%;
+
   display:grid;
+
   place-items:center;
+
   background:#eef2ff;
+
   color:#4f46e5;
+
   font-size:20px;
+
 }
 
 .modal{
+
   position:fixed;
+
   inset:0;
-  background:rgba(15,23,42,.55);
+
+  background:
+    rgba(
+      15,
+      23,
+      42,
+      .55
+    );
 
   display:flex;
+
   align-items:center;
+
   justify-content:center;
 
   padding:20px;
+
   z-index:9999;
+
 }
 
 .modal-card{
-  width:min(650px,100%);
-  max-height:90vh;
+
+  width:
+    min(
+      650px,
+      100%
+    );
+
+  max-height:
+    90vh;
+
   overflow:auto;
 
   background:#fff;
+
   border-radius:22px;
+
   padding:25px;
 
   box-shadow:
-    0 25px 80px rgba(0,0,0,.25);
+    0 25px 80px
+    rgba(
+      0,
+      0,
+      0,
+      .25
+    );
+
 }
 
 .preview{
+
   width:110px;
+
   height:110px;
+
   border-radius:18px;
+
   object-fit:cover;
-  border:1px solid #d9deea;
+
+  border:
+    1px solid #d9deea;
+
   background:#f8fafc;
+
   display:block;
+
   margin-bottom:15px;
+
 }
 
 .modal-title{
+
   display:flex;
+
   justify-content:space-between;
+
   align-items:center;
+
   gap:15px;
+
 }
 
 .close-btn{
+
   background:#e2e8f0;
+
   color:#334155;
+
 }
 
 .status-pill{
+
   display:inline-block;
+
   padding:5px 9px;
+
   border-radius:999px;
+
   font-size:11px;
+
   font-weight:800;
+
 }
 
 .paid{
+
   background:#ecfdf3;
+
   color:#087443;
+
 }
 
 .pending{
+
   background:#fffbeb;
+
   color:#92400e;
+
 }
 
 .failed,
 .rejected{
+
   background:#fef2f2;
+
   color:#b42318;
+
 }
 
 .application-delete{
+
   background:
     linear-gradient(
       135deg,
       #b91c1c,
       #ef4444
     );
+
 }
 
 .application-delete:hover{
+
   background:
     linear-gradient(
       135deg,
       #991b1b,
       #dc2626
     );
+
 }
 
 @media(max-width:800px){
 
   .stats{
-    grid-template-columns:1fr 1fr;
+
+    grid-template-columns:
+      1fr 1fr;
+
   }
 
 }
@@ -516,28 +817,41 @@ th{
 @media(max-width:700px){
 
   .wrap{
-    width:min(
-      calc(100% - 20px),
-      1200px
-    );
+
+    width:
+      min(
+        calc(100% - 20px),
+        1200px
+      );
 
     margin:10px auto;
+
   }
 
   .box{
+
     padding:18px;
+
   }
 
   .grid{
-    grid-template-columns:1fr;
+
+    grid-template-columns:
+      1fr;
+
   }
 
   .stats{
-    grid-template-columns:1fr;
+
+    grid-template-columns:
+      1fr;
+
   }
 
   .login-box{
+
     margin:25px auto;
+
   }
 
 }
@@ -549,6 +863,7 @@ th{
 <body>
 
 <div class="wrap">
+
 
 <!-- =====================================================
      LOGIN
@@ -575,50 +890,47 @@ th{
     Admin Email
   </label>
 
-<input
-id="email"
-type="email"
-placeholder="Enter admin email"
-autocomplete="username"
-
->
+  <input
+    id="email"
+    type="email"
+    placeholder="Enter admin email"
+    autocomplete="username"
+  >
 
   <label>
     Admin Password
   </label>
 
-<input
-id="password"
-type="password"
-placeholder="Enter admin password"
-autocomplete="current-password"
-
->
+  <input
+    id="password"
+    type="password"
+    placeholder="Enter admin password"
+    autocomplete="current-password"
+  >
 
   <div class="actions">
 
-```
-<button
-  id="loginBtn"
-  type="button"
-  onclick="login()"
->
-  🔐 Login
-</button>
+    <button
+      id="loginBtn"
+      type="button"
+      onclick="login()"
+    >
+      🔐 Login
+    </button>
 
-<a
-  class="btn logout"
-  href="index.html"
->
-  🏠 Home
-</a>
-```
+    <a
+      class="btn logout"
+      href="index.html"
+    >
+      🏠 Home
+    </a>
 
   </div>
 
   <div id="loginMessage"></div>
 
 </div>
+
 
 <!-- =====================================================
      ADMIN PANEL
@@ -629,136 +941,147 @@ autocomplete="current-password"
   class="hidden"
 >
 
+
 <!-- HEADER -->
 
 <div class="box">
 
   <div class="top">
 
-```
-<div>
+    <div>
 
-  <h1>
-    🛠️ Admin Panel
-  </h1>
+      <h1>
+        🛠️ Admin Panel
+      </h1>
 
-  <div style="margin-top:8px">
+      <div
+        style="margin-top:8px"
+      >
 
-    <span class="online">
-      ● Admin Online
-    </span>
+        <span class="online">
+          ● Admin Online
+        </span>
 
-    <span
-      id="adminName"
-      class="badge"
-    >
-      Admin
-    </span>
+        <span
+          id="adminName"
+          class="badge"
+        >
+          Admin
+        </span>
+
+      </div>
+
+    </div>
+
+    <div class="actions">
+
+      <a
+        class="btn logout"
+        href="index.html"
+      >
+        🏠 Home
+      </a>
+
+      <button
+        type="button"
+        class="logout"
+        onclick="logout()"
+      >
+        🚪 Logout
+      </button>
+
+    </div>
 
   </div>
 
 </div>
 
-<div class="actions">
 
-  <a
-    class="btn logout"
-    href="index.html"
-  >
-    🏠 Home
-  </a>
-
-  <button
-    type="button"
-    class="logout"
-    onclick="logout()"
-  >
-    🚪 Logout
-  </button>
-
-</div>
-```
-
-  </div>
-
-</div>
-
-<!-- =====================================================
-     ONLY 3 STATS
-====================================================== -->
+<!-- STATS -->
 
 <div class="stats">
 
-  <!-- PENDING -->
+  <div class="stat">
 
-  <div class="stat pending-stat">
+    <div class="stat-icon">
+      👥
+    </div>
 
-```
-<div class="stat-icon">
-  ⏳
-</div>
+    <div
+      class="stat-number"
+      id="totalRetailers"
+    >
+      0
+    </div>
 
-<div
-  class="stat-number"
-  id="pendingApplications"
->
-  0
-</div>
-
-<div class="stat-title">
-  Pending
-</div>
-```
+    <div class="stat-title">
+      Total Retailers
+    </div>
 
   </div>
 
-  <!-- SUCCESS -->
 
-  <div class="stat success-stat">
+  <div class="stat">
 
-```
-<div class="stat-icon">
-  ✅
-</div>
+    <div class="stat-icon">
+      📋
+    </div>
 
-<div
-  class="stat-number"
-  id="successApplications"
->
-  0
-</div>
+    <div
+      class="stat-number"
+      id="totalApplications"
+    >
+      0
+    </div>
 
-<div class="stat-title">
-  Success
-</div>
-```
+    <div class="stat-title">
+      Total Applications
+    </div>
 
   </div>
 
-  <!-- FAILED -->
 
-  <div class="stat failed-stat">
+  <div class="stat">
 
-```
-<div class="stat-icon">
-  ❌
-</div>
+    <div class="stat-icon">
+      💰
+    </div>
 
-<div
-  class="stat-number"
-  id="failedApplications"
->
-  0
-</div>
+    <div
+      class="stat-number"
+      id="paidApplications"
+    >
+      0
+    </div>
 
-<div class="stat-title">
-  Failed
-</div>
-```
+    <div class="stat-title">
+      Paid Applications
+    </div>
+
+  </div>
+
+
+  <div class="stat">
+
+    <div class="stat-icon">
+      ⏳
+    </div>
+
+    <div
+      class="stat-number"
+      id="pendingApplications"
+    >
+      0
+    </div>
+
+    <div class="stat-title">
+      Pending Applications
+    </div>
 
   </div>
 
 </div>
+
 
 <!-- CREATE RETAILER -->
 
@@ -776,124 +1099,122 @@ autocomplete="current-password"
 
   <div class="grid">
 
-```
-<div>
+    <div>
 
-  <label>
-    Retailer Full Name
-  </label>
+      <label>
+        Retailer Full Name
+      </label>
 
-  <input
-    id="retailerName"
-    type="text"
-    placeholder="Retailer full name"
-  >
+      <input
+        id="retailerName"
+        type="text"
+        placeholder="Retailer full name"
+      >
 
-</div>
-
-
-<div>
-
-  <label>
-    Mobile Number
-  </label>
-
-  <input
-    id="retailerMobile"
-    type="tel"
-    maxlength="10"
-    inputmode="numeric"
-    placeholder="10 digit mobile number"
-  >
-
-</div>
+    </div>
 
 
-<div>
+    <div>
 
-  <label>
-    Retailer Number
-  </label>
+      <label>
+        Mobile Number
+      </label>
 
-  <input
-    id="retailerNumber"
-    type="text"
-    placeholder="Optional"
-  >
+      <input
+        id="retailerMobile"
+        type="tel"
+        maxlength="10"
+        inputmode="numeric"
+        placeholder="10 digit mobile number"
+      >
 
-  <div class="hint">
-    खाली छोड़ने पर Auto Generated ID बनेगी।
-  </div>
-
-</div>
+    </div>
 
 
-<div>
+    <div>
 
-  <label>
-    Retailer Password
-  </label>
+      <label>
+        Retailer Number
+      </label>
 
-  <input
-    id="retailerPassword"
-    type="password"
-    placeholder="Enter password manually"
-    autocomplete="new-password"
-  >
+      <input
+        id="retailerNumber"
+        type="text"
+        placeholder="Optional"
+      >
 
-  <div class="hint">
-    Minimum 6 characters
-  </div>
+      <div class="hint">
+        खाली छोड़ने पर Auto Generated ID बनेगी।
+      </div>
 
-</div>
-```
+    </div>
+
+
+    <div>
+
+      <label>
+        Retailer Password
+      </label>
+
+      <input
+        id="retailerPassword"
+        type="password"
+        placeholder="Enter password manually"
+        autocomplete="new-password"
+      >
+
+      <div class="hint">
+        Minimum 6 characters
+      </div>
+
+    </div>
 
   </div>
+
 
   <div class="id-box">
 
-```
-<label>
-  Auto Generated Retailer ID
-</label>
+    <label>
+      Auto Generated Retailer ID
+    </label>
 
-<input
-  id="retailerUsername"
-  type="text"
-  readonly
->
+    <input
+      id="retailerUsername"
+      type="text"
+      readonly
+    >
 
-<div class="hint">
-  यही Retailer ID login के लिए use होगी।
-</div>
-```
+    <div class="hint">
+      यही Retailer ID login के लिए use होगी।
+    </div>
 
   </div>
+
 
   <div class="actions">
 
-```
-<button
-  type="button"
-  onclick="generateRetailerId()"
->
-  🔄 Generate ID
-</button>
+    <button
+      type="button"
+      onclick="generateRetailerId()"
+    >
+      🔄 Generate ID
+    </button>
 
-<button
-  type="button"
-  id="createRetailerBtn"
-  onclick="createRetailer()"
->
-  👤 Create Retailer
-</button>
-```
+    <button
+      type="button"
+      id="createRetailerBtn"
+      onclick="createRetailer()"
+    >
+      👤 Create Retailer
+    </button>
 
   </div>
+
 
   <div id="createMessage"></div>
 
 </div>
+
 
 <!-- RETAILERS -->
 
@@ -901,71 +1222,90 @@ autocomplete="current-password"
 
   <div class="top">
 
-```
-<div>
+    <div>
 
-  <h2>
-    👥 Retailer Management
-  </h2>
+      <h2>
+        👥 Retailer Management
+      </h2>
 
-  <p class="hint">
-    Retailer profile, photo, address और account management
-  </p>
+      <p class="hint">
+        Retailer profile, photo, address और account management
+      </p>
 
-</div>
+    </div>
 
-<button
-  type="button"
-  onclick="loadRetailers()"
->
-  🔄 Refresh
-</button>
-```
+    <button
+      type="button"
+      onclick="loadRetailers()"
+    >
+      🔄 Refresh
+    </button>
 
   </div>
+
 
   <div class="table-wrap">
 
-```
-<table>
+    <table>
 
-  <thead>
+      <thead>
 
-    <tr>
+        <tr>
 
-      <th>Photo</th>
-      <th>Retailer ID</th>
-      <th>Name</th>
-      <th>Mobile</th>
-      <th>Retailer No.</th>
-      <th>Address</th>
-      <th>Actions</th>
+          <th>
+            Photo
+          </th>
 
-    </tr>
+          <th>
+            Retailer ID
+          </th>
 
-  </thead>
+          <th>
+            Name
+          </th>
 
-  <tbody id="retailerRows">
+          <th>
+            Mobile
+          </th>
 
-    <tr>
+          <th>
+            Retailer No.
+          </th>
 
-      <td
-        colspan="7"
-        class="loading"
-      >
-        Loading retailers...
-      </td>
+          <th>
+            Address
+          </th>
 
-    </tr>
+          <th>
+            Actions
+          </th>
 
-  </tbody>
+        </tr>
 
-</table>
-```
+      </thead>
+
+
+      <tbody id="retailerRows">
+
+        <tr>
+
+          <td
+            colspan="7"
+            class="loading"
+          >
+            Loading retailers...
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
 
   </div>
 
 </div>
+
 
 <!-- APPLICATIONS -->
 
@@ -973,77 +1313,99 @@ autocomplete="current-password"
 
   <div class="top">
 
-```
-<div>
+    <div>
 
-  <h2>
-    📋 Applications
-  </h2>
+      <h2>
+        📋 Applications
+      </h2>
 
-  <p class="hint">
-    Payment, application status और application delete
-  </p>
+      <p class="hint">
+        Payment, application status और application delete
+      </p>
 
-</div>
+    </div>
 
-<button
-  type="button"
-  onclick="loadApplications()"
->
-  🔄 Refresh
-</button>
-```
+    <button
+      type="button"
+      onclick="loadApplications()"
+    >
+      🔄 Refresh
+    </button>
 
   </div>
+
 
   <div class="table-wrap">
 
-```
-<table>
+    <table>
 
-  <thead>
+      <thead>
 
-    <tr>
+        <tr>
 
-      <th>TR Number</th>
-      <th>Service</th>
-      <th>Amount</th>
-      <th>Payment</th>
-      <th>Status</th>
-      <th>Remark</th>
-      <th>Save</th>
-      <th>Delete</th>
+          <th>
+            TR Number
+          </th>
 
-    </tr>
+          <th>
+            Service
+          </th>
 
-  </thead>
+          <th>
+            Amount
+          </th>
+
+          <th>
+            Payment
+          </th>
+
+          <th>
+            Status
+          </th>
+
+          <th>
+            Remark
+          </th>
+
+          <th>
+            Save
+          </th>
+
+          <th>
+            Delete
+          </th>
+
+        </tr>
+
+      </thead>
 
 
-  <tbody id="applicationRows">
+      <tbody id="applicationRows">
 
-    <tr>
+        <tr>
 
-      <td
-        colspan="8"
-        class="loading"
-      >
-        Loading applications...
-      </td>
+          <td
+            colspan="8"
+            class="loading"
+          >
+            Loading applications...
+          </td>
 
-    </tr>
+        </tr>
 
-  </tbody>
+      </tbody>
 
-</table>
-```
+    </table>
 
   </div>
 
 </div>
 
+
 </div>
 
 </div>
+
 
 <!-- =====================================================
      EDIT RETAILER MODAL
@@ -1056,133 +1418,141 @@ autocomplete="current-password"
 
   <div class="modal-card">
 
-```
-<div class="modal-title">
+    <div class="modal-title">
 
-  <div>
+      <div>
 
-    <h2>
-      ✏️ Edit Retailer
-    </h2>
+        <h2>
+          ✏️ Edit Retailer
+        </h2>
+
+        <div
+          class="hint"
+          id="editRetailerIdText"
+        ></div>
+
+      </div>
+
+      <button
+        type="button"
+        class="close-btn"
+        onclick="closeEditModal()"
+      >
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="divider"></div>
+
+
+    <input
+      type="hidden"
+      id="editUserId"
+    >
+
+
+    <label>
+      Retailer Photo
+    </label>
+
+    <img
+      id="photoPreview"
+      class="preview"
+      src=""
+      alt="Retailer Photo"
+    >
+
+    <input
+      id="editPhoto"
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      onchange="previewPhoto(event)"
+    >
+
+    <div class="hint">
+      JPG / PNG / WEBP. Photo को छोटा करके सुरक्षित रूप से upload किया जाएगा।
+    </div>
+
+
+    <br>
+
+
+    <label>
+      Retailer Full Name
+    </label>
+
+    <input
+      id="editName"
+      type="text"
+      placeholder="Retailer full name"
+    >
+
+
+    <label>
+      Mobile Number
+    </label>
+
+    <input
+      id="editMobile"
+      type="tel"
+      maxlength="10"
+      inputmode="numeric"
+      placeholder="10 digit mobile number"
+    >
+
+
+    <label>
+      Retailer Number
+    </label>
+
+    <input
+      id="editRetailerNumber"
+      type="text"
+      placeholder="Retailer number"
+    >
+
+
+    <label>
+      Address
+    </label>
+
+    <textarea
+      id="editAddress"
+      placeholder="Retailer full address"
+    ></textarea>
+
 
     <div
-      class="hint"
-      id="editRetailerIdText"
+      id="editMessage"
     ></div>
 
-  </div>
 
-  <button
-    type="button"
-    class="close-btn"
-    onclick="closeEditModal()"
-  >
-    ✕
-  </button>
+    <div class="actions">
 
-</div>
+      <button
+        type="button"
+        class="close-btn"
+        onclick="closeEditModal()"
+      >
+        Cancel
+      </button>
 
+      <button
+        type="button"
+        id="saveRetailerBtn"
+        onclick="saveRetailer()"
+      >
+        💾 Save Changes
+      </button>
 
-<div class="divider"></div>
-
-
-<input
-  type="hidden"
-  id="editUserId"
->
-
-
-<label>
-  Retailer Photo
-</label>
-
-<img
-  id="photoPreview"
-  class="preview"
-  src=""
-  alt="Retailer Photo"
->
-
-<input
-  id="editPhoto"
-  type="file"
-  accept="image/jpeg,image/png,image/webp"
-  onchange="previewPhoto(event)"
->
-
-<div class="hint">
-  JPG / PNG / WEBP. Photo को छोटा करके सुरक्षित रूप से upload किया जाएगा।
-</div>
-
-<br>
-
-<label>
-  Retailer Full Name
-</label>
-
-<input
-  id="editName"
-  type="text"
-  placeholder="Retailer full name"
->
-
-<label>
-  Mobile Number
-</label>
-
-<input
-  id="editMobile"
-  type="tel"
-  maxlength="10"
-  inputmode="numeric"
-  placeholder="10 digit mobile number"
->
-
-<label>
-  Retailer Number
-</label>
-
-<input
-  id="editRetailerNumber"
-  type="text"
-  placeholder="Retailer number"
->
-
-<label>
-  Address
-</label>
-
-<textarea
-  id="editAddress"
-  placeholder="Retailer full address"
-></textarea>
-
-<div id="editMessage"></div>
-
-<div class="actions">
-
-  <button
-    type="button"
-    class="close-btn"
-    onclick="closeEditModal()"
-  >
-    Cancel
-  </button>
-
-  <button
-    type="button"
-    id="saveRetailerBtn"
-    onclick="saveRetailer()"
-  >
-    💾 Save Changes
-  </button>
-
-</div>
-```
+    </div>
 
   </div>
 
 </div>
+
 
 <script>
 
@@ -1202,6 +1572,7 @@ const supabaseClient =
     SUPABASE_PUBLISHABLE_KEY
   );
 
+
 const RETAILER_FUNCTION =
   "admin-create-retailer";
 
@@ -1217,12 +1588,14 @@ function escapeHtml(value){
       /[&<>"']/g,
       function(char){
 
-        const map={
+        const map = {
+
           "&":"&amp;",
           "<":"&lt;",
           ">":"&gt;",
           '"':"&quot;",
           "'":"&#039;"
+
         };
 
         return map[char];
@@ -1241,7 +1614,9 @@ function showMessage(
 ){
 
   const element =
-    document.getElementById(elementId);
+    document.getElementById(
+      elementId
+    );
 
   if(!element) return;
 
@@ -1263,10 +1638,14 @@ function showMessage(
 }
 
 
-function clearMessage(elementId){
+function clearMessage(
+  elementId
+){
 
   const element =
-    document.getElementById(elementId);
+    document.getElementById(
+      elementId
+    );
 
   if(element)
     element.innerHTML="";
@@ -1280,17 +1659,18 @@ function clearMessage(elementId){
 
 function randomRetailerCode(){
 
-  const chars=
+  const chars =
     "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
   let result="";
 
   for(let i=0;i<6;i++){
 
-    result+=
+    result +=
       chars[
         Math.floor(
-          Math.random()*chars.length
+          Math.random() *
+          chars.length
         )
       ];
 
@@ -1303,14 +1683,18 @@ function randomRetailerCode(){
 
 function generateRetailerId(){
 
-  const username=
-    "RET-"+randomRetailerCode();
+  const username =
+    "RET-" +
+    randomRetailerCode();
 
   document
-    .getElementById("retailerUsername")
-    .value=username;
+    .getElementById(
+      "retailerUsername"
+    )
+    .value =
+      username;
 
-  const numberInput=
+  const numberInput =
     document.getElementById(
       "retailerNumber"
     );
@@ -1320,7 +1704,8 @@ function generateRetailerId(){
     !numberInput.value.trim()
   ){
 
-    numberInput.value=username;
+    numberInput.value =
+      username;
 
   }
 
@@ -1336,14 +1721,14 @@ async function getSession(){
   const {
     data,
     error
-  }=
+  } =
     await supabaseClient.auth
       .getSession();
 
   if(error){
 
     throw new Error(
-      "Session error: "+
+      "Session error: " +
       error.message
     );
 
@@ -1370,12 +1755,14 @@ async function getSession(){
    ADMIN PROFILE
 ========================================================= */
 
-async function getAdminProfile(userId){
+async function getAdminProfile(
+  userId
+){
 
   const {
     data,
     error
-  }=
+  } =
     await supabaseClient
       .from("profiles")
       .select(
@@ -1390,7 +1777,7 @@ async function getAdminProfile(userId){
   if(error){
 
     throw new Error(
-      "Admin profile check failed: "+
+      "Admin profile check failed: " +
       error.message
     );
 
@@ -1404,7 +1791,7 @@ async function getAdminProfile(userId){
 
   }
 
-  if(data.role!=="admin"){
+  if(data.role !== "admin"){
 
     throw new Error(
       "This account is not an admin account."
@@ -1423,15 +1810,17 @@ async function getAdminProfile(userId){
 
 async function login(){
 
-  clearMessage("loginMessage");
+  clearMessage(
+    "loginMessage"
+  );
 
-  const email=
+  const email =
     document
       .getElementById("email")
       .value
       .trim();
 
-  const password=
+  const password =
     document
       .getElementById("password")
       .value;
@@ -1460,34 +1849,44 @@ async function login(){
 
   }
 
-  const button=
+  const button =
     document.getElementById(
       "loginBtn"
     );
 
   button.disabled=true;
-  button.textContent="⏳ Logging in...";
+
+  button.textContent =
+    "⏳ Logging in...";
+
 
   try{
 
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient.auth
         .signInWithPassword({
-          email:email,
-          password:password
+
+          email:
+            email,
+
+          password:
+            password
+
         });
+
 
     if(error){
 
       throw new Error(
-        "Login failed: "+
+        "Login failed: " +
         error.message
       );
 
     }
+
 
     if(!data?.user){
 
@@ -1497,10 +1896,12 @@ async function login(){
 
     }
 
-    const profile=
+
+    const profile =
       await getAdminProfile(
         data.user.id
       );
+
 
     await openAdminPanel(
       profile,
@@ -1526,7 +1927,9 @@ async function login(){
   finally{
 
     button.disabled=false;
-    button.textContent="🔐 Login";
+
+    button.textContent =
+      "🔐 Login";
 
   }
 
@@ -1543,22 +1946,34 @@ async function openAdminPanel(
 ){
 
   document
-    .getElementById("loginBox")
-    .classList.add("hidden");
+    .getElementById(
+      "loginBox"
+    )
+    .classList.add(
+      "hidden"
+    );
 
   document
-    .getElementById("adminPanel")
-    .classList.remove("hidden");
+    .getElementById(
+      "adminPanel"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
 
   document
-    .getElementById("adminName")
-    .textContent=
-      "👤 "+
+    .getElementById(
+      "adminName"
+    )
+    .textContent =
+      "👤 " +
       (
         profile.full_name ||
         user.email ||
         "Admin"
       );
+
 
   await refreshDashboard();
 
@@ -1576,13 +1991,16 @@ async function restoreSession(){
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient.auth
         .getSession();
 
     if(error){
 
-      console.error(error);
+      console.error(
+        error
+      );
+
       return;
 
     }
@@ -1590,13 +2008,16 @@ async function restoreSession(){
     if(!data?.session)
       return;
 
-    const user=
+
+    const user =
       data.session.user;
 
-    const profile=
+
+    const profile =
       await getAdminProfile(
         user.id
       );
+
 
     await openAdminPanel(
       profile,
@@ -1640,7 +2061,8 @@ async function logout(){
 
   }
 
-  window.location.href="admin.html";
+  window.location.href =
+    "admin.html";
 
 }
 
@@ -1651,41 +2073,60 @@ async function logout(){
 
 async function createRetailer(){
 
-  clearMessage("createMessage");
+  clearMessage(
+    "createMessage"
+  );
 
-  const button=
+
+  const button =
     document.getElementById(
       "createRetailerBtn"
     );
 
-  const fullName=
+
+  const fullName =
     document
-      .getElementById("retailerName")
+      .getElementById(
+        "retailerName"
+      )
       .value
       .trim();
 
-  const mobile=
+
+  const mobile =
     document
-      .getElementById("retailerMobile")
+      .getElementById(
+        "retailerMobile"
+      )
       .value
       .trim();
 
-  let username=
+
+  let username =
     document
-      .getElementById("retailerUsername")
+      .getElementById(
+        "retailerUsername"
+      )
       .value
       .trim();
 
-  let retailerNumber=
+
+  let retailerNumber =
     document
-      .getElementById("retailerNumber")
+      .getElementById(
+        "retailerNumber"
+      )
       .value
       .trim();
 
-  const password=
+
+  const password =
     document
-      .getElementById("retailerPassword")
+      .getElementById(
+        "retailerPassword"
+      )
       .value;
+
 
   if(!fullName){
 
@@ -1699,6 +2140,7 @@ async function createRetailer(){
 
   }
 
+
   if(!/^\d{10}$/.test(mobile)){
 
     showMessage(
@@ -1711,20 +2153,29 @@ async function createRetailer(){
 
   }
 
+
   if(!username){
 
     generateRetailerId();
 
-    username=
+    username =
       document
-        .getElementById("retailerUsername")
+        .getElementById(
+          "retailerUsername"
+        )
         .value
         .trim();
 
   }
 
-  if(!retailerNumber)
-    retailerNumber=username;
+
+  if(!retailerNumber){
+
+    retailerNumber =
+      username;
+
+  }
+
 
   if(!password){
 
@@ -1738,6 +2189,7 @@ async function createRetailer(){
 
   }
 
+
   if(password.length<6){
 
     showMessage(
@@ -1750,81 +2202,120 @@ async function createRetailer(){
 
   }
 
+
   button.disabled=true;
-  button.textContent="⏳ Creating...";
+
+  button.textContent =
+    "⏳ Creating...";
+
 
   try{
 
     await getSession();
 
+
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient.functions
         .invoke(
           RETAILER_FUNCTION,
           {
+
             body:{
-              action:"create",
-              full_name:fullName,
-              mobile:mobile,
-              username:username,
-              retailer_number:retailerNumber,
-              password:password
+
+              action:
+                "create",
+
+              full_name:
+                fullName,
+
+              mobile:
+                mobile,
+
+              username:
+                username,
+
+              retailer_number:
+                retailerNumber,
+
+              password:
+                password
+
             }
+
           }
         );
+
 
     if(error){
 
       throw new Error(
-        await readFunctionError(error)
+        await readFunctionError(
+          error
+        )
       );
 
     }
+
 
     if(data?.error){
 
       throw new Error(
-        formatFunctionError(data)
+        formatFunctionError(
+          data
+        )
       );
 
     }
 
+
     showMessage(
       "createMessage",
 
-      "Retailer created successfully.\n\n"+
-      "Retailer ID: "+
-      (data.username||username)+
-      "\n"+
-      "Retailer Number: "+
+      "Retailer created successfully.\n\n" +
+      "Retailer ID: " +
+      (data.username || username) +
+      "\n" +
+      "Retailer Number: " +
       (
-        data.retailer_number||
+        data.retailer_number ||
         retailerNumber
-      )+
-      "\n\n"+
+      ) +
+      "\n\n" +
       "Password saved securely in Supabase Authentication."
+
     );
 
+
     document
-      .getElementById("retailerName")
+      .getElementById(
+        "retailerName"
+      )
       .value="";
 
     document
-      .getElementById("retailerMobile")
+      .getElementById(
+        "retailerMobile"
+      )
       .value="";
 
     document
-      .getElementById("retailerNumber")
+      .getElementById(
+        "retailerNumber"
+      )
       .value="";
 
     document
-      .getElementById("retailerPassword")
+      .getElementById(
+        "retailerPassword"
+      )
       .value="";
+
 
     generateRetailerId();
+
 
     await refreshDashboard();
 
@@ -1847,7 +2338,9 @@ async function createRetailer(){
   finally{
 
     button.disabled=false;
-    button.textContent="👤 Create Retailer";
+
+    button.textContent =
+      "👤 Create Retailer";
 
   }
 
@@ -1858,28 +2351,33 @@ async function createRetailer(){
    EDGE ERROR
 ========================================================= */
 
-async function readFunctionError(error){
+async function readFunctionError(
+  error
+){
 
-  let message=
-    error?.message||
+  let message =
+    error?.message ||
     "Edge Function request failed.";
 
   try{
 
-    const context=
+    const context =
       error?.context;
 
     if(
       context &&
-      typeof context.clone==="function"
+      typeof context.clone ===
+        "function"
     ){
 
-      const cloned=context.clone();
+      const cloned =
+        context.clone();
 
-      const contentType=
+      const contentType =
         cloned.headers?.get(
           "content-type"
-        )||"";
+        ) || "";
+
 
       if(
         contentType.includes(
@@ -1887,17 +2385,22 @@ async function readFunctionError(error){
         )
       ){
 
-        const body=
+        const body =
           await cloned.json();
 
-        if(body)
-          message=
-            formatFunctionError(body);
+        if(body){
+
+          message =
+            formatFunctionError(
+              body
+            );
+
+        }
 
       }
       else{
 
-        const text=
+        const text =
           await cloned.text();
 
         if(text)
@@ -1919,17 +2422,19 @@ async function readFunctionError(error){
 }
 
 
-function formatFunctionError(data){
+function formatFunctionError(
+  data
+){
 
-  let message=
-    data?.error||
-    data?.message||
+  let message =
+    data?.error ||
+    data?.message ||
     "Edge Function request failed.";
 
   if(data?.details){
 
-    message+=
-      "\nDetails: "+
+    message +=
+      "\nDetails: " +
       data.details;
 
   }
@@ -1951,31 +2456,44 @@ async function callRetailerFunction(
 
   await getSession();
 
+
   const body={
-    action:action,
-    user_id:userId,
+
+    action:
+      action,
+
+    user_id:
+      userId,
+
     ...extra
+
   };
+
 
   const {
     data,
     error
-  }=
+  } =
     await supabaseClient.functions
       .invoke(
         RETAILER_FUNCTION,
         {
-          body:body
+          body:
+            body
         }
       );
+
 
   if(error){
 
     throw new Error(
-      await readFunctionError(error)
+      await readFunctionError(
+        error
+      )
     );
 
   }
+
 
   if(!data){
 
@@ -1985,13 +2503,17 @@ async function callRetailerFunction(
 
   }
 
+
   if(data.error){
 
     throw new Error(
-      formatFunctionError(data)
+      formatFunctionError(
+        data
+      )
     );
 
   }
+
 
   return data;
 
@@ -2004,29 +2526,37 @@ async function callRetailerFunction(
 
 async function loadRetailers(){
 
-  const rows=
+  const rows =
     document.getElementById(
       "retailerRows"
     );
 
+
   rows.innerHTML=`
 
     <tr>
-      <td colspan="7" class="loading">
+
+      <td
+        colspan="7"
+        class="loading"
+      >
         Loading retailers...
       </td>
+
     </tr>
 
   `;
+
 
   try{
 
     await getSession();
 
+
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient
         .from("profiles")
         .select(
@@ -2043,6 +2573,7 @@ async function loadRetailers(){
           }
         );
 
+
     if(error){
 
       throw new Error(
@@ -2051,14 +2582,20 @@ async function loadRetailers(){
 
     }
 
+
     if(!data?.length){
 
       rows.innerHTML=`
 
         <tr>
-          <td colspan="7" class="loading">
+
+          <td
+            colspan="7"
+            class="loading"
+          >
             No retailers found.
           </td>
+
         </tr>
 
       `;
@@ -2067,16 +2604,21 @@ async function loadRetailers(){
 
     }
 
-    rows.innerHTML=
+
+    rows.innerHTML =
       data.map(
-        retailer=>{
+        retailer => {
 
-          const userId=
-            String(retailer.id);
+          const userId =
+            String(
+              retailer.id
+            );
 
-          const retailerId=
-            retailer.retailer_number||
+
+          const retailerId =
+            retailer.retailer_number ||
             "RET";
+
 
           return `
 
@@ -2093,35 +2635,54 @@ async function loadRetailers(){
 
               </td>
 
-              <td>
-                <strong>
-                  ${escapeHtml(retailerId)}
-                </strong>
-              </td>
 
               <td>
+
+                <strong>
+                  ${escapeHtml(
+                    retailerId
+                  )}
+                </strong>
+
+              </td>
+
+
+              <td>
+
                 ${escapeHtml(
                   retailer.full_name
                 )}
+
               </td>
 
+
               <td>
+
                 ${escapeHtml(
                   retailer.mobile
                 )}
+
               </td>
 
+
               <td>
+
                 ${escapeHtml(
                   retailer.retailer_number
                 )}
+
               </td>
 
+
               <td>
+
                 ${escapeHtml(
-                  retailer.address||"—"
+                  retailer.address ||
+                  "—"
                 )}
+
               </td>
+
 
               <td>
 
@@ -2131,11 +2692,14 @@ async function loadRetailers(){
                     type="button"
                     class="small-btn edit-btn"
                     onclick='openEditModal(
-                      ${JSON.stringify(retailer)}
+                      ${JSON.stringify(
+                        retailer
+                      )}
                     )'
                   >
                     ✏️ Edit
                   </button>
+
 
                   <button
                     type="button"
@@ -2147,6 +2711,7 @@ async function loadRetailers(){
                   >
                     🔑 Password
                   </button>
+
 
                   <button
                     type="button"
@@ -2170,6 +2735,7 @@ async function loadRetailers(){
         }
       ).join("");
 
+
     for(
       const retailer of data
     ){
@@ -2192,6 +2758,7 @@ async function loadRetailers(){
       error
     );
 
+
     rows.innerHTML=`
 
       <tr>
@@ -2200,10 +2767,12 @@ async function loadRetailers(){
           colspan="7"
           class="loading"
         >
+
           ${escapeHtml(
-            error?.message||
+            error?.message ||
             "Could not load retailers."
           )}
+
         </td>
 
       </tr>
@@ -2219,33 +2788,42 @@ async function loadRetailers(){
    LOAD RETAILER PHOTO
 ========================================================= */
 
-async function loadRetailerPhoto(userId){
+async function loadRetailerPhoto(
+  userId
+){
 
   try{
 
-    const data=
+    const data =
       await callRetailerFunction(
         "photo_url",
         userId
       );
 
+
     if(!data.photo_url)
       return;
 
-    const holder=
+
+    const holder =
       document.getElementById(
-        "photo-"+userId
+        "photo-" +
+        userId
       );
+
 
     if(!holder)
       return;
 
-    holder.outerHTML=`
+
+    holder.outerHTML = `
 
       <img
         id="photo-${escapeHtml(userId)}"
         class="retailer-photo"
-        src="${escapeHtml(data.photo_url)}"
+        src="${escapeHtml(
+          data.photo_url
+        )}"
         alt="Retailer"
       >
 
@@ -2268,58 +2846,96 @@ async function loadRetailerPhoto(userId){
    EDIT MODAL
 ========================================================= */
 
-function openEditModal(retailer){
+function openEditModal(
+  retailer
+){
 
-  clearMessage("editMessage");
+  clearMessage(
+    "editMessage"
+  );
 
-  document
-    .getElementById("editModal")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("editUserId")
-    .value=
-      retailer.id||"";
 
   document
-    .getElementById("editRetailerIdText")
-    .textContent=
-      "Retailer ID: "+
+    .getElementById(
+      "editModal"
+    )
+    .classList.remove(
+      "hidden"
+    );
+
+
+  document
+    .getElementById(
+      "editUserId"
+    )
+    .value =
+      retailer.id || "";
+
+
+  document
+    .getElementById(
+      "editRetailerIdText"
+    )
+    .textContent =
+      "Retailer ID: " +
       (
-        retailer.retailer_number||
+        retailer.retailer_number ||
         "—"
       );
 
-  document
-    .getElementById("editName")
-    .value=
-      retailer.full_name||"";
 
   document
-    .getElementById("editMobile")
-    .value=
-      retailer.mobile||"";
+    .getElementById(
+      "editName"
+    )
+    .value =
+      retailer.full_name ||
+      "";
+
 
   document
-    .getElementById("editRetailerNumber")
-    .value=
-      retailer.retailer_number||"";
+    .getElementById(
+      "editMobile"
+    )
+    .value =
+      retailer.mobile ||
+      "";
+
 
   document
-    .getElementById("editAddress")
-    .value=
-      retailer.address||"";
+    .getElementById(
+      "editRetailerNumber"
+    )
+    .value =
+      retailer.retailer_number ||
+      "";
+
 
   document
-    .getElementById("editPhoto")
+    .getElementById(
+      "editAddress"
+    )
+    .value =
+      retailer.address ||
+      "";
+
+
+  document
+    .getElementById(
+      "editPhoto"
+    )
     .value="";
 
-  const preview=
+
+  const preview =
     document.getElementById(
       "photoPreview"
     );
 
-  preview.src="";
+
+  preview.src =
+    "";
+
 
   if(retailer.photo_path){
 
@@ -2330,7 +2946,7 @@ function openEditModal(retailer){
   }
   else{
 
-    preview.src=
+    preview.src =
       createAvatarDataUrl(
         retailer.full_name
       );
@@ -2343,36 +2959,44 @@ function openEditModal(retailer){
 function closeEditModal(){
 
   document
-    .getElementById("editModal")
-    .classList.add("hidden");
+    .getElementById(
+      "editModal"
+    )
+    .classList.add(
+      "hidden"
+    );
 
 }
 
 
-async function loadEditPhoto(userId){
+async function loadEditPhoto(
+  userId
+){
 
   try{
 
-    const data=
+    const data =
       await callRetailerFunction(
         "photo_url",
         userId
       );
 
-    const preview=
+
+    const preview =
       document.getElementById(
         "photoPreview"
       );
 
+
     if(data.photo_url){
 
-      preview.src=
+      preview.src =
         data.photo_url;
 
     }
     else{
 
-      preview.src=
+      preview.src =
         createAvatarDataUrl(
           "Retailer"
         );
@@ -2382,7 +3006,9 @@ async function loadEditPhoto(userId){
   }
   catch(error){
 
-    console.warn(error);
+    console.warn(
+      error
+    );
 
   }
 
@@ -2393,21 +3019,21 @@ async function loadEditPhoto(userId){
    AVATAR
 ========================================================= */
 
-function createAvatarDataUrl(name){
+function createAvatarDataUrl(
+  name
+){
 
-  const letter=
-    String(name||"R")
+  const letter =
+    String(name || "R")
       .trim()
       .charAt(0)
       .toUpperCase();
 
-  const svg=`
 
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="110"
-      height="110"
-    >
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="110"
+         height="110">
 
       <rect
         width="110"
@@ -2428,11 +3054,11 @@ function createAvatarDataUrl(name){
       </text>
 
     </svg>
-
   `;
 
-  return(
-    "data:image/svg+xml;charset=UTF-8,"+
+
+  return (
+    "data:image/svg+xml;charset=UTF-8," +
     encodeURIComponent(svg)
   );
 
@@ -2443,20 +3069,26 @@ function createAvatarDataUrl(name){
    PHOTO PREVIEW
 ========================================================= */
 
-function previewPhoto(event){
+function previewPhoto(
+  event
+){
 
-  const file=
+  const file =
     event.target.files?.[0];
+
 
   if(!file)
     return;
+
 
   if(
     ![
       "image/jpeg",
       "image/png",
       "image/webp"
-    ].includes(file.type)
+    ].includes(
+      file.type
+    )
   ){
 
     alert(
@@ -2469,19 +3101,27 @@ function previewPhoto(event){
 
   }
 
-  const reader=
+
+  const reader =
     new FileReader();
 
-  reader.onload=function(){
 
-    document
-      .getElementById("photoPreview")
-      .src=
-        reader.result;
+  reader.onload =
+    function(){
 
-  };
+      document
+        .getElementById(
+          "photoPreview"
+        )
+        .src =
+          reader.result;
 
-  reader.readAsDataURL(file);
+    };
+
+
+  reader.readAsDataURL(
+    file
+  );
 
 }
 
@@ -2490,52 +3130,80 @@ function previewPhoto(event){
    RESIZE IMAGE
 ========================================================= */
 
-async function resizeImage(file){
+async function resizeImage(
+  file
+){
 
-  const bitmap=
-    await createImageBitmap(file);
+  const bitmap =
+    await createImageBitmap(
+      file
+    );
 
-  const maxSize=700;
 
-  let width=bitmap.width;
-  let height=bitmap.height;
+  const maxSize =
+    700;
+
+
+  let width =
+    bitmap.width;
+
+  let height =
+    bitmap.height;
+
 
   if(
-    width>maxSize||
-    height>maxSize
+    width > maxSize ||
+    height > maxSize
   ){
 
-    if(width>height){
+    if(width > height){
 
-      height=
+      height =
         Math.round(
-          height*maxSize/width
+          height *
+          maxSize /
+          width
         );
 
-      width=maxSize;
+      width =
+        maxSize;
 
     }
     else{
 
-      width=
+      width =
         Math.round(
-          width*maxSize/height
+          width *
+          maxSize /
+          height
         );
 
-      height=maxSize;
+      height =
+        maxSize;
 
     }
 
   }
 
-  const canvas=
-    document.createElement("canvas");
 
-  canvas.width=width;
-  canvas.height=height;
+  const canvas =
+    document.createElement(
+      "canvas"
+    );
 
-  const ctx=
-    canvas.getContext("2d");
+
+  canvas.width =
+    width;
+
+  canvas.height =
+    height;
+
+
+  const ctx =
+    canvas.getContext(
+      "2d"
+    );
+
 
   ctx.drawImage(
     bitmap,
@@ -2544,6 +3212,7 @@ async function resizeImage(file){
     width,
     height
   );
+
 
   return new Promise(
     function(resolve){
@@ -2555,7 +3224,7 @@ async function resizeImage(file){
 
         },
         "image/jpeg",
-        .82
+        0.82
       );
 
     }
@@ -2565,26 +3234,31 @@ async function resizeImage(file){
 
 
 /* =========================================================
-   BLOB TO DATA URL
+   FILE TO DATA URL
 ========================================================= */
 
-function blobToDataUrl(blob){
+function blobToDataUrl(
+  blob
+){
 
   return new Promise(
     function(resolve,reject){
 
-      const reader=
+      const reader =
         new FileReader();
 
-      reader.onload=
-        ()=>resolve(
-          reader.result
-        );
+      reader.onload =
+        () =>
+          resolve(
+            reader.result
+          );
 
-      reader.onerror=
+      reader.onerror =
         reject;
 
-      reader.readAsDataURL(blob);
+      reader.readAsDataURL(
+        blob
+      );
 
     }
   );
@@ -2598,47 +3272,69 @@ function blobToDataUrl(blob){
 
 async function saveRetailer(){
 
-  clearMessage("editMessage");
+  clearMessage(
+    "editMessage"
+  );
 
-  const button=
+
+  const button =
     document.getElementById(
       "saveRetailerBtn"
     );
 
-  const userId=
+
+  const userId =
     document
-      .getElementById("editUserId")
+      .getElementById(
+        "editUserId"
+      )
       .value
       .trim();
 
-  const fullName=
+
+  const fullName =
     document
-      .getElementById("editName")
+      .getElementById(
+        "editName"
+      )
       .value
       .trim();
 
-  const mobile=
+
+  const mobile =
     document
-      .getElementById("editMobile")
+      .getElementById(
+        "editMobile"
+      )
       .value
       .trim();
 
-  const retailerNumber=
+
+  const retailerNumber =
     document
-      .getElementById("editRetailerNumber")
+      .getElementById(
+        "editRetailerNumber"
+      )
       .value
       .trim();
 
-  const address=
+
+  const address =
     document
-      .getElementById("editAddress")
+      .getElementById(
+        "editAddress"
+      )
       .value
       .trim();
 
-  const photoFile=
+
+  const photoFile =
     document
-      .getElementById("editPhoto")
+      .getElementById(
+        "editPhoto"
+      )
       .files?.[0];
+
 
   if(!userId){
 
@@ -2652,6 +3348,7 @@ async function saveRetailer(){
 
   }
 
+
   if(!fullName){
 
     showMessage(
@@ -2663,6 +3360,7 @@ async function saveRetailer(){
     return;
 
   }
+
 
   if(
     mobile &&
@@ -2679,6 +3377,7 @@ async function saveRetailer(){
 
   }
 
+
   if(!retailerNumber){
 
     showMessage(
@@ -2691,18 +3390,23 @@ async function saveRetailer(){
 
   }
 
+
   button.disabled=true;
-  button.textContent="⏳ Saving...";
+
+  button.textContent =
+    "⏳ Saving...";
+
 
   try{
 
     let photoData="";
 
+
     if(photoFile){
 
       if(
-        photoFile.size>
-        10*1024*1024
+        photoFile.size >
+        10 * 1024 * 1024
       ){
 
         throw new Error(
@@ -2711,8 +3415,12 @@ async function saveRetailer(){
 
       }
 
-      const resized=
-        await resizeImage(photoFile);
+
+      const resized =
+        await resizeImage(
+          photoFile
+        );
+
 
       if(!resized){
 
@@ -2722,35 +3430,53 @@ async function saveRetailer(){
 
       }
 
-      photoData=
+
+      photoData =
         await blobToDataUrl(
           resized
         );
 
     }
 
+
     await callRetailerFunction(
       "edit",
       userId,
       {
-        full_name:fullName,
-        mobile:mobile,
-        retailer_number:retailerNumber,
-        address:address,
-        photo_data:photoData
+
+        full_name:
+          fullName,
+
+        mobile:
+          mobile,
+
+        retailer_number:
+          retailerNumber,
+
+        address:
+          address,
+
+        photo_data:
+          photoData
+
       }
     );
+
 
     showMessage(
       "editMessage",
       "Retailer updated successfully."
     );
 
+
     await loadRetailers();
+
 
     setTimeout(
       function(){
+
         closeEditModal();
+
       },
       700
     );
@@ -2763,9 +3489,10 @@ async function saveRetailer(){
       error
     );
 
+
     showMessage(
       "editMessage",
-      error?.message||
+      error?.message ||
       "Retailer update failed.",
       true
     );
@@ -2774,7 +3501,9 @@ async function saveRetailer(){
   finally{
 
     button.disabled=false;
-    button.textContent="💾 Save Changes";
+
+    button.textContent =
+      "💾 Save Changes";
 
   }
 
@@ -2790,18 +3519,21 @@ async function resetRetailerPassword(
   retailerId
 ){
 
-  const newPassword=
+  const newPassword =
     prompt(
-      "Retailer: "+
-      retailerId+
+      "Retailer: " +
+      retailerId +
       "\n\nEnter NEW password:"
     );
+
 
   if(newPassword===null)
     return;
 
-  const trimmed=
+
+  const trimmed =
     newPassword.trim();
+
 
   if(!trimmed){
 
@@ -2813,6 +3545,7 @@ async function resetRetailerPassword(
 
   }
 
+
   if(trimmed.length<6){
 
     alert(
@@ -2823,14 +3556,19 @@ async function resetRetailerPassword(
 
   }
 
+
   if(
     !confirm(
-      "Reset password for "+
-      retailerId+
+      "Reset password for " +
+      retailerId +
       "?"
     )
-  )
+  ){
+
     return;
+
+  }
+
 
   try{
 
@@ -2838,23 +3576,27 @@ async function resetRetailerPassword(
       "reset_password",
       userId,
       {
-        password:trimmed
+        password:
+          trimmed
       }
     );
 
+
     alert(
-      "Password updated successfully.\n\n"+
-      "Retailer ID: "+
+      "Password updated successfully.\n\n" +
+      "Retailer ID: " +
       retailerId
     );
 
   }
   catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
 
     alert(
-      error?.message||
+      error?.message ||
       "Password reset failed."
     );
 
@@ -2872,20 +3614,26 @@ async function deleteRetailer(
   retailerId
 ){
 
-  const confirmation=
+  const confirmation =
     prompt(
-      "⚠️ DELETE RETAILER\n\n"+
-      "Retailer: "+
-      retailerId+
-      "\n\n"+
-      "This will delete the retailer login account and profile.\n\n"+
+      "⚠️ DELETE RETAILER\n\n" +
+      "Retailer: " +
+      retailerId +
+      "\n\n" +
+      "This will delete the retailer login account and profile.\n\n" +
       "Type DELETE to confirm."
     );
 
+
   if(
-    confirmation!=="DELETE"
-  )
+    confirmation !==
+    "DELETE"
+  ){
+
     return;
+
+  }
+
 
   try{
 
@@ -2894,9 +3642,11 @@ async function deleteRetailer(
       userId
     );
 
+
     alert(
       "Retailer deleted successfully."
     );
+
 
     await refreshDashboard();
 
@@ -2908,8 +3658,9 @@ async function deleteRetailer(
       error
     );
 
+
     alert(
-      error?.message||
+      error?.message ||
       "Retailer deletion failed."
     );
 
@@ -2920,14 +3671,18 @@ async function deleteRetailer(
 
 /* =========================================================
    LOAD APPLICATIONS
+   UPDATED:
+   - id included
+   - Delete button added
 ========================================================= */
 
 async function loadApplications(){
 
-  const rows=
+  const rows =
     document.getElementById(
       "applicationRows"
     );
+
 
   rows.innerHTML=`
 
@@ -2944,14 +3699,16 @@ async function loadApplications(){
 
   `;
 
+
   try{
 
     await getSession();
 
+
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient
         .from("applications")
         .select(
@@ -2964,6 +3721,7 @@ async function loadApplications(){
           }
         );
 
+
     if(error){
 
       throw new Error(
@@ -2971,6 +3729,7 @@ async function loadApplications(){
       );
 
     }
+
 
     if(!data?.length){
 
@@ -2993,46 +3752,44 @@ async function loadApplications(){
 
     }
 
-    rows.innerHTML=
+
+    rows.innerHTML =
       data.map(
         function(app,index){
 
-          const applicationId=
-            String(app.id||"");
+          const applicationId =
+            String(
+              app.id || ""
+            );
 
-          const tr=
-            String(app.tr_number||"");
 
-          const key=
+          const tr =
+            String(
+              app.tr_number || ""
+            );
+
+
+          const key =
             (
-              tr+"-"+index
+              tr +
+              "-" +
+              index
             )
             .replace(
               /[^a-zA-Z0-9_-]/g,
               "_"
             );
 
-          /*
-            DATABASE:
-              Pending
-              Paid
-              Failed
 
-            UI:
-              Pending
-              Success
-              Failed
-
-            Success = Paid in database.
-          */
-
-          const payment=
-            app.payment_status||
+          const payment =
+            app.payment_status ||
             "Pending";
 
-          const status=
-            app.application_status||
+
+          const status =
+            app.application_status ||
             "Received";
+
 
           return `
 
@@ -3044,17 +3801,20 @@ async function loadApplications(){
                 </strong>
               </td>
 
+
               <td>
                 ${escapeHtml(
                   app.service_name
                 )}
               </td>
 
+
               <td>
                 ₹${escapeHtml(
                   app.amount
                 )}
               </td>
+
 
               <td>
 
@@ -3066,8 +3826,8 @@ async function loadApplications(){
                     value="Pending"
                     ${
                       payment==="Pending"
-                      ?"selected"
-                      :""
+                      ? "selected"
+                      : ""
                     }
                   >
                     Pending
@@ -3077,19 +3837,19 @@ async function loadApplications(){
                     value="Paid"
                     ${
                       payment==="Paid"
-                      ?"selected"
-                      :""
+                      ? "selected"
+                      : ""
                     }
                   >
-                    Success
+                    Paid
                   </option>
 
                   <option
                     value="Failed"
                     ${
                       payment==="Failed"
-                      ?"selected"
-                      :""
+                      ? "selected"
+                      : ""
                     }
                   >
                     Failed
@@ -3098,6 +3858,7 @@ async function loadApplications(){
                 </select>
 
               </td>
+
 
               <td>
 
@@ -3109,8 +3870,8 @@ async function loadApplications(){
                     value="Received"
                     ${
                       status==="Received"
-                      ?"selected"
-                      :""
+                      ? "selected"
+                      : ""
                     }
                   >
                     Received
@@ -3120,8 +3881,8 @@ async function loadApplications(){
                     value="Verification"
                     ${
                       status==="Verification"
-                      ?"selected"
-                      :""
+                      ? "selected"
+                      : ""
                     }
                   >
                     Verification
@@ -3131,8 +3892,8 @@ async function loadApplications(){
                     value="Processing"
                     ${
                       status==="Processing"
-                      ?"selected"
-                      :""
+                      ? "selected"
+                      : ""
                     }
                   >
                     Processing
@@ -3142,8 +3903,8 @@ async function loadApplications(){
                     value="Completed"
                     ${
                       status==="Completed"
-                      ?"selected"
-                      :""
+                      ? "selected"
+                      : ""
                     }
                   >
                     Completed
@@ -3153,8 +3914,8 @@ async function loadApplications(){
                     value="Rejected"
                     ${
                       status==="Rejected"
-                      ?"selected"
-                      :""
+                      ? "selected"
+                      : ""
                     }
                   >
                     Rejected
@@ -3164,17 +3925,19 @@ async function loadApplications(){
 
               </td>
 
+
               <td>
 
                 <input
                   id="remark-${key}"
                   value="${escapeHtml(
-                    app.remark||""
+                    app.remark || ""
                   )}"
                   placeholder="Remark"
                 >
 
               </td>
+
 
               <td>
 
@@ -3190,6 +3953,7 @@ async function loadApplications(){
                 </button>
 
               </td>
+
 
               <td>
 
@@ -3221,6 +3985,7 @@ async function loadApplications(){
       error
     );
 
+
     rows.innerHTML=`
 
       <tr>
@@ -3229,10 +3994,12 @@ async function loadApplications(){
           colspan="8"
           class="loading"
         >
+
           ${escapeHtml(
-            error?.message||
+            error?.message ||
             "Could not load applications."
           )}
+
         </td>
 
       </tr>
@@ -3246,6 +4013,8 @@ async function loadApplications(){
 
 /* =========================================================
    SAVE APPLICATION
+   UPDATED:
+   Uses application ID instead of TR number
 ========================================================= */
 
 async function saveApplication(
@@ -3257,6 +4026,7 @@ async function saveApplication(
 
     await getSession();
 
+
     if(!applicationId){
 
       throw new Error(
@@ -3265,24 +4035,28 @@ async function saveApplication(
 
     }
 
-    const paymentElement=
+
+    const paymentElement =
       document.getElementById(
-        "payment-"+key
+        "payment-" + key
       );
 
-    const statusElement=
+
+    const statusElement =
       document.getElementById(
-        "status-"+key
+        "status-" + key
       );
 
-    const remarkElement=
+
+    const remarkElement =
       document.getElementById(
-        "remark-"+key
+        "remark-" + key
       );
+
 
     if(
-      !paymentElement||
-      !statusElement||
+      !paymentElement ||
+      !statusElement ||
       !remarkElement
     ){
 
@@ -3292,29 +4066,41 @@ async function saveApplication(
 
     }
 
-    const payment=
+
+    const payment =
       paymentElement.value;
 
-    const status=
+
+    const status =
       statusElement.value;
 
-    const remark=
+
+    const remark =
       remarkElement.value.trim();
+
 
     const {
       error
-    }=
+    } =
       await supabaseClient
         .from("applications")
         .update({
-          payment_status:payment,
-          application_status:status,
-          remark:remark
+
+          payment_status:
+            payment,
+
+          application_status:
+            status,
+
+          remark:
+            remark
+
         })
         .eq(
           "id",
           applicationId
         );
+
 
     if(error){
 
@@ -3324,9 +4110,11 @@ async function saveApplication(
 
     }
 
+
     alert(
       "Application status updated successfully."
     );
+
 
     await refreshDashboard();
 
@@ -3339,7 +4127,7 @@ async function saveApplication(
     );
 
     alert(
-      error?.message||
+      error?.message ||
       "Status update failed."
     );
 
@@ -3350,6 +4138,7 @@ async function saveApplication(
 
 /* =========================================================
    DELETE APPLICATION
+   NEW
 ========================================================= */
 
 async function deleteApplication(
@@ -3367,29 +4156,37 @@ async function deleteApplication(
 
   }
 
-  const confirmation=
+
+  const confirmation =
     prompt(
-      "⚠️ DELETE APPLICATION\n\n"+
-      "TR Number: "+
-      trNumber+
-      "\n\n"+
-      "This application will be permanently deleted.\n"+
-      "This action cannot be undone.\n\n"+
+      "⚠️ DELETE APPLICATION\n\n" +
+      "TR Number: " +
+      trNumber +
+      "\n\n" +
+      "This application will be permanently deleted.\n" +
+      "This action cannot be undone.\n\n" +
       "Type DELETE to confirm."
     );
 
+
   if(
-    confirmation!=="DELETE"
-  )
+    confirmation !==
+    "DELETE"
+  ){
+
     return;
+
+  }
+
 
   try{
 
     await getSession();
 
+
     const {
       error
-    }=
+    } =
       await supabaseClient
         .from("applications")
         .delete()
@@ -3397,6 +4194,7 @@ async function deleteApplication(
           "id",
           applicationId
         );
+
 
     if(error){
 
@@ -3406,11 +4204,13 @@ async function deleteApplication(
 
     }
 
+
     alert(
-      "Application deleted successfully.\n\n"+
-      "TR Number: "+
+      "Application deleted successfully.\n\n" +
+      "TR Number: " +
       trNumber
     );
+
 
     await refreshDashboard();
 
@@ -3422,28 +4222,33 @@ async function deleteApplication(
       error
     );
 
-    let message=
-      error?.message||
+
+    let message =
+      error?.message ||
       "Application deletion failed.";
 
+
     if(
-      message
-        .toLowerCase()
-        .includes("row-level security")||
-      message
-        .toLowerCase()
-        .includes("permission")||
-      message
-        .toLowerCase()
-        .includes("not allowed")
+      message.toLowerCase().includes(
+        "row-level security"
+      ) ||
+      message.toLowerCase().includes(
+        "permission"
+      ) ||
+      message.toLowerCase().includes(
+        "not allowed"
+      )
     ){
 
-      message+=
+      message +=
         "\n\nPlease add the Admin DELETE RLS policy to the applications table.";
 
     }
 
-    alert(message);
+
+    alert(
+      message
+    );
 
   }
 
@@ -3452,7 +4257,6 @@ async function deleteApplication(
 
 /* =========================================================
    STATS
-   ONLY 3 BOXES
 ========================================================= */
 
 async function loadStats(){
@@ -3461,77 +4265,91 @@ async function loadStats(){
 
     await getSession();
 
+
     const {
-      data:applications,
-      error
-    }=
+      count,
+      error:
+        retailerError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id",
+          {
+            count:"exact",
+            head:true
+          }
+        )
+        .eq(
+          "role",
+          "retailer"
+        );
+
+
+    if(retailerError)
+      throw retailerError;
+
+
+    document
+      .getElementById(
+        "totalRetailers"
+      )
+      .textContent =
+        count || 0;
+
+
+    const {
+      data:
+        applications,
+      error:
+        applicationError
+    } =
       await supabaseClient
         .from("applications")
         .select(
           "payment_status"
         );
 
-    if(error)
-      throw error;
 
-    const list=
-      applications||[];
+    if(applicationError)
+      throw applicationError;
 
 
-    /*
-      ONLY THREE CATEGORIES
-
-      Pending -> payment_status = Pending
-      Success -> payment_status = Paid
-      Failed  -> payment_status = Failed
-
-      No fourth category.
-    */
-
-    const pending=
-      list.filter(
-        item =>
-          !item.payment_status||
-          item.payment_status==="Pending"
-      ).length;
+    const list =
+      applications || [];
 
 
-    const success=
-      list.filter(
-        item =>
-          item.payment_status==="Paid"
-      ).length;
+    document
+      .getElementById(
+        "totalApplications"
+      )
+      .textContent =
+        list.length;
 
 
-    const failed=
-      list.filter(
-        item =>
-          item.payment_status==="Failed"
-      ).length;
+    document
+      .getElementById(
+        "paidApplications"
+      )
+      .textContent =
+        list.filter(
+          item =>
+            item.payment_status ===
+            "Paid"
+        ).length;
 
 
     document
       .getElementById(
         "pendingApplications"
       )
-      .textContent=
-        pending;
-
-
-    document
-      .getElementById(
-        "successApplications"
-      )
-      .textContent=
-        success;
-
-
-    document
-      .getElementById(
-        "failedApplications"
-      )
-      .textContent=
-        failed;
+      .textContent =
+        list.filter(
+          item =>
+            !item.payment_status ||
+            item.payment_status ===
+            "Pending"
+        ).length;
 
   }
   catch(error){
@@ -3571,7 +4389,10 @@ async function refreshDashboard(){
 
 supabaseClient.auth
   .onAuthStateChange(
-    function(event){
+    function(
+      event,
+      session
+    ){
 
       console.log(
         "AUTH EVENT:",
@@ -3579,10 +4400,11 @@ supabaseClient.auth
       );
 
       if(
-        event==="SIGNED_OUT"
+        event ===
+        "SIGNED_OUT"
       ){
 
-        window.location.href=
+        window.location.href =
           "admin.html";
 
       }
@@ -3600,21 +4422,29 @@ document.addEventListener(
   function(event){
 
     if(
-      event.key==="Enter"&&
+      event.key ===
+      "Enter" &&
       !document
-        .getElementById("loginBox")
+        .getElementById(
+          "loginBox"
+        )
         .classList
-        .contains("hidden")
+        .contains(
+          "hidden"
+        )
     ){
 
-      const active=
+      const active =
         document.activeElement;
 
+
       if(
-        active&&
+        active &&
         (
-          active.id==="email"||
-          active.id==="password"
+          active.id ===
+            "email" ||
+          active.id ===
+            "password"
         )
       ){
 
@@ -3631,17 +4461,20 @@ document.addEventListener(
 
 
 /* =========================================================
-   CLOSE MODAL
+   CLOSE MODAL ON BACKDROP
 ========================================================= */
 
 document
-  .getElementById("editModal")
+  .getElementById(
+    "editModal"
+  )
   .addEventListener(
     "click",
     function(event){
 
       if(
-        event.target===this
+        event.target ===
+        this
       ){
 
         closeEditModal();
