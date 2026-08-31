@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,22 +12,10 @@ content="AllInOneStop - All Online Services in One Place. Retailer portal, admin
 
 <meta name="theme-color" content="#4f46e5">
 
-<!-- =====================================================
-     EXISTING LIBRARIES
-     DO NOT REMOVE
-===================================================== -->
 <script src="https://cdn.jsdelivr.net/npm/@Supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 
 <style>
-
-/* =====================================================
-   ALLINONESTOP FINAL HOME PAGE
-   PREMIUM SERVICE UNIVERSE DESIGN
-
-   IMPORTANT:
-   Existing Supabase functionality is preserved.
-===================================================== */
 
 *{
   box-sizing:border-box;
@@ -85,9 +74,8 @@ a{
   margin:auto;
 }
 
-
 /* =====================================================
-   BACKGROUND DECORATION
+   BACKGROUND
 ===================================================== */
 
 .background-orb{
@@ -121,7 +109,6 @@ a{
   bottom:-120px;
   background:rgba(236,72,153,.07);
 }
-
 
 /* =====================================================
    NAVBAR
@@ -258,7 +245,6 @@ a{
   color:#d63355;
   background:#fff0f2;
 }
-
 
 /* =====================================================
    HERO
@@ -423,9 +409,8 @@ a{
     0 9px 23px rgba(35,42,80,.08);
 }
 
-
 /* =====================================================
-   HERO TRUST ITEMS
+   TRUST
 ===================================================== */
 
 .hero-trust{
@@ -460,7 +445,6 @@ a{
 
   background:#eef2ff;
 }
-
 
 /* =====================================================
    SERVICE UNIVERSE
@@ -721,9 +705,8 @@ a{
   background:#7c3aed;
 }
 
-
 /* =====================================================
-   TRACKING BOX
+   TRACKING
 ===================================================== */
 
 .track-box{
@@ -822,9 +805,8 @@ a{
   font-size:9.5px;
 }
 
-
 /* =====================================================
-   QUICK STATS / BENEFITS
+   QUICK STRIP
 ===================================================== */
 
 .quick-strip{
@@ -890,9 +872,8 @@ a{
   font-size:10.5px;
 }
 
-
 /* =====================================================
-   SECTION TITLES
+   SECTION TITLE
 ===================================================== */
 
 .section-title{
@@ -930,7 +911,6 @@ a{
 
   font-size:13.5px;
 }
-
 
 /* =====================================================
    PORTAL CARDS
@@ -1143,9 +1123,8 @@ a{
     );
 }
 
-
 /* =====================================================
-   SERVICE CATEGORIES
+   SERVICES
 ===================================================== */
 
 .services-section{
@@ -1156,26 +1135,26 @@ a{
   display:grid;
 
   grid-template-columns:
-    repeat(6,1fr);
+    repeat(4,1fr);
 
-  gap:12px;
+  gap:14px;
 }
 
 .service-tile{
-  min-height:145px;
+  min-height:155px;
 
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
 
-  padding:17px 11px;
+  padding:18px 12px;
 
   text-align:center;
 
   border-radius:19px;
 
-  background:rgba(255,255,255,.80);
+  background:rgba(255,255,255,.84);
 
   border:1px solid rgba(255,255,255,.95);
 
@@ -1185,55 +1164,55 @@ a{
   transition:
     transform .22s ease,
     box-shadow .22s ease;
+
+  cursor:pointer;
 }
 
 .service-tile:hover{
   transform:translateY(-6px);
 
   box-shadow:
-    0 18px 34px rgba(45,54,95,.13);
+    0 18px 34px rgba(45,54,95,.15);
 }
 
 .service-icon{
-  width:48px;
-  height:48px;
+  width:52px;
+  height:52px;
 
   display:grid;
   place-items:center;
 
-  margin-bottom:10px;
+  margin-bottom:11px;
 
   border-radius:16px;
 
-  font-size:22px;
+  font-size:23px;
 
   background:#edf2ff;
 }
 
-.service-tile:nth-child(2) .service-icon{
+.service-tile:nth-child(2n) .service-icon{
   background:#e9fbf1;
 }
 
-.service-tile:nth-child(3) .service-icon{
+.service-tile:nth-child(3n) .service-icon{
   background:#fff5dc;
 }
 
-.service-tile:nth-child(4) .service-icon{
+.service-tile:nth-child(4n) .service-icon{
   background:#f1eaff;
 }
 
-.service-tile:nth-child(5) .service-icon{
+.service-tile:nth-child(5n) .service-icon{
   background:#ffeaf3;
-}
-
-.service-tile:nth-child(6) .service-icon{
-  background:#e8f8ff;
 }
 
 .service-tile strong{
   color:#203253;
 
-  font-size:11.5px;
+  font-size:12px;
+
+  line-height:1.35;
 }
 
 .service-tile span{
@@ -1245,6 +1224,15 @@ a{
   line-height:1.4;
 }
 
+/* WhatsApp service tile */
+.service-tile.whatsapp-service{
+  border-color:#bbf7d0;
+}
+
+.service-tile.whatsapp-service:hover{
+  box-shadow:
+    0 18px 38px rgba(34,197,94,.18);
+}
 
 /* =====================================================
    HOW IT WORKS
@@ -1375,9 +1363,8 @@ a{
   z-index:3;
 }
 
-
 /* =====================================================
-   WHY CHOOSE
+   WHY
 ===================================================== */
 
 .why-section{
@@ -1446,9 +1433,8 @@ a{
   line-height:1.5;
 }
 
-
 /* =====================================================
-   FINAL CTA
+   CTA
 ===================================================== */
 
 .cta{
@@ -1567,7 +1553,6 @@ a{
   transform:translateY(-3px);
 }
 
-
 /* =====================================================
    FOOTER
 ===================================================== */
@@ -1671,9 +1656,8 @@ footer{
   font-size:9.5px;
 }
 
-
 /* =====================================================
-   MOBILE BOTTOM NAVIGATION
+   MOBILE BOTTOM NAV
 ===================================================== */
 
 .mobile-bottom-nav{
@@ -1728,7 +1712,6 @@ footer{
   color:#5146df;
 }
 
-
 /* =====================================================
    SESSION STATUS
 ===================================================== */
@@ -1758,7 +1741,6 @@ footer{
   box-shadow:
     0 8px 24px rgba(16,185,129,.08);
 }
-
 
 /* =====================================================
    ANIMATIONS
@@ -1802,9 +1784,8 @@ footer{
   animation-delay:.5s;
 }
 
-
 /* =====================================================
-   RESPONSIVE - TABLET
+   RESPONSIVE TABLET
 ===================================================== */
 
 @media(max-width:1050px){
@@ -1847,9 +1828,8 @@ footer{
 
 }
 
-
 /* =====================================================
-   RESPONSIVE - MOBILE/TABLET
+   RESPONSIVE 800
 ===================================================== */
 
 @media(max-width:800px){
@@ -1933,9 +1913,8 @@ footer{
 
 }
 
-
 /* =====================================================
-   RESPONSIVE - SMALL MOBILE
+   RESPONSIVE 600
 ===================================================== */
 
 @media(max-width:600px){
@@ -2072,6 +2051,27 @@ footer{
   .service-grid{
     grid-template-columns:
       repeat(2,1fr);
+
+    gap:10px;
+  }
+
+  .service-tile{
+    min-height:145px;
+    padding:14px 8px;
+  }
+
+  .service-icon{
+    width:46px;
+    height:46px;
+    font-size:20px;
+  }
+
+  .service-tile strong{
+    font-size:10.5px;
+  }
+
+  .service-tile span{
+    font-size:8.5px;
   }
 
   .steps{
@@ -2108,7 +2108,6 @@ footer{
 
 }
 
-
 /* =====================================================
    VERY SMALL MOBILE
 ===================================================== */
@@ -2136,7 +2135,6 @@ footer{
 
 }
 
-
 /* =====================================================
    REDUCED MOTION
 ===================================================== */
@@ -2159,17 +2157,11 @@ footer{
 </style>
 </head>
 
-
 <body>
-
-<!-- =====================================================
-     BACKGROUND
-===================================================== -->
 
 <div class="background-orb orb-one"></div>
 <div class="background-orb orb-two"></div>
 <div class="background-orb orb-three"></div>
-
 
 <!-- =====================================================
      NAVBAR
@@ -2197,7 +2189,6 @@ footer{
 
   </a>
 
-
   <nav class="navlinks">
 
     <a
@@ -2218,7 +2209,6 @@ footer{
       🔎 Track Application
     </a>
 
-    <!-- Existing logout button -->
     <button
       id="logoutBtn"
       class="logout"
@@ -2230,13 +2220,11 @@ footer{
 
 </header>
 
-
 <!-- =====================================================
      MAIN
 ===================================================== -->
 
 <main class="container">
-
 
 <!-- =====================================================
      HERO
@@ -2246,8 +2234,6 @@ footer{
 
   <div class="hero-grid">
 
-
-    <!-- LEFT SIDE -->
     <div class="hero-left">
 
       <div class="hero-badge">
@@ -2255,17 +2241,14 @@ footer{
         Fast • Secure • Simple
       </div>
 
-
       <h1>
         AllInOneStop
       </h1>
-
 
       <h2>
         All Online Services<br>
         in One Place
       </h2>
-
 
       <p class="hero-description">
         Your trusted digital platform for retailer services,
@@ -2273,13 +2256,10 @@ footer{
         all in one place.
       </p>
 
-
-      <!-- Existing session status -->
       <div
         id="sessionStatus"
         class="status">
       </div>
-
 
       <div class="hero-buttons">
 
@@ -2296,7 +2276,6 @@ footer{
         </a>
 
       </div>
-
 
       <div class="hero-trust">
 
@@ -2332,8 +2311,9 @@ footer{
 
     </div>
 
-
-    <!-- CENTER SERVICE UNIVERSE -->
+    <!-- =================================================
+         SERVICE UNIVERSE
+    ================================================== -->
 
     <div class="universe">
 
@@ -2341,8 +2321,6 @@ footer{
       <div class="universe-ring two"></div>
       <div class="universe-ring three"></div>
 
-
-      <!-- Center -->
       <div class="universe-center">
 
         <div class="universe-globe">
@@ -2359,8 +2337,6 @@ footer{
 
       </div>
 
-
-      <!-- Retailer -->
       <a
         href="retailer.html"
         class="universe-node node-retailer">
@@ -2379,8 +2355,6 @@ footer{
 
       </a>
 
-
-      <!-- Admin -->
       <a
         href="admin.html"
         class="universe-node node-admin">
@@ -2399,8 +2373,6 @@ footer{
 
       </a>
 
-
-      <!-- Tracking -->
       <a
         href="tracking.html"
         class="universe-node node-track">
@@ -2419,26 +2391,25 @@ footer{
 
       </a>
 
-
-      <!-- More Services -->
-      <div class="universe-node node-more">
+      <div
+        class="universe-node node-more"
+        onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})"
+        style="cursor:pointer;">
 
         <div class="node-icon">
           ⭐
         </div>
 
         <strong>
-          More
+          Services
         </strong>
 
         <small>
-          Services Available
+          Click to View Services
         </small>
 
       </div>
 
-
-      <!-- Decorative dots -->
       <span class="orbit-dot dot-green"></span>
       <span class="orbit-dot dot-blue"></span>
       <span class="orbit-dot dot-pink"></span>
@@ -2446,8 +2417,9 @@ footer{
 
     </div>
 
-
-    <!-- TRACKING PANEL -->
+    <!-- =================================================
+         TRACKING
+    ================================================== -->
 
     <div class="track-box">
 
@@ -2458,22 +2430,18 @@ footer{
         </div>
 
         <div>
-
           <h3>
             Track Your Application
           </h3>
-
         </div>
 
       </div>
-
 
       <p>
         Already submitted an application?
         Use your TR number on our tracking page
         to check the current application status.
       </p>
-
 
       <a
         class="track-main-btn"
@@ -2482,7 +2450,6 @@ footer{
         🔎 Open Tracking Page →
 
       </a>
-
 
       <div class="track-note">
         Fast • Accurate • Easy
@@ -2493,7 +2460,6 @@ footer{
   </div>
 
 </section>
-
 
 <!-- =====================================================
      QUICK BENEFITS
@@ -2519,7 +2485,6 @@ footer{
 
   </div>
 
-
   <div class="quick-item">
 
     <div class="quick-icon">
@@ -2537,7 +2502,6 @@ footer{
     </div>
 
   </div>
-
 
   <div class="quick-item">
 
@@ -2558,7 +2522,6 @@ footer{
   </div>
 
 </section>
-
 
 <!-- =====================================================
      PORTALS
@@ -2582,11 +2545,7 @@ footer{
 
   </div>
 
-
   <div class="portal-grid">
-
-
-    <!-- RETAILER -->
 
     <article class="portal-card retailer-card">
 
@@ -2602,17 +2561,14 @@ footer{
 
       </div>
 
-
       <h3>
         Retailer Portal
       </h3>
-
 
       <p>
         Securely login, submit applications,
         upload documents and manage your work.
       </p>
-
 
       <ul class="portal-list">
 
@@ -2630,7 +2586,6 @@ footer{
 
       </ul>
 
-
       <a
         class="portal-link"
         href="retailer.html">
@@ -2640,9 +2595,6 @@ footer{
       </a>
 
     </article>
-
-
-    <!-- ADMIN -->
 
     <article class="portal-card admin-card">
 
@@ -2658,17 +2610,14 @@ footer{
 
       </div>
 
-
       <h3>
         Admin Panel
       </h3>
-
 
       <p>
         Manage retailers, applications,
         payments, documents and application status.
       </p>
-
 
       <ul class="portal-list">
 
@@ -2686,7 +2635,6 @@ footer{
 
       </ul>
 
-
       <a
         class="portal-link"
         href="admin.html">
@@ -2696,9 +2644,6 @@ footer{
       </a>
 
     </article>
-
-
-    <!-- TRACKING -->
 
     <article class="portal-card tracking-card">
 
@@ -2714,17 +2659,14 @@ footer{
 
       </div>
 
-
       <h3>
         Application Tracking
       </h3>
-
 
       <p>
         Enter your TR number on the tracking page
         and check your application progress.
       </p>
-
 
       <ul class="portal-list">
 
@@ -2742,7 +2684,6 @@ footer{
 
       </ul>
 
-
       <a
         class="portal-link"
         href="tracking.html">
@@ -2757,9 +2698,9 @@ footer{
 
 </section>
 
-
 <!-- =====================================================
      SERVICES
+     NEW SERVICES ADDED
 ===================================================== -->
 
 <section
@@ -2777,112 +2718,275 @@ footer{
     </h2>
 
     <p>
-      Explore online services available through AllInOneStop.
+      Service पर click करें, number enter करें और WhatsApp पर enquiry भेजें।
     </p>
 
   </div>
 
-
   <div class="service-grid">
 
-
-    <div class="service-tile">
-
-      <div class="service-icon">
-        📄
-      </div>
-
-      <strong>
-        Ration Card
-      </strong>
-
-      <span>
-        Related online services
-      </span>
-
-    </div>
-
-
-    <div class="service-tile">
+    <!-- 1 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('Aadhar Number to PAN Number')">
 
       <div class="service-icon">
         🪪
       </div>
 
       <strong>
-        PAN Card
+        Aadhar Number to PAN Number
       </strong>
 
       <span>
-        New & correction services
+        Click to Enquire
       </span>
 
     </div>
 
+    <!-- 2 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('PAN Number to Aadhar Number')">
 
-    <div class="service-tile">
+      <div class="service-icon">
+        🔄
+      </div>
+
+      <strong>
+        PAN Number to Aadhar Number
+      </strong>
+
+      <span>
+        Click to Enquire
+      </span>
+
+    </div>
+
+    <!-- 3 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('PAN Number to PAN Details')">
+
+      <div class="service-icon">
+        📋
+      </div>
+
+      <strong>
+        PAN Number to PAN Details
+      </strong>
+
+      <span>
+        Click to Enquire
+      </span>
+
+    </div>
+
+    <!-- 4 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('PAN to Aadhar Status')">
+
+      <div class="service-icon">
+        🔎
+      </div>
+
+      <strong>
+        PAN to Aadhar Status
+      </strong>
+
+      <span>
+        Click to Enquire
+      </span>
+
+    </div>
+
+    <!-- 5 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('Mobile Number to PAN Number')">
+
+      <div class="service-icon">
+        📱
+      </div>
+
+      <strong>
+        Mobile Number to PAN Number
+      </strong>
+
+      <span>
+        Click to Enquire
+      </span>
+
+    </div>
+
+    <!-- 6 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('DL PDF')">
+
+      <div class="service-icon">
+        🚗
+      </div>
+
+      <strong>
+        DL PDF
+      </strong>
+
+      <span>
+        Driving Licence PDF
+      </span>
+
+    </div>
+
+    <!-- 7 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('RC PDF')">
+
+      <div class="service-icon">
+        🚘
+      </div>
+
+      <strong>
+        RC PDF
+      </strong>
+
+      <span>
+        Registration Certificate PDF
+      </span>
+
+    </div>
+
+    <!-- 8 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('Voter to Mobile Number Link')">
 
       <div class="service-icon">
         🗳️
       </div>
 
       <strong>
-        Election Card
+        Voter to Mobile Number Link
       </strong>
 
       <span>
-        Online application services
+        Click to Enquire
       </span>
 
     </div>
 
-
-    <div class="service-tile">
+    <!-- 9 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('Voter Download')">
 
       <div class="service-icon">
-        📜
+        🗳️
       </div>
 
       <strong>
-        Certificates
+        Voter Download
       </strong>
 
       <span>
-        Certificate related services
+        Click to Enquire
       </span>
 
     </div>
 
+    <!-- 10 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('CIBIL Report PDF Download')">
 
-    <div class="service-tile">
+      <div class="service-icon">
+        📊
+      </div>
+
+      <strong>
+        CIBIL Report PDF Download
+      </strong>
+
+      <span>
+        Click to Enquire
+      </span>
+
+    </div>
+
+    <!-- 11 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('Ration Number to Aadhar Number - All State')">
+
+      <div class="service-icon">
+        📄
+      </div>
+
+      <strong>
+        Ration Number to Aadhar Number
+      </strong>
+
+      <span>
+        All State Services
+      </span>
+
+    </div>
+
+    <!-- 12 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('Aadhar Number to Details')">
 
       <div class="service-icon">
         👤
       </div>
 
       <strong>
-        Aadhaar Services
+        Aadhar Number to Details
       </strong>
 
       <span>
-        Document related services
+        Click to Enquire
       </span>
 
     </div>
 
-
-    <div class="service-tile">
+    <!-- 13 -->
+    <div
+      class="service-tile"
+      onclick="openServiceWhatsApp('Aadhar Number to Aadhar PDF')">
 
       <div class="service-icon">
-        🧰
+        📥
       </div>
 
       <strong>
-        Other Services
+        Aadhar Number to Aadhar PDF
       </strong>
 
       <span>
-        More services available
+        Click to Enquire
+      </span>
+
+    </div>
+
+    <!-- 14 -->
+    <div
+      class="service-tile whatsapp-service"
+      onclick="openServiceWhatsApp('Name and Mobile Number to Aadhar PDF')">
+
+      <div class="service-icon">
+        📱
+      </div>
+
+      <strong>
+        Name & Mobile Number to Aadhar PDF
+      </strong>
+
+      <span>
+        All Services • WhatsApp Enquiry
       </span>
 
     </div>
@@ -2890,7 +2994,6 @@ footer{
   </div>
 
 </section>
-
 
 <!-- =====================================================
      HOW IT WORKS
@@ -2914,9 +3017,7 @@ footer{
 
   </div>
 
-
   <div class="steps">
-
 
     <div class="step">
 
@@ -2942,7 +3043,6 @@ footer{
 
     </div>
 
-
     <div class="step">
 
       <div class="step-number">
@@ -2967,7 +3067,6 @@ footer{
 
     </div>
 
-
     <div class="step">
 
       <div class="step-number">
@@ -2979,11 +3078,11 @@ footer{
       </div>
 
       <h3>
-        Submit Documents
+        Submit Details
       </h3>
 
       <p>
-        Fill the required details and upload documents.
+        Fill the required details and submit your request.
       </p>
 
       <span class="step-arrow">
@@ -2991,7 +3090,6 @@ footer{
       </span>
 
     </div>
-
 
     <div class="step">
 
@@ -3017,7 +3115,6 @@ footer{
 
 </section>
 
-
 <!-- =====================================================
      WHY CHOOSE
 ===================================================== -->
@@ -3040,9 +3137,7 @@ footer{
 
   </div>
 
-
   <div class="why-grid">
-
 
     <div class="why-item">
 
@@ -3060,7 +3155,6 @@ footer{
 
     </div>
 
-
     <div class="why-item">
 
       <div class="why-icon">
@@ -3077,7 +3171,6 @@ footer{
 
     </div>
 
-
     <div class="why-item">
 
       <div class="why-icon">
@@ -3093,7 +3186,6 @@ footer{
       </p>
 
     </div>
-
 
     <div class="why-item">
 
@@ -3114,7 +3206,6 @@ footer{
   </div>
 
 </section>
-
 
 <!-- =====================================================
      CTA
@@ -3138,7 +3229,6 @@ footer{
 
   </div>
 
-
   <a
     class="cta-btn"
     href="retailer.html">
@@ -3149,9 +3239,7 @@ footer{
 
 </section>
 
-
 </main>
-
 
 <!-- =====================================================
      FOOTER
@@ -3162,7 +3250,6 @@ footer{
   <div class="container">
 
     <div class="footer-inner">
-
 
       <div class="footer-brand-area">
 
@@ -3176,7 +3263,6 @@ footer{
 
         </div>
 
-
         <p class="footer-tagline">
           All Online Services in One Place.
           A simple, secure and convenient digital
@@ -3184,7 +3270,6 @@ footer{
         </p>
 
       </div>
-
 
       <div class="footer-column">
 
@@ -3210,7 +3295,6 @@ footer{
 
       </div>
 
-
       <div class="footer-column">
 
         <h4>
@@ -3235,9 +3319,7 @@ footer{
 
       </div>
 
-
     </div>
-
 
     <div class="footer-bottom">
 
@@ -3256,7 +3338,6 @@ footer{
 
 </footer>
 
-
 <!-- =====================================================
      MOBILE BOTTOM NAVIGATION
 ===================================================== -->
@@ -3272,7 +3353,6 @@ footer{
 
   </a>
 
-
   <a href="retailer.html">
 
     <span>🏪</span>
@@ -3280,14 +3360,12 @@ footer{
 
   </a>
 
-
   <a href="tracking.html">
 
     <span>🔎</span>
     Track
 
   </a>
-
 
   <a href="admin.html">
 
@@ -3298,10 +3376,8 @@ footer{
 
 </nav>
 
-
 <!-- =====================================================
-     EXISTING SUPABASE SESSION / LOGOUT
-     PRESERVED FROM YOUR ORIGINAL CODE
+     JAVASCRIPT
 ===================================================== -->
 
 <script>
@@ -3316,7 +3392,6 @@ document.getElementById("year").textContent =
 
 /* =====================================================
    SUPABASE CONFIG
-   SAME AS ORIGINAL
 ===================================================== */
 
 const SUPABASE_URL =
@@ -3324,7 +3399,6 @@ const SUPABASE_URL =
 
 const SUPABASE_PUBLISHABLE_KEY =
   window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
-
 
 const supabaseClient =
   window.supabase.createClient(
@@ -3334,8 +3408,70 @@ const supabaseClient =
 
 
 /* =====================================================
+   SERVICE -> WHATSAPP
+=====================================================
+
+   WhatsApp Number:
+   9429193151
+
+   User clicks service
+   ↓
+   Number input box
+   ↓
+   WhatsApp opens
+   ↓
+   Service + entered number
+===================================================== */
+
+function openServiceWhatsApp(serviceName){
+
+  const number = prompt(
+    "Enter Number for:\n" +
+    serviceName
+  );
+
+  if(number === null){
+    return;
+  }
+
+  const cleanNumber =
+    number.trim();
+
+  if(!cleanNumber){
+
+    alert(
+      "Please enter a number."
+    );
+
+    return;
+  }
+
+  const whatsappNumber =
+    "919429193151";
+
+  const message =
+    "Hello AllInOneStop,%0A%0A" +
+    "I want to enquire about:%0A" +
+    serviceName +
+    "%0A%0ANumber: " +
+    encodeURIComponent(cleanNumber);
+
+  const whatsappUrl =
+    "https://wa.me/" +
+    whatsappNumber +
+    "?text=" +
+    message;
+
+  window.open(
+    whatsappUrl,
+    "_blank"
+  );
+
+}
+
+
+/* =====================================================
    SHOW SESSION
-   SAME FUNCTIONALITY
 ===================================================== */
 
 async function showSession(){
@@ -3344,7 +3480,6 @@ async function showSession(){
 
     const {data} =
       await supabaseClient.auth.getSession();
-
 
     if(data.session?.user){
 
@@ -3357,12 +3492,10 @@ async function showSession(){
           "Logged-in user"
         );
 
-
       document.getElementById(
         "sessionStatus"
       ).style.display =
         "block";
-
 
       document.getElementById(
         "logoutBtn"
@@ -3382,7 +3515,6 @@ async function showSession(){
 
 /* =====================================================
    LOGOUT
-   SAME FUNCTIONALITY
 ===================================================== */
 
 async function logout(){
@@ -3404,7 +3536,6 @@ async function logout(){
 
 /* =====================================================
    AUTH STATE CHANGE
-   SAME FUNCTIONALITY
 ===================================================== */
 
 supabaseClient.auth.onAuthStateChange(
@@ -3420,7 +3551,6 @@ supabaseClient.auth.onAuthStateChange(
         "logoutBtn"
       );
 
-
     if(session?.user){
 
       box.textContent =
@@ -3430,10 +3560,8 @@ supabaseClient.auth.onAuthStateChange(
           "Logged-in user"
         );
 
-
       box.style.display =
         "block";
-
 
       btn.style.display =
         "inline-block";
@@ -3442,7 +3570,6 @@ supabaseClient.auth.onAuthStateChange(
 
       box.style.display =
         "none";
-
 
       btn.style.display =
         "none";
@@ -3462,3 +3589,5 @@ showSession();
 </script>
 
 </body>
+</html>
+```
