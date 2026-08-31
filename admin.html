@@ -1,1188 +1,843 @@
+```html
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0"
-
->
-
-<title>AllInOneStop Admin Panel</title>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-
-  background:
-    radial-gradient(
-      circle at 10% 10%,
-      #7c5cff20,
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 90% 15%,
-      #00d2ff18,
-      transparent 30%
-    ),
-    linear-gradient(
-      135deg,
-      #eef2ff,
-      #f8fbff 45%,
-      #ecfeff
-    );
-
-  color:#172033;
-  min-height:100vh;
-}
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-}
-
-button:disabled{
-  opacity:.6;
-  cursor:not-allowed;
-}
-
-.wrap{
-  width:min(1200px,calc(100% - 30px));
-  margin:25px auto;
-}
-
-.box{
-  background:rgba(255,255,255,.96);
-  border-radius:22px;
-  padding:25px;
-  margin-bottom:20px;
-
-  box-shadow:
-    0 15px 45px rgba(38,48,80,.10);
-
-  border:1px solid #fff;
-}
-
-.hidden{
-  display:none !important;
-}
-
-h1{
-  margin:0;
-  color:#4f46e5;
-}
-
-h2{
-  margin-top:0;
-  color:#172033;
-}
-
-p{
-  color:#667085;
-}
-
-label{
-  display:block;
-  font-size:13px;
-  font-weight:800;
-  color:#475467;
-  margin-bottom:6px;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  padding:13px;
-  border:1px solid #d9deea;
-  border-radius:11px;
-  background:#fff;
-  margin-bottom:15px;
-}
-
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-  outline:2px solid #c7d2fe;
-  border-color:#6366f1;
-}
-
-button,
-.btn{
-  padding:11px 16px;
-  border-radius:11px;
-  color:#fff;
-  font-weight:800;
-
-  background:
-    linear-gradient(
-      135deg,
-      #5b5cf0,
-      #287cff
-    );
-
-  text-decoration:none;
-  display:inline-block;
-}
-
-button:hover,
-.btn:hover{
-  box-shadow:
-    0 8px 20px rgba(54,88,255,.20);
-}
-
-.logout{
-  background:
-    linear-gradient(
-      135deg,
-      #334155,
-      #475569
-    );
-
-  color:#fff !important;
-}
-
-.delete-btn{
-  background:
-    linear-gradient(
-      135deg,
-      #dc2626,
-      #ef4444
-    );
-}
-
-.password-btn{
-  background:
-    linear-gradient(
-      135deg,
-      #7c3aed,
-      #4f46e5
-    );
-}
-
-.edit-btn{
-  background:
-    linear-gradient(
-      135deg,
-      #0891b2,
-      #2563eb
-    );
-}
-
-.small-btn{
-  padding:7px 10px;
-  font-size:12px;
-}
-
-.actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  flex-wrap:wrap;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.divider{
-  height:1px;
-  background:#eaecf0;
-  margin:22px 0;
-}
-
-.hint{
-  font-size:12px;
-  color:#667085;
-}
-
-.badge,
-.online{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-}
-
-.badge{
-  background:#eef2ff;
-  color:#4f46e5;
-}
-
-.online{
-  background:#ecfdf3;
-  color:#087443;
-}
-
-.msg{
-  padding:13px;
-  border-radius:11px;
-  margin-top:14px;
-  background:#ecfdf3;
-  color:#087443;
-  font-size:14px;
-  font-weight:700;
-  white-space:pre-wrap;
-  word-break:break-word;
-}
-
-.msg.error{
-  background:#fef2f2;
-  color:#b42318;
-}
-
-.msg.warning{
-  background:#fffbeb;
-  color:#92400e;
-}
-
-/* =====================================================
-   ONLY 3 DASHBOARD BOXES
-===================================================== */
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-  margin-bottom:20px;
-}
-
-.stat{
-  background:#fff;
-  border-radius:18px;
-  padding:22px;
-
-  box-shadow:
-    0 10px 30px rgba(38,48,80,.08);
-
-  border:1px solid #eef0f5;
-}
-
-.stat-icon{
-  font-size:30px;
-}
-
-.stat-number{
-  font-size:32px;
-  font-weight:900;
-  margin-top:8px;
-}
-
-.stat-title{
-  font-size:14px;
-  font-weight:800;
-  margin-top:4px;
-}
-
-.stat.pending-stat .stat-number{
-  color:#d97706;
-}
-
-.stat.pending-stat .stat-title{
-  color:#92400e;
-}
-
-.stat.success-stat .stat-number{
-  color:#059669;
-}
-
-.stat.success-stat .stat-title{
-  color:#047857;
-}
-
-.stat.failed-stat .stat-number{
-  color:#dc2626;
-}
-
-.stat.failed-stat .stat-title{
-  color:#b91c1c;
-}
-
-.table-wrap{
-  overflow-x:auto;
-  border:1px solid #eaecf0;
-  border-radius:14px;
-  margin-top:12px;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:1250px;
-}
-
-th,
-td{
-  padding:11px;
-  border-bottom:1px solid #eaecf0;
-  text-align:left;
-  font-size:13px;
-  vertical-align:middle;
-}
-
-th{
-  background:#f8fafc;
-  color:#475467;
-}
-
-.loading{
-  text-align:center;
-  padding:25px;
-  color:#667085;
-}
-
-.login-box{
-  max-width:550px;
-  margin:70px auto;
-}
-
-.login-icon{
-  width:70px;
-  height:70px;
-  border-radius:20px;
-  display:grid;
-  place-items:center;
-
-  background:
-    linear-gradient(
-      135deg,
-      #6366f1,
-      #06b6d4
-    );
-
-  color:#fff;
-  font-size:34px;
-  margin-bottom:18px;
-}
-
-.photo-cell{
-  width:60px;
-}
-
-.retailer-photo{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid #e0e7ff;
-  background:#f1f5f9;
-}
-
-.photo-placeholder{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  background:#eef2ff;
-  color:#4f46e5;
-  font-size:20px;
-}
-
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(15,23,42,.55);
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  padding:20px;
-  z-index:9999;
-}
-
-.modal-card{
-  width:min(650px,100%);
-  max-height:90vh;
-  overflow:auto;
-
-  background:#fff;
-  border-radius:22px;
-  padding:25px;
-
-  box-shadow:
-    0 25px 80px rgba(0,0,0,.25);
-}
-
-.preview{
-  width:110px;
-  height:110px;
-  border-radius:18px;
-  object-fit:cover;
-  border:1px solid #d9deea;
-  background:#f8fafc;
-  display:block;
-  margin-bottom:15px;
-}
-
-.modal-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-}
-
-.close-btn{
-  background:#e2e8f0;
-  color:#334155;
-}
-
-.status-pill{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:999px;
-  font-size:11px;
-  font-weight:800;
-}
-
-.paid{
-  background:#ecfdf3;
-  color:#087443;
-}
-
-.pending{
-  background:#fffbeb;
-  color:#92400e;
-}
-
-.failed,
-.rejected{
-  background:#fef2f2;
-  color:#b42318;
-}
-
-.application-delete{
-  background:
-    linear-gradient(
-      135deg,
-      #b91c1c,
-      #ef4444
-    );
-}
-
-.application-delete:hover{
-  background:
-    linear-gradient(
-      135deg,
-      #991b1b,
-      #dc2626
-    );
-}
-
-@media(max-width:800px){
-
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
-
-}
-
-@media(max-width:700px){
-
-  .wrap{
-    width:min(
-      calc(100% - 20px),
-      1200px
-    );
-
-    margin:10px auto;
-  }
-
-  .box{
-    padding:18px;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-  }
-
-  .stats{
-    grid-template-columns:1fr;
-  }
-
-  .login-box{
-    margin:25px auto;
-  }
-
-}
-
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AllInOneStop Admin Panel</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 10% 10%, #7c5cff20, transparent 30%),
+        radial-gradient(circle at 90% 15%, #00d2ff18, transparent 30%),
+        linear-gradient(135deg, #eef2ff, #f8fbff 45%, #ecfeff);
+      color: #172033;
+      min-height: 100vh;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .wrap {
+      width: min(1200px, calc(100% - 30px));
+      margin: 25px auto;
+    }
+
+    .box {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 22px;
+      padding: 25px;
+      margin-bottom: 20px;
+      box-shadow: 0 15px 45px rgba(38, 48, 80, 0.10);
+      border: 1px solid #ffffff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    h1 {
+      margin: 0;
+      color: #4f46e5;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #172033;
+    }
+
+    p {
+      color: #667085;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: #475467;
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d9deea;
+      border-radius: 11px;
+      background: white;
+      margin-bottom: 15px;
+    }
+
+    input:focus,
+    select:focus {
+      outline: 2px solid #c7d2fe;
+      border-color: #6366f1;
+    }
+
+    button,
+    .btn {
+      padding: 11px 16px;
+      border-radius: 11px;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, #5b5cf0, #287cff);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    button:hover,
+    .btn:hover {
+      box-shadow: 0 8px 20px rgba(54, 88, 255, 0.20);
+    }
+
+    .logout {
+      background: #475467;
+    }
+
+    .delete-btn {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+    }
+
+    .password-btn {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    }
+
+    .small-btn {
+      padding: 7px 10px;
+      font-size: 12px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .divider {
+      height: 1px;
+      background: #eaecf0;
+      margin: 22px 0;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #667085;
+    }
+
+    .badge,
+    .online {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .badge {
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+
+    .online {
+      background: #ecfdf3;
+      color: #087443;
+    }
+
+    .msg {
+      padding: 13px;
+      border-radius: 11px;
+      margin-top: 14px;
+      background: #ecfdf3;
+      color: #087443;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .msg.error {
+      background: #fef2f2;
+      color: #b42318;
+    }
+
+    .msg.warning {
+      background: #fffbeb;
+      color: #92400e;
+    }
+
+    .id-box {
+      background: #f8fafc;
+      border: 1px solid #e4e7ec;
+      border-radius: 13px;
+      padding: 13px;
+      margin-top: 5px;
+    }
+
+    .id-box input {
+      margin-bottom: 5px;
+      background: #f8fafc;
+      color: #4f46e5;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(38, 48, 80, 0.08);
+      border: 1px solid #eef0f5;
+    }
+
+    .stat-icon {
+      font-size: 27px;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 900;
+      margin-top: 8px;
+      color: #4f46e5;
+    }
+
+    .stat-title {
+      color: #667085;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #eaecf0;
+      border-radius: 14px;
+      margin-top: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th,
+    td {
+      padding: 11px;
+      border-bottom: 1px solid #eaecf0;
+      text-align: left;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475467;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 25px;
+      color: #667085;
+    }
+
+    .login-box {
+      max-width: 550px;
+      margin: 70px auto;
+    }
+
+    .login-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      color: white;
+      font-size: 34px;
+      margin-bottom: 18px;
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .paid {
+      background: #ecfdf3;
+      color: #087443;
+    }
+
+    .pending {
+      background: #fffbeb;
+      color: #92400e;
+    }
+
+    .failed,
+    .rejected {
+      background: #fef2f2;
+      color: #b42318;
+    }
+
+    .type-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}.type-option{position:relative}.type-option input{position:absolute;opacity:0;pointer-events:none}.type-option label{display:block;padding:14px 16px;border:2px solid #e4e7ec;border-radius:13px;background:#fff;cursor:pointer;margin:0;transition:.2s}.type-option label strong{display:block;color:#172033;font-size:14px;margin-bottom:4px}.type-option label span{display:block;color:#667085;font-size:12px;font-weight:600}.type-option input:checked+label{border-color:#4f46e5;background:#eef2ff;box-shadow:0 7px 18px rgba(79,70,229,.12)}.type-option input:checked+label strong{color:#4338ca}.type-badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#eef2ff;color:#4338ca}.type-badge.all{background:#ecfdf3;color:#087443}
+
+    @media (max-width: 800px) {
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .wrap {
+        width: min(100% - 20px, 1200px);
+        margin: 10px auto;
+      }
+
+      .box {
+        padding: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .type-options {
+        grid-template-columns: 1fr;
+      }
+
+      .login-box {
+        margin: 25px auto;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="wrap">
 
-<!-- =====================================================
-     LOGIN
-====================================================== -->
+  <!-- =====================================================
+       LOGIN
+  ====================================================== -->
 
-<div
-  class="box login-box"
-  id="loginBox"
->
+  <div class="box login-box" id="loginBox">
 
-  <div class="login-icon">
-    🔐
-  </div>
+    <div class="login-icon">🔐</div>
 
-  <h1>
-    Admin Login
-  </h1>
+    <h1>Admin Login</h1>
 
-  <p>
-    AllInOneStop management portal
-  </p>
+    <p>AllInOneStop management portal</p>
 
-  <label>
-    Admin Email
-  </label>
+    <label for="email">Admin Email</label>
 
-<input
-id="email"
-type="email"
-placeholder="Enter admin email"
-autocomplete="username"
-
->
-
-  <label>
-    Admin Password
-  </label>
-
-<input
-id="password"
-type="password"
-placeholder="Enter admin password"
-autocomplete="current-password"
-
->
-
-  <div class="actions">
-
-```
-<button
-  id="loginBtn"
-  type="button"
-  onclick="login()"
->
-  🔐 Login
-</button>
-
-<a
-  class="btn logout"
-  href="index.html"
->
-  🏠 Home
-</a>
-```
-
-  </div>
-
-  <div id="loginMessage"></div>
-
-</div>
-
-<!-- =====================================================
-     ADMIN PANEL
-====================================================== -->
-
-<div
-  id="adminPanel"
-  class="hidden"
->
-
-<!-- HEADER -->
-
-<div class="box">
-
-  <div class="top">
-
-```
-<div>
-
-  <h1>
-    🛠️ Admin Panel
-  </h1>
-
-  <div style="margin-top:8px">
-
-    <span class="online">
-      ● Admin Online
-    </span>
-
-    <span
-      id="adminName"
-      class="badge"
+    <input
+      id="email"
+      type="email"
+      placeholder="Enter admin email"
+      autocomplete="username"
     >
-      Admin
-    </span>
 
-  </div>
+    <label for="password">Admin Password</label>
 
-</div>
+    <input
+      id="password"
+      type="password"
+      placeholder="Enter admin password"
+      autocomplete="current-password"
+    >
 
-<div class="actions">
+    <div class="actions">
 
-  <a
-    class="btn logout"
-    href="index.html"
-  >
-    🏠 Home
-  </a>
-
-  <button
-    type="button"
-    class="logout"
-    onclick="logout()"
-  >
-    🚪 Logout
-  </button>
-
-</div>
-```
-
-  </div>
-
-</div>
-
-<!-- =====================================================
-     ONLY 3 STATS
-====================================================== -->
-
-<div class="stats">
-
-  <!-- PENDING -->
-
-  <div class="stat pending-stat">
-
-```
-<div class="stat-icon">
-  ⏳
-</div>
-
-<div
-  class="stat-number"
-  id="pendingApplications"
->
-  0
-</div>
-
-<div class="stat-title">
-  Pending
-</div>
-```
-
-  </div>
-
-  <!-- SUCCESS -->
-
-  <div class="stat success-stat">
-
-```
-<div class="stat-icon">
-  ✅
-</div>
-
-<div
-  class="stat-number"
-  id="successApplications"
->
-  0
-</div>
-
-<div class="stat-title">
-  Success
-</div>
-```
-
-  </div>
-
-  <!-- FAILED -->
-
-  <div class="stat failed-stat">
-
-```
-<div class="stat-icon">
-  ❌
-</div>
-
-<div
-  class="stat-number"
-  id="failedApplications"
->
-  0
-</div>
-
-<div class="stat-title">
-  Failed
-</div>
-```
-
-  </div>
-
-</div>
-
-<!-- CREATE RETAILER -->
-
-<div class="box">
-
-  <h2>
-    ➕ Create New Retailer
-  </h2>
-
-  <p>
-    Retailer account इसी admin panel से create होगा।
-  </p>
-
-  <div class="divider"></div>
-
-  <div class="grid">
-
-```
-<div>
-
-  <label>
-    Retailer Full Name
-  </label>
-
-  <input
-    id="retailerName"
-    type="text"
-    placeholder="Retailer full name"
-  >
-
-</div>
-
-
-<div>
-
-  <label>
-    Mobile Number
-  </label>
-
-  <input
-    id="retailerMobile"
-    type="tel"
-    maxlength="10"
-    inputmode="numeric"
-    placeholder="10 digit mobile number"
-  >
-
-</div>
-
-
-<div>
-
-  <label>
-    Retailer Number
-  </label>
-
-  <input
-    id="retailerNumber"
-    type="text"
-    placeholder="Optional"
-  >
-
-  <div class="hint">
-    खाली छोड़ने पर Auto Generated ID बनेगी।
-  </div>
-
-</div>
-
-
-<div>
-
-  <label>
-    Retailer Password
-  </label>
-
-  <input
-    id="retailerPassword"
-    type="password"
-    placeholder="Enter password manually"
-    autocomplete="new-password"
-  >
-
-  <div class="hint">
-    Minimum 6 characters
-  </div>
-
-</div>
-```
-
-  </div>
-
-  <div class="id-box">
-
-```
-<label>
-  Auto Generated Retailer ID
-</label>
-
-<input
-  id="retailerUsername"
-  type="text"
-  readonly
->
-
-<div class="hint">
-  यही Retailer ID login के लिए use होगी।
-</div>
-```
-
-  </div>
-
-  <div class="actions">
-
-```
-<button
-  type="button"
-  onclick="generateRetailerId()"
->
-  🔄 Generate ID
-</button>
-
-<button
-  type="button"
-  id="createRetailerBtn"
-  onclick="createRetailer()"
->
-  👤 Create Retailer
-</button>
-```
-
-  </div>
-
-  <div id="createMessage"></div>
-
-</div>
-
-<!-- RETAILERS -->
-
-<div class="box">
-
-  <div class="top">
-
-```
-<div>
-
-  <h2>
-    👥 Retailer Management
-  </h2>
-
-  <p class="hint">
-    Retailer profile, photo, address और account management
-  </p>
-
-</div>
-
-<button
-  type="button"
-  onclick="loadRetailers()"
->
-  🔄 Refresh
-</button>
-```
-
-  </div>
-
-  <div class="table-wrap">
-
-```
-<table>
-
-  <thead>
-
-    <tr>
-
-      <th>Photo</th>
-      <th>Retailer ID</th>
-      <th>Name</th>
-      <th>Mobile</th>
-      <th>Retailer No.</th>
-      <th>Address</th>
-      <th>Actions</th>
-
-    </tr>
-
-  </thead>
-
-  <tbody id="retailerRows">
-
-    <tr>
-
-      <td
-        colspan="7"
-        class="loading"
+      <button
+        id="loginBtn"
+        type="button"
+        onclick="login()"
       >
-        Loading retailers...
-      </td>
+        🔐 Login
+      </button>
 
-    </tr>
-
-  </tbody>
-
-</table>
-```
-
-  </div>
-
-</div>
-
-<!-- APPLICATIONS -->
-
-<div class="box">
-
-  <div class="top">
-
-```
-<div>
-
-  <h2>
-    📋 Applications
-  </h2>
-
-  <p class="hint">
-    Payment, application status और application delete
-  </p>
-
-</div>
-
-<button
-  type="button"
-  onclick="loadApplications()"
->
-  🔄 Refresh
-</button>
-```
-
-  </div>
-
-  <div class="table-wrap">
-
-```
-<table>
-
-  <thead>
-
-    <tr>
-
-      <th>TR Number</th>
-      <th>Service</th>
-      <th>Amount</th>
-      <th>Payment</th>
-      <th>Status</th>
-      <th>Remark</th>
-      <th>Save</th>
-      <th>Delete</th>
-
-    </tr>
-
-  </thead>
-
-
-  <tbody id="applicationRows">
-
-    <tr>
-
-      <td
-        colspan="8"
-        class="loading"
+      <a
+        class="btn logout"
+        href="index.html"
       >
-        Loading applications...
-      </td>
+        🏠 Home
+      </a>
 
-    </tr>
+    </div>
 
-  </tbody>
+    <div id="loginMessage"></div>
 
-</table>
-```
+  </div>
+
+
+  <!-- =====================================================
+       ADMIN PANEL
+  ====================================================== -->
+
+  <div id="adminPanel" class="hidden">
+
+    <!-- HEADER -->
+
+    <div class="box">
+
+      <div class="top">
+
+        <div>
+
+          <h1>🛠️ Admin Panel</h1>
+
+          <div style="margin-top:8px">
+
+            <span class="online">
+              ● Admin Online
+            </span>
+
+            <span
+              id="adminName"
+              class="badge"
+            >
+              Admin
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <a
+            class="btn logout"
+            href="index.html"
+          >
+            🏠 Home
+          </a>
+
+          <button
+            type="button"
+            class="logout"
+            onclick="logout()"
+          >
+            🚪 Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         STATS
+    ================================================== -->
+
+    <div class="stats">
+
+      <div class="stat">
+
+        <div class="stat-icon">👥</div>
+
+        <div
+          class="stat-number"
+          id="totalRetailers"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Total Retailers
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">📋</div>
+
+        <div
+          class="stat-number"
+          id="totalApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Total Applications
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">💰</div>
+
+        <div
+          class="stat-number"
+          id="paidApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Paid Applications
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">⏳</div>
+
+        <div
+          class="stat-number"
+          id="pendingApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Pending Applications
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CREATE RETAILER
+    ================================================== -->
+
+    <div class="box">
+
+      <h2>➕ Create New Retailer</h2>
+
+      <p>
+        Retailer account इसी admin panel से create होगा।
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="grid">
+
+        <div>
+
+          <label for="retailerName">
+            Retailer Full Name
+          </label>
+
+          <input
+            id="retailerName"
+            type="text"
+            placeholder="Retailer full name"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label for="retailerMobile">
+            Mobile Number
+          </label>
+
+          <input
+            id="retailerMobile"
+            type="tel"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="10 digit mobile number"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label for="retailerNumber">
+            Retailer Number
+          </label>
+
+          <input
+            id="retailerNumber"
+            type="text"
+            placeholder="Optional"
+          >
+
+          <div class="hint">
+            खाली छोड़ने पर Auto Generated ID ही Retailer Number बनेगा।
+          </div>
+
+        </div>
+
+
+        <div>
+          <label>Retailer Service Access</label>
+          <div class="type-options">
+            <div class="type-option">
+              <input type="radio" id="retailerTypeRation" name="retailerType" value="ration_card" checked>
+              <label for="retailerTypeRation"><strong>🍚 Ration Card Only</strong><span>Sirf Ration Card services dikhenge aur use hongi.</span></label>
+            </div>
+            <div class="type-option">
+              <input type="radio" id="retailerTypeAll" name="retailerType" value="all_work">
+              <label for="retailerTypeAll"><strong>🌐 All Work</strong><span>Ration Card + PAN + Election + all services.</span></label>
+            </div>
+          </div>
+          <div class="hint">Admin jo access select karega, retailer ko wahi services milengi.</div>
+        </div>
+
+        <div>
+          <label for="retailerPassword">
+            Retailer Password
+          </label>
+
+          <input
+            id="retailerPassword"
+            type="password"
+            placeholder="Enter password manually"
+            autocomplete="new-password"
+          >
+
+          <div class="hint">
+            Minimum 6 characters
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="id-box">
+
+        <label for="retailerUsername">
+          Auto Generated Retailer ID
+        </label>
+
+        <input
+          id="retailerUsername"
+          type="text"
+          readonly
+        >
+
+        <div class="hint">
+          यही Retailer ID login के लिए use होगी।
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          type="button"
+          onclick="generateRetailerId()"
+        >
+          🔄 Generate ID
+        </button>
+
+        <button
+          type="button"
+          id="createRetailerBtn"
+          onclick="createRetailer()"
+        >
+          👤 Create Retailer
+        </button>
+
+      </div>
+
+
+      <div id="createMessage"></div>
+
+    </div>
+
+
+    <!-- =================================================
+         RETAILER HISTORY
+    ================================================== -->
+
+    <div class="box">
+
+      <div class="top">
+
+        <div>
+
+          <h2>👥 Retailer History</h2>
+
+          <p class="hint">
+            सभी registered retailers
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          onclick="loadRetailers()"
+        >
+          🔄 Refresh
+        </button>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Retailer ID</th>
+              <th>Name</th>
+              <th>Mobile</th>
+              <th>Retailer No.</th>
+              <th>Service Access</th>
+              <th>Actions</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="retailerRows">
+
+            <tr>
+              <td
+                colspan="6"
+                class="loading"
+              >
+                Loading retailers...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         APPLICATIONS
+    ================================================== -->
+
+    <div class="box">
+
+      <div class="top">
+
+        <div>
+
+          <h2>📋 Applications</h2>
+
+          <p class="hint">
+            Payment और application status
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          onclick="loadApplications()"
+        >
+          🔄 Refresh
+        </button>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>TR Number</th>
+              <th>Service</th>
+              <th>Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Remark</th>
+              <th>Save</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="applicationRows">
+
+            <tr>
+              <td
+                colspan="7"
+                class="loading"
+              >
+                Loading applications...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
 
   </div>
 
 </div>
 
-</div>
-
-</div>
-
-<!-- =====================================================
-     EDIT RETAILER MODAL
-====================================================== -->
-
-<div
-  id="editModal"
-  class="modal hidden"
->
-
-  <div class="modal-card">
-
-```
-<div class="modal-title">
-
-  <div>
-
-    <h2>
-      ✏️ Edit Retailer
-    </h2>
-
-    <div
-      class="hint"
-      id="editRetailerIdText"
-    ></div>
-
-  </div>
-
-  <button
-    type="button"
-    class="close-btn"
-    onclick="closeEditModal()"
-  >
-    ✕
-  </button>
-
-</div>
-
-
-<div class="divider"></div>
-
-
-<input
-  type="hidden"
-  id="editUserId"
->
-
-
-<label>
-  Retailer Photo
-</label>
-
-<img
-  id="photoPreview"
-  class="preview"
-  src=""
-  alt="Retailer Photo"
->
-
-<input
-  id="editPhoto"
-  type="file"
-  accept="image/jpeg,image/png,image/webp"
-  onchange="previewPhoto(event)"
->
-
-<div class="hint">
-  JPG / PNG / WEBP. Photo को छोटा करके सुरक्षित रूप से upload किया जाएगा।
-</div>
-
-<br>
-
-<label>
-  Retailer Full Name
-</label>
-
-<input
-  id="editName"
-  type="text"
-  placeholder="Retailer full name"
->
-
-<label>
-  Mobile Number
-</label>
-
-<input
-  id="editMobile"
-  type="tel"
-  maxlength="10"
-  inputmode="numeric"
-  placeholder="10 digit mobile number"
->
-
-<label>
-  Retailer Number
-</label>
-
-<input
-  id="editRetailerNumber"
-  type="text"
-  placeholder="Retailer number"
->
-
-<label>
-  Address
-</label>
-
-<textarea
-  id="editAddress"
-  placeholder="Retailer full address"
-></textarea>
-
-<div id="editMessage"></div>
-
-<div class="actions">
-
-  <button
-    type="button"
-    class="close-btn"
-    onclick="closeEditModal()"
-  >
-    Cancel
-  </button>
-
-  <button
-    type="button"
-    id="saveRetailerBtn"
-    onclick="saveRetailer()"
-  >
-    💾 Save Changes
-  </button>
-
-</div>
-```
-
-  </div>
-
-</div>
 
 <script>
 
@@ -1202,6 +857,11 @@ const supabaseClient =
     SUPABASE_PUBLISHABLE_KEY
   );
 
+
+/* =========================================================
+   EDGE FUNCTION
+========================================================= */
+
 const RETAILER_FUNCTION =
   "admin-create-retailer";
 
@@ -1210,25 +870,22 @@ const RETAILER_FUNCTION =
    HELPERS
 ========================================================= */
 
-function escapeHtml(value){
+function escapeHtml(value) {
 
   return String(value ?? "")
-    .replace(
-      /[&<>"']/g,
-      function(char){
+    .replace(/[&<>"']/g, function(char) {
 
-        const map={
-          "&":"&amp;",
-          "<":"&lt;",
-          ">":"&gt;",
-          '"':"&quot;",
-          "'":"&#039;"
-        };
+      const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      };
 
-        return map[char];
+      return map[char];
 
-      }
-    );
+    });
 
 }
 
@@ -1236,22 +893,26 @@ function escapeHtml(value){
 function showMessage(
   elementId,
   text,
-  isError=false,
-  isWarning=false
-){
+  isError = false,
+  isWarning = false
+) {
 
   const element =
     document.getElementById(elementId);
 
-  if(!element) return;
+  if (!element) {
+    return;
+  }
 
-  let className="msg";
+  let className = "msg";
 
-  if(isError)
-    className+=" error";
+  if (isError) {
+    className += " error";
+  }
 
-  if(isWarning)
-    className+=" warning";
+  if (isWarning) {
+    className += " warning";
+  }
 
   element.innerHTML =
     '<div class="' +
@@ -1263,13 +924,14 @@ function showMessage(
 }
 
 
-function clearMessage(elementId){
+function clearMessage(elementId) {
 
   const element =
     document.getElementById(elementId);
 
-  if(element)
-    element.innerHTML="";
+  if (element) {
+    element.innerHTML = "";
+  }
 
 }
 
@@ -1278,19 +940,19 @@ function clearMessage(elementId){
    RETAILER ID
 ========================================================= */
 
-function randomRetailerCode(){
+function randomRetailerCode() {
 
-  const chars=
+  const chars =
     "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
-  let result="";
+  let result = "";
 
-  for(let i=0;i<6;i++){
+  for (let i = 0; i < 6; i++) {
 
-    result+=
+    result +=
       chars[
         Math.floor(
-          Math.random()*chars.length
+          Math.random() * chars.length
         )
       ];
 
@@ -1301,26 +963,32 @@ function randomRetailerCode(){
 }
 
 
-function generateRetailerId(){
+function generateRetailerId() {
 
-  const username=
-    "RET-"+randomRetailerCode();
+  const username =
+    "RET-" + randomRetailerCode();
 
-  document
-    .getElementById("retailerUsername")
-    .value=username;
+  const usernameInput =
+    document.getElementById(
+      "retailerUsername"
+    );
 
-  const numberInput=
+  const numberInput =
     document.getElementById(
       "retailerNumber"
     );
 
-  if(
+  if (usernameInput) {
+    usernameInput.value = username;
+  }
+
+  if (
     numberInput &&
     !numberInput.value.trim()
-  ){
+  ) {
 
-    numberInput.value=username;
+    numberInput.value =
+      username;
 
   }
 
@@ -1331,29 +999,28 @@ function generateRetailerId(){
    SESSION
 ========================================================= */
 
-async function getSession(){
+async function getSession() {
 
   const {
     data,
     error
-  }=
-    await supabaseClient.auth
-      .getSession();
+  } =
+    await supabaseClient.auth.getSession();
 
-  if(error){
+  if (error) {
 
     throw new Error(
-      "Session error: "+
+      "Session error: " +
       error.message
     );
 
   }
 
-  if(
+  if (
     !data ||
     !data.session ||
     !data.session.access_token
-  ){
+  ) {
 
     throw new Error(
       "Admin session expired. Please login again."
@@ -1367,15 +1034,15 @@ async function getSession(){
 
 
 /* =========================================================
-   ADMIN PROFILE
+   CHECK ADMIN PROFILE
 ========================================================= */
 
-async function getAdminProfile(userId){
+async function getAdminProfile(userId) {
 
   const {
     data,
     error
-  }=
+  } =
     await supabaseClient
       .from("profiles")
       .select(
@@ -1387,16 +1054,16 @@ async function getAdminProfile(userId){
       )
       .maybeSingle();
 
-  if(error){
+  if (error) {
 
     throw new Error(
-      "Admin profile check failed: "+
+      "Admin profile check failed: " +
       error.message
     );
 
   }
 
-  if(!data){
+  if (!data) {
 
     throw new Error(
       "Admin profile not found."
@@ -1404,7 +1071,7 @@ async function getAdminProfile(userId){
 
   }
 
-  if(data.role!=="admin"){
+  if (data.role !== "admin") {
 
     throw new Error(
       "This account is not an admin account."
@@ -1421,22 +1088,22 @@ async function getAdminProfile(userId){
    LOGIN
 ========================================================= */
 
-async function login(){
+async function login() {
 
   clearMessage("loginMessage");
 
-  const email=
+  const email =
     document
       .getElementById("email")
       .value
       .trim();
 
-  const password=
+  const password =
     document
       .getElementById("password")
       .value;
 
-  if(!email){
+  if (!email) {
 
     showMessage(
       "loginMessage",
@@ -1448,7 +1115,7 @@ async function login(){
 
   }
 
-  if(!password){
+  if (!password) {
 
     showMessage(
       "loginMessage",
@@ -1460,36 +1127,44 @@ async function login(){
 
   }
 
-  const button=
+  const button =
     document.getElementById(
       "loginBtn"
     );
 
-  button.disabled=true;
-  button.textContent="⏳ Logging in...";
+  button.disabled = true;
 
-  try{
+  button.textContent =
+    "⏳ Logging in...";
+
+  try {
 
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient.auth
         .signInWithPassword({
-          email:email,
-          password:password
+
+          email: email,
+
+          password: password
+
         });
 
-    if(error){
+    if (error) {
 
       throw new Error(
-        "Login failed: "+
+        "Login failed: " +
         error.message
       );
 
     }
 
-    if(!data?.user){
+    if (
+      !data ||
+      !data.user
+    ) {
 
       throw new Error(
         "Login failed. User account not found."
@@ -1497,7 +1172,7 @@ async function login(){
 
     }
 
-    const profile=
+    const profile =
       await getAdminProfile(
         data.user.id
       );
@@ -1508,7 +1183,7 @@ async function login(){
     );
 
   }
-  catch(error){
+  catch (error) {
 
     console.error(
       "ADMIN LOGIN ERROR:",
@@ -1518,15 +1193,17 @@ async function login(){
     showMessage(
       "loginMessage",
       error?.message ||
-      "Login failed.",
+      "Login failed. Please try again.",
       true
     );
 
   }
-  finally{
+  finally {
 
-    button.disabled=false;
-    button.textContent="🔐 Login";
+    button.disabled = false;
+
+    button.textContent =
+      "🔐 Login";
 
   }
 
@@ -1534,13 +1211,13 @@ async function login(){
 
 
 /* =========================================================
-   OPEN ADMIN
+   OPEN ADMIN PANEL
 ========================================================= */
 
 async function openAdminPanel(
   profile,
   user
-){
+) {
 
   document
     .getElementById("loginBox")
@@ -1552,8 +1229,8 @@ async function openAdminPanel(
 
   document
     .getElementById("adminName")
-    .textContent=
-      "👤 "+
+    .textContent =
+      "👤 " +
       (
         profile.full_name ||
         user.email ||
@@ -1566,34 +1243,44 @@ async function openAdminPanel(
 
 
 /* =========================================================
-   RESTORE
+   RESTORE SESSION
 ========================================================= */
 
-async function restoreSession(){
+async function restoreSession() {
 
-  try{
+  try {
 
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient.auth
         .getSession();
 
-    if(error){
+    if (error) {
 
-      console.error(error);
+      console.error(
+        "SESSION ERROR:",
+        error
+      );
+
       return;
 
     }
 
-    if(!data?.session)
+    if (
+      !data ||
+      !data.session
+    ) {
+
       return;
 
-    const user=
+    }
+
+    const user =
       data.session.user;
 
-    const profile=
+    const profile =
       await getAdminProfile(
         user.id
       );
@@ -1604,15 +1291,14 @@ async function restoreSession(){
     );
 
   }
-  catch(error){
+  catch (error) {
 
     console.warn(
       "RESTORE SESSION:",
       error.message
     );
 
-    await supabaseClient.auth
-      .signOut();
+    await supabaseClient.auth.signOut();
 
   }
 
@@ -1623,15 +1309,14 @@ async function restoreSession(){
    LOGOUT
 ========================================================= */
 
-async function logout(){
+async function logout() {
 
-  try{
+  try {
 
-    await supabaseClient.auth
-      .signOut();
+    await supabaseClient.auth.signOut();
 
   }
-  catch(error){
+  catch (error) {
 
     console.error(
       "LOGOUT ERROR:",
@@ -1640,7 +1325,8 @@ async function logout(){
 
   }
 
-  window.location.href="admin.html";
+  window.location.href =
+    "admin.html";
 
 }
 
@@ -1649,45 +1335,54 @@ async function logout(){
    CREATE RETAILER
 ========================================================= */
 
-async function createRetailer(){
+async function createRetailer() {
 
   clearMessage("createMessage");
 
-  const button=
+  const button =
     document.getElementById(
       "createRetailerBtn"
     );
 
-  const fullName=
+  const fullName =
     document
       .getElementById("retailerName")
       .value
       .trim();
 
-  const mobile=
+  const mobile =
     document
       .getElementById("retailerMobile")
       .value
       .trim();
 
-  let username=
+  let username =
     document
       .getElementById("retailerUsername")
       .value
       .trim();
 
-  let retailerNumber=
+  let retailerNumber =
     document
       .getElementById("retailerNumber")
       .value
       .trim();
 
-  const password=
+  const password =
     document
       .getElementById("retailerPassword")
       .value;
 
-  if(!fullName){
+  const retailerTypeElement =
+    document.querySelector('input[name="retailerType"]:checked');
+
+  const retailerType =
+    retailerTypeElement ? retailerTypeElement.value : "ration_card";
+
+
+  /* ================= VALIDATION ================= */
+
+  if (!fullName) {
 
     showMessage(
       "createMessage",
@@ -1699,7 +1394,8 @@ async function createRetailer(){
 
   }
 
-  if(!/^\d{10}$/.test(mobile)){
+
+  if (!/^\d{10}$/.test(mobile)) {
 
     showMessage(
       "createMessage",
@@ -1711,22 +1407,34 @@ async function createRetailer(){
 
   }
 
-  if(!username){
+
+  if (!username) {
+
+    const rationTypeRadio = document.getElementById("retailerTypeRation");
+    if (rationTypeRadio) rationTypeRadio.checked = true;
 
     generateRetailerId();
 
-    username=
+    username =
       document
-        .getElementById("retailerUsername")
+        .getElementById(
+          "retailerUsername"
+        )
         .value
         .trim();
 
   }
 
-  if(!retailerNumber)
-    retailerNumber=username;
 
-  if(!password){
+  if (!retailerNumber) {
+
+    retailerNumber =
+      username;
+
+  }
+
+
+  if (!password) {
 
     showMessage(
       "createMessage",
@@ -1738,7 +1446,8 @@ async function createRetailer(){
 
   }
 
-  if(password.length<6){
+
+  if (password.length < 6) {
 
     showMessage(
       "createMessage",
@@ -1750,33 +1459,71 @@ async function createRetailer(){
 
   }
 
-  button.disabled=true;
-  button.textContent="⏳ Creating...";
 
-  try{
+  button.disabled = true;
+
+  button.textContent =
+    "⏳ Creating...";
+
+
+  try {
+
+    /* ============================================
+       CHECK ADMIN SESSION
+    ============================================ */
 
     await getSession();
+
+
+    /* ============================================
+       REQUEST
+    ============================================ */
+
+    const requestBody = {
+
+      action: "create",
+
+      full_name: fullName,
+
+      mobile: mobile,
+
+      username: username,
+
+      retailer_number: retailerNumber,
+
+      retailer_type: retailerType,
+
+      password: password
+
+    };
+
+
+    console.log(
+      "CREATE RETAILER REQUEST:",
+      {
+        ...requestBody,
+        password: "[HIDDEN]"
+      }
+    );
+
+
+    /* ============================================
+       EDGE FUNCTION
+    ============================================ */
 
     const {
       data,
       error
-    }=
-      await supabaseClient.functions
-        .invoke(
-          RETAILER_FUNCTION,
-          {
-            body:{
-              action:"create",
-              full_name:fullName,
-              mobile:mobile,
-              username:username,
-              retailer_number:retailerNumber,
-              password:password
-            }
-          }
-        );
+    } =
+      await supabaseClient.functions.invoke(
+        RETAILER_FUNCTION,
+        {
+          body: requestBody
+        }
+      );
 
-    if(error){
+
+    if (error) {
 
       throw new Error(
         await readFunctionError(error)
@@ -1784,7 +1531,17 @@ async function createRetailer(){
 
     }
 
-    if(data?.error){
+
+    if (!data) {
+
+      throw new Error(
+        "Edge Function returned empty response."
+      );
+
+    }
+
+
+    if (data.error) {
 
       throw new Error(
         formatFunctionError(data)
@@ -1792,44 +1549,72 @@ async function createRetailer(){
 
     }
 
+
+    /* ============================================
+       SUCCESS
+    ============================================ */
+
+    const createdUsername =
+      data.username ||
+      username;
+
+    const createdNumber =
+      data.retailer_number ||
+      retailerNumber;
+
+
     showMessage(
       "createMessage",
 
-      "Retailer created successfully.\n\n"+
-      "Retailer ID: "+
-      (data.username||username)+
-      "\n"+
-      "Retailer Number: "+
-      (
-        data.retailer_number||
-        retailerNumber
-      )+
-      "\n\n"+
-      "Password saved securely in Supabase Authentication."
+      "Retailer created successfully.\n\n" +
+      "Retailer ID: " +
+      createdUsername +
+      "\n" +
+      "Retailer Number: " +
+      createdNumber +
+      "\n\n" +
+      "Password was saved securely in Supabase Authentication.",
+
+      false
     );
 
-    document
-      .getElementById("retailerName")
-      .value="";
+
+    /* ============================================
+       CLEAR FORM
+    ============================================ */
 
     document
-      .getElementById("retailerMobile")
-      .value="";
+      .getElementById(
+        "retailerName"
+      )
+      .value = "";
 
     document
-      .getElementById("retailerNumber")
-      .value="";
+      .getElementById(
+        "retailerMobile"
+      )
+      .value = "";
 
     document
-      .getElementById("retailerPassword")
-      .value="";
+      .getElementById(
+        "retailerNumber"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "retailerPassword"
+      )
+      .value = "";
+
 
     generateRetailerId();
+
 
     await refreshDashboard();
 
   }
-  catch(error){
+  catch (error) {
 
     console.error(
       "CREATE RETAILER ERROR:",
@@ -1838,16 +1623,20 @@ async function createRetailer(){
 
     showMessage(
       "createMessage",
+
       error?.message ||
       "Failed to create retailer.",
+
       true
     );
 
   }
-  finally{
+  finally {
 
-    button.disabled=false;
-    button.textContent="👤 Create Retailer";
+    button.disabled = false;
+
+    button.textContent =
+      "👤 Create Retailer";
 
   }
 
@@ -1855,62 +1644,72 @@ async function createRetailer(){
 
 
 /* =========================================================
-   EDGE ERROR
+   EDGE FUNCTION ERROR READER
 ========================================================= */
 
-async function readFunctionError(error){
+async function readFunctionError(error) {
 
-  let message=
-    error?.message||
+  let message =
+    error?.message ||
     "Edge Function request failed.";
 
-  try{
+  try {
 
-    const context=
+    const context =
       error?.context;
 
-    if(
+    if (
       context &&
-      typeof context.clone==="function"
-    ){
+      typeof context.clone === "function"
+    ) {
 
-      const cloned=context.clone();
+      const cloned =
+        context.clone();
 
-      const contentType=
+      const contentType =
         cloned.headers?.get(
           "content-type"
-        )||"";
+        ) || "";
 
-      if(
+      if (
         contentType.includes(
           "application/json"
         )
-      ){
+      ) {
 
-        const body=
+        const body =
           await cloned.json();
 
-        if(body)
-          message=
-            formatFunctionError(body);
+        if (body) {
+
+          message =
+            formatFunctionError(
+              body
+            );
+
+        }
 
       }
-      else{
+      else {
 
-        const text=
+        const text =
           await cloned.text();
 
-        if(text)
-          message=text;
+        if (text) {
+          message = text;
+        }
 
       }
 
     }
 
   }
-  catch(e){
+  catch (readerError) {
 
-    console.warn(e);
+    console.warn(
+      "Could not read Edge Function error:",
+      readerError
+    );
 
   }
 
@@ -1919,17 +1718,17 @@ async function readFunctionError(error){
 }
 
 
-function formatFunctionError(data){
+function formatFunctionError(data) {
 
-  let message=
-    data?.error||
-    data?.message||
+  let message =
+    data?.error ||
+    data?.message ||
     "Edge Function request failed.";
 
-  if(data?.details){
+  if (data?.details) {
 
-    message+=
-      "\nDetails: "+
+    message +=
+      "\nDetails: " +
       data.details;
 
   }
@@ -1940,36 +1739,62 @@ function formatFunctionError(data){
 
 
 /* =========================================================
-   CALL EDGE FUNCTION
+   CALL RETAILER EDGE FUNCTION
 ========================================================= */
 
 async function callRetailerFunction(
   action,
   userId,
-  extra={}
-){
+  password = ""
+) {
 
   await getSession();
 
-  const body={
-    action:action,
-    user_id:userId,
-    ...extra
+
+  const body = {
+
+    action: action,
+
+    user_id: userId
+
   };
+
+
+  if (
+    action ===
+    "reset_password"
+  ) {
+
+    body.password =
+      password;
+
+  }
+
+
+  console.log(
+    "CALLING RETAILER FUNCTION:",
+    RETAILER_FUNCTION
+  );
+
+  console.log(
+    "ACTION:",
+    action
+  );
+
 
   const {
     data,
     error
-  }=
-    await supabaseClient.functions
-      .invoke(
-        RETAILER_FUNCTION,
-        {
-          body:body
-        }
-      );
+  } =
+    await supabaseClient.functions.invoke(
+      RETAILER_FUNCTION,
+      {
+        body: body
+      }
+    );
 
-  if(error){
+
+  if (error) {
 
     throw new Error(
       await readFunctionError(error)
@@ -1977,7 +1802,8 @@ async function callRetailerFunction(
 
   }
 
-  if(!data){
+
+  if (!data) {
 
     throw new Error(
       "Edge Function returned empty response."
@@ -1985,7 +1811,8 @@ async function callRetailerFunction(
 
   }
 
-  if(data.error){
+
+  if (data.error) {
 
     throw new Error(
       formatFunctionError(data)
@@ -1993,7 +1820,170 @@ async function callRetailerFunction(
 
   }
 
+
   return data;
+
+}
+
+
+/* =========================================================
+   RESET RETAILER PASSWORD
+========================================================= */
+
+async function resetRetailerPassword(
+  userId,
+  retailerId
+) {
+
+  const newPassword =
+    prompt(
+      "Retailer: " +
+      retailerId +
+      "\n\nEnter NEW password:"
+    );
+
+
+  if (newPassword === null) {
+    return;
+  }
+
+
+  const trimmedPassword =
+    newPassword.trim();
+
+
+  if (!trimmedPassword) {
+
+    alert(
+      "Password cannot be empty."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    trimmedPassword.length < 6
+  ) {
+
+    alert(
+      "Password must be at least 6 characters."
+    );
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      "Reset password for " +
+      retailerId +
+      "?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    await callRetailerFunction(
+      "reset_password",
+      userId,
+      trimmedPassword
+    );
+
+
+    /*
+      IMPORTANT:
+      New password is deliberately NOT
+      displayed anywhere after reset.
+    */
+
+    alert(
+      "Password updated successfully.\n\n" +
+      "Retailer ID: " +
+      retailerId
+    );
+
+  }
+  catch (error) {
+
+    console.error(
+      "RESET PASSWORD ERROR:",
+      error
+    );
+
+    alert(
+      error?.message ||
+      "Password reset failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DELETE RETAILER
+========================================================= */
+
+async function deleteRetailer(
+  userId,
+  retailerId
+) {
+
+  const confirmation =
+    prompt(
+      "Delete retailer " +
+      retailerId +
+      "?\n\nType DELETE to confirm."
+    );
+
+
+  if (
+    confirmation !==
+    "DELETE"
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    await callRetailerFunction(
+      "delete",
+      userId
+    );
+
+
+    alert(
+      "Retailer deleted successfully."
+    );
+
+
+    await refreshDashboard();
+
+  }
+  catch (error) {
+
+    console.error(
+      "DELETE RETAILER ERROR:",
+      error
+    );
+
+    alert(
+      error?.message ||
+      "Retailer deletion failed."
+    );
+
+  }
 
 }
 
@@ -2002,35 +1992,36 @@ async function callRetailerFunction(
    LOAD RETAILERS
 ========================================================= */
 
-async function loadRetailers(){
+async function loadRetailers() {
 
-  const rows=
+  const rows =
     document.getElementById(
       "retailerRows"
     );
 
-  rows.innerHTML=`
 
+  rows.innerHTML = `
     <tr>
-      <td colspan="7" class="loading">
+      <td colspan="6" class="loading">
         Loading retailers...
       </td>
     </tr>
-
   `;
 
-  try{
+
+  try {
 
     await getSession();
+
 
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient
         .from("profiles")
         .select(
-          "id,full_name,mobile,retailer_number,address,photo_path,role"
+          "id,full_name,mobile,retailer_number,role,retailer_type"
         )
         .eq(
           "role",
@@ -2039,11 +2030,12 @@ async function loadRetailers(){
         .order(
           "full_name",
           {
-            ascending:true
+            ascending: true
           }
         );
 
-    if(error){
+
+    if (error) {
 
       throw new Error(
         error.message
@@ -2051,51 +2043,52 @@ async function loadRetailers(){
 
     }
 
-    if(!data?.length){
 
-      rows.innerHTML=`
+    if (
+      !data ||
+      data.length === 0
+    ) {
 
+      rows.innerHTML = `
         <tr>
-          <td colspan="7" class="loading">
+          <td colspan="5" class="loading">
             No retailers found.
           </td>
         </tr>
-
       `;
 
       return;
 
     }
 
-    rows.innerHTML=
+
+    rows.innerHTML =
       data.map(
-        retailer=>{
+        function(retailer) {
 
-          const userId=
-            String(retailer.id);
-
-          const retailerId=
-            retailer.retailer_number||
+          const retailerId =
+            retailer.retailer_number ||
             "RET";
 
+
+          const userId =
+            escapeHtml(
+              retailer.id
+            );
+
+
+          const safeRetailerId =
+            escapeHtml(
+              retailerId
+            );
+
+
           return `
-
             <tr>
-
-              <td class="photo-cell">
-
-                <div
-                  id="photo-${escapeHtml(userId)}"
-                  class="photo-placeholder"
-                >
-                  👤
-                </div>
-
-              </td>
 
               <td>
                 <strong>
-                  ${escapeHtml(retailerId)}
+                  ${safeRetailerId}
                 </strong>
               </td>
 
@@ -2113,14 +2106,16 @@ async function loadRetailers(){
 
               <td>
                 ${escapeHtml(
-                  retailer.retailer_number
+                  retailer.retailer_number ||
+                  retailerId
                 )}
               </td>
 
               <td>
-                ${escapeHtml(
-                  retailer.address||"—"
-                )}
+
+                <span class="type-badge ${retailer.retailer_type === "all_work" ? "all" : ""}">
+                  ${retailer.retailer_type === "all_work" ? "🌐 All Work" : "🍚 Ration Card Only"}
+                </span>
               </td>
 
               <td>
@@ -2129,32 +2124,20 @@ async function loadRetailers(){
 
                   <button
                     type="button"
-                    class="small-btn edit-btn"
-                    onclick='openEditModal(
-                      ${JSON.stringify(retailer)}
-                    )'
-                  >
-                    ✏️ Edit
-                  </button>
-
-                  <button
-                    type="button"
                     class="small-btn password-btn"
-                    onclick='resetRetailerPassword(
-                      ${JSON.stringify(userId)},
-                      ${JSON.stringify(retailerId)}
-                    )'
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    onclick="resetFromButton(this)"
                   >
-                    🔑 Password
+                    🔑 Reset Password
                   </button>
 
                   <button
                     type="button"
                     class="small-btn delete-btn"
-                    onclick='deleteRetailer(
-                      ${JSON.stringify(userId)},
-                      ${JSON.stringify(retailerId)}
-                    )'
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    onclick="deleteFromButton(this)"
                   >
                     🗑️ Delete
                   </button>
@@ -2164,50 +2147,29 @@ async function loadRetailers(){
               </td>
 
             </tr>
-
           `;
 
         }
       ).join("");
 
-    for(
-      const retailer of data
-    ){
-
-      if(retailer.photo_path){
-
-        loadRetailerPhoto(
-          retailer.id
-        );
-
-      }
-
-    }
-
   }
-  catch(error){
+  catch (error) {
 
     console.error(
       "LOAD RETAILERS ERROR:",
       error
     );
 
-    rows.innerHTML=`
 
+    rows.innerHTML = `
       <tr>
-
-        <td
-          colspan="7"
-          class="loading"
-        >
+        <td colspan="5" class="loading">
           ${escapeHtml(
-            error?.message||
+            error?.message ||
             "Could not load retailers."
           )}
         </td>
-
       </tr>
-
     `;
 
   }
@@ -2215,705 +2177,26 @@ async function loadRetailers(){
 }
 
 
-/* =========================================================
-   LOAD RETAILER PHOTO
-========================================================= */
+function resetFromButton(
+  button
+) {
 
-async function loadRetailerPhoto(userId){
-
-  try{
-
-    const data=
-      await callRetailerFunction(
-        "photo_url",
-        userId
-      );
-
-    if(!data.photo_url)
-      return;
-
-    const holder=
-      document.getElementById(
-        "photo-"+userId
-      );
-
-    if(!holder)
-      return;
-
-    holder.outerHTML=`
-
-      <img
-        id="photo-${escapeHtml(userId)}"
-        class="retailer-photo"
-        src="${escapeHtml(data.photo_url)}"
-        alt="Retailer"
-      >
-
-    `;
-
-  }
-  catch(error){
-
-    console.warn(
-      "PHOTO LOAD ERROR:",
-      error
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   EDIT MODAL
-========================================================= */
-
-function openEditModal(retailer){
-
-  clearMessage("editMessage");
-
-  document
-    .getElementById("editModal")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("editUserId")
-    .value=
-      retailer.id||"";
-
-  document
-    .getElementById("editRetailerIdText")
-    .textContent=
-      "Retailer ID: "+
-      (
-        retailer.retailer_number||
-        "—"
-      );
-
-  document
-    .getElementById("editName")
-    .value=
-      retailer.full_name||"";
-
-  document
-    .getElementById("editMobile")
-    .value=
-      retailer.mobile||"";
-
-  document
-    .getElementById("editRetailerNumber")
-    .value=
-      retailer.retailer_number||"";
-
-  document
-    .getElementById("editAddress")
-    .value=
-      retailer.address||"";
-
-  document
-    .getElementById("editPhoto")
-    .value="";
-
-  const preview=
-    document.getElementById(
-      "photoPreview"
-    );
-
-  preview.src="";
-
-  if(retailer.photo_path){
-
-    loadEditPhoto(
-      retailer.id
-    );
-
-  }
-  else{
-
-    preview.src=
-      createAvatarDataUrl(
-        retailer.full_name
-      );
-
-  }
-
-}
-
-
-function closeEditModal(){
-
-  document
-    .getElementById("editModal")
-    .classList.add("hidden");
-
-}
-
-
-async function loadEditPhoto(userId){
-
-  try{
-
-    const data=
-      await callRetailerFunction(
-        "photo_url",
-        userId
-      );
-
-    const preview=
-      document.getElementById(
-        "photoPreview"
-      );
-
-    if(data.photo_url){
-
-      preview.src=
-        data.photo_url;
-
-    }
-    else{
-
-      preview.src=
-        createAvatarDataUrl(
-          "Retailer"
-        );
-
-    }
-
-  }
-  catch(error){
-
-    console.warn(error);
-
-  }
-
-}
-
-
-/* =========================================================
-   AVATAR
-========================================================= */
-
-function createAvatarDataUrl(name){
-
-  const letter=
-    String(name||"R")
-      .trim()
-      .charAt(0)
-      .toUpperCase();
-
-  const svg=`
-
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="110"
-      height="110"
-    >
-
-      <rect
-        width="110"
-        height="110"
-        rx="18"
-        fill="#eef2ff"
-      />
-
-      <text
-        x="55"
-        y="68"
-        text-anchor="middle"
-        font-size="45"
-        font-family="Arial"
-        fill="#4f46e5"
-      >
-        ${letter}
-      </text>
-
-    </svg>
-
-  `;
-
-  return(
-    "data:image/svg+xml;charset=UTF-8,"+
-    encodeURIComponent(svg)
+  resetRetailerPassword(
+    button.dataset.userId,
+    button.dataset.retailerId
   );
 
 }
 
 
-/* =========================================================
-   PHOTO PREVIEW
-========================================================= */
+function deleteFromButton(
+  button
+) {
 
-function previewPhoto(event){
-
-  const file=
-    event.target.files?.[0];
-
-  if(!file)
-    return;
-
-  if(
-    ![
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ].includes(file.type)
-  ){
-
-    alert(
-      "Only JPG, PNG and WEBP photos are allowed."
-    );
-
-    event.target.value="";
-
-    return;
-
-  }
-
-  const reader=
-    new FileReader();
-
-  reader.onload=function(){
-
-    document
-      .getElementById("photoPreview")
-      .src=
-        reader.result;
-
-  };
-
-  reader.readAsDataURL(file);
-
-}
-
-
-/* =========================================================
-   RESIZE IMAGE
-========================================================= */
-
-async function resizeImage(file){
-
-  const bitmap=
-    await createImageBitmap(file);
-
-  const maxSize=700;
-
-  let width=bitmap.width;
-  let height=bitmap.height;
-
-  if(
-    width>maxSize||
-    height>maxSize
-  ){
-
-    if(width>height){
-
-      height=
-        Math.round(
-          height*maxSize/width
-        );
-
-      width=maxSize;
-
-    }
-    else{
-
-      width=
-        Math.round(
-          width*maxSize/height
-        );
-
-      height=maxSize;
-
-    }
-
-  }
-
-  const canvas=
-    document.createElement("canvas");
-
-  canvas.width=width;
-  canvas.height=height;
-
-  const ctx=
-    canvas.getContext("2d");
-
-  ctx.drawImage(
-    bitmap,
-    0,
-    0,
-    width,
-    height
+  deleteRetailer(
+    button.dataset.userId,
+    button.dataset.retailerId
   );
-
-  return new Promise(
-    function(resolve){
-
-      canvas.toBlob(
-        function(blob){
-
-          resolve(blob);
-
-        },
-        "image/jpeg",
-        .82
-      );
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   BLOB TO DATA URL
-========================================================= */
-
-function blobToDataUrl(blob){
-
-  return new Promise(
-    function(resolve,reject){
-
-      const reader=
-        new FileReader();
-
-      reader.onload=
-        ()=>resolve(
-          reader.result
-        );
-
-      reader.onerror=
-        reject;
-
-      reader.readAsDataURL(blob);
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   SAVE RETAILER
-========================================================= */
-
-async function saveRetailer(){
-
-  clearMessage("editMessage");
-
-  const button=
-    document.getElementById(
-      "saveRetailerBtn"
-    );
-
-  const userId=
-    document
-      .getElementById("editUserId")
-      .value
-      .trim();
-
-  const fullName=
-    document
-      .getElementById("editName")
-      .value
-      .trim();
-
-  const mobile=
-    document
-      .getElementById("editMobile")
-      .value
-      .trim();
-
-  const retailerNumber=
-    document
-      .getElementById("editRetailerNumber")
-      .value
-      .trim();
-
-  const address=
-    document
-      .getElementById("editAddress")
-      .value
-      .trim();
-
-  const photoFile=
-    document
-      .getElementById("editPhoto")
-      .files?.[0];
-
-  if(!userId){
-
-    showMessage(
-      "editMessage",
-      "Retailer user ID missing.",
-      true
-    );
-
-    return;
-
-  }
-
-  if(!fullName){
-
-    showMessage(
-      "editMessage",
-      "Retailer name is required.",
-      true
-    );
-
-    return;
-
-  }
-
-  if(
-    mobile &&
-    !/^\d{10}$/.test(mobile)
-  ){
-
-    showMessage(
-      "editMessage",
-      "Mobile number must be exactly 10 digits.",
-      true
-    );
-
-    return;
-
-  }
-
-  if(!retailerNumber){
-
-    showMessage(
-      "editMessage",
-      "Retailer number is required.",
-      true
-    );
-
-    return;
-
-  }
-
-  button.disabled=true;
-  button.textContent="⏳ Saving...";
-
-  try{
-
-    let photoData="";
-
-    if(photoFile){
-
-      if(
-        photoFile.size>
-        10*1024*1024
-      ){
-
-        throw new Error(
-          "Original photo is too large. Please select a smaller photo."
-        );
-
-      }
-
-      const resized=
-        await resizeImage(photoFile);
-
-      if(!resized){
-
-        throw new Error(
-          "Could not process photo."
-        );
-
-      }
-
-      photoData=
-        await blobToDataUrl(
-          resized
-        );
-
-    }
-
-    await callRetailerFunction(
-      "edit",
-      userId,
-      {
-        full_name:fullName,
-        mobile:mobile,
-        retailer_number:retailerNumber,
-        address:address,
-        photo_data:photoData
-      }
-    );
-
-    showMessage(
-      "editMessage",
-      "Retailer updated successfully."
-    );
-
-    await loadRetailers();
-
-    setTimeout(
-      function(){
-        closeEditModal();
-      },
-      700
-    );
-
-  }
-  catch(error){
-
-    console.error(
-      "EDIT RETAILER ERROR:",
-      error
-    );
-
-    showMessage(
-      "editMessage",
-      error?.message||
-      "Retailer update failed.",
-      true
-    );
-
-  }
-  finally{
-
-    button.disabled=false;
-    button.textContent="💾 Save Changes";
-
-  }
-
-}
-
-
-/* =========================================================
-   RESET PASSWORD
-========================================================= */
-
-async function resetRetailerPassword(
-  userId,
-  retailerId
-){
-
-  const newPassword=
-    prompt(
-      "Retailer: "+
-      retailerId+
-      "\n\nEnter NEW password:"
-    );
-
-  if(newPassword===null)
-    return;
-
-  const trimmed=
-    newPassword.trim();
-
-  if(!trimmed){
-
-    alert(
-      "Password cannot be empty."
-    );
-
-    return;
-
-  }
-
-  if(trimmed.length<6){
-
-    alert(
-      "Password must be at least 6 characters."
-    );
-
-    return;
-
-  }
-
-  if(
-    !confirm(
-      "Reset password for "+
-      retailerId+
-      "?"
-    )
-  )
-    return;
-
-  try{
-
-    await callRetailerFunction(
-      "reset_password",
-      userId,
-      {
-        password:trimmed
-      }
-    );
-
-    alert(
-      "Password updated successfully.\n\n"+
-      "Retailer ID: "+
-      retailerId
-    );
-
-  }
-  catch(error){
-
-    console.error(error);
-
-    alert(
-      error?.message||
-      "Password reset failed."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   DELETE RETAILER
-========================================================= */
-
-async function deleteRetailer(
-  userId,
-  retailerId
-){
-
-  const confirmation=
-    prompt(
-      "⚠️ DELETE RETAILER\n\n"+
-      "Retailer: "+
-      retailerId+
-      "\n\n"+
-      "This will delete the retailer login account and profile.\n\n"+
-      "Type DELETE to confirm."
-    );
-
-  if(
-    confirmation!=="DELETE"
-  )
-    return;
-
-  try{
-
-    await callRetailerFunction(
-      "delete",
-      userId
-    );
-
-    alert(
-      "Retailer deleted successfully."
-    );
-
-    await refreshDashboard();
-
-  }
-  catch(error){
-
-    console.error(
-      "DELETE RETAILER ERROR:",
-      error
-    );
-
-    alert(
-      error?.message||
-      "Retailer deletion failed."
-    );
-
-  }
 
 }
 
@@ -2922,49 +2205,46 @@ async function deleteRetailer(
    LOAD APPLICATIONS
 ========================================================= */
 
-async function loadApplications(){
+async function loadApplications() {
 
-  const rows=
+  const rows =
     document.getElementById(
       "applicationRows"
     );
 
-  rows.innerHTML=`
 
+  rows.innerHTML = `
     <tr>
-
-      <td
-        colspan="8"
-        class="loading"
-      >
+      <td colspan="7" class="loading">
         Loading applications...
       </td>
-
     </tr>
-
   `;
 
-  try{
+
+  try {
 
     await getSession();
+
 
     const {
       data,
       error
-    }=
+    } =
       await supabaseClient
         .from("applications")
         .select(
-          "id,tr_number,service_name,amount,payment_status,application_status,remark"
+          "tr_number,service_name,amount,payment_status,application_status,remark"
         )
         .order(
           "created_at",
           {
-            ascending:false
+            ascending: false
           }
         );
 
-    if(error){
+
+    if (error) {
 
       throw new Error(
         error.message
@@ -2972,70 +2252,57 @@ async function loadApplications(){
 
     }
 
-    if(!data?.length){
 
-      rows.innerHTML=`
+    if (
+      !data ||
+      data.length === 0
+    ) {
 
+      rows.innerHTML = `
         <tr>
-
-          <td
-            colspan="8"
-            class="loading"
-          >
+          <td colspan="7" class="loading">
             No applications yet.
           </td>
-
         </tr>
-
       `;
 
       return;
 
     }
 
-    rows.innerHTML=
+
+    rows.innerHTML =
       data.map(
-        function(app,index){
+        function(app, index) {
 
-          const applicationId=
-            String(app.id||"");
+          const tr =
+            String(
+              app.tr_number || ""
+            );
 
-          const tr=
-            String(app.tr_number||"");
 
-          const key=
+          const key =
             (
-              tr+"-"+index
-            )
-            .replace(
+              tr +
+              "-" +
+              index
+            ).replace(
               /[^a-zA-Z0-9_-]/g,
               "_"
             );
 
-          /*
-            DATABASE:
-              Pending
-              Paid
-              Failed
 
-            UI:
-              Pending
-              Success
-              Failed
-
-            Success = Paid in database.
-          */
-
-          const payment=
-            app.payment_status||
+          const payment =
+            app.payment_status ||
             "Pending";
 
-          const status=
-            app.application_status||
+
+          const status =
+            app.application_status ||
             "Received";
 
-          return `
 
+          return `
             <tr>
 
               <td>
@@ -3064,33 +2331,21 @@ async function loadApplications(){
 
                   <option
                     value="Pending"
-                    ${
-                      payment==="Pending"
-                      ?"selected"
-                      :""
-                    }
+                    ${payment === "Pending" ? "selected" : ""}
                   >
                     Pending
                   </option>
 
                   <option
                     value="Paid"
-                    ${
-                      payment==="Paid"
-                      ?"selected"
-                      :""
-                    }
+                    ${payment === "Paid" ? "selected" : ""}
                   >
-                    Success
+                    Paid
                   </option>
 
                   <option
                     value="Failed"
-                    ${
-                      payment==="Failed"
-                      ?"selected"
-                      :""
-                    }
+                    ${payment === "Failed" ? "selected" : ""}
                   >
                     Failed
                   </option>
@@ -3107,55 +2362,35 @@ async function loadApplications(){
 
                   <option
                     value="Received"
-                    ${
-                      status==="Received"
-                      ?"selected"
-                      :""
-                    }
+                    ${status === "Received" ? "selected" : ""}
                   >
                     Received
                   </option>
 
                   <option
                     value="Verification"
-                    ${
-                      status==="Verification"
-                      ?"selected"
-                      :""
-                    }
+                    ${status === "Verification" ? "selected" : ""}
                   >
                     Verification
                   </option>
 
                   <option
                     value="Processing"
-                    ${
-                      status==="Processing"
-                      ?"selected"
-                      :""
-                    }
+                    ${status === "Processing" ? "selected" : ""}
                   >
                     Processing
                   </option>
 
                   <option
                     value="Completed"
-                    ${
-                      status==="Completed"
-                      ?"selected"
-                      :""
-                    }
+                    ${status === "Completed" ? "selected" : ""}
                   >
                     Completed
                   </option>
 
                   <option
                     value="Rejected"
-                    ${
-                      status==="Rejected"
-                      ?"selected"
-                      :""
-                    }
+                    ${status === "Rejected" ? "selected" : ""}
                   >
                     Rejected
                   </option>
@@ -3169,7 +2404,7 @@ async function loadApplications(){
                 <input
                   id="remark-${key}"
                   value="${escapeHtml(
-                    app.remark||""
+                    app.remark || ""
                   )}"
                   placeholder="Remark"
                 >
@@ -3181,62 +2416,40 @@ async function loadApplications(){
                 <button
                   type="button"
                   class="small-btn"
-                  onclick='saveApplication(
-                    ${JSON.stringify(applicationId)},
+                  onclick="saveApplication(
+                    ${JSON.stringify(tr)},
                     ${JSON.stringify(key)}
-                  )'
+                  )"
                 >
                   💾 Save
                 </button>
 
               </td>
 
-              <td>
-
-                <button
-                  type="button"
-                  class="small-btn application-delete"
-                  onclick='deleteApplication(
-                    ${JSON.stringify(applicationId)},
-                    ${JSON.stringify(tr)}
-                  )'
-                >
-                  🗑️ Delete
-                </button>
-
-              </td>
-
             </tr>
-
           `;
 
         }
       ).join("");
 
   }
-  catch(error){
+  catch (error) {
 
     console.error(
       "LOAD APPLICATIONS ERROR:",
       error
     );
 
-    rows.innerHTML=`
 
+    rows.innerHTML = `
       <tr>
-
-        <td
-          colspan="8"
-          class="loading"
-        >
+        <td colspan="7" class="loading">
           ${escapeHtml(
-            error?.message||
+            error?.message ||
             "Could not load applications."
           )}
         </td>
-
       </tr>
-
     `;
 
   }
@@ -3249,74 +2462,82 @@ async function loadApplications(){
 ========================================================= */
 
 async function saveApplication(
-  applicationId,
+  trNumber,
   key
-){
+) {
 
-  try{
+  try {
 
     await getSession();
 
-    if(!applicationId){
 
-      throw new Error(
-        "Application ID is missing."
-      );
-
-    }
-
-    const paymentElement=
+    const paymentElement =
       document.getElementById(
-        "payment-"+key
+        "payment-" + key
       );
 
-    const statusElement=
+
+    const statusElement =
       document.getElementById(
-        "status-"+key
+        "status-" + key
       );
 
-    const remarkElement=
+
+    const remarkElement =
       document.getElementById(
-        "remark-"+key
+        "remark-" + key
       );
 
-    if(
-      !paymentElement||
-      !statusElement||
+
+    if (
+      !paymentElement ||
+      !statusElement ||
       !remarkElement
-    ){
+    ) {
 
       throw new Error(
-        "Application fields not found. Please refresh the page."
+        "Application form fields not found."
       );
 
     }
 
-    const payment=
+
+    const payment =
       paymentElement.value;
 
-    const status=
+
+    const status =
       statusElement.value;
 
-    const remark=
+
+    const remark =
       remarkElement.value.trim();
+
 
     const {
       error
-    }=
+    } =
       await supabaseClient
         .from("applications")
         .update({
-          payment_status:payment,
-          application_status:status,
-          remark:remark
+
+          payment_status:
+            payment,
+
+          application_status:
+            status,
+
+          remark:
+            remark
+
         })
         .eq(
-          "id",
-          applicationId
+          "tr_number",
+          trNumber
         );
 
-    if(error){
+
+    if (error) {
 
       throw new Error(
         error.message
@@ -3324,22 +2545,25 @@ async function saveApplication(
 
     }
 
+
     alert(
       "Application status updated successfully."
     );
 
+
     await refreshDashboard();
 
   }
-  catch(error){
+  catch (error) {
 
     console.error(
       "SAVE APPLICATION ERROR:",
       error
     );
 
+
     alert(
-      error?.message||
+      error?.message ||
       "Status update failed."
     );
 
@@ -3349,195 +2573,127 @@ async function saveApplication(
 
 
 /* =========================================================
-   DELETE APPLICATION
+   LOAD STATS
 ========================================================= */
 
-async function deleteApplication(
-  applicationId,
-  trNumber
-){
+async function loadStats() {
 
-  if(!applicationId){
-
-    alert(
-      "Application ID missing. Please refresh the page."
-    );
-
-    return;
-
-  }
-
-  const confirmation=
-    prompt(
-      "⚠️ DELETE APPLICATION\n\n"+
-      "TR Number: "+
-      trNumber+
-      "\n\n"+
-      "This application will be permanently deleted.\n"+
-      "This action cannot be undone.\n\n"+
-      "Type DELETE to confirm."
-    );
-
-  if(
-    confirmation!=="DELETE"
-  )
-    return;
-
-  try{
+  try {
 
     await getSession();
 
+
+    /* ============================================
+       RETAILER COUNT
+    ============================================ */
+
     const {
-      error
-    }=
+      count,
+      error: retailerError
+    } =
       await supabaseClient
-        .from("applications")
-        .delete()
-        .eq(
+        .from("profiles")
+        .select(
           "id",
-          applicationId
+          {
+            count: "exact",
+            head: true
+          }
+        )
+        .eq(
+          "role",
+          "retailer"
         );
 
-    if(error){
 
-      throw new Error(
-        error.message
-      );
+    if (retailerError) {
 
-    }
-
-    alert(
-      "Application deleted successfully.\n\n"+
-      "TR Number: "+
-      trNumber
-    );
-
-    await refreshDashboard();
-
-  }
-  catch(error){
-
-    console.error(
-      "DELETE APPLICATION ERROR:",
-      error
-    );
-
-    let message=
-      error?.message||
-      "Application deletion failed.";
-
-    if(
-      message
-        .toLowerCase()
-        .includes("row-level security")||
-      message
-        .toLowerCase()
-        .includes("permission")||
-      message
-        .toLowerCase()
-        .includes("not allowed")
-    ){
-
-      message+=
-        "\n\nPlease add the Admin DELETE RLS policy to the applications table.";
+      throw retailerError;
 
     }
 
-    alert(message);
 
-  }
+    document
+      .getElementById(
+        "totalRetailers"
+      )
+      .textContent =
+        count || 0;
 
-}
 
-
-/* =========================================================
-   STATS
-   ONLY 3 BOXES
-========================================================= */
-
-async function loadStats(){
-
-  try{
-
-    await getSession();
+    /* ============================================
+       APPLICATIONS
+    ============================================ */
 
     const {
-      data:applications,
-      error
-    }=
+      data: applications,
+      error: applicationError
+    } =
       await supabaseClient
         .from("applications")
         .select(
           "payment_status"
         );
 
-    if(error)
-      throw error;
 
-    const list=
-      applications||[];
+    if (applicationError) {
 
+      throw applicationError;
 
-    /*
-      ONLY THREE CATEGORIES
-
-      Pending -> payment_status = Pending
-      Success -> payment_status = Paid
-      Failed  -> payment_status = Failed
-
-      No fourth category.
-    */
-
-    const pending=
-      list.filter(
-        item =>
-          !item.payment_status||
-          item.payment_status==="Pending"
-      ).length;
+    }
 
 
-    const success=
-      list.filter(
-        item =>
-          item.payment_status==="Paid"
-      ).length;
+    const list =
+      applications || [];
 
 
-    const failed=
-      list.filter(
-        item =>
-          item.payment_status==="Failed"
-      ).length;
+    document
+      .getElementById(
+        "totalApplications"
+      )
+      .textContent =
+        list.length;
+
+
+    document
+      .getElementById(
+        "paidApplications"
+      )
+      .textContent =
+        list.filter(
+          function(item) {
+
+            return (
+              item.payment_status ===
+              "Paid"
+            );
+
+          }
+        ).length;
 
 
     document
       .getElementById(
         "pendingApplications"
       )
-      .textContent=
-        pending;
+      .textContent =
+        list.filter(
+          function(item) {
 
+            return (
+              !item.payment_status ||
+              item.payment_status ===
+              "Pending"
+            );
 
-    document
-      .getElementById(
-        "successApplications"
-      )
-      .textContent=
-        success;
-
-
-    document
-      .getElementById(
-        "failedApplications"
-      )
-      .textContent=
-        failed;
+          }
+        ).length;
 
   }
-  catch(error){
+  catch (error) {
 
     console.error(
-      "STATS ERROR:",
+      "LOAD STATS ERROR:",
       error
     );
 
@@ -3547,10 +2703,10 @@ async function loadStats(){
 
 
 /* =========================================================
-   REFRESH
+   REFRESH DASHBOARD
 ========================================================= */
 
-async function refreshDashboard(){
+async function refreshDashboard() {
 
   await Promise.allSettled([
 
@@ -3569,26 +2725,28 @@ async function refreshDashboard(){
    AUTH LISTENER
 ========================================================= */
 
-supabaseClient.auth
-  .onAuthStateChange(
-    function(event){
+supabaseClient.auth.onAuthStateChange(
+  function(event, session) {
 
-      console.log(
-        "AUTH EVENT:",
-        event
-      );
+    console.log(
+      "AUTH EVENT:",
+      event
+    );
 
-      if(
-        event==="SIGNED_OUT"
-      ){
+    if (
+      event === "SIGNED_OUT" &&
+      !window.location.pathname.endsWith(
+        "admin.html"
+      )
+    ) {
 
-        window.location.href=
-          "admin.html";
-
-      }
+      window.location.href =
+        "admin.html";
 
     }
-  );
+
+  }
+);
 
 
 /* =========================================================
@@ -3597,26 +2755,25 @@ supabaseClient.auth
 
 document.addEventListener(
   "keydown",
-  function(event){
+  function(event) {
 
-    if(
-      event.key==="Enter"&&
+    if (
+      event.key === "Enter" &&
       !document
         .getElementById("loginBox")
-        .classList
-        .contains("hidden")
-    ){
+        .classList.contains("hidden")
+    ) {
 
-      const active=
+      const active =
         document.activeElement;
 
-      if(
-        active&&
+      if (
+        active &&
         (
-          active.id==="email"||
-          active.id==="password"
+          active.id === "email" ||
+          active.id === "password"
         )
-      ){
+      ) {
 
         event.preventDefault();
 
@@ -3631,34 +2788,12 @@ document.addEventListener(
 
 
 /* =========================================================
-   CLOSE MODAL
-========================================================= */
-
-document
-  .getElementById("editModal")
-  .addEventListener(
-    "click",
-    function(event){
-
-      if(
-        event.target===this
-      ){
-
-        closeEditModal();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
    INITIALIZE
 ========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
-  function(){
+  function() {
 
     generateRetailerId();
 
@@ -3671,3 +2806,4 @@ document.addEventListener(
 
 </body>
 </html>
+```
