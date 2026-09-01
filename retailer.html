@@ -1812,7 +1812,7 @@ function renderServiceFolders(){
     const list=folder.querySelector(".serviceList");
     group.items.forEach(service=>{
       const btn=document.createElement("button");btn.type="button";btn.className="serviceItem"+(selected&&String(selected.id)===String(service.id)?" active":"");
-      btn.innerHTML=`<span><span class="serviceItemName">${escapeHtml(service.name)}</span><br><span class="serviceBadge">Click to open service</span></span><span class="serviceItemPrice">₹${Number(service.amount||0)}</span>`;
+      btn.innerHTML=`<span><span class="serviceItemName">${escapeHtml(service.name)}</span><br><span class="serviceBadge">👆 Click to open form</span></span><span class="serviceItemPrice">₹${Number(service.amount||0)}</span>`;
       btn.onclick=()=>chooseService(service.id);list.appendChild(btn);
     });
     box.appendChild(folder);
@@ -1904,6 +1904,25 @@ function getServiceType(
     n.includes("correction")
   )
     return "pan_correction";
+
+
+  /* Driving Licence / DL PDF */
+  if(
+    /(^|\s)dl(\s|$)/.test(n) ||
+    n.includes("dl pdf") ||
+    n.includes("driving licence") ||
+    n.includes("driving license")
+  )
+    return "dl_pdf";
+
+
+  /* Registration Certificate / RC PDF */
+  if(
+    /(^|\s)rc(\s|$)/.test(n) ||
+    n.includes("rc pdf") ||
+    n.includes("registration certificate")
+  )
+    return "rc_pdf";
 
 
   if(
@@ -2039,6 +2058,34 @@ const SERVICE_FIELDS = {
     ["dob","DOB","date"],
     ["mobile","Mobile Number","tel"]
   ]
+,
+
+  dl_pdf:[
+    ["applicant_name","Applicant Name","text",true],
+    ["dob","Date of Birth","date",true],
+    ["aadhaar_number","Aadhaar Number","text",true],
+    ["dl_number","Driving Licence Number","text",true],
+    ["mobile","Mobile Number","tel",true],
+    ["email","Email ID","email"]
+  ],
+
+  rc_pdf:[
+    ["applicant_name","Applicant Name","text",true],
+    ["vehicle_number","Vehicle Number","text",true],
+    ["rc_number","RC Number","text",true],
+    ["aadhaar_number","Aadhaar Number","text",true],
+    ["mobile","Mobile Number","tel",true],
+    ["email","Email ID","email"]
+  ],
+
+  generic:[
+    ["applicant_name","Customer / Applicant Name","text",true],
+    ["dob","Date of Birth","date"],
+    ["mobile","Mobile Number","tel",true],
+    ["email","Email ID","email"],
+    ["address","Address","textarea"],
+    ["service_details","Service Details / Requirement","textarea",true]
+  ]
 
 };
 
@@ -2126,6 +2173,22 @@ const SERVICE_FILES = {
     ["customer_photo","Customer Photo"],
     ["customer_signature","Customer Signature"],
     ["lc_pdf","LC PDF"]
+  ]
+,
+
+  dl_pdf:[
+    ["dl_document_pdf","Driving Licence / DL Document PDF"],
+    ["aadhaar_pdf","Aadhaar Card PDF"]
+  ],
+
+  rc_pdf:[
+    ["rc_document_pdf","RC Document PDF"],
+    ["aadhaar_pdf","Aadhaar Card PDF"]
+  ],
+
+  generic:[
+    ["service_document","Service Related Document"],
+    ["aadhaar_pdf","Aadhaar Card PDF"]
   ]
 
 };
@@ -2275,12 +2338,16 @@ function serviceChanged(){
     ) +
     "</span>";
 
+  /* Every non-LMS service gets a customer form. Unknown services use the generic form. */
+  const formType = SERVICE_FIELDS[type] ? type : "generic";
+  const fileType = SERVICE_FILES[type] ? type : "generic";
+
   renderCustomerFields(
-    type
+    formType
   );
 
   renderFiles(
-    SERVICE_FILES[type] || []
+    SERVICE_FILES[fileType] || []
   );
 
   let amount =
@@ -2455,7 +2522,7 @@ function renderCustomerFields(
 
             <textarea
               id="field_${escapeAttr(key)}"
-              data-field="${escapeAttr(key)}"></textarea>
+              data-field="${escapeAttr(key)}"${isRequired ? " required" : ""}></textarea>
 
           </div>
           `;
@@ -2477,7 +2544,7 @@ function renderCustomerFields(
 
             <select
               id="field_${escapeAttr(key)}"
-              data-field="${escapeAttr(key)}">
+              data-field="${escapeAttr(key)}"${isRequired ? " required" : ""}>
 
               <option value="">
                 Select
@@ -2515,7 +2582,7 @@ function renderCustomerFields(
             <input
               id="field_${escapeAttr(key)}"
               data-field="${escapeAttr(key)}"
-              type="${escapeAttr(inputType)}">
+              type="${escapeAttr(inputType)}"${isRequired ? " required" : ""}>
 
           </div>
           `;
@@ -2568,12 +2635,12 @@ function renderFiles(
       div.innerHTML =
         `
         <label>
-          ${escapeHtml(label)}
+          ${escapeHtml(label)}${requiredMark}
         </label>
 
         <input
           type="file"
-          data-field="${escapeAttr(key)}"
+          data-field="${escapeAttr(key)}"${isRequired ? " required" : ""}
           accept=".jpg,.jpeg,.png,.pdf">
 
         `;
@@ -2749,8 +2816,13 @@ async function getFiles(){
     const file =
       input.files[0];
 
-    if(!file)
+    if(!file){
+      if(input.required){
+        const label = input.closest(".file")?.querySelector("label")?.innerText?.replace(/\*/g,"").trim() || "Document";
+        throw new Error(label + " is required.");
+      }
       continue;
+    }
 
     if(
       file.size >
@@ -2833,6 +2905,16 @@ async function submitApplication(){
 
   const fieldData =
     getFields();
+
+  const requiredFields = document.querySelectorAll("#dynamicFields [data-field][required]");
+  for(const input of requiredFields){
+    if(!String(input.value || "").trim()){
+      const label = input.closest("div")?.querySelector("label")?.innerText?.replace(/\*/g,"").trim() || "Required field";
+      msg(label + " is required.","err");
+      input.focus();
+      return;
+    }
+  }
 
   const mobile =
     fieldData.mobile;
