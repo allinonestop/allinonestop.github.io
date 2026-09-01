@@ -499,6 +499,31 @@ button:disabled{
 .statusBadgeFailed{background:#ffebee;color:#b71c1c}
 .statusBadgeSuccess{background:#e8f5e9;color:#1b5e20}
 
+/* =====================================================
+   SERVICE FOLDERS + PROFILE EDIT
+===================================================== */
+.profileEditGrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.fullProfileEdit{grid-column:1/-1}
+.profileEditGrid textarea{min-height:95px}
+.serviceHeadingRow{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;flex-wrap:wrap;margin-bottom:15px}
+.serviceHeadingRow h2{margin:0 0 5px}
+.serviceAccessNote{font-size:13px;color:#64748b}
+.serviceSearchWrap{min-width:280px}
+.serviceSearchWrap input{border-radius:12px;padding:12px 14px}
+.hiddenServiceSelect{display:none!important}
+.serviceFolders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.serviceFolder{border:1px solid #dbe4f0;border-radius:18px;background:linear-gradient(145deg,#fff,#f8fbff);overflow:hidden;box-shadow:0 8px 24px rgba(30,64,175,.07)}
+.serviceFolderHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 16px;background:linear-gradient(135deg,#eef2ff,#ecfeff);border-bottom:1px solid #dbeafe}
+.serviceFolderTitle{font-weight:900;color:#1e3a8a;font-size:15px}
+.serviceFolderCount{font-size:11px;font-weight:800;background:#fff;padding:5px 9px;border-radius:20px;color:#475569;border:1px solid #dbe4f0}
+.serviceList{padding:10px}
+.serviceItem{width:100%;text-align:left;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:11px 12px;margin:5px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:.18s;box-shadow:none}
+.serviceItem:hover{border-color:#93c5fd;transform:translateY(-1px);box-shadow:0 6px 16px rgba(37,99,235,.09)}
+.serviceItem.active{border-color:#4f46e5;background:#eef2ff}
+.serviceItemName{font-weight:800;color:#172033;font-size:13px}
+.serviceItemPrice{font-weight:900;color:#0d47a1;white-space:nowrap;font-size:13px}
+.serviceLoading,.serviceEmpty{padding:30px;text-align:center;color:#64748b;background:#f8fafc;border-radius:15px;border:1px dashed #cbd5e1;grid-column:1/-1}
+.serviceBadge{font-size:10px;font-weight:800;color:#475569;margin-top:3px}
 @media(max-width:700px){
 
   .grid{
@@ -633,10 +658,10 @@ button:disabled{
         <div id="profilePhoto" class="profilePhoto">R</div>
         <div>
           <h2>My Profile</h2>
-          <div class="smallNote">View your retailer profile. Only Retailer Number can be edited.</div>
+          <div class="smallNote">Name, photo, email and address can be updated. Mobile Number, Retailer Number and Customer ID are locked.</div>
         </div>
       </div>
-      <button class="primary" id="editProfileBtn" onclick="toggleProfileEdit()">Edit Retailer Number</button>
+      <button class="primary" id="editProfileBtn" onclick="toggleProfileEdit()">Edit Profile</button>
     </div>
 
     <div class="profileGrid">
@@ -644,16 +669,41 @@ button:disabled{
       <div class="profileItem"><div class="profileLabel">DOB</div><div id="profileDob" class="profileValue">-</div></div>
       <div class="profileItem"><div class="profileLabel">Address</div><div id="profileAddress" class="profileValue">-</div></div>
       <div class="profileItem"><div class="profileLabel">Email</div><div id="profileEmail" class="profileValue">-</div></div>
-      <div class="profileItem"><div class="profileLabel">Retailer Number</div><div id="profileRetailerNumber" class="profileValue">-</div></div>
+      <div class="profileItem"><div class="profileLabel">Retailer Number / Customer ID</div><div id="profileRetailerNumber" class="profileValue">🔒 -</div></div>
       <div class="profileItem"><div class="profileLabel">Username / Retailer ID</div><div id="profileUsername" class="profileValue">🔒 -</div></div>
       <div class="profileItem"><div class="profileLabel">Mobile Number</div><div id="profileMobile" class="profileValue">🔒 -</div></div>
     </div>
 
     <div id="profileEditRow" class="profileEditRow">
-      <label for="retailerNumberEdit">Retailer Number</label>
-      <input id="retailerNumberEdit" type="text" maxlength="50" placeholder="Enter Retailer Number">
+      <div class="profileEditGrid">
+        <div>
+          <label for="profileNameEdit">Full Name</label>
+          <input id="profileNameEdit" type="text" maxlength="120" placeholder="Enter Full Name">
+        </div>
+        <div>
+          <label for="profileEmailEdit">Email</label>
+          <input id="profileEmailEdit" type="email" maxlength="160" placeholder="Enter Email">
+        </div>
+        <div class="fullProfileEdit">
+          <label for="profileAddressEdit">Address</label>
+          <textarea id="profileAddressEdit" maxlength="500" placeholder="Enter Address"></textarea>
+        </div>
+        <div>
+          <label for="profilePhotoEdit">Profile Photo</label>
+          <input id="profilePhotoEdit" type="file" accept=".jpg,.jpeg,.png,.webp">
+          <div class="smallNote">JPG, PNG or WEBP • maximum 2 MB</div>
+        </div>
+        <div>
+          <label>Mobile Number</label>
+          <input id="profileMobileEdit" class="lockedInput" type="text" readonly>
+        </div>
+        <div>
+          <label>Retailer Number / Customer ID</label>
+          <input id="profileRetailerNumberEdit" class="lockedInput" type="text" readonly>
+        </div>
+      </div>
       <div class="profileEditActions">
-        <button class="success" id="saveRetailerNumberBtn" onclick="saveRetailerNumber()">Save</button>
+        <button class="success" id="saveProfileBtn" onclick="saveProfile()">Save Profile</button>
         <button class="secondary" onclick="toggleProfileEdit(false)">Cancel</button>
       </div>
       <div id="profileMsg" class="status"></div>
@@ -718,29 +768,25 @@ button:disabled{
 
   <div class="card">
 
-    <h2>
-      1. Select Service
-    </h2>
+    <div class="serviceHeadingRow">
+      <div>
+        <h2>1. Select Service</h2>
+        <div id="serviceAccessNote" class="serviceAccessNote">Loading your available services...</div>
+      </div>
+      <div class="serviceSearchWrap">
+        <input id="serviceSearch" type="search" placeholder="🔎 Search service..." oninput="filterServiceFolders()">
+      </div>
+    </div>
 
-    <label>
-      Service
-      <span class="req">*</span>
-    </label>
-
-    <select
-      id="service"
-      onchange="serviceChanged()">
-
-      <option value="">
-        Loading services...
-      </option>
-
+    <select id="service" class="hiddenServiceSelect" aria-hidden="true" tabindex="-1">
+      <option value="">Loading services...</option>
     </select>
 
-    <div
-      id="serviceInfo"
-      class="serviceBox hidden">
+    <div id="serviceFolders" class="serviceFolders">
+      <div class="serviceLoading">Loading services...</div>
     </div>
+
+    <div id="serviceInfo" class="serviceBox hidden"></div>
 
   </div>
 
@@ -1213,83 +1259,135 @@ function profileValue(keys, authUser=null){
 }
 
 function renderRetailerProfile(authUser=null){
-  const fullName = profileValue(["full_name","name"], authUser) || "-";
-  const dob = profileValue(["dob","date_of_birth","birth_date"], authUser) || "-";
-  const address = profileValue(["address","full_address","residential_address"], authUser) || "-";
-  const email = (authUser && authUser.email) || profileValue(["email"], authUser) || "-";
-  const rn = retailer?.retailer_number || "-";
-  const mobile = retailer?.mobile || profileValue(["phone","mobile_number"], authUser) || "-";
-  const username = (authUser?.user_metadata?.username || retailer?.username || retailer?.retailer_id || "") || "-";
-  const photo = profileValue(["photo_url","avatar_url","profile_photo","photo"], authUser);
+  const fullName=profileValue(["full_name","name"],authUser)||"-";
+  const dob=profileValue(["dob","date_of_birth","birth_date"],authUser)||"-";
+  const address=profileValue(["address","full_address","residential_address"],authUser)||"-";
+  const email=(authUser&&authUser.email)||profileValue(["email"],authUser)||"-";
+  const rn=retailer?.retailer_number||"-";
+  const mobile=retailer?.mobile||profileValue(["phone","mobile_number"],authUser)||"-";
+  const username=(authUser?.user_metadata?.username||retailer?.username||retailer?.retailer_id||retailer?.retailer_number||"")||"-";
+  const photo=retailer?.photo_url||profileValue(["photo_url","avatar_url","profile_photo","photo"],authUser);
 
-  $("profileFullName").textContent = fullName;
-  $("profileDob").textContent = dob;
-  $("profileAddress").textContent = address;
-  $("profileEmail").textContent = email;
-  $("profileRetailerNumber").textContent = rn;
-  $("profileUsername").textContent = "🔒 " + username;
-  $("profileMobile").textContent = "🔒 " + mobile;
-  $("retailerNumberEdit").value = retailer?.retailer_number || "";
+  $("profileFullName").textContent=fullName;
+  $("profileDob").textContent=dob;
+  $("profileAddress").textContent=address;
+  $("profileEmail").textContent=email;
+  $("profileRetailerNumber").textContent="🔒 "+rn;
+  $("profileUsername").textContent="🔒 "+username;
+  $("profileMobile").textContent="🔒 "+mobile;
+  $("profileNameEdit").value=fullName==="-"?"":fullName;
+  $("profileEmailEdit").value=email==="-"?"":email;
+  $("profileAddressEdit").value=address==="-"?"":address;
+  $("profileMobileEdit").value=mobile==="-"?"":mobile;
+  $("profileRetailerNumberEdit").value=rn==="-"?"":rn;
 
-  const photoBox = $("profilePhoto");
+  const photoBox=$("profilePhoto");
   if(photo){
-    photoBox.innerHTML = `<img src="${escapeAttr(photo)}" alt="Profile Photo" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+    photoBox.innerHTML=`<img src="${escapeAttr(photo)}" alt="Profile Photo" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
   }else{
-    const initials = String(fullName).split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase() || "R";
-    photoBox.textContent = initials;
+    const initials=String(fullName).split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase()||"R";
+    photoBox.textContent=initials;
+  }
+}
+
+async function loadRetailerPhoto(){
+  if(!retailer?.photo_path)return;
+  try{
+    const {data,error}=await sb.storage.from("retailer-photos").createSignedUrl(retailer.photo_path,3600);
+    if(!error&&data?.signedUrl){
+      retailer.photo_url=data.signedUrl;
+      renderRetailerProfile();
+    }
+  }catch(e){
+    console.warn("Profile photo URL error:",e);
   }
 }
 
 function toggleProfileEdit(force){
-  const row = $("profileEditRow");
-  const show = force === undefined ? !row.classList.contains("show") : !!force;
-  row.classList.toggle("show", show);
-  if(show){
-    $("retailerNumberEdit").value = retailer?.retailer_number || "";
-    $("retailerNumberEdit").focus();
-  }
+  const row=$("profileEditRow");
+  const show=force===undefined?!row.classList.contains("show"):!!force;
+  row.classList.toggle("show",show);
+  $("editProfileBtn").textContent=show?"Close Edit":"Edit Profile";
+  if(show){renderRetailerProfile();$("profileNameEdit").focus();}
 }
 
-async function saveRetailerNumber(){
-  if(!retailer?.id){
-    profileMsg("Retailer profile not loaded.","err");
-    return;
+function readFileAsDataUrl(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=()=>reject(new Error("Photo read failed."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function parseProfilePhoto(dataUrl){
+  const match=String(dataUrl||"").match(/^data:(image\/(?:jpeg|png|webp));base64,(.+)$/);
+  if(!match)return null;
+  const binary=atob(match[2]);
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  return {contentType:match[1],bytes};
+}
+
+async function saveProfile(){
+  if(!retailer?.id){profileMsg("Retailer profile not loaded.","err");return;}
+  const fullName=$("profileNameEdit").value.trim();
+  const email=$("profileEmailEdit").value.trim();
+  const address=$("profileAddressEdit").value.trim();
+  const photoFile=$("profilePhotoEdit").files[0];
+
+  if(!fullName){profileMsg("Full Name is required.","err");return;}
+  if(email&&!/^\S+@\S+\.\S+$/.test(email)){profileMsg("Please enter a valid email address.","err");return;}
+  if(photoFile){
+    if(!["image/jpeg","image/png","image/webp"].includes(photoFile.type)){profileMsg("Only JPG, PNG and WEBP photos are allowed.","err");return;}
+    if(photoFile.size>2*1024*1024){profileMsg("Photo must be smaller than 2 MB.","err");return;}
   }
-  const value = $("retailerNumberEdit").value.trim();
-  if(!value){
-    profileMsg("Retailer Number required.","err");
-    return;
-  }
-  const btn = $("saveRetailerNumberBtn");
-  btn.disabled = true;
-  btn.textContent = "Saving...";
+
+  const btn=$("saveProfileBtn");btn.disabled=true;btn.textContent="Saving...";
   try{
-    const {data,error} = await sb
-      .from("profiles")
-      .update({retailer_number:value})
-      .eq("id",retailer.id)
-      .select("*")
-      .single();
-    if(error) throw error;
-    retailer = data || {...retailer, retailer_number:value};
-    renderRetailerProfile();
-    $("retailerInfo").textContent = (retailer.full_name || "") + " | Retailer ID: " + (retailer.retailer_number || "");
-    profileMsg("Retailer Number updated successfully.","ok");
-    setTimeout(()=>toggleProfileEdit(false),900);
+    const {data:authData,error:authError}=await sb.auth.getUser();
+    if(authError||!authData?.user)throw new Error("Login session expired. Please login again.");
+
+    const {data:updatedProfile,error:profileError}=await sb.from("profiles").update({full_name:fullName,address:address||null}).eq("id",retailer.id).select("*").single();
+    if(profileError)throw profileError;
+    retailer=updatedProfile||{...retailer,full_name:fullName,address:address||null};
+
+    let emailMessage="";
+    if(email&&email.toLowerCase()!==String(authData.user.email||"").toLowerCase()){
+      const {error:emailError}=await sb.auth.updateUser({email});
+      if(emailError)throw emailError;
+      emailMessage=" Email confirmation may be required for the new email.";
+    }
+
+    if(photoFile){
+      const dataUrl=await readFileAsDataUrl(photoFile);
+      const parsed=parseProfilePhoto(dataUrl);
+      if(!parsed)throw new Error("Invalid photo format.");
+      const ext=parsed.contentType==="image/png"?"png":parsed.contentType==="image/webp"?"webp":"jpg";
+      const filePath=`${retailer.id}/profile-${Date.now()}.${ext}`;
+      const {error:uploadError}=await sb.storage.from("retailer-photos").upload(filePath,parsed.bytes,{contentType:parsed.contentType,upsert:false});
+      if(uploadError)throw uploadError;
+      const {data:signed,error:signedError}=await sb.storage.from("retailer-photos").createSignedUrl(filePath,3600);
+      if(signedError)throw signedError;
+      const {data:photoProfile,error:photoError}=await sb.from("profiles").update({photo_path:filePath}).eq("id",retailer.id).select("*").single();
+      if(photoError)throw photoError;
+      retailer=photoProfile||{...retailer,photo_path:filePath};
+      if(signed?.signedUrl)retailer.photo_url=signed.signedUrl;
+    }
+
+    const {data:freshProfile,error:freshError}=await sb.from("profiles").select("*").eq("id",retailer.id).maybeSingle();
+    if(!freshError&&freshProfile)retailer=freshProfile;
+    renderRetailerProfile({...authData.user,email:email||authData.user.email});
+    $("retailerInfo").textContent=(retailer.full_name||"")+" | Retailer ID: "+(retailer.retailer_number||"");
+    profileMsg("Profile updated successfully."+emailMessage,"ok");
+    $("profilePhotoEdit").value="";
+    setTimeout(()=>toggleProfileEdit(false),1200);
   }catch(e){
-    console.error("Profile update error:",e);
-    profileMsg(e.message || "Retailer Number update failed.","err");
-  }finally{
-    btn.disabled = false;
-    btn.textContent = "Save";
-  }
+    console.error("Profile update error:",e);profileMsg(e.message||"Profile update failed.","err");
+  }finally{btn.disabled=false;btn.textContent="Save Profile";}
 }
 
-function profileMsg(text,type="inf"){
-  const e=$("profileMsg");
-  e.className="status "+type;
-  e.textContent=text;
-}
+function profileMsg(text,type="inf"){$("profileMsg").className="status "+type;$('profileMsg').textContent=text;}
 
 /* =====================================================
    SHOW APP
@@ -1315,6 +1413,9 @@ function showApp(){
       " | Retailer ID: "
       +
       (retailer.retailer_number || "");
+
+  renderRetailerProfile();
+  loadRetailerPhoto();
 
 }
 
@@ -1404,6 +1505,8 @@ async function logout(){
 
   $("service").innerHTML =
     '<option value="">Select Service</option>';
+  if($("serviceSearch")) $("serviceSearch").value="";
+  if($("serviceFolders")) $("serviceFolders").innerHTML='<div class="serviceLoading">Login to load services.</div>';
 
   resetApplicationArea();
 
@@ -1422,94 +1525,63 @@ async function logout(){
 ===================================================== */
 
 async function loadServices(){
-
   try{
+    const {data,error}=await sb.from("services").select("id,name,amount,without_ration_amount,fields,description,sort_order,active").eq("active",true).order("sort_order",{ascending:true});
+    if(error)throw error;
+    const allServices=data||[];
+    const retailerType=String(retailer?.retailer_type||"ration_card").toLowerCase().trim();
+    if(retailerType==="all_work")services=allServices;
+    else services=allServices.filter(service=>["ration_noncard","ration_division","ration_finger","ration_father_husband","ration_delete","ration_add","ration_correction"].includes(getServiceType(service.name)));
 
-    const {
-      data,
-      error
-    } =
-      await sb
-        .from("services")
-        .select(
-          "id,name,amount,without_ration_amount,fields,description,sort_order,active"
-        )
-        .eq(
-          "active",
-          true
-        )
-        .order(
-          "sort_order",
-          {
-            ascending:true
-          }
-        );
-
-    if(error)
-      throw error;
-
-    services =
-      data || [];
-
-    $("service").innerHTML =
-      '<option value="">Select Service</option>';
-
-
-    services.forEach(
-      s => {
-
-        const option =
-          document.createElement(
-            "option"
-          );
-
-        option.value =
-          s.id;
-
-        option.textContent =
-          s.name
-          +
-          " - ₹"
-          +
-          Number(
-            s.amount || 0
-          );
-
-        $("service")
-          .appendChild(option);
-
-      }
-    );
-
-
-    if(!services.length){
-
-      msg(
-        "No active services found.",
-        "err"
-      );
-
-    }
-
-  }
-
-  catch(e){
-
-    console.error(
-      "Services error:",
-      e
-    );
-
-    msg(
-      "Services error: " +
-      e.message,
-      "err"
-    );
-
-  }
-
+    $("service").innerHTML='<option value="">Select Service</option>';
+    services.forEach(s=>{const option=document.createElement("option");option.value=s.id;option.textContent=s.name+" - ₹"+Number(s.amount||0);$("service").appendChild(option);});
+    $("serviceAccessNote").textContent=retailerType==="all_work"?"🌐 All Work access • All active services are available":"🍚 Ration Card Only • Only Ration Card services are available";
+    renderServiceFolders();
+    if(!services.length){$("serviceFolders").innerHTML='<div class="serviceEmpty">No services are available for your account.</div>';msg("No services available for this retailer.","err");}
+  }catch(e){console.error("Services error:",e);$("serviceFolders").innerHTML='<div class="serviceEmpty">Services could not be loaded.</div>';msg("Services error: "+e.message,"err");}
 }
 
+function serviceCategory(service){
+  const type=getServiceType(service.name);
+  if(type.startsWith("ration_"))return {key:"ration",title:"🍚 Ration Card Services"};
+  if(type.startsWith("pan_"))return {key:"pan",title:"💳 PAN Card Services"};
+  if(type.startsWith("election_"))return {key:"election",title:"🗳️ Election Card Services"};
+  if(type==="lms")return {key:"lms",title:"🎓 LMS / Certificate Services"};
+  const n=String(service.name||"").toLowerCase();
+  if(n.includes("dl")||n.includes("driving"))return {key:"dl",title:"🚗 DL Services"};
+  if(n.includes("rc")||n.includes("registration"))return {key:"rc",title:"🚘 RC Services"};
+  return {key:"other",title:"📁 Other Services"};
+}
+
+function renderServiceFolders(){
+  const box=$("serviceFolders");if(!box)return;
+  const search=String($("serviceSearch")?.value||"").trim().toLowerCase();
+  const groups={};
+  services.forEach(service=>{
+    if(search&&!String(service.name||"").toLowerCase().includes(search))return;
+    const cat=serviceCategory(service);
+    if(!groups[cat.key])groups[cat.key]={...cat,items:[]};
+    groups[cat.key].items.push(service);
+  });
+  const order=["ration","pan","election","lms","dl","rc","other"];
+  const keys=order.filter(k=>groups[k]);
+  if(!keys.length){box.innerHTML='<div class="serviceEmpty">No matching service found.</div>';return;}
+  box.innerHTML="";
+  keys.forEach(key=>{
+    const group=groups[key];
+    const folder=document.createElement("div");folder.className="serviceFolder";
+    folder.innerHTML=`<div class="serviceFolderHeader"><div class="serviceFolderTitle">${escapeHtml(group.title)}</div><div class="serviceFolderCount">${group.items.length} service${group.items.length===1?"":"s"}</div></div><div class="serviceList"></div>`;
+    const list=folder.querySelector(".serviceList");
+    group.items.forEach(service=>{
+      const btn=document.createElement("button");btn.type="button";btn.className="serviceItem"+(selected&&String(selected.id)===String(service.id)?" active":"");
+      btn.innerHTML=`<span><span class="serviceItemName">${escapeHtml(service.name)}</span><br><span class="serviceBadge">Click to open service</span></span><span class="serviceItemPrice">₹${Number(service.amount||0)}</span>`;
+      btn.onclick=()=>chooseService(service.id);list.appendChild(btn);
+    });
+    box.appendChild(folder);
+  });
+}
+function filterServiceFolders(){renderServiceFolders();}
+function chooseService(serviceId){$("service").value=String(serviceId);serviceChanged();renderServiceFolders();$("serviceInfo")?.scrollIntoView({behavior:"smooth",block:"nearest"});}
 
 /* =====================================================
    SERVICE TYPE
@@ -2024,6 +2096,8 @@ function serviceChanged(){
   generateUPIQR(
     amount
   );
+
+  renderServiceFolders();
 
 }
 
