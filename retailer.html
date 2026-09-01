@@ -2137,28 +2137,34 @@ const SERVICE_FIELDS = {
   ],
 
   election_new:[
-    ["applicant_name","Applicant Name","text",true],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob_age","DOB / Age","text"],
-    ["gender","Gender","select"],
-    ["email","Email","email"],
-    ["address","Address","textarea"],
-    ["mobile","Mobile Number","tel",true]
+    ["mother_election_card_pdf","Mother Election Card PDF",true],
+    ["father_election_card_pdf","Father Election Card PDF",true],
+    ["election_card_pdf","Election Card PDF",true],
+    ["customer_signature","Customer Signature",true],
+    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["lc_pdf","LC PDF",true],
+    ["customer_photo","Customer Photo",true]
   ],
 
   election_correction:[
-    ["name","Name","text",true],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob_age","DOB / Age","text"],
-    ["mobile","Mobile Number","tel",true],
-    ["email","Email","email"]
+    ["mother_election_card_pdf","Mother Election Card PDF",true],
+    ["father_election_card_pdf","Father Election Card PDF",true],
+    ["election_card_pdf","Election Card PDF",true],
+    ["customer_signature","Customer Signature",true],
+    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["lc_pdf","LC PDF",true],
+    ["customer_photo","Customer Photo",true]
   ],
 
   election_wife:[
-    ["wife_name","Wife Name","text",true],
-    ["husband_name","Husband Name","text",true],
-    ["dob","DOB","date"],
-    ["mobile","Mobile Number","tel",true]
+    ["wife_aadhaar_pdf","Wife Aadhaar PDF"],
+    ["father_election_card_pdf","Father Election Card PDF"],
+    ["mother_election_card_pdf","Mother Election Card PDF"],
+    ["husband_election_card_pdf","Husband Election Card PDF"],
+    ["customer_aadhaar_pdf","Customer Aadhaar PDF"],
+    ["customer_photo","Customer Photo"],
+    ["customer_signature","Customer Signature"],
+    ["lc_pdf","LC PDF"]
   ],
 
   dl_pdf:[
@@ -2432,9 +2438,7 @@ function serviceChanged(){
   );
 
   renderFiles(
-    (type==="election_new" || type==="election_correction")
-      ? getServiceFileFields(type)
-      : (SERVICE_FILES[fileType] || [])
+    SERVICE_FILES[fileType] || []
   );
 
   let amount =
@@ -2731,21 +2735,6 @@ function renumberRationMembers(){
    FILES
 ===================================================== */
 
-
-function getServiceFileFields(type){
-  if(type==="election_new" || type==="election_correction"){
-    return [
-      ["mother_election_card_pdf","Mother Election Card PDF",true],
-      ["father_election_card_pdf","Father Election Card PDF",true],
-      ["election_card_pdf","Election Card PDF",true],
-      ["customer_signature","Customer Signature",true],
-      ["aadhaar_pdf","Aadhaar Card PDF",true],
-      ["lc_pdf","LC PDF",true],
-      ["customer_photo","Customer Photo",true]
-    ];
-  }
-  return SERVICE_FIELDS[type] || SERVICE_FIELDS.generic || [];
-}
 
 function renderFiles(list){
   const box=$("otherFiles");
