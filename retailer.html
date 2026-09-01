@@ -2031,18 +2031,21 @@ function getServiceType(
     return "election_wife";
 
 
-  if(
-    n.includes("new election") ||
-    n.includes("new election card")
-  )
-    return "election_new";
-
-
+  /* Election Card services */
   if(
     n.includes("election") &&
-    n.includes("correction")
+    (n.includes("correction") || n.includes("update"))
   )
     return "election_correction";
+
+
+  if(
+    n.includes("new election") ||
+    n.includes("new election card") ||
+    n === "election card" ||
+    n.includes("election card new")
+  )
+    return "election_new";
 
 
   return "generic";
