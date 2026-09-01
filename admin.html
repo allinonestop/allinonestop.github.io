@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -325,7 +324,7 @@
       color: #b42318;
     }
 
-    .type-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}.type-option{position:relative}.type-option input{position:absolute;opacity:0;pointer-events:none}.type-option label{display:block;padding:14px 16px;border:2px solid #e4e7ec;border-radius:13px;background:#fff;cursor:pointer;margin:0;transition:.2s}.type-option label strong{display:block;color:#172033;font-size:14px;margin-bottom:4px}.type-option label span{display:block;color:#667085;font-size:12px;font-weight:600}.type-option input:checked+label{border-color:#4f46e5;background:#eef2ff;box-shadow:0 7px 18px rgba(79,70,229,.12)}.type-option input:checked+label strong{color:#4338ca}.type-badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#eef2ff;color:#4338ca}.type-badge.all{background:#ecfdf3;color:#087443}.access-btn{background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe}.access-btn:hover{filter:brightness(.97)}
+    .type-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}.type-option{position:relative}.type-option input{position:absolute;opacity:0;pointer-events:none}.type-option label{display:block;padding:14px 16px;border:2px solid #e4e7ec;border-radius:13px;background:#fff;cursor:pointer;margin:0;transition:.2s}.type-option label strong{display:block;color:#172033;font-size:14px;margin-bottom:4px}.type-option label span{display:block;color:#667085;font-size:12px;font-weight:600}.type-option input:checked+label{border-color:#4f46e5;background:#eef2ff;box-shadow:0 7px 18px rgba(79,70,229,.12)}.type-option input:checked+label strong{color:#4338ca}.type-badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#eef2ff;color:#4338ca}.type-badge.all{background:#ecfdf3;color:#087443}
 
     @media (max-width: 800px) {
       .stats {
@@ -359,7 +358,38 @@
         margin: 25px auto;
       }
     }
-  </style>
+  
+/* Password show/hide control */
+.password-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrap input {
+  width: 100%;
+  padding-right: 52px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  box-shadow: none;
+}
+
+.password-toggle:hover {
+  background: rgba(30, 64, 175, 0.08);
+}
+</style>
 </head>
 
 <body>
@@ -644,12 +674,22 @@
             Retailer Password
           </label>
 
-          <input
-            id="retailerPassword"
-            type="password"
-            placeholder="Enter password manually"
-            autocomplete="new-password"
-          >
+          <div class="password-wrap">
+            <input
+              id="retailerPassword"
+              type="password"
+              placeholder="Enter password manually"
+              autocomplete="new-password"
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              id="retailerPasswordToggle"
+              onclick="toggleRetailerPassword()"
+              aria-label="Show password"
+              title="Show / Hide Password"
+            >👁️</button>
+          </div>
 
           <div class="hint">
             Minimum 6 characters
@@ -960,6 +1000,34 @@ function randomRetailerCode() {
 
   return result;
 
+}
+
+
+/* =========================================================
+   RETAILER PASSWORD SHOW / HIDE
+========================================================= */
+
+function toggleRetailerPassword() {
+
+  const input =
+    document.getElementById("retailerPassword");
+
+  const button =
+    document.getElementById("retailerPasswordToggle");
+
+  if (!input || !button) return;
+
+  if (input.type === "password") {
+    input.type = "text";
+    button.textContent = "🙈";
+    button.setAttribute("aria-label", "Hide password");
+    button.title = "Hide Password";
+  } else {
+    input.type = "password";
+    button.textContent = "👁️";
+    button.setAttribute("aria-label", "Show password");
+    button.title = "Show Password";
+  }
 }
 
 
@@ -1745,8 +1813,7 @@ function formatFunctionError(data) {
 async function callRetailerFunction(
   action,
   userId,
-  password = "",
-  extra = {}
+  password = ""
 ) {
 
   await getSession();
@@ -1756,9 +1823,7 @@ async function callRetailerFunction(
 
     action: action,
 
-    user_id: userId,
-
-    ...extra
+    user_id: userId
 
   };
 
@@ -1932,74 +1997,6 @@ async function resetRetailerPassword(
 
 
 /* =========================================================
-   CHANGE RETAILER SERVICE ACCESS
-========================================================= */
-
-async function changeRetailerAccess(
-  userId,
-  retailerId,
-  currentType
-) {
-
-  const current =
-    currentType === "all_work"
-      ? "All Work"
-      : "Ration Card Only";
-
-  const answer = prompt(
-    "Retailer: " + retailerId +
-    "\n\nCurrent access: " + current +
-    "\n\nType 1 = Ration Card Only\nType 2 = All Work"
-  );
-
-  if (answer === null) return;
-
-  const value = answer.trim();
-  let retailerType = "";
-
-  if (value === "1" || value.toLowerCase() === "ration_card" || value.toLowerCase() === "ration") {
-    retailerType = "ration_card";
-  } else if (value === "2" || value.toLowerCase() === "all_work" || value.toLowerCase() === "all") {
-    retailerType = "all_work";
-  } else {
-    alert("Invalid choice.\n\n1 = Ration Card Only\n2 = All Work");
-    return;
-  }
-
-  if (retailerType === currentType) {
-    alert("This retailer already has this access.");
-    return;
-  }
-
-  const label = retailerType === "all_work"
-    ? "All Work"
-    : "Ration Card Only";
-
-  if (!confirm("Change " + retailerId + " access to " + label + "?")) return;
-
-  try {
-    await callRetailerFunction(
-      "update_access",
-      userId,
-      "",
-      { retailer_type: retailerType }
-    );
-
-    alert(
-      "Service access updated successfully.\n\n" +
-      "Retailer: " + retailerId + "\n" +
-      "New access: " + label
-    );
-
-    await loadRetailers();
-  } catch (error) {
-    console.error("CHANGE ACCESS ERROR:", error);
-    alert(error?.message || "Service access update failed.");
-  }
-}
-
-
-/* =========================================================
    DELETE RETAILER
 ========================================================= */
 
@@ -2056,15 +2053,6 @@ async function deleteRetailer(
 
   }
 
-}
-
-
-function changeAccessFromButton(button) {
-  changeRetailerAccess(
-    button.dataset.userId,
-    button.dataset.retailerId,
-    button.dataset.retailerType || "ration_card"
-  );
 }
 
 
@@ -2210,17 +2198,6 @@ async function loadRetailers() {
                     onclick="resetFromButton(this)"
                   >
                     🔑 Reset Password
-                  </button>
-
-                  <button
-                    type="button"
-                    class="small-btn access-btn"
-                    data-user-id="${userId}"
-                    data-retailer-id="${safeRetailerId}"
-                    data-retailer-type="${escapeHtml(retailer.retailer_type || "ration_card")}"
-                    onclick="changeAccessFromButton(this)"
-                  >
-                    🔄 Change Access
                   </button>
 
                   <button
@@ -2897,4 +2874,3 @@ document.addEventListener(
 
 </body>
 </html>
-
