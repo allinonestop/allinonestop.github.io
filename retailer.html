@@ -10,7 +10,7 @@
 <script src="config.js"></script>
 
 <!-- QR CODE LIBRARY -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js?v=1"></script>
 
 <style>
 *{
@@ -1767,16 +1767,40 @@ async function loadServices(){
     const {data,error}=await sb.from("services").select("id,name,amount,without_ration_amount,fields,description,sort_order,active").eq("active",true).order("sort_order",{ascending:true});
     if(error)throw error;
     const allServices=data||[];
-    const retailerType=String(retailer?.retailer_type||"ration_card").toLowerCase().trim();
-    if(retailerType==="all_work")services=allServices;
-    else services=allServices.filter(service=>{
-      const type=getServiceType(service.name);
-      return type.startsWith("ration_");
-    });
+
+    // Admin can store the access type using any of these equivalent values.
+    // Keep the frontend tolerant so existing retailers continue working.
+    const retailerType=String(retailer?.retailer_type||retailer?.service_access||"ration_card_only")
+      .toLowerCase().trim().replace(/[\s-]+/g,"_");
+
+    const isAllWork=[
+      "all_work",
+      "all_in_one",
+      "all_services",
+      "all_service",
+      "all"
+    ].includes(retailerType);
+
+    const rationTypes=[
+      "ration_noncard",
+      "ration_division",
+      "ration_finger",
+      "ration_father_husband",
+      "ration_delete",
+      "ration_add",
+      "ration_correction",
+      "ration_pvc"
+    ];
+
+    services=isAllWork
+      ? allServices
+      : allServices.filter(service=>rationTypes.includes(getServiceType(service.name)));
 
     $("service").innerHTML='<option value="">Select Service</option>';
     services.forEach(s=>{const option=document.createElement("option");option.value=s.id;option.textContent=s.name+" - ₹"+Number(s.amount||0);$("service").appendChild(option);});
-    $("serviceAccessNote").textContent=retailerType==="all_work"?"🌐 All Work access • All active services are available":"🍚 Ration Card Only • Only Ration Card services are available";
+    $("serviceAccessNote").textContent=isAllWork
+      ? "🌐 All Work access • All active services are available"
+      : "🍚 Ration Card Only • Only Ration Card services are available";
     renderServiceFolders();
     if(!services.length){$("serviceFolders").innerHTML='<div class="serviceEmpty">No services are available for your account.</div>';msg("No services available for this retailer.","err");}
   }catch(e){console.error("Services error:",e);$("serviceFolders").innerHTML='<div class="serviceEmpty">Services could not be loaded.</div>';msg("Services error: "+e.message,"err");}
@@ -1845,14 +1869,6 @@ function getServiceType(
     return "lms";
 
 
-  /* Ration Card PDF PVC */
-  if(
-    n.includes("ration card pdf pvc") ||
-    (n.includes("ration") && n.includes("pvc"))
-  )
-    return "ration_pdf_pvc";
-
-
   if(
     n.includes("non card") ||
     n.includes("noncard") ||
@@ -1896,6 +1912,12 @@ function getServiceType(
   )
     return "ration_add";
 
+
+  if(
+    (n.includes("ration") || n.includes("redtion")) &&
+    (n.includes("pdf pvc") || n.includes("pvc card") || n.includes("ration pvc"))
+  )
+    return "ration_pvc";
 
   if(
     n.includes("ration") &&
@@ -2027,16 +2049,20 @@ const SERVICE_FIELDS = {
   ],
 
   ration_noncard:[
-    ["applicant_name","Applicant Name","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
+    ["applicant_name","Applicant Name","text",true],
+    ["aadhaar_number","Aadhaar Number","text",true],
     ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
+    ["mobile","Mobile Number","tel",true],
+    ["email","Email ID","email"]
   ],
 
-  ration_pdf_pvc:[
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"],
-    ["email","Email ID","email"]
+  ration_pvc:[
+    ["applicant_name","Name","text",true],
+    ["aadhaar_number","Aadhaar Number","text",true],
+    ["ration_card_number","Ration Card Number","text",true],
+    ["mobile","Mobile Number","tel",true],
+    ["email","Email ID","email"],
+    ["address","Address","textarea"]
   ],
 
   pan_new:[
@@ -2046,9 +2072,19 @@ const SERVICE_FIELDS = {
   ],
 
   pan_correction:[
-    ["name","Name","text"],
+    ["name","Name","text",true],
     ["email","Email ID","email"],
-    ["mobile","Mobile Number","tel"]
+    ["mobile","Mobile Number","tel",true],
+    ["pan_number","PAN Number","text"]
+  ],
+
+  lms:[
+    ["name","Name","text",true],
+    ["mobile","Mobile Number","tel",true],
+    ["email","Email ID","email",true],
+    ["state","State","text",true],
+    ["district","District","text",true],
+    ["aadhaar_number","Aadhaar Number","text",true]
   ],
 
   election_new:[
@@ -2113,42 +2149,49 @@ const SERVICE_FIELDS = {
 
 const SERVICE_FILES = {
 
+  lms:[
+    ["aadhaar_pdf","Aadhaar Card PDF",true]
+  ],
+
   ration_correction:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF PVC"]
+    ["ration_card_pdf","Ration Card PDF"]
   ],
 
   ration_add:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF PVC"]
+    ["ration_card_pdf","Ration Card PDF"]
   ],
 
   ration_delete:[
-    ["ration_card_pdf","Ration Card PDF PVC"],
+    ["ration_card_pdf","Ration Card PDF"],
     ["aadhaar_pdf","Aadhaar Card PDF"]
   ],
 
   ration_father_husband:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF PVC"]
+    ["ration_card_pdf","Ration Card PDF"]
   ],
 
   ration_division:[
     ["aadhaar_pdf","Aadhaar Card PDF - Separate Members"],
-    ["ration_card_pdf","Ration Card PDF PVC"]
+    ["ration_card_pdf","Ration Card PDF"]
   ],
 
   ration_finger:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF PVC"]
+    ["ration_card_pdf","Ration Card PDF"]
   ],
 
   ration_noncard:[
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF PVC"]
+    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["ration_card_pdf","Ration Card PDF",true]
   ],
 
-  ration_pdf_pvc:[],
+  ration_pvc:[
+    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["ration_card_pdf","Ration Card PDF",true]
+  ],
 
   pan_new:[
     ["photo","Photo"],
@@ -2262,28 +2305,22 @@ function generateUPIQR(
     ) +
     "&cu=INR";
 
-  if(
-    typeof QRCode ===
-    "undefined"
-  ){
-
-    qrBox.innerHTML =
-      "<div style='padding:20px;color:#b71c1c'>QR library loading failed.</div>";
-
+  if(typeof QRCode === "undefined"){
+    qrBox.innerHTML="<div style='padding:20px;color:#b71c1c'>QR library loading failed. Please refresh once.</div>";
     return;
-
   }
 
-  new QRCode(
-    qrBox,
-    {
+  try{
+    new QRCode(qrBox,{
       text:upiUrl,
       width:180,
       height:180,
-      correctLevel:
-        QRCode.CorrectLevel.H
-    }
-  );
+      correctLevel:QRCode.CorrectLevel.H
+    });
+  }catch(err){
+    console.error("QR error:",err);
+    qrBox.innerHTML="<div style='padding:20px;color:#b71c1c'>QR could not be generated.</div>";
+  }
 
 }
 
@@ -2312,16 +2349,8 @@ function serviceChanged(){
       selected.name
     );
 
-  if(
-    type === "lms"
-  ){
-
-    $("lmsCard")
-      .classList
-      .remove("hidden");
-
-    return;
-
+  if(type === "lms"){
+    $("lmsCard").classList.add("hidden");
   }
 
   $("customerCard")
@@ -2456,11 +2485,8 @@ function resetApplicationArea(){
     .classList
     .add("hidden");
 
-  $("dynamicFields").innerHTML =
-    "";
-
-  $("otherFiles").innerHTML =
-    "";
+  if($("dynamicFields")) $("dynamicFields").innerHTML="";
+  if($("otherFiles")) $("otherFiles").innerHTML="";
 
   if(
     $("upiQr")
@@ -2496,183 +2522,67 @@ function resetApplicationArea(){
    CUSTOMER FIELDS
 ===================================================== */
 
-function renderCustomerFields(
-  type
-){
+function renderCustomerFields(type){
+  const box=$("dynamicFields");
+  if(!box) return;
+  box.innerHTML="";
 
-  const box =
-    $("dynamicFields");
+  const list=SERVICE_FIELDS[type] || SERVICE_FIELDS.generic || [];
 
-  box.innerHTML =
-    "";
+  list.forEach(field=>{
+    const key=field[0];
+    const label=field[1];
+    const inputType=field[2] || "text";
+    const isRequired=field[3] === true;
+    const wrapper=document.createElement("div");
+    const requiredMark=isRequired ? ' <span class="req">*</span>' : '';
+    const safeId="field_"+escapeAttr(key);
 
-  const list =
-    SERVICE_FIELDS[type] || [];
-
-  list.forEach(
-    field => {
-
-      const key =
-        field[0];
-
-      const label =
-        field[1];
-
-      const inputType =
-        field[2];
-
-      const wrapper =
-        document.createElement(
-          "div"
-        );
-
-      if(
-        inputType ===
-        "textarea"
-      ){
-
-        wrapper.innerHTML =
-          `
-          <div class="full">
-
-            <label>
-              ${escapeHtml(label)}
-            </label>
-
-            <textarea
-              id="field_${escapeAttr(key)}"
-              data-field="${escapeAttr(key)}"${isRequired ? " required" : ""}></textarea>
-
-          </div>
-          `;
-
-      }
-
-      else if(
-        inputType ===
-        "select"
-      ){
-
-        wrapper.innerHTML =
-          `
-          <div>
-
-            <label>
-              ${escapeHtml(label)}
-            </label>
-
-            <select
-              id="field_${escapeAttr(key)}"
-              data-field="${escapeAttr(key)}"${isRequired ? " required" : ""}>
-
-              <option value="">
-                Select
-              </option>
-
-              <option value="Male">
-                Male
-              </option>
-
-              <option value="Female">
-                Female
-              </option>
-
-              <option value="Other">
-                Other
-              </option>
-
-            </select>
-
-          </div>
-          `;
-
-      }
-
-      else{
-
-        wrapper.innerHTML =
-          `
-          <div>
-
-            <label>
-              ${escapeHtml(label)}
-            </label>
-
-            <input
-              id="field_${escapeAttr(key)}"
-              data-field="${escapeAttr(key)}"
-              type="${escapeAttr(inputType)}"${isRequired ? " required" : ""}>
-
-          </div>
-          `;
-
-      }
-
-      box.appendChild(
-        wrapper
-      );
-
+    if(inputType==="textarea"){
+      wrapper.className="full";
+      wrapper.innerHTML=`
+        <label for="${safeId}">${escapeHtml(label)}${requiredMark}</label>
+        <textarea id="${safeId}" data-field="${escapeAttr(key)}"${isRequired ? " required" : ""}></textarea>`;
+    }else if(inputType==="select"){
+      wrapper.innerHTML=`
+        <label for="${safeId}">${escapeHtml(label)}${requiredMark}</label>
+        <select id="${safeId}" data-field="${escapeAttr(key)}"${isRequired ? " required" : ""}>
+          <option value="">Select</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>`;
+    }else{
+      wrapper.innerHTML=`
+        <label for="${safeId}">${escapeHtml(label)}${requiredMark}</label>
+        <input id="${safeId}" data-field="${escapeAttr(key)}" type="${escapeAttr(inputType)}"${isRequired ? " required" : ""}>`;
     }
-  );
-
+    box.appendChild(wrapper);
+  });
 }
-
 
 /* =====================================================
    FILES
 ===================================================== */
 
-function renderFiles(
-  list
-){
+function renderFiles(list){
+  const box=$("otherFiles");
+  if(!box) return;
+  box.innerHTML="";
 
-  const box =
-    $("otherFiles");
-
-  box.innerHTML =
-    "";
-
-  (
-    list || []
-  ).forEach(
-    item => {
-
-      const key =
-        item[0];
-
-      const label =
-        item[1];
-
-      const div =
-        document.createElement(
-          "div"
-        );
-
-      div.className =
-        "file";
-
-      div.innerHTML =
-        `
-        <label>
-          ${escapeHtml(label)}${requiredMark}
-        </label>
-
-        <input
-          type="file"
-          data-field="${escapeAttr(key)}"${isRequired ? " required" : ""}
-          accept=".jpg,.jpeg,.png,.pdf">
-
-        `;
-
-      box.appendChild(
-        div
-      );
-
-    }
-  );
-
+  (list || []).forEach(item=>{
+    const key=item[0];
+    const label=item[1];
+    const isRequired=item[2] === true;
+    const requiredMark=isRequired ? ' <span class="req">*</span>' : '';
+    const div=document.createElement("div");
+    div.className="file";
+    div.innerHTML=`
+      <label>${escapeHtml(label)}${requiredMark}</label>
+      <input type="file" data-field="${escapeAttr(key)}"${isRequired ? " required" : ""} accept=".jpg,.jpeg,.png,.webp,.pdf">`;
+    box.appendChild(div);
+  });
 }
-
 
 /* =====================================================
    GET FIELDS
@@ -2891,16 +2801,6 @@ async function submitApplication(){
       "Please select a service.",
       "err"
     );
-
-    return;
-
-  }
-
-  if(
-    getServiceType(
-      selected.name
-    ) === "lms"
-  ){
 
     return;
 
