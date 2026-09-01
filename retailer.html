@@ -1927,6 +1927,26 @@ function getServiceType(
 
 
   if(
+    n.includes("second pan") ||
+    n.includes("duplicate pan")
+  )
+    return "pan_second";
+
+
+  if(
+    n.includes("pan card pdf")
+  )
+    return "pan_pdf";
+
+
+  if(
+    n.includes("without dob") ||
+    n.includes("without date of birth")
+  )
+    return "pan_without_dob";
+
+
+  if(
     n.includes("new pan")
   )
     return "pan_new";
@@ -1937,6 +1957,30 @@ function getServiceType(
     n.includes("correction")
   )
     return "pan_correction";
+
+
+  if(
+    n.includes("address update") &&
+    n.includes("aadhar") ||
+    n.includes("aadhaar only address update")
+  )
+    return "aadhar_address_update";
+
+
+  if(
+    n.includes("aadhar number to pan number") ||
+    n.includes("aadhaar number to pan number") ||
+    n.includes("pan number to aadhar number") ||
+    n.includes("pan number to pan details") ||
+    n.includes("pan to aadhar status") ||
+    n.includes("mobile number to pan number") ||
+    n.includes("ration number to aadhar number") ||
+    n.includes("aadhar number to details") ||
+    n.includes("aadhar number to aadhar pdf") ||
+    n.includes("name & mobile number to aadhar pdf") ||
+    n.includes("name and mobile number to aadhar pdf")
+  )
+    return "pdf_details";
 
 
   /* Driving Licence / DL PDF */
@@ -2078,6 +2122,46 @@ const SERVICE_FIELDS = {
     ["pan_number","PAN Number","text"]
   ],
 
+  pan_second:[
+    ["name","Name","text",true],
+    ["dob","DOB","date",true],
+    ["father_name","Father Name","text",true],
+    ["mother_name","Mother Name","text"],
+    ["mobile","Mobile Number","tel",true],
+    ["email","Gmail / Email ID","email",true]
+  ],
+
+  pan_pdf:[
+    ["pan_number","PAN Number","text",true]
+  ],
+
+  pan_without_dob:[
+    ["name","Name","text",true],
+    ["dob","DOB","date"],
+    ["father_name","Father Name","text",true],
+    ["mother_name","Mother Name","text"],
+    ["mobile","Mobile Number","tel",true],
+    ["email","Gmail / Email ID","email",true]
+  ],
+
+  pdf_details:[
+    ["input_number","Input Number / ID","text",true],
+    ["mobile","Mobile Number","tel"],
+    ["email","Email ID","email"]
+  ],
+
+  aadhar_address_update:[
+    ["street","Street / Road / Lane","text",true],
+    ["area","Area / Locality / Sector","text",true],
+    ["village_city","Village / Town / City","text",true],
+    ["post_office","Post Office","text",true],
+    ["district","District","text",true],
+    ["state","State","text",true],
+    ["pincode","Pincode","text",true],
+    ["aadhaar_number","Aadhaar Number","text",true],
+    ["name","Name","text",true]
+  ],
+
   lms:[
     ["name","Name","text",true],
     ["mobile","Mobile Number","tel",true],
@@ -2208,6 +2292,29 @@ const SERVICE_FILES = {
     ["aadhaar_pdf","Aadhaar Card PDF"],
     ["dob_certificate","DOB Certificate PDF"],
     ["election_card_pdf","Election Card PDF"]
+  ],
+
+  pan_second:[
+    ["photo","Customer Passport Size Photo",true],
+    ["signature","Signature Photo (White Paper)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF",true]
+  ],
+
+  pan_pdf:[],
+
+  pan_without_dob:[
+    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["photo","Customer Photo",true],
+    ["signature","Signature Photo",true],
+    ["dob_proof","DOB Proof / DOB Upload"]
+  ],
+
+  aadhar_address_update:[
+    ["aadhaar_pdf","Aadhaar Card PDF",true]
+  ],
+
+  pdf_details:[
+    ["service_document","Required Service Document"]
   ],
 
   election_new:[
