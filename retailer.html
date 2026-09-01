@@ -776,6 +776,25 @@ html[data-theme="dark"] .statusBox.successBox{background:#0d281b}
 
 
 @media(max-width:700px){
+
+/* =====================================================
+   RATION CARD MEMBER BUILDER
+===================================================== */
+.rationMemberBuilder{grid-column:1/-1;background:var(--panel,#fff);border:1px solid var(--border,#dbe4f0);border-radius:16px;padding:16px;margin-bottom:4px}
+.rationMemberHead{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.rationMemberHead h3{margin:0;font-size:16px}
+.rationMemberList{display:flex;flex-direction:column;gap:10px}
+.rationMemberRow{border:1px solid var(--border,#dbe4f0);border-radius:14px;padding:12px;background:var(--soft,#f8fafc)}
+.rationMemberTop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+.rationMemberNo{font-weight:900;font-size:13px}
+.rationMemberGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.rationMemberGrid label{display:block;font-size:12px;font-weight:800;margin-bottom:5px}
+.rationMemberGrid input{width:100%}
+.rationCommonTitle{grid-column:1/-1;font-weight:900;font-size:14px;margin-top:2px}
+.addMemberBtn{border:0;border-radius:10px;padding:9px 13px;font-weight:900;cursor:pointer}
+.removeMemberBtn{border:0;border-radius:9px;padding:7px 10px;font-weight:800;cursor:pointer}
+@media(max-width:700px){.rationMemberGrid{grid-template-columns:1fr}}
+
   .profileGrid,.profileEditGrid,.serviceFolders,.statusBoxes{grid-template-columns:1fr}
   .serviceSearchWrap{min-width:100%}
   .themeToggle{width:100%;justify-content:center}
@@ -2238,42 +2257,42 @@ const SERVICE_FILES = {
   ],
 
   ration_correction:[
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["ration_card_pdf","Ration Card PDF",true]
   ],
 
   ration_add:[
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["ration_card_pdf","Ration Card PDF",true]
   ],
 
   ration_delete:[
-    ["ration_card_pdf","Ration Card PDF"],
-    ["aadhaar_pdf","Aadhaar Card PDF"]
+    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["ration_card_pdf","Ration Card PDF",true]
   ],
 
   ration_father_husband:[
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["ration_card_pdf","Ration Card PDF",true]
   ],
 
   ration_division:[
-    ["aadhaar_pdf","Aadhaar Card PDF - Separate Members"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["ration_card_pdf","Ration Card PDF",true]
   ],
 
   ration_finger:[
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["ration_card_pdf","Ration Card PDF",true]
   ],
 
   ration_noncard:[
-    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
 
   ration_pvc:[
-    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
 
@@ -2634,6 +2653,14 @@ function renderCustomerFields(type){
   if(!box) return;
   box.innerHTML="";
 
+  /* Ration Card services use a serial-wise member builder.
+     Each member gets Aadhaar, Aadhaar name, DOB and DOB year.
+     Common customer details stay below the member list. */
+  if(String(type).startsWith("ration_")){
+    renderRationCustomerFields(box);
+    return;
+  }
+
   const list=SERVICE_FIELDS[type] || SERVICE_FIELDS.generic || [];
 
   list.forEach(field=>{
@@ -2668,6 +2695,96 @@ function renderCustomerFields(type){
   });
 }
 
+function renderRationCustomerFields(box){
+  const builder=document.createElement("div");
+  builder.className="rationMemberBuilder";
+  builder.innerHTML=`
+    <div class="rationMemberHead">
+      <div>
+        <h3>👥 Member Details — Kramwise</h3>
+        <div class="smallNote">Jitne members ka Name Add / Delete / Correction karna hai, unko kramwise add karein.</div>
+      </div>
+      <button type="button" class="addMemberBtn primary" onclick="addRationMember()">➕ Add Member</button>
+    </div>
+    <div id="rationMemberList" class="rationMemberList"></div>
+    <div class="grid" style="margin-top:14px">
+      <div class="rationCommonTitle">📋 Common Ration Card / Customer Details</div>
+      <div>
+        <label for="field_mobile">Mobile Number</label>
+        <input id="field_mobile" data-field="mobile" type="tel" maxlength="10" inputmode="numeric" placeholder="10 digit mobile number">
+      </div>
+      <div>
+        <label for="field_email">Email ID</label>
+        <input id="field_email" data-field="email" type="email" placeholder="Email ID">
+      </div>
+      <div>
+        <label for="field_address">Address</label>
+        <textarea id="field_address" data-field="address" placeholder="Address"></textarea>
+      </div>
+      <div>
+        <label for="field_current_address">Current Address</label>
+        <textarea id="field_current_address" data-field="current_address" placeholder="Current Address"></textarea>
+      </div>
+      <div class="full">
+        <label for="field_ration_card_number">Ration Card Number</label>
+        <input id="field_ration_card_number" data-field="ration_card_number" type="text" placeholder="Ration Card Number">
+      </div>
+    </div>`;
+  box.appendChild(builder);
+  addRationMember();
+}
+
+function addRationMember(){
+  const list=$("rationMemberList");
+  if(!list) return;
+  const index=list.children.length+1;
+  const row=document.createElement("div");
+  row.className="rationMemberRow";
+  row.innerHTML=`
+    <div class="rationMemberTop">
+      <div class="rationMemberNo">👤 Member ${index}</div>
+      <button type="button" class="removeMemberBtn danger" onclick="removeRationMember(this)">🗑️ Remove</button>
+    </div>
+    <div class="rationMemberGrid">
+      <div>
+        <label>Aadhaar Number <span class="req">*</span></label>
+        <input class="ration-member-aadhaar" type="text" maxlength="12" inputmode="numeric" required placeholder="Aadhaar Number">
+      </div>
+      <div>
+        <label>Name as per Aadhaar <span class="req">*</span></label>
+        <input class="ration-member-name" type="text" maxlength="120" required placeholder="Name as per Aadhaar">
+      </div>
+      <div>
+        <label>DOB <span class="req">*</span></label>
+        <input class="ration-member-dob" type="date" required>
+      </div>
+      <div>
+        <label>DOB Year <span class="req">*</span></label>
+        <input class="ration-member-dob-year" type="text" maxlength="4" inputmode="numeric" required placeholder="YYYY">
+      </div>
+    </div>`;
+  list.appendChild(row);
+  renumberRationMembers();
+}
+
+function removeRationMember(button){
+  const list=$("rationMemberList");
+  if(!list) return;
+  if(list.children.length<=1){
+    msg("At least one member is required.","err");
+    return;
+  }
+  button.closest(".rationMemberRow")?.remove();
+  renumberRationMembers();
+}
+
+function renumberRationMembers(){
+  document.querySelectorAll("#rationMemberList .rationMemberRow").forEach((row,i)=>{
+    const title=row.querySelector(".rationMemberNo");
+    if(title) title.textContent="👤 Member "+(i+1);
+  });
+}
+
 /* =====================================================
    FILES
 ===================================================== */
@@ -2696,61 +2813,42 @@ function renderFiles(list){
 ===================================================== */
 
 function getFields(){
+  const result={};
 
-  const result =
-    {};
+  document.querySelectorAll("#dynamicFields [data-field]").forEach(el=>{
+    result[el.dataset.field]=String(el.value||"").trim();
+  });
 
-  document
-    .querySelectorAll(
-      "#dynamicFields [data-field]"
-    )
-    .forEach(
-      el => {
+  const members=[];
+  document.querySelectorAll("#rationMemberList .rationMemberRow").forEach(row=>{
+    members.push({
+      serial: members.length+1,
+      aadhaar_number: String(row.querySelector(".ration-member-aadhaar")?.value||"").trim(),
+      name_as_per_aadhaar: String(row.querySelector(".ration-member-name")?.value||"").trim(),
+      dob: String(row.querySelector(".ration-member-dob")?.value||"").trim(),
+      dob_year: String(row.querySelector(".ration-member-dob-year")?.value||"").trim()
+    });
+  });
 
-        result[
-          el.dataset.field
-        ] =
-          el.value.trim();
+  if(members.length){
+    result.members=members;
+  }
 
-      }
-    );
-
-  const mobile =
-    result.mobile ||
-    "";
-
-  const email =
-    result.email ||
-    "";
-
-  const nameEnglish =
+  const mobile=result.mobile||"";
+  const email=result.email||"";
+  const firstMember=members[0]||{};
+  const nameEnglish=
+    firstMember.name_as_per_aadhaar ||
     result.name_english ||
     result.name ||
     result.applicant_name ||
     result.wife_name ||
     "";
 
-  result.without_ration_card =
-    false;
+  result.without_ration_card=false;
 
-  return {
-
-    fields:
-      result,
-
-    mobile:
-      mobile,
-
-    email:
-      email,
-
-    nameEnglish:
-      nameEnglish
-
-  };
-
+  return {fields:result,mobile,email,nameEnglish};
 }
-
 
 /* =====================================================
    BASE64
@@ -3564,6 +3662,33 @@ function toggleApplicationDetails(
 
 }
 
+
+/* =====================================================
+   RETAILER THEME - LIGHT / DARK
+===================================================== */
+function applyRetailerTheme(theme){
+  const t = theme === "dark" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", t);
+  try{ localStorage.setItem("allinonestop_retailer_theme", t); }catch(e){}
+
+  const icon = document.getElementById("themeIcon");
+  const text = document.getElementById("themeText");
+  if(icon) icon.textContent = t === "dark" ? "☀️" : "🌙";
+  if(text) text.textContent = t === "dark" ? "Light" : "Dark";
+}
+
+function toggleRetailerTheme(){
+  const current = document.documentElement.getAttribute("data-theme") || "light";
+  applyRetailerTheme(current === "dark" ? "light" : "dark");
+}
+
+(function initRetailerTheme(){
+  let saved = "light";
+  try{
+    saved = localStorage.getItem("allinonestop_retailer_theme") || "light";
+  }catch(e){}
+  applyRetailerTheme(saved);
+})();
 
 /* =====================================================
    AUTO LOGIN SESSION
