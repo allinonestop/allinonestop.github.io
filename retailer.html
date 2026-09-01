@@ -2270,28 +2270,13 @@ const SERVICE_FILES = {
   ],
 
   election_new:[
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["mother_election_card","Mother Election Card PDF"],
-    ["father_election_card","Father Election Card PDF"],
-    ["signature","Signature"],
-    ["photo","Photo"],
-    ["lc_pdf","LC PDF"]
+    ["mobile","Mobile Number","tel",true]
   ],
   election_correction:[
-    ["signature","Signature"],
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["existing_election_card_pdf","Existing Election Card PDF"],
-    ["photo","Photo"]
+    ["mobile","Mobile Number","tel",true]
   ],
   election_wife:[
-    ["wife_aadhaar_pdf","Wife Aadhaar PDF"],
-    ["father_election_card_pdf","Father Election Card PDF"],
-    ["mother_election_card_pdf","Mother Election Card PDF"],
-    ["husband_election_card_pdf","Husband Election Card PDF"],
-    ["customer_aadhaar_pdf","Customer Aadhaar PDF"],
-    ["customer_photo","Customer Photo"],
-    ["customer_signature","Customer Signature"],
-    ["lc_pdf","LC PDF"]
+    ["mobile","Mobile Number","tel",true]
   ],
   dl_pdf:[
     ["dl_document_pdf","Driving Licence / DL Document PDF",true],
@@ -2447,7 +2432,9 @@ function serviceChanged(){
   );
 
   renderFiles(
-    SERVICE_FILES[fileType] || []
+    (type==="election_new" || type==="election_correction")
+      ? getServiceFileFields(type)
+      : (SERVICE_FILES[fileType] || [])
   );
 
   let amount =
@@ -2743,6 +2730,22 @@ function renumberRationMembers(){
 /* =====================================================
    FILES
 ===================================================== */
+
+
+function getServiceFileFields(type){
+  if(type==="election_new" || type==="election_correction"){
+    return [
+      ["mother_election_card_pdf","Mother Election Card PDF",true],
+      ["father_election_card_pdf","Father Election Card PDF",true],
+      ["election_card_pdf","Election Card PDF",true],
+      ["customer_signature","Customer Signature",true],
+      ["aadhaar_pdf","Aadhaar Card PDF",true],
+      ["lc_pdf","LC PDF",true],
+      ["customer_photo","Customer Photo",true]
+    ];
+  }
+  return SERVICE_FIELDS[type] || SERVICE_FIELDS.generic || [];
+}
 
 function renderFiles(list){
   const box=$("otherFiles");
