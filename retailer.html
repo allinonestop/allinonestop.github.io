@@ -1769,7 +1769,10 @@ async function loadServices(){
     const allServices=data||[];
     const retailerType=String(retailer?.retailer_type||"ration_card").toLowerCase().trim();
     if(retailerType==="all_work")services=allServices;
-    else services=allServices.filter(service=>["ration_noncard","ration_division","ration_finger","ration_father_husband","ration_delete","ration_add","ration_correction"].includes(getServiceType(service.name)));
+    else services=allServices.filter(service=>{
+      const type=getServiceType(service.name);
+      return type.startsWith("ration_");
+    });
 
     $("service").innerHTML='<option value="">Select Service</option>';
     services.forEach(s=>{const option=document.createElement("option");option.value=s.id;option.textContent=s.name+" - ₹"+Number(s.amount||0);$("service").appendChild(option);});
@@ -1840,6 +1843,14 @@ function getServiceType(
     n.includes("lms")
   )
     return "lms";
+
+
+  /* Ration Card PDF PVC */
+  if(
+    n.includes("ration card pdf pvc") ||
+    (n.includes("ration") && n.includes("pvc"))
+  )
+    return "ration_pdf_pvc";
 
 
   if(
@@ -2022,6 +2033,12 @@ const SERVICE_FIELDS = {
     ["mobile","Mobile Number","tel"]
   ],
 
+  ration_pdf_pvc:[
+    ["ration_card_number","Ration Card Number","text"],
+    ["mobile","Mobile Number","tel"],
+    ["email","Email ID","email"]
+  ],
+
   pan_new:[
     ["name","Name","text"],
     ["email","Email ID","email"],
@@ -2098,38 +2115,40 @@ const SERVICE_FILES = {
 
   ration_correction:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["ration_card_pdf","Ration Card PDF PVC"]
   ],
 
   ration_add:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["ration_card_pdf","Ration Card PDF PVC"]
   ],
 
   ration_delete:[
-    ["ration_card_pdf","Ration Card PDF"],
+    ["ration_card_pdf","Ration Card PDF PVC"],
     ["aadhaar_pdf","Aadhaar Card PDF"]
   ],
 
   ration_father_husband:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["ration_card_pdf","Ration Card PDF PVC"]
   ],
 
   ration_division:[
     ["aadhaar_pdf","Aadhaar Card PDF - Separate Members"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["ration_card_pdf","Ration Card PDF PVC"]
   ],
 
   ration_finger:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["ration_card_pdf","Ration Card PDF PVC"]
   ],
 
   ration_noncard:[
     ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["ration_card_pdf","Ration Card PDF"]
+    ["ration_card_pdf","Ration Card PDF PVC"]
   ],
+
+  ration_pdf_pvc:[],
 
   pan_new:[
     ["photo","Photo"],
