@@ -1166,6 +1166,7 @@ html[data-theme="dark"] .statusBox.successBox{background:#0d281b}
       <input
         id="paymentScreenshot"
         type="file"
+        required
         accept=".jpg,.jpeg,.png,.pdf">
 
     </div>
@@ -2137,23 +2138,15 @@ const SERVICE_FIELDS = {
   ],
 
   election_new:[
-    ["mother_election_card_pdf","Mother Election Card PDF",true],
-    ["father_election_card_pdf","Father Election Card PDF",true],
-    ["election_card_pdf","Election Card PDF",true],
-    ["customer_signature","Customer Signature",true],
-    ["aadhaar_pdf","Aadhaar Card PDF",true],
-    ["lc_pdf","LC PDF",true],
-    ["customer_photo","Customer Photo",true]
+    ["name","Name","text",true],
+    ["address","Address","textarea",true],
+    ["mobile","Mobile Number","tel",true]
   ],
 
   election_correction:[
-    ["mother_election_card_pdf","Mother Election Card PDF",true],
-    ["father_election_card_pdf","Father Election Card PDF",true],
-    ["election_card_pdf","Election Card PDF",true],
-    ["customer_signature","Customer Signature",true],
-    ["aadhaar_pdf","Aadhaar Card PDF",true],
-    ["lc_pdf","LC PDF",true],
-    ["customer_photo","Customer Photo",true]
+    ["name","Name","text",true],
+    ["address","Address","textarea",true],
+    ["mobile","Mobile Number","tel",true]
   ],
 
   election_wife:[
@@ -2276,10 +2269,23 @@ const SERVICE_FILES = {
   ],
 
   election_new:[
-    ["mobile","Mobile Number","tel",true]
+    ["mother_election_card_pdf","Mother Election Card PDF",true],
+    ["father_election_card_pdf","Father Election Card PDF",true],
+    ["election_card_pdf","Election Card PDF",true],
+    ["customer_signature","Customer Signature",true],
+    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["lc_pdf","LC PDF",true],
+    ["customer_photo","Customer Photo",true]
   ],
+
   election_correction:[
-    ["mobile","Mobile Number","tel",true]
+    ["mother_election_card_pdf","Mother Election Card PDF",true],
+    ["father_election_card_pdf","Father Election Card PDF",true],
+    ["election_card_pdf","Election Card PDF",true],
+    ["customer_signature","Customer Signature",true],
+    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["lc_pdf","LC PDF",true],
+    ["customer_photo","Customer Photo",true]
   ],
   election_wife:[
     ["mobile","Mobile Number","tel",true]
