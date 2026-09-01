@@ -1926,8 +1926,7 @@ function getServiceType(
 
 
   if(
-    n.includes("name add") ||
-    n.includes("add name")
+    (n.includes("name add") || n.includes("name add service") || n.includes("add name"))
   )
     return "ration_add";
 
@@ -2056,89 +2055,33 @@ function getServiceType(
 
 const SERVICE_FIELDS = {
 
-  ration_correction:[
-    ["name_english","English Name (as per Aadhaar)","text"],
-    ["name_gujarati","Gujarati Name (je rakhvanu hoy te)","text"],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob","DOB","date"],
-    ["dob_year","DOB / Years","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
-  ],
+  /* ================= RATION CARD ================= */
+  ration_correction:[],
+  ration_add:[],
+  ration_delete:[],
+  ration_father_husband:[],
+  ration_division:[],
+  ration_finger:[],
+  ration_noncard:[],
+  ration_pvc:[],
 
-  ration_add:[
-    ["name_english","English Name (as per Aadhaar)","text"],
-    ["name_gujarati","Gujarati Name","text"],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob","DOB","date"],
-    ["dob_year","DOB / Years","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
-  ],
-
-  ration_delete:[
-    ["ration_card_number","Ration Card Number","text"],
-    ["delete_person_name","Jiska naam delete karna hai","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["mobile","Mobile Number","tel"]
-  ],
-
-  ration_father_husband:[
-    ["name_english","English Name","text"],
-    ["name_gujarati","Gujarati Name","text"],
-    ["father_husband_name","Father / Husband Name","text"],
-    ["dob","DOB","date"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
-  ],
-
-  ration_division:[
-    ["applicant_name","Applicant Name","text"],
-    ["name_gujarati","Gujarati Name","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"],
-    ["whatsapp","WhatsApp Number","tel"]
-  ],
-
-  ration_finger:[
-    ["applicant_name","Applicant Name","text"],
-    ["aadhaar_number","Aadhaar Number","text"],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel"]
-  ],
-
-  ration_noncard:[
-    ["applicant_name","Applicant Name","text",true],
-    ["aadhaar_number","Aadhaar Number","text",true],
-    ["ration_card_number","Ration Card Number","text"],
-    ["mobile","Mobile Number","tel",true],
-    ["email","Email ID","email"]
-  ],
-
-  ration_pvc:[
-    ["applicant_name","Name","text",true],
-    ["aadhaar_number","Aadhaar Number","text",true],
-    ["ration_card_number","Ration Card Number","text",true],
-    ["mobile","Mobile Number","tel",true],
-    ["email","Email ID","email"],
-    ["address","Address","textarea"]
-  ],
-
+  /* ================= PAN CARD ================= */
   pan_new:[
-    ["name","Name","text"],
-    ["email","Email ID","email"],
-    ["mobile","Mobile Number","tel"]
+    ["name","Name","text",true],
+    ["dob","DOB","date",true],
+    ["father_name","Father Name","text",true],
+    ["mother_name","Mother Name","text"],
+    ["mobile","Mobile Number","tel",true],
+    ["email","Gmail / Email ID","email",true]
   ],
 
   pan_correction:[
     ["name","Name","text",true],
-    ["email","Email ID","email"],
+    ["pan_number","PAN Number","text",true],
+    ["dob","DOB","date"],
+    ["father_name","Father Name","text"],
     ["mobile","Mobile Number","tel",true],
-    ["pan_number","PAN Number","text"]
+    ["email","Gmail / Email ID","email"]
   ],
 
   pan_second:[
@@ -2156,19 +2099,22 @@ const SERVICE_FIELDS = {
 
   pan_without_dob:[
     ["name","Name","text",true],
-    ["dob","DOB","date"],
+    ["dob","DOB","date",true],
     ["father_name","Father Name","text",true],
     ["mother_name","Mother Name","text"],
     ["mobile","Mobile Number","tel",true],
     ["email","Gmail / Email ID","email",true]
   ],
 
+  /* ================= PDF / DETAILS ================= */
   pdf_details:[
     ["input_number","Input Number / ID","text",true],
-    ["mobile","Mobile Number","tel"],
-    ["email","Email ID","email"]
+    ["new_mobile","New Mobile Number (if required)","tel"],
+    ["full_name","Full Name","text"],
+    ["gender","Gender","select"]
   ],
 
+  /* ================= AADHAAR ADDRESS ================= */
   aadhar_address_update:[
     ["street","Street / Road / Lane","text",true],
     ["area","Area / Locality / Sector","text",true],
@@ -2191,46 +2137,41 @@ const SERVICE_FIELDS = {
   ],
 
   election_new:[
-    ["applicant_name","Applicant Name","text"],
+    ["applicant_name","Applicant Name","text",true],
     ["father_husband_name","Father / Husband Name","text"],
     ["dob_age","DOB / Age","text"],
     ["gender","Gender","select"],
     ["email","Email","email"],
     ["address","Address","textarea"],
-    ["mobile","Mobile Number","tel"]
+    ["mobile","Mobile Number","tel",true]
   ],
 
   election_correction:[
-    ["name","Name","text"],
+    ["name","Name","text",true],
     ["father_husband_name","Father / Husband Name","text"],
     ["dob_age","DOB / Age","text"],
-    ["mobile","Mobile Number","tel"],
+    ["mobile","Mobile Number","tel",true],
     ["email","Email","email"]
   ],
 
   election_wife:[
-    ["wife_name","Wife Name","text"],
-    ["husband_name","Husband Name","text"],
+    ["wife_name","Wife Name","text",true],
+    ["husband_name","Husband Name","text",true],
     ["dob","DOB","date"],
-    ["mobile","Mobile Number","tel"]
-  ]
-,
+    ["mobile","Mobile Number","tel",true]
+  ],
 
   dl_pdf:[
-    ["applicant_name","Applicant Name","text",true],
-    ["dob","Date of Birth","date",true],
-    ["aadhaar_number","Aadhaar Number","text",true],
     ["dl_number","Driving Licence Number","text",true],
-    ["mobile","Mobile Number","tel",true],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["mobile","Mobile Number","tel"],
     ["email","Email ID","email"]
   ],
 
   rc_pdf:[
-    ["applicant_name","Applicant Name","text",true],
     ["vehicle_number","Vehicle Number","text",true],
     ["rc_number","RC Number","text",true],
-    ["aadhaar_number","Aadhaar Number","text",true],
-    ["mobile","Mobile Number","tel",true],
+    ["mobile","Mobile Number","tel"],
     ["email","Email ID","email"]
   ],
 
@@ -2242,7 +2183,6 @@ const SERVICE_FIELDS = {
     ["address","Address","textarea"],
     ["service_details","Service Details / Requirement","textarea",true]
   ]
-
 };
 
 
@@ -2252,65 +2192,53 @@ const SERVICE_FIELDS = {
 
 const SERVICE_FILES = {
 
-  lms:[
-    ["aadhaar_pdf","Aadhaar Card PDF",true]
-  ],
-
+  /* Ration: one Aadhaar PDF + one Ration Card PDF */
   ration_correction:[
-    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF — Single PDF for all members",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
-
   ration_add:[
-    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF — Single PDF for all members",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
-
   ration_delete:[
-    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF — Single PDF for all members",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
-
   ration_father_husband:[
-    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF — Single PDF for all members",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
-
   ration_division:[
-    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF — Single PDF for all members",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
-
   ration_finger:[
-    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF — Single PDF for all members",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
-
   ration_noncard:[
-    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF — Single PDF for all members",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
-
   ration_pvc:[
-    ["aadhaar_pdf","Aadhaar Card PDF (All members)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF — Single PDF for all members",true],
     ["ration_card_pdf","Ration Card PDF",true]
   ],
 
+  /* New PAN Card WITH DOB proof — ₹350 */
   pan_new:[
-    ["photo","Photo"],
-    ["signature","Signature"],
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["dob_certificate","DOB Certificate PDF"],
-    ["election_card_pdf","Election Card PDF"]
+    ["photo","Customer Passport Size Photo",true],
+    ["signature","Signature Photo (White Paper)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF",true],
+    ["dob_certificate","DOB Proof / DOB Certificate PDF",true]
   ],
 
   pan_correction:[
-    ["photo","Photo"],
-    ["signature","Signature"],
-    ["pan_card_pdf","PAN Card PDF"],
-    ["aadhaar_pdf","Aadhaar Card PDF"],
-    ["dob_certificate","DOB Certificate PDF"],
-    ["election_card_pdf","Election Card PDF"]
+    ["photo","Customer Photo",true],
+    ["signature","Signature Photo",true],
+    ["pan_card_pdf","PAN Card PDF",true],
+    ["aadhaar_pdf","Aadhaar Card PDF",true]
   ],
 
   pan_second:[
@@ -2321,19 +2249,24 @@ const SERVICE_FILES = {
 
   pan_pdf:[],
 
+  /* New PAN Card WITHOUT DOB proof — ₹500 */
   pan_without_dob:[
-    ["aadhaar_pdf","Aadhaar Card PDF",true],
-    ["photo","Customer Photo",true],
-    ["signature","Signature Photo",true],
-    ["dob_proof","DOB Proof / DOB Upload"]
+    ["photo","Customer Passport Size Photo",true],
+    ["signature","Signature Photo (White Paper)",true],
+    ["aadhaar_pdf","Aadhaar Card PDF",true]
+  ],
+
+  /* Simple document/details services */
+  pdf_details:[
+    ["service_document","Payment / Service Screenshot",true]
   ],
 
   aadhar_address_update:[
     ["aadhaar_pdf","Aadhaar Card PDF",true]
   ],
 
-  pdf_details:[
-    ["service_document","Required Service Document"]
+  lms:[
+    ["aadhaar_pdf","Aadhaar Card PDF",true]
   ],
 
   election_new:[
@@ -2344,14 +2277,12 @@ const SERVICE_FILES = {
     ["photo","Photo"],
     ["lc_pdf","LC PDF"]
   ],
-
   election_correction:[
     ["signature","Signature"],
     ["aadhaar_pdf","Aadhaar Card PDF"],
     ["existing_election_card_pdf","Existing Election Card PDF"],
     ["photo","Photo"]
   ],
-
   election_wife:[
     ["wife_aadhaar_pdf","Wife Aadhaar PDF"],
     ["father_election_card_pdf","Father Election Card PDF"],
@@ -2361,24 +2292,19 @@ const SERVICE_FILES = {
     ["customer_photo","Customer Photo"],
     ["customer_signature","Customer Signature"],
     ["lc_pdf","LC PDF"]
-  ]
-,
-
+  ],
   dl_pdf:[
-    ["dl_document_pdf","Driving Licence / DL Document PDF"],
+    ["dl_document_pdf","Driving Licence / DL Document PDF",true],
     ["aadhaar_pdf","Aadhaar Card PDF"]
   ],
-
   rc_pdf:[
-    ["rc_document_pdf","RC Document PDF"],
+    ["rc_document_pdf","RC Document PDF",true],
     ["aadhaar_pdf","Aadhaar Card PDF"]
   ],
-
   generic:[
     ["service_document","Service Related Document"],
     ["aadhaar_pdf","Aadhaar Card PDF"]
   ]
-
 };
 
 
@@ -2648,6 +2574,35 @@ function resetApplicationArea(){
    CUSTOMER FIELDS
 ===================================================== */
 
+function getPdfDetailFields(serviceName){
+  const n=String(serviceName||"").toLowerCase();
+  if(n.includes("aadhar number to pan number") || n.includes("aadhaar number to pan number"))
+    return [["input_number","Aadhaar Number","text",true]];
+  if(n.includes("pan number to aadhar number"))
+    return [["input_number","PAN Number","text",true]];
+  if(n.includes("pan number to pan details"))
+    return [["input_number","PAN Number","text",true]];
+  if(n.includes("pan to aadhar status"))
+    return [["input_number","PAN Number","text",true]];
+  if(n.includes("mobile number to pan number"))
+    return [["input_number","Mobile Number","tel",true]];
+  if(n.includes("voter to mobile number link"))
+    return [["input_number","Voter ID Number","text",true],["new_mobile","New Mobile Number","tel",true]];
+  if(n.includes("voter download"))
+    return [["input_number","Voter ID Number","text",true]];
+  if(n.includes("cibil"))
+    return [["full_name","Full Name","text",true],["mobile","Mobile Number","tel",true],["pan_number","PAN Number","text",true],["gender","Gender","select",true]];
+  if(n.includes("ration number to aadhar number"))
+    return [["ration_card_number","Ration Card Number","text",true],["state","State","text",true],["mobile","Mobile Number","tel",true]];
+  if(n.includes("aadhar number to details") || n.includes("aadhaar number to details"))
+    return [["aadhaar_number","Aadhaar Number","text",true]];
+  if(n.includes("aadhar number to aadhar pdf") || n.includes("aadhaar number to aadhaar pdf"))
+    return [["aadhaar_number","Aadhaar Number","text",true]];
+  if(n.includes("name & mobile number to aadhar pdf") || n.includes("name and mobile number to aadhar pdf"))
+    return [["name","Name","text",true],["mobile","Mobile Number","tel",true],["aadhaar_number","Aadhaar Number","text",true]];
+  return SERVICE_FIELDS.pdf_details;
+}
+
 function renderCustomerFields(type){
   const box=$("dynamicFields");
   if(!box) return;
@@ -2661,7 +2616,7 @@ function renderCustomerFields(type){
     return;
   }
 
-  const list=SERVICE_FIELDS[type] || SERVICE_FIELDS.generic || [];
+  const list=(type==="pdf_details" && selected) ? getPdfDetailFields(selected.name) : (SERVICE_FIELDS[type] || SERVICE_FIELDS.generic || []);
 
   list.forEach(field=>{
     const key=field[0];
@@ -2702,7 +2657,7 @@ function renderRationCustomerFields(box){
     <div class="rationMemberHead">
       <div>
         <h3>👥 Member Details — Kramwise</h3>
-        <div class="smallNote">Jitne members ka Name Add / Delete / Correction karna hai, unko kramwise add karein.</div>
+        <div class="smallNote">Jitne members ka Name Add / Delete / Correction karna hai, unko kramwise add karein. Sabhi members ke Aadhaar ek hi PDF file mein upload kar sakte hain.</div>
       </div>
       <button type="button" class="addMemberBtn primary" onclick="addRationMember()">➕ Add Member</button>
     </div>
