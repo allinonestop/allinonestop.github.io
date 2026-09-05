@@ -1783,186 +1783,41 @@ async function logout(){
    LOAD SERVICES
 ===================================================== */
 
-
-/* =====================================================
-   SERVICE PRICING
-   Service prices are fixed for your account.
-   No retailer-side price editing is available.
-===================================================== */
-
-const SUPER_PRO_DEFAULT_PRICES = {
-  "name add":70,
-  "name delete":100,
-  "ration card correction":350,
-  "ration card wrong finger correction":400,
-  "pita aadhaar se pati name ration card add":500,
-  "pita name to pati name update":500,
-  "ration card vibhajan":2500,
-  "non nsfa to nsfa":3500,
-  "ration card pdf pvc":100,
-
-  "new pan card with dob proof":350,
-  "new pan card":350,
-  "pan card correction":500,
-  "second pan card":2000,
-  "new pan card without dob proof":500,
-  "pan card pdf":100,
-
-  "aadhaar number to pan number":70,
-  "aadhar number to pan number":70,
-  "pan number to aadhaar number":500,
-  "pan number to aadhar number":500,
-  "pan number to pan details":30,
-  "pan to aadhaar status":50,
-  "pan to aadhar status":50,
-  "mobile number to pan number":70,
-  "voter to mobile number link":70,
-  "voter download":70,
-  "cibil report pdf download":300,
-  "ration number to aadhaar number":500,
-  "ration number to aadhar number":500,
-  "aadhaar number to details":500,
-  "aadhar number to details":500,
-  "aadhaar number to aadhaar pdf":500,
-  "aadhar number to aadhar pdf":500,
-  "name & mobile number to aadhaar pdf":1000,
-  "name & mobile number to aadhar pdf":1000,
-  "aadhaar only address update":700,
-  "aadhar only address update":700,
-
-  "lms certificate":1500,
-  "new election card":500,
-  "election card correction":500,
-  "election card update":500,
-  "election card":500,
-  "dl pdf":250,
-  "rc pdf":300
-};
-
-function normalServiceName(name){
-  return String(name || "")
-    .toLowerCase()
-    .replace(/[₹]/g,"")
-    .replace(/\s+/g," ")
-    .trim();
-}
-
-function superProDefaultPrice(name){
-  const n = normalServiceName(name);
-  if (SUPER_PRO_DEFAULT_PRICES[n] != null) return SUPER_PRO_DEFAULT_PRICES[n];
-
-  // Flexible matching for names already stored in Supabase.
-  if(n.includes("ration card pdf") && n.includes("pvc")) return 100;
-  if(n.includes("ration card") && n.includes("vibhajan")) return 2500;
-  if(n.includes("non nsfa") || (n.includes("nsfa") && n.includes("non"))) return 3500;
-  if(n.includes("wrong finger")) return 400;
-  if(n.includes("pita") && n.includes("pati")) return 500;
-  if(n.includes("name add")) return 70;
-  if(n.includes("name delete")) return 100;
-  if(n.includes("ration") && n.includes("correction")) return 350;
-  if(n.includes("new pan") && n.includes("without dob")) return 500;
-  if(n.includes("new pan")) return 350;
-  if(n.includes("pan") && n.includes("correction")) return 500;
-  if(n.includes("second pan") || n.includes("duplicate pan")) return 2000;
-  if(n.includes("pan card pdf")) return 100;
-  if(n.includes("aadhaar number to pan") || n.includes("aadhar number to pan")) return 70;
-  if(n.includes("pan number to aadhaar") || n.includes("pan number to aadhar")) return 500;
-  if(n.includes("pan number to pan details")) return 30;
-  if(n.includes("pan to aadhaar status") || n.includes("pan to aadhar status")) return 50;
-  if(n.includes("mobile number to pan")) return 70;
-  if(n.includes("voter to mobile")) return 70;
-  if(n.includes("voter download")) return 70;
-  if(n.includes("cibil")) return 300;
-  if(n.includes("ration number to aadhaar") || n.includes("ration number to aadhar")) return 500;
-  if(n.includes("aadhaar number to details") || n.includes("aadhar number to details")) return 500;
-  if(n.includes("aadhaar number to aadhaar pdf") || n.includes("aadhar number to aadhar pdf")) return 500;
-  if(n.includes("name & mobile") && n.includes("aadhaar pdf")) return 1000;
-  if(n.includes("name and mobile") && n.includes("aadhar pdf")) return 1000;
-  if(n.includes("aadhaar only address update") || n.includes("aadhar only address update")) return 700;
-  if(n.includes("lms")) return 1500;
-  if(n.includes("election") && (n.includes("new") || n === "election card")) return 500;
-  if(n.includes("election") && (n.includes("correction") || n.includes("update"))) return 500;
-  if(/\bdl\b/.test(n) || n.includes("dl pdf") || n.includes("driving licence") || n.includes("driving license")) return 250;
-  if(/\brc\b/.test(n) || n.includes("rc pdf") || n.includes("registration certificate")) return 300;
-  return null;
-}
-
-function isSuperRetailer(){
-  const t = String(retailer?.retailer_type || "").toLowerCase().trim().replace(/[\s-]+/g,"_");
-  return ["super_pro","super_retailer_pro","super_retailer"].includes(t);
-}
-
-function effectiveServiceAmount(service){
-  if(!service) return 0;
-  if(isSuperRetailer()){
-    const fixed = superProDefaultPrice(service.name);
-    if(fixed != null) return fixed;
-  }
-  return Number(service.amount || 0);
-}
-
-async /* Retailer-style dashboard: Super Pro is auto-detected internally; no special panel or price editor is shown. */
-function loadServices(){
+async function loadServices(){
   try{
     const {data,error}=await sb.from("services")
       .select("id,name,amount,without_ration_amount,fields,description,sort_order,active")
       .eq("active",true)
       .order("sort_order",{ascending:true});
-    if(error)throw error;
+    if(error) throw error;
 
-    let allServices=data||[];
-
-    // Hide legacy/duplicate services at UI level too.
-    const seenNameAdd=new Set();
-    allServices=allServices.filter(s=>{
-      const n=normalServiceName(s.name);
-      if(n==="name correction" || n==="bandh card chalu") return false;
-      if(n==="ration card pdf") return false; // PVC is the only Ration PDF service.
-      if(n==="name add"){
-        if(seenNameAdd.has(n)) return false;
-        seenNameAdd.add(n);
-      }
-      return true;
-    });
-
+    const allServices=data||[];
     const retailerType=String(retailer?.retailer_type||retailer?.service_access||"ration_card")
       .toLowerCase().trim().replace(/[\s-]+/g,"_");
 
-    const isAllWork=[
-      "all_work","all_in_one","all_services","all_service","all"
-    ].includes(retailerType);
-
-    const isSuper=isSuperRetailer();
+    const isAllWork=["all_work","all_in_one","all_services","all_service","all","super_pro","super_retailer_pro","super_retailer"]
+      .includes(retailerType);
 
     const rationTypes=[
-      "ration_noncard","ration_division","ration_finger",
-      "ration_father_husband","ration_delete","ration_add",
-      "ration_correction","ration_pvc"
+      "ration_noncard","ration_division","ration_finger","ration_father_husband",
+      "ration_delete","ration_add","ration_correction","ration_pvc"
     ];
 
-    if(isSuper){
-      //  gets all active services, exactly like All Work.
-      // Prices remain fixed; there is no retailer-side price editor.
-      services=allServices;
-    }else{
-      services=isAllWork
-        ? allServices
-        : allServices.filter(service=>rationTypes.includes(getServiceType(service.name)));
-    }
+    services=isAllWork
+      ? allServices
+      : allServices.filter(service=>rationTypes.includes(getServiceType(service.name)));
 
     $("service").innerHTML='<option value="">Select Service</option>';
     services.forEach(s=>{
       const option=document.createElement("option");
       option.value=s.id;
-      option.textContent=s.name+" - ₹"+effectiveServiceAmount(s);
+      option.textContent=s.name+" - ₹"+Number(s.amount||0);
       $("service").appendChild(option);
     });
 
-    $("serviceAccessNote").textContent=isSuper
-      ? "🌐 All active services are available"
-      : isAllWork
-        ? "🌐 All active services are available"
-        : "🍚 Ration Card Only • Only Ration Card services are available";
+    $("serviceAccessNote").textContent=isAllWork
+      ? "🌐 All Work access • All active services are available"
+      : "🍚 Ration Card Only • Only Ration Card services are available";
 
     renderServiceFolders();
     if(!services.length){
@@ -1974,6 +1829,68 @@ function loadServices(){
     $("serviceFolders").innerHTML='<div class="serviceEmpty">Services could not be loaded.</div>';
     msg("Services error: "+e.message,"err");
   }
+}
+
+function fixedServicePrice(name, fallback){
+  const n=String(name||"").toLowerCase().replace(/\s+/g," ").trim();
+  const map={
+    "new name add":70,"name add":70,"name delete":100,
+    "ration card correction":350,"ration card wrong finger correction":400,
+    "pita aadhaar se pati name ration card add":500,"pita name to pati name update":500,
+    "ration card vibhajan":2500,"non nsfa to nsfa":3500,"ration card pdf pvc":100,
+    "new pan card with dob proof":350,"new pan card":350,"new pan card - instant":350,
+    "pan card correction":500,"second pan card":2000,"new pan card without dob proof":500,"pan card pdf":100,
+    "aadhaar number to pan number":70,"aadhar number to pan number":70,
+    "pan number to aadhaar number":500,"pan number to aadhar number":500,
+    "pan number to pan details":30,"pan to aadhaar status":50,"pan to aadhar status":50,
+    "mobile number to pan number":70,"voter to mobile number link":70,"voter download":70,
+    "cibil report pdf download":300,"ration number to aadhaar number":500,"ration number to aadhar number":500,
+    "aadhaar number to details":500,"aadhar number to details":500,
+    "aadhaar number to aadhaar pdf":500,"aadhar number to aadhar pdf":500,
+    "name & mobile number to aadhaar pdf":1000,"name & mobile number to aadhar pdf":1000,
+    "aadhaar only address update":700,"aadhar only address update":700,
+    "lms certificate":1500,"election card":500,"election card update":500,
+    "election card correction":500,"new election card":500,"dl pdf":250,"rc pdf":300
+  };
+  if(map[n]!=null) return map[n];
+  if(n.includes("ration card pdf")&&n.includes("pvc")) return 100;
+  if(n.includes("vibhajan")) return 2500;
+  if(n.includes("non nsfa")) return 3500;
+  if(n.includes("wrong finger")) return 400;
+  if(n.includes("pita")&&n.includes("pati")) return 500;
+  if(n.includes("name delete")) return 100;
+  if(n.includes("name add")) return 70;
+  if(n.includes("ration")&&n.includes("correction")) return 350;
+  if(n.includes("without dob")) return 500;
+  if(n.includes("new pan")) return 350;
+  if(n.includes("pan")&&n.includes("correction")) return 500;
+  if(n.includes("second pan")) return 2000;
+  if(n.includes("pan card pdf")) return 100;
+  if(n.includes("aadhaar number to pan")||n.includes("aadhar number to pan")) return 70;
+  if(n.includes("pan number to aadhaar")||n.includes("pan number to aadhar")) return 500;
+  if(n.includes("pan number to pan details")) return 30;
+  if(n.includes("aadhaar status")||n.includes("aadhar status")) return 50;
+  if(n.includes("mobile number to pan")) return 70;
+  if(n.includes("voter to mobile")) return 70;
+  if(n.includes("voter download")) return 70;
+  if(n.includes("cibil")) return 300;
+  if(n.includes("ration number to")) return 500;
+  if(n.includes("aadhaar number to details")||n.includes("aadhar number to details")) return 500;
+  if(n.includes("aadhaar number to aadhaar pdf")||n.includes("aadhar number to aadhar pdf")) return 500;
+  if(n.includes("name & mobile")&&n.includes("aadhaar pdf")) return 1000;
+  if(n.includes("address update")) return 700;
+  if(n.includes("lms")) return 1500;
+  if(n.includes("election")) return 500;
+  if(/\bdl\b/.test(n)||n.includes("driving license")||n.includes("driving licence")) return 250;
+  if(/\brc\b/.test(n)||n.includes("registration certificate")) return 300;
+  return Number(fallback||0);
+}
+
+function effectiveServiceAmount(service){
+  if(!service) return 0;
+  // Super Pro and regular retailers both use the fixed service price stored/configured here.
+  // There is intentionally no retailer-side price editor.
+  return fixedServicePrice(service.name, service.amount);
 }
 
 function serviceCategory(service){
@@ -2009,12 +1926,14 @@ function renderServiceFolders(){
     const list=folder.querySelector(".serviceList");
     group.items.forEach(service=>{
       const btn=document.createElement("button");btn.type="button";btn.className="serviceItem"+(selected&&String(selected.id)===String(service.id)?" active":"");
-      btn.innerHTML=`<span><span class="serviceItemName">${escapeHtml(service.name)}</span><br><span class="serviceBadge">"👆 Click to open form"</span></span><span class="serviceItemPrice">₹${effectiveServiceAmount(service)}</span>`;
-      btn.onclick=()=>chooseService(service.id);list.appendChild(btn);
+      btn.innerHTML=`<span><span class="serviceItemName">${escapeHtml(service.name)}</span><br><span class="serviceBadge">👆 Click to open form</span></span><span class="serviceItemPrice">₹${effectiveServiceAmount(service)}</span>`;
+      btn.onclick=()=>chooseService(service.id);
+      list.appendChild(btn);
     });
     box.appendChild(folder);
   });
 }
+
 function filterServiceFolders(){renderServiceFolders();}
 function chooseService(serviceId){$("service").value=String(serviceId);serviceChanged();renderServiceFolders();$("serviceInfo")?.scrollIntoView({behavior:"smooth",block:"nearest"});}
 
