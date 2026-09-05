@@ -800,7 +800,6 @@ html[data-theme="dark"] .statusBox.successBox{background:#0d281b}
   .themeToggle{width:100%;justify-content:center}
 }
 
-
 </style>
 </head>
 
@@ -1783,33 +1782,37 @@ async function logout(){
    LOAD SERVICES
 ===================================================== */
 
-function isSpecialElectionAccount(){
-  const t=String(retailer?.retailer_type || retailer?.service_access || '').toLowerCase().trim().replace(/[\s-]+/g,"_");
-  return ["super_pro","super_retailer_pro","super_retailer"].includes(t);
-}
-
-function normalizedRetailerType(){
-  return String(retailer?.retailer_type || retailer?.service_access || "ration_card")
-    .toLowerCase().trim().replace(/[\s-]+/g,"_");
-}
-
 async function loadServices(){
   try{
-    const {data,error}=await sb.from("services")
-      .select("id,name,amount,without_ration_amount,fields,description,sort_order,active")
-      .eq("active",true)
-      .order("sort_order",{ascending:true});
-    if(error) throw error;
-
+    const {data,error}=await sb.from("services").select("id,name,amount,without_ration_amount,fields,description,sort_order,active").eq("active",true).order("sort_order",{ascending:true});
+    if(error)throw error;
     const allServices=data||[];
-    const retailerType=normalizedRetailerType();
 
-    const isAllWork=["all_work","all_in_one","all_services","all_service","all","super_pro","super_retailer_pro","super_retailer"]
-      .includes(retailerType);
+    // Admin can store the access type using any of these equivalent values.
+    // Keep the frontend tolerant so existing retailers continue working.
+    const retailerType=String(retailer?.retailer_type||retailer?.service_access||"ration_card_only")
+      .toLowerCase().trim().replace(/[\s-]+/g,"_");
+
+    const isAllWork=[
+      "all_work",
+      "all_in_one",
+      "all_services",
+      "all_service",
+      "all",
+      "super_pro",
+      "super_retailer_pro",
+      "super_retailer"
+    ].includes(retailerType);
 
     const rationTypes=[
-      "ration_noncard","ration_division","ration_finger","ration_father_husband",
-      "ration_delete","ration_add","ration_correction","ration_pvc"
+      "ration_noncard",
+      "ration_division",
+      "ration_finger",
+      "ration_father_husband",
+      "ration_delete",
+      "ration_add",
+      "ration_correction",
+      "ration_pvc"
     ];
 
     services=isAllWork
@@ -1817,40 +1820,13 @@ async function loadServices(){
       : allServices.filter(service=>rationTypes.includes(getServiceType(service.name)));
 
     $("service").innerHTML='<option value="">Select Service</option>';
-    services.forEach(s=>{
-      const option=document.createElement("option");
-      option.value=s.id;
-      option.textContent=s.name+" - ₹"+effectiveServiceAmount(s);
-      $("service").appendChild(option);
-    });
-
+    services.forEach(s=>{const option=document.createElement("option");option.value=s.id;option.textContent=s.name+" - ₹"+effectiveServiceAmount(s);$("service").appendChild(option);});
     $("serviceAccessNote").textContent=isAllWork
-      ? "All active services are available"
-      : "Only Ration Card services are available";
-
+      ? "🌐 All Work access • All active services are available"
+      : "🍚 Ration Card Only • Only Ration Card services are available";
     renderServiceFolders();
-    if(!services.length){
-      $("serviceFolders").innerHTML='<div class="serviceEmpty">No services are available for your account.</div>';
-      msg("No services available for this retailer.","err");
-    }
-  }catch(e){
-    console.error("Services error:",e);
-    $("serviceFolders").innerHTML='<div class="serviceEmpty">Services could not be loaded.</div>';
-    msg("Services error: "+e.message,"err");
-  }
-}
-
-function effectiveServiceAmount(service){
-  if(!service) return 0;
-
-  // All retailers use the normal/global service price.
-  // Only the special account gets Election New/Correction at ₹250.
-  if(isSpecialElectionAccount()){
-    const type=getServiceType(service.name);
-    if(type === "election_new" || type === "election_correction") return 250;
-  }
-
-  return Number(service.amount || 0);
+    if(!services.length){$("serviceFolders").innerHTML='<div class="serviceEmpty">No services are available for your account.</div>';msg("No services available for this retailer.","err");}
+  }catch(e){console.error("Services error:",e);$("serviceFolders").innerHTML='<div class="serviceEmpty">Services could not be loaded.</div>';msg("Services error: "+e.message,"err");}
 }
 
 function serviceCategory(service){
@@ -1863,6 +1839,27 @@ function serviceCategory(service){
   if(n.includes("dl")||n.includes("driving"))return {key:"dl",title:"🚗 DL Services"};
   if(n.includes("rc")||n.includes("registration"))return {key:"rc",title:"🚘 RC Services"};
   return {key:"other",title:"📁 Other Services"};
+}
+
+function isSuperRetailer(){
+  const t = String(retailer?.retailer_type || retailer?.service_access || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[\s-]+/g,"_");
+  return ["super_pro","super_retailer_pro","super_retailer"].includes(t);
+}
+
+function effectiveServiceAmount(service){
+  if(!service) return 0;
+
+  // Super Retailer Pro: only Election New/Correction are ₹250.
+  // Every other service keeps the normal/global retailer price.
+  if(isSuperRetailer()){
+    const type=getServiceType(service.name);
+    if(type === "election_new" || type === "election_correction") return 250;
+  }
+
+  return Number(service.amount || 0);
 }
 
 function renderServiceFolders(){
@@ -1887,13 +1884,11 @@ function renderServiceFolders(){
     group.items.forEach(service=>{
       const btn=document.createElement("button");btn.type="button";btn.className="serviceItem"+(selected&&String(selected.id)===String(service.id)?" active":"");
       btn.innerHTML=`<span><span class="serviceItemName">${escapeHtml(service.name)}</span><br><span class="serviceBadge">👆 Click to open form</span></span><span class="serviceItemPrice">₹${effectiveServiceAmount(service)}</span>`;
-      btn.onclick=()=>chooseService(service.id);
-      list.appendChild(btn);
+      btn.onclick=()=>chooseService(service.id);list.appendChild(btn);
     });
     box.appendChild(folder);
   });
 }
-
 function filterServiceFolders(){renderServiceFolders();}
 function chooseService(serviceId){$("service").value=String(serviceId);serviceChanged();renderServiceFolders();$("serviceInfo")?.scrollIntoView({behavior:"smooth",block:"nearest"});}
 
@@ -2192,9 +2187,19 @@ const SERVICE_FIELDS = {
     ["lc_pdf","LC PDF"]
   ],
 
-  dl_pdf:[["dl_number","DL Number","text",true]],
+  dl_pdf:[
+    ["dl_number","Driving Licence Number","text",true],
+    ["aadhaar_number","Aadhaar Number","text"],
+    ["mobile","Mobile Number","tel"],
+    ["email","Email ID","email"]
+  ],
 
-  rc_pdf:[["rc_number","RC Number","text",true]],
+  rc_pdf:[
+    ["vehicle_number","Vehicle Number","text",true],
+    ["rc_number","RC Number","text",true],
+    ["mobile","Mobile Number","tel"],
+    ["email","Email ID","email"]
+  ],
 
   generic:[
     ["applicant_name","Customer / Applicant Name","text",true],
@@ -2312,8 +2317,14 @@ const SERVICE_FILES = {
   election_wife:[
     ["mobile","Mobile Number","tel",true]
   ],
-  dl_pdf:[],
-  rc_pdf:[],
+  dl_pdf:[
+    ["dl_document_pdf","Driving Licence / DL Document PDF",true],
+    ["aadhaar_pdf","Aadhaar Card PDF"]
+  ],
+  rc_pdf:[
+    ["rc_document_pdf","RC Document PDF",true],
+    ["aadhaar_pdf","Aadhaar Card PDF"]
+  ],
   generic:[
     ["service_document","Service Related Document"],
     ["aadhaar_pdf","Aadhaar Card PDF"]
@@ -2461,15 +2472,35 @@ function serviceChanged(){
     SERVICE_FILES[fileType] || []
   );
 
-  let amount = effectiveServiceAmount(selected);
+  let amount =
+    effectiveServiceAmount(selected);
 
   if(
     selected.without_ration_amount != null
   ){
-    const serviceName=String(selected.name||"").toLowerCase();
-    if(serviceName.includes("without ration") || serviceName.includes("without ration card")){
-      amount=Number(selected.without_ration_amount);
+
+    const serviceName =
+      String(
+        selected.name || ""
+      )
+      .toLowerCase();
+
+    if(
+      serviceName.includes(
+        "without ration"
+      ) ||
+      serviceName.includes(
+        "without ration card"
+      )
+    ){
+
+      amount =
+        Number(
+          selected.without_ration_amount
+        );
+
     }
+
   }
 
   if(
@@ -3725,7 +3756,6 @@ window.addEventListener(
 );
 
 </script>
-
 
 </body>
 </html>
