@@ -587,7 +587,7 @@
     }
 
 
-.type-badge.super{background:#f3e8ff;color:#6d28d9;border:1px solid #d8b4fe}
+.type-badge.super{background:#f3e8ff;color:#6d28d9;border:1px solid #d8b4fe}.type-badge.super2{background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc}
 ''</style>
 </head>
 
@@ -867,6 +867,10 @@
             <div class="type-option">
               <input type="radio" id="retailerTypeSuper" name="retailerType" value="super_pro">
               <label for="retailerTypeSuper"><strong>👑 Super Retailer Pro</strong><span>All services + private account prices.</span></label>
+            </div>
+            <div class="type-option">
+              <input type="radio" id="retailerTypeSuper2" name="retailerType" value="super_pro_2">
+              <label for="retailerTypeSuper2"><strong>👑 Super Retailer 2</strong><span>All services except Ration Card services.</span></label>
             </div>
           </div>
           <div class="hint">Admin jo access select karega, retailer ko wahi services milengi.</div>
@@ -1584,7 +1588,8 @@ async function changeRetailerAccess(userId, retailerId, currentType){
   const options = [
     ["ration_card","🍚 Ration Card Only"],
     ["all_work","🌐 All Work"],
-    ["super_pro","👑 Super Retailer Pro"]
+    ["super_pro","👑 Super Retailer Pro"],
+    ["super_pro_2","👑 Super Retailer 2"]
   ];
   const label = options.map((x,i)=>`${i+1}. ${x[1]}`).join("\n");
   const answer = prompt("Change access for "+retailerId+"\n\n"+label+"\n\nEnter 1, 2 or 3:");
@@ -2424,8 +2429,8 @@ async function loadRetailers() {
 
               <td>
 
-                <span class="type-badge ${retailer.retailer_type === "all_work" ? "all" : retailer.retailer_type === "super_pro" ? "super" : ""}">
-                  ${retailer.retailer_type === "all_work" ? "🌐 All Work" : retailer.retailer_type === "super_pro" ? "👑 Super Retailer Pro" : "🍚 Ration Card Only"}
+                <span class="type-badge ${retailer.retailer_type === "all_work" ? "all" : retailer.retailer_type === "super_pro" ? "super" : retailer.retailer_type === "super_pro_2" ? "super2" : ""}">
+                  ${retailer.retailer_type === "all_work" ? "🌐 All Work" : retailer.retailer_type === "super_pro" ? "👑 Super Retailer Pro" : retailer.retailer_type === "super_pro_2" ? "👑 Super Retailer 2" : "🍚 Ration Card Only"}
                 </span>
               </td>
 
