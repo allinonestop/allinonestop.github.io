@@ -3,38 +3,27 @@ window.ALLINONESTOP_CONFIG = {
   SUPABASE_PUBLISHABLE_KEY: "sb_publishable_Z5T2Fbbr0RPMZds67p7-9Q_Yw2-jMVn"
 };
 
-/* Retailer safety patch: robust Election service detection and file fields. */
+/* =========================================================
+   SUPER RETAILER PRO
+   Normal retailers remain unchanged. Super Pro gets all active
+   services and account-specific prices.
+========================================================= */
 (function(){
-  if(!/retailer\.html$/i.test(location.pathname)) return;
-  window.addEventListener("DOMContentLoaded", function(){
-    try{
-      if(typeof window.getServiceType === "function"){
-        const originalGetServiceType=window.getServiceType;
-        window.getServiceType=function(name){
-          const n=String(name||"").toLowerCase().replace(/[_-]+/g," ").replace(/\s+/g," ").trim();
-          if(n.includes("election")&&(n.includes("correction")||n.includes("update"))) return "election_correction";
-          if(n.includes("election")&&n.includes("card")) return "election_new";
-          return originalGetServiceType(name);
-        };
-      }
-      const electionFiles=[
-        ["mother_election_card_pdf","Mother Election Card PDF",true],
-        ["father_election_card_pdf","Father Election Card PDF",true],
-        ["election_card_pdf","Election Card PDF",true],
-        ["customer_signature","Customer Signature",true],
-        ["aadhaar_pdf","Aadhaar Card PDF",true],
-        ["lc_pdf","LC PDF",true],
-        ["customer_photo","Customer Photo",true]
-      ];
-      const originalRenderFiles=window.renderFiles;
-      window.renderFiles=function(list){
-        const selectedName=String(window.selected?.name||"").toLowerCase();
-        if(selectedName.includes("election")&&typeof originalRenderFiles==="function"){
-          originalRenderFiles(electionFiles);
-          return;
-        }
-        if(typeof originalRenderFiles==="function") originalRenderFiles(list||[]);
-      };
-    }catch(e){console.warn("Retailer safety patch skipped:",e);}
-  });
+  function install(){
+    if(!/retailer\.html$/i.test(location.pathname)) return;
+    if(typeof window.supabase === "undefined") return;
+    const cfg=window.ALLINONESTOP_CONFIG;
+    const sb=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_PUBLISHABLE_KEY);
+    const isPro=()=>{const t=String(window.retailer?.retailer_type||"").toLowerCase().replace(/[\s-]+/g,"_");return ["super_pro","super_retailer","super_retailer_pro","pro"].includes(t);};
+    const esc=v=>String(v??"").replace(/[&<>\"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+    async function overrides(){if(!isPro()||!window.retailer?.id)return{};const {data,error}=await sb.from("super_retailer_prices").select("service_id,price,without_ration_price").eq("retailer_id",window.retailer.id);if(error){console.warn(error);return{};}const m={};(data||[]).forEach(x=>m[String(x.service_id)]=x);return m;}
+    function apply(m){if(!isPro()||!Array.isArray(window.services))return;window.services.forEach(s=>{const x=m[String(s.id)];if(x){s.amount=Number(x.price??s.amount??0);if(x.without_ration_price!=null)s.without_ration_amount=Number(x.without_ration_price);}});if(typeof window.renderServiceFolders==="function")window.renderServiceFolders();}
+    async function renderEditor(){if(!isPro())return;let card=document.getElementById("superProPriceCard");if(!card){card=document.createElement("div");card.id="superProPriceCard";card.className="card";card.style.cssText="border:2px solid #8b5cf6;background:linear-gradient(145deg,#faf5ff,#eef2ff);";card.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h2 style="margin:0">👑 Super Retailer Pro — My Prices</h2><div class="smallNote">Aap apne account ke service prices set kar sakte hain. Normal retailers ke prices par koi effect nahi hoga.</div></div><button type="button" id="superProReloadBtn" class="primary">🔄 Reload Prices</button></div><div id="superProPriceMsg" class="status"></div><div id="superProPriceList" style="margin-top:14px"></div>';const app=document.getElementById("app");if(app)app.insertBefore(card,app.firstElementChild);card.querySelector("#superProReloadBtn").onclick=renderEditor;}
+      const box=document.getElementById("superProPriceList"),note=document.getElementById("superProPriceMsg");if(!box)return;box.innerHTML='<div class="smallNote">Loading prices...</div>';const {data,error}=await sb.from("services").select("id,name,amount,without_ration_amount,active,sort_order").eq("active",true).order("sort_order",{ascending:true});if(error){box.textContent="Price list load failed: "+error.message;return;}const m=await overrides();box.innerHTML="";(data||[]).forEach(s=>{const x=m[String(s.id)]||{};const row=document.createElement("div");row.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) 140px 140px 80px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #dbe4f0";row.innerHTML=`<div><b>${esc(s.name)}</b><div class="smallNote">Default ₹${Number(s.amount||0)}</div></div><input type="number" min="0" step="1" value="${Number(x.price??s.amount??0)}" data-p="${s.id}" placeholder="Price"><input type="number" min="0" step="1" value="${x.without_ration_price!=null?Number(x.without_ration_price):Number(s.without_ration_amount||0)}" data-w="${s.id}" placeholder="Without ration"><button type="button" class="success" data-s="${s.id}" style="padding:8px">💾 Save</button>`;box.appendChild(row);});box.querySelectorAll("[data-s]").forEach(btn=>btn.onclick=async()=>{const id=btn.dataset.s,p=Number(box.querySelector(`[data-p="${CSS.escape(id)}"]`).value),w=Number(box.querySelector(`[data-w="${CSS.escape(id)}"]`).value);if(!Number.isFinite(p)||p<0){note.className="status err";note.textContent="Valid price enter karein.";return;}btn.disabled=true;const {error:e}=await sb.from("super_retailer_prices").upsert({retailer_id:window.retailer.id,service_id:id,price:p,without_ration_price:Number.isFinite(w)&&w>0?w:null},{onConflict:"retailer_id,service_id"});btn.disabled=false;if(e){note.className="status err";note.textContent="Price save failed: "+e.message;return;}const svc=window.services.find(x=>String(x.id)===String(id));if(svc){svc.amount=p;if(Number.isFinite(w)&&w>0)svc.without_ration_amount=w;}if(typeof window.renderServiceFolders==="function")window.renderServiceFolders();note.className="status ok";note.textContent="Price saved successfully.";});}
+    const timer=setInterval(()=>{if(typeof window.loadServices==="function"&&typeof window.serviceChanged==="function"){clearInterval(timer);const oldLoad=window.loadServices;const oldChanged=window.serviceChanged;window.loadServices=async function(){if(!isPro())return oldLoad.apply(this,arguments);const oldType=window.retailer.retailer_type;window.retailer.retailer_type="all_work";try{await oldLoad.apply(this,arguments);}finally{window.retailer.retailer_type=oldType;}apply(await overrides());renderEditor();};window.serviceChanged=function(){if(isPro()&&window.selected){const s=window.services.find(x=>String(x.id)===String(window.selected.id));if(s)window.selected=s;}return oldChanged.apply(this,arguments);};}},50);setTimeout(()=>clearInterval(timer),15000);
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install);else install();
 })();
+
+/* Existing Election service safety patch */
+(function(){if(!/retailer\.html$/i.test(location.pathname))return;window.addEventListener("DOMContentLoaded",function(){try{if(typeof window.getServiceType==="function"){const o=window.getServiceType;window.getServiceType=function(name){const n=String(name||"").toLowerCase().replace(/[_-]+/g," ").replace(/\s+/g," ").trim();if(n.includes("election")&&(n.includes("correction")||n.includes("update")))return "election_correction";if(n.includes("election")&&n.includes("card"))return "election_new";return o(name);};}}catch(e){console.warn("Election patch skipped:",e);}});})();
