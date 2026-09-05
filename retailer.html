@@ -1786,7 +1786,7 @@ async function logout(){
 
 /* =====================================================
    SERVICE PRICING
-   Super Retailer Pro uses the fixed prices configured here.
+   Service prices are fixed for your account.
    No retailer-side price editing is available.
 ===================================================== */
 
@@ -1901,7 +1901,8 @@ function effectiveServiceAmount(service){
   return Number(service.amount || 0);
 }
 
-async function loadServices(){
+async /* Retailer-style dashboard: Super Pro is auto-detected internally; no special panel or price editor is shown. */
+function loadServices(){
   try{
     const {data,error}=await sb.from("services")
       .select("id,name,amount,without_ration_amount,fields,description,sort_order,active")
@@ -1940,7 +1941,7 @@ async function loadServices(){
     ];
 
     if(isSuper){
-      // Super Retailer Pro gets all active services, exactly like All Work.
+      //  gets all active services, exactly like All Work.
       // Prices remain fixed; there is no retailer-side price editor.
       services=allServices;
     }else{
@@ -1958,9 +1959,9 @@ async function loadServices(){
     });
 
     $("serviceAccessNote").textContent=isSuper
-      ? "🌐 All Work access • All active services are available"
+      ? "🌐 All active services are available"
       : isAllWork
-        ? "🌐 All Work access • All active services are available"
+        ? "🌐 All active services are available"
         : "🍚 Ration Card Only • Only Ration Card services are available";
 
     renderServiceFolders();
