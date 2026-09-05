@@ -1783,6 +1783,16 @@ async function logout(){
    LOAD SERVICES
 ===================================================== */
 
+function isSuperRetailer(){
+  const t=String(retailer?.retailer_type || retailer?.service_access || '').toLowerCase().trim().replace(/[\s-]+/g,"_");
+  return ["super_pro","super_retailer_pro","super_retailer"].includes(t);
+}
+
+function normalizedRetailerType(){
+  return String(retailer?.retailer_type || retailer?.service_access || "ration_card")
+    .toLowerCase().trim().replace(/[\s-]+/g,"_");
+}
+
 async function loadServices(){
   try{
     const {data,error}=await sb.from("services")
@@ -1792,8 +1802,7 @@ async function loadServices(){
     if(error) throw error;
 
     const allServices=data||[];
-    const retailerType=String(retailer?.retailer_type||retailer?.service_access||"ration_card")
-      .toLowerCase().trim().replace(/[\s-]+/g,"_");
+    const retailerType=normalizedRetailerType();
 
     const isAllWork=["all_work","all_in_one","all_services","all_service","all","super_pro","super_retailer_pro","super_retailer"]
       .includes(retailerType);
@@ -1811,13 +1820,13 @@ async function loadServices(){
     services.forEach(s=>{
       const option=document.createElement("option");
       option.value=s.id;
-      option.textContent=s.name+" - ₹"+Number(s.amount||0);
+      option.textContent=s.name+" - ₹"+effectiveServiceAmount(s);
       $("service").appendChild(option);
     });
 
     $("serviceAccessNote").textContent=isAllWork
-      ? "🌐 All Work access • All active services are available"
-      : "🍚 Ration Card Only • Only Ration Card services are available";
+      ? "All active services are available"
+      : "Only Ration Card services are available";
 
     renderServiceFolders();
     if(!services.length){
@@ -1888,8 +1897,10 @@ function fixedServicePrice(name, fallback){
 
 function effectiveServiceAmount(service){
   if(!service) return 0;
-  // Super Pro and regular retailers both use the fixed service price stored/configured here.
-  // There is intentionally no retailer-side price editor.
+  if(isSuperRetailer()){
+    const type=getServiceType(service.name);
+    if(type === "election_new" || type === "election_correction") return 250;
+  }
   return fixedServicePrice(service.name, service.amount);
 }
 
@@ -2504,7 +2515,6 @@ function serviceChanged(){
   let amount = effectiveServiceAmount(selected);
 
   if(
-    !isSuperRetailer() &&
     selected.without_ration_amount != null
   ){
     const serviceName=String(selected.name||"").toLowerCase();
