@@ -801,7 +801,6 @@ html[data-theme="dark"] .statusBox.successBox{background:#0d281b}
 }
 
 
-.superProBadge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#f3e8ff;color:#6d28d9;font-weight:900;font-size:12px;margin-left:7px}.superPriceEditor{margin-top:4px}.superPriceEditor input{margin:0!important}
 </style>
 </head>
 
@@ -1786,8 +1785,9 @@ async function logout(){
 
 
 /* =====================================================
-   SUPER RETAILER PRO - PRIVATE PRICE SYSTEM
-   Normal retailer prices remain untouched.
+   SERVICE PRICING
+   Super Retailer Pro uses the fixed prices configured here.
+   No retailer-side price editing is available.
 ===================================================== */
 
 const SUPER_PRO_DEFAULT_PRICES = {
@@ -1834,6 +1834,7 @@ const SUPER_PRO_DEFAULT_PRICES = {
   "new election card":500,
   "election card correction":500,
   "election card update":500,
+  "election card":500,
   "dl pdf":250,
   "rc pdf":300
 };
@@ -1850,7 +1851,7 @@ function superProDefaultPrice(name){
   const n = normalServiceName(name);
   if (SUPER_PRO_DEFAULT_PRICES[n] != null) return SUPER_PRO_DEFAULT_PRICES[n];
 
-  // Flexible matching for service names already stored in Supabase.
+  // Flexible matching for names already stored in Supabase.
   if(n.includes("ration card pdf") && n.includes("pvc")) return 100;
   if(n.includes("ration card") && n.includes("vibhajan")) return 2500;
   if(n.includes("non nsfa") || (n.includes("nsfa") && n.includes("non"))) return 3500;
@@ -1864,10 +1865,8 @@ function superProDefaultPrice(name){
   if(n.includes("pan") && n.includes("correction")) return 500;
   if(n.includes("second pan") || n.includes("duplicate pan")) return 2000;
   if(n.includes("pan card pdf")) return 100;
-  if(n.includes("aadhaar number to pan")) return 70;
-  if(n.includes("aadhar number to pan")) return 70;
-  if(n.includes("pan number to aadhaar")) return 500;
-  if(n.includes("pan number to aadhar")) return 500;
+  if(n.includes("aadhaar number to pan") || n.includes("aadhar number to pan")) return 70;
+  if(n.includes("pan number to aadhaar") || n.includes("pan number to aadhar")) return 500;
   if(n.includes("pan number to pan details")) return 30;
   if(n.includes("pan to aadhaar status") || n.includes("pan to aadhar status")) return 50;
   if(n.includes("mobile number to pan")) return 70;
@@ -1896,87 +1895,10 @@ function isSuperRetailer(){
 function effectiveServiceAmount(service){
   if(!service) return 0;
   if(isSuperRetailer()){
-    const custom = Number(service.super_price);
-    if(Number.isFinite(custom) && custom >= 0) return custom;
-    const def = superProDefaultPrice(service.name);
-    if(def != null) return def;
+    const fixed = superProDefaultPrice(service.name);
+    if(fixed != null) return fixed;
   }
   return Number(service.amount || 0);
-}
-
-async function loadSuperProPrices(serviceRows){
-  if(!isSuperRetailer()) return serviceRows;
-
-  try{
-    const {data,error} = await sb
-      .from("super_retailer_prices")
-      .select("service_id,price,without_ration_price")
-      .eq("retailer_id", retailer.id);
-
-    if(error) throw error;
-
-    const map = new Map((data || []).map(x => [String(x.service_id), x]));
-    return serviceRows.map(s => {
-      const own = map.get(String(s.id));
-      if(own){
-        return {...s, super_price:Number(own.price), super_without_ration_price:own.without_ration_price};
-      }
-      const def = superProDefaultPrice(s.name);
-      return {...s, super_price:def};
-    });
-  }catch(e){
-    console.warn("Super Pro price table not ready; using built-in Super Pro prices.",e);
-    return serviceRows.map(s => ({...s, super_price:superProDefaultPrice(s.name)}));
-  }
-}
-
-async function saveSuperProPrice(serviceId, price){
-  if(!isSuperRetailer()) return;
-  const value = Number(price);
-  if(!Number.isFinite(value) || value < 0) throw new Error("Invalid price.");
-
-  const {error} = await sb.from("super_retailer_prices").upsert({
-    retailer_id: retailer.id,
-    service_id: serviceId,
-    price: value
-  }, {onConflict:"retailer_id,service_id"});
-
-  if(error) throw error;
-}
-
-function showSuperPriceEditor(service, container){
-  if(!isSuperRetailer()) return;
-  const current = effectiveServiceAmount(service);
-  const wrap=document.createElement("div");
-  wrap.className="superPriceEditor";
-  wrap.innerHTML=`
-    <div style="display:flex;gap:6px;align-items:center;margin-top:7px">
-      <input class="superPriceInput" type="number" min="0" step="1"
-        value="${escapeAttr(current)}" style="width:90px;padding:6px;border-radius:7px;border:1px solid #cbd5e1">
-      <button type="button" class="small-btn" style="padding:6px 9px;background:#7c3aed;color:#fff">Save</button>
-    </div>`;
-  const input=wrap.querySelector("input");
-  wrap.querySelector("button").onclick=async()=>{
-    const btn=wrap.querySelector("button");
-    btn.disabled=true;
-    try{
-      await saveSuperProPrice(service.id,input.value);
-      service.super_price=Number(input.value);
-      if(selected && String(selected.id)===String(service.id)){
-        selected=service;
-        const amount=effectiveServiceAmount(selected);
-        $("amount").value=amount;
-        $("amountText").textContent="₹"+amount;
-        $("serviceInfo").innerHTML="<b>"+escapeHtml(selected.name)+"</b><br><span class=\"servicePrice\">₹"+amount+"</span>";
-        generateUPIQR(amount);
-      }
-      renderServiceFolders();
-      msg("Super Retailer Pro price updated for this account.","ok");
-    }catch(e){
-      msg("Price update failed: "+(e.message||e),"err");
-    }finally{btn.disabled=false;}
-  };
-  container.appendChild(wrap);
 }
 
 async function loadServices(){
@@ -2018,7 +1940,9 @@ async function loadServices(){
     ];
 
     if(isSuper){
-      services=await loadSuperProPrices(allServices);
+      // Super Retailer Pro gets all active services, exactly like All Work.
+      // Prices remain fixed; there is no retailer-side price editor.
+      services=allServices;
     }else{
       services=isAllWork
         ? allServices
@@ -2034,7 +1958,7 @@ async function loadServices(){
     });
 
     $("serviceAccessNote").textContent=isSuper
-      ? "👑 Super Retailer Pro • All active services • Your private prices"
+      ? "🌐 All Work access • All active services are available"
       : isAllWork
         ? "🌐 All Work access • All active services are available"
         : "🍚 Ration Card Only • Only Ration Card services are available";
@@ -2084,8 +2008,8 @@ function renderServiceFolders(){
     const list=folder.querySelector(".serviceList");
     group.items.forEach(service=>{
       const btn=document.createElement("button");btn.type="button";btn.className="serviceItem"+(selected&&String(selected.id)===String(service.id)?" active":"");
-      btn.innerHTML=`<span><span class="serviceItemName">${escapeHtml(service.name)}</span><br><span class="serviceBadge">${isSuperRetailer()?"👑 Your Private Price":"👆 Click to open form"}</span></span><span class="serviceItemPrice">₹${effectiveServiceAmount(service)}</span>`;
-      btn.onclick=()=>chooseService(service.id);list.appendChild(btn); if(isSuperRetailer()) showSuperPriceEditor(service,list);
+      btn.innerHTML=`<span><span class="serviceItemName">${escapeHtml(service.name)}</span><br><span class="serviceBadge">"👆 Click to open form"</span></span><span class="serviceItemPrice">₹${effectiveServiceAmount(service)}</span>`;
+      btn.onclick=()=>chooseService(service.id);list.appendChild(btn);
     });
     box.appendChild(folder);
   });
