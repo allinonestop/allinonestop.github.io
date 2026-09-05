@@ -1,0 +1,92 @@
+name: Final Super Retailer 2 Fix
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-super-retailer-2-final.yml'
+      - '.github/sr2-final-trigger'
+      - 'super-retailer-2.html'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: "!contains(github.event.head_commit.message, '[skip sr2 final]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix service filtering and normal pricing
+        shell: bash
+        run: |
+          set -e
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('super-retailer-2.html')
+          s = p.read_text(encoding='utf-8')
+
+          start = s.find('function isRationCardService(service){')
+          end = s.find('\n\nasync function loadServices(){', start)
+          if start < 0 or end < 0:
+              raise SystemExit('Could not locate Super Retailer 2 service filter block')
+
+          helper = '''function isRationCardService(service){
+            const id=String(service?.id||"");
+            const RATION_SERVICE_IDS=new Set([
+              "03e7e0b7-bbf6-4923-a0f4-36bbdf41d4cf",
+              "9a6bd3b3-b409-46d2-8620-b1f2a992213a",
+              "fc2baf87-beef-4c3c-bd12-5f71961807b9",
+              "c32380c8-9f2f-4e05-a2fd-db1e966fa184",
+              "68c2e53c-835a-48fc-925a-e634e7451536",
+              "3f26c691-9061-4f36-8ec2-b84b0d991ac9",
+              "56cfcfc2-d886-4fe5-89cf-cca664dee57d",
+              "0417fb20-fdc2-4337-ae22-9e68b33628a1",
+              "d4d35edd-a3a8-403b-8b6e-ee6e3dd00834",
+              "2e57930d-130e-4139-a45f-95b14d2703f2",
+              "c086e584-d162-4ad1-aedb-4c9aacc0d2ca",
+              "aae24c2a-932e-4f69-a503-d1d9e140cabe",
+              "9886de28-ef1e-4b33-b5b8-853153176702"
+            ]);
+            return RATION_SERVICE_IDS.has(id);
+          }'''
+          s = s[:start] + helper + s[end:]
+
+          # Remove any Ration folder fallback from the SR2 page.
+          s = s.replace('  if(type.startsWith("ration_"))return {key:"ration",title:"🍚 Ration Card Services"};\n', '  if(type.startsWith("ration_"))return null;\n')
+          s = s.replace('    const cat=serviceCategory(service);\n    if(!groups[cat.key])groups[cat.key]={...cat,items:[]};', '    const cat=serviceCategory(service);\n    if(!cat)return;\n    if(!groups[cat.key])groups[cat.key]={...cat,items:[]};')
+
+          # Keep Super Retailer 2 on normal service-table prices.
+          s = re.sub(r'function effectiveServiceAmount\(service\)\{.*?\n\}', '''function effectiveServiceAmount(service){
+            return Number(service?.amount || 0);
+          }''', s, count=1, flags=re.S)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s = Path('super-retailer-2.html').read_text(encoding='utf-8')
+          scripts = re.findall(r'<script[^>]*>(.*?)</script>', s, re.S)
+          Path('/tmp/sr2-check.js').write_text('\n'.join(scripts), encoding='utf-8')
+          print('Embedded script bytes:', Path('/tmp/sr2-check.js').stat().st_size)
+          PY
+          node --check /tmp/sr2-check.js
+
+          grep -q 'function isRationCardService(service)' super-retailer-2.html
+          grep -q 'RATION_SERVICE_IDS' super-retailer-2.html
+          grep -q 'services = allServices.filter(service => !isRationCardService(service));' super-retailer-2.html
+          grep -q 'return Number(service?.amount || 0);' super-retailer-2.html
+          echo 'Super Retailer 2 validation passed.'
+
+      - name: Commit final fix
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add super-retailer-2.html
+          if git diff --cached --quiet; then
+            echo 'No changes required.'
+            exit 0
+          fi
+          git commit -m 'Finalize Super Retailer 2 services [skip sr2 final]'
+          git push
