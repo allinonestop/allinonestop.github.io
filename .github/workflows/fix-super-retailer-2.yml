@@ -1,0 +1,42 @@
+name: Fix Super Retailer 2
+on:
+  push:
+    paths:
+      - 'super-retailer-2.html'
+      - '.github/sr2-fix-trigger'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: "!contains(github.event.head_commit.message, '[skip sr2 patch]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Super Retailer 2
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('super-retailer-2.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('async function isRationCardService(service){','function isRationCardService(service){')
+          s=s.replace('isSuperRetailer2.call({retailer:pr})','isSuperRetailer2()')
+          s=s.replace('function loadServices(){','async function loadServices(){')
+          if 'function isRationCardService(service)' not in s:
+              marker='async function loadServices(){'
+              helper='''function isRationCardService(service){\n  const id=String(service?.id||\"\");\n  const name=String(service?.name||\"\").toLowerCase().replace(/\\s+/g,\" \").trim();\n  const known=new Set([\n    \"03e7e0b7-bbf6-4923-a0f4-36bbdf41d4cf\",\n    \"9a6bd3b3-b409-46d2-8620-b1f2a992213a\",\n    \"fc2baf87-beef-4c3c-bd12-5f71961807b9\",\n    \"c32380c8-9f2f-4e05-a2fd-db1e966fa184\",\n    \"68c2e53c-835a-48fc-925a-e634e7451536\",\n    \"3f26c691-9061-4f36-8ec2-b84b0d991ac9\",\n    \"56cfcfc2-d886-4fe5-89cf-cca664dee57d\",\n    \"0417fb20-fdc2-4337-ae22-9e68b33628a1\",\n    \"d4d35edd-a3a8-403b-8b6e-ee6e3dd00834\",\n    \"2e57930d-130e-4139-a45f-95b14d2703f2\",\n    \"c086e584-d162-4ad1-aedb-4c9aacc0d2ca\",\n    \"aae24c2a-932e-4f69-a503-d1d9e140cabe\",\n    \"9886de28-ef1e-4b33-b5b8-853153176702\"\n  ]);\n  if(known.has(id)) return true;\n  const t=getServiceType(name);\n  if(t.startsWith(\"ration_\")) return true;\n  if(name.includes(\"ration card\") || name.includes(\"redtion card\")) return true;\n  if(name.includes(\"name add\") && !name.includes(\"pan\") && !name.includes(\"election\")) return true;\n  if(name.includes(\"name delete\") || name.includes(\"delete name\")) return true;\n  if(name.includes(\"pita name to pati name\")) return true;\n  if(name.includes(\"non nsfa\") || name.includes(\"non-nsfa\") || name.includes(\"nsfa\")) return true;\n  if(name.includes(\"vibhajan\") || name.includes(\"division\")) return true;\n  if(name.includes(\"wrong finger\") || name.includes(\"finger correction\") || name.includes(\"fingerprint\")) return true;\n  if(name.includes(\"ration number to aadhar\")) return true;\n  return false;\n}\n\n'''
+              s=s.replace(marker,helper+marker,1)
+          # Replace the old filter block with the robust one.
+          s=re.sub(r'const\s+rationTypes\s*=\s*\[[\s\S]*?\];\s*services\s*=\s*allServices\.filter\(service\s*=>\s*!rationTypes\.includes\(getServiceType\(service\.name\)\)\s*\);', 'services = allServices.filter(service => !isRationCardService(service));', s, count=1)
+          s=s.replace('if(!isSuperRetailerAccount() || !service) return amount;','if(!service) return amount;\n  if(isSuperRetailer2()) return amount;\n  if(!isSuperRetailerAccount()) return amount;')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit fixed file
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add super-retailer-2.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Fix Super Retailer 2 service access [skip sr2 patch]'
+          git push
