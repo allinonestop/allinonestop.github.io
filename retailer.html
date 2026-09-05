@@ -3727,41 +3727,5 @@ window.addEventListener(
 </script>
 
 
-/* =====================================================
-   HARD REMOVE LEGACY SUPER PRO PRICE PANEL
-   Super Pro uses the same dashboard as every retailer.
-   Only Election New/Correction price differs in code above.
-===================================================== */
-(function removeLegacySuperPricePanel(){
-  function clean(){
-    const nodes=[...document.querySelectorAll('body *')];
-    for(const el of nodes){
-      const tx=String(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
-      if(tx.includes('super retailer pro — my prices') || tx.includes('super retailer pro - my prices')){
-        let target=el;
-        for(let i=0;i<5 && target.parentElement;i++){
-          const parent=target.parentElement;
-          const ptx=String(parent.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
-          if(ptx.includes('reload prices') || ptx.includes('default ₹') || ptx.includes('my prices')) target=parent;
-          else break;
-        }
-        target.remove();
-        break;
-      }
-    }
-    // Remove any orphan legacy price-editor controls if an older template injects them.
-    document.querySelectorAll('button,input').forEach(el=>{
-      const tx=String(el.textContent||el.value||'').trim().toLowerCase();
-      if(tx==='reload prices' || tx==='save price' || tx==='save') {
-        const holder=el.closest('.card, .panel, section, .box');
-        if(holder && /my prices|private price|your private price|reload prices/i.test(holder.textContent||'')) holder.remove();
-      }
-    });
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',clean,{once:false});
-  else clean();
-  new MutationObserver(()=>clean()).observe(document.documentElement,{childList:true,subtree:true});
-})();
-
 </body>
 </html>
