@@ -1783,7 +1783,7 @@ async function logout(){
    LOAD SERVICES
 ===================================================== */
 
-function isSuperRetailer(){
+function isSpecialElectionAccount(){
   const t=String(retailer?.retailer_type || retailer?.service_access || '').toLowerCase().trim().replace(/[\s-]+/g,"_");
   return ["super_pro","super_retailer_pro","super_retailer"].includes(t);
 }
@@ -1843,9 +1843,9 @@ async function loadServices(){
 function effectiveServiceAmount(service){
   if(!service) return 0;
 
-  // Normal retailers: use the normal/global service price from Supabase.
-  // Super Retailer Pro: same exact prices, with only Election New/Correction at ₹250.
-  if(isSuperRetailer()){
+  // All retailers use the normal/global service price.
+  // Only the special account gets Election New/Correction at ₹250.
+  if(isSpecialElectionAccount()){
     const type=getServiceType(service.name);
     if(type === "election_new" || type === "election_correction") return 250;
   }
