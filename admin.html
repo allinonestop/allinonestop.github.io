@@ -586,7 +586,9 @@
       h2{font-size:20px}
     }
 
-</style>
+
+.type-badge.super{background:#f3e8ff;color:#6d28d9;border:1px solid #d8b4fe}
+''</style>
 </head>
 
 <body>
@@ -861,6 +863,10 @@
             <div class="type-option">
               <input type="radio" id="retailerTypeAll" name="retailerType" value="all_work">
               <label for="retailerTypeAll"><strong>🌐 All Work</strong><span>Ration Card + PAN + Election + all services.</span></label>
+            </div>
+            <div class="type-option">
+              <input type="radio" id="retailerTypeSuper" name="retailerType" value="super_pro">
+              <label for="retailerTypeSuper"><strong>👑 Super Retailer Pro</strong><span>All services + private account prices.</span></label>
             </div>
           </div>
           <div class="hint">Admin jo access select karega, retailer ko wahi services milengi.</div>
@@ -1569,6 +1575,46 @@ async function restoreSession() {
 
 }
 
+
+
+/* =========================================================
+   CHANGE RETAILER ACCESS
+========================================================= */
+async function changeRetailerAccess(userId, retailerId, currentType){
+  const options = [
+    ["ration_card","🍚 Ration Card Only"],
+    ["all_work","🌐 All Work"],
+    ["super_pro","👑 Super Retailer Pro"]
+  ];
+  const label = options.map((x,i)=>`${i+1}. ${x[1]}`).join("\n");
+  const answer = prompt("Change access for "+retailerId+"\n\n"+label+"\n\nEnter 1, 2 or 3:");
+  if(answer===null) return;
+  const selectedIndex=Number(answer)-1;
+  if(!Number.isInteger(selectedIndex) || !options[selectedIndex]){
+    alert("Invalid choice.");
+    return;
+  }
+  const newType=options[selectedIndex][0];
+  if(newType===currentType){
+    alert("This retailer already has this access.");
+    return;
+  }
+  if(!confirm("Change "+retailerId+" to "+options[selectedIndex][1]+"?")) return;
+
+  try{
+    await getSession();
+    const {data,error}=await supabaseClient.functions.invoke(RETAILER_FUNCTION,{
+      body:{action:"update_access",user_id:userId,retailer_type:newType}
+    });
+    if(error) throw new Error(await readFunctionError(error));
+    if(!data || data.error) throw new Error(formatFunctionError(data||{}));
+    alert("Access updated successfully.");
+    await loadRetailers();
+  }catch(e){
+    console.error("CHANGE ACCESS ERROR",e);
+    alert(e.message||"Access update failed.");
+  }
+}
 
 /* =========================================================
    LOGOUT
@@ -2378,14 +2424,26 @@ async function loadRetailers() {
 
               <td>
 
-                <span class="type-badge ${retailer.retailer_type === "all_work" ? "all" : ""}">
-                  ${retailer.retailer_type === "all_work" ? "🌐 All Work" : "🍚 Ration Card Only"}
+                <span class="type-badge ${retailer.retailer_type === "all_work" ? "all" : retailer.retailer_type === "super_pro" ? "super" : ""}">
+                  ${retailer.retailer_type === "all_work" ? "🌐 All Work" : retailer.retailer_type === "super_pro" ? "👑 Super Retailer Pro" : "🍚 Ration Card Only"}
                 </span>
               </td>
 
               <td>
 
                 <div class="actions">
+
+                  <button
+                    type="button"
+                    class="small-btn"
+                    style="background:linear-gradient(135deg,#0ea5e9,#2563eb)"
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    data-retailer-type="${escapeHtml(retailer.retailer_type || "ration_card")}"
+                    onclick="changeRetailerAccess(this.dataset.userId,this.dataset.retailerId,this.dataset.retailerType)"
+                  >
+                    🔄 Change Access
+                  </button>
 
                   <button
                     type="button"
