@@ -22,6 +22,38 @@ function effectiveServiceAmount(s){const k=electionKind(s?.name);if(isSuper()&&(
 function getServiceType(name){const n=String(name||'').toLowerCase().replace(/\s+/g,' ').trim();if(n.includes('lms'))return'lms';if(n.includes('non card')||n.includes('noncard')||n.includes('nsfa'))return'ration_noncard';if(n.includes('vibhajan')||n.includes('division'))return'ration_division';if(n.includes('finger')||n.includes('fingerprint'))return'ration_finger';if(n.includes('pita')&&n.includes('pati'))return'ration_father_husband';if(n.includes('name delete')||n.includes('name delet')||n.includes('delete name'))return'ration_delete';if(n.includes('name add')||n.includes('add name'))return'ration_add';if(n.includes('ration')&&n.includes('pdf pvc'))return'ration_pvc';if(n.includes('ration')&&n.includes('correction'))return'ration_correction';if(n.includes('second pan')||n.includes('duplicate pan'))return'pan_second';if(n.includes('pan card pdf'))return'pan_pdf';if(n.includes('without dob'))return'pan_without_dob';if(n.includes('new pan'))return'pan_new';if(n.includes('pan')&&n.includes('correction'))return'pan_correction';if(n.includes('address update')&&n.includes('aadhar')||n.includes('aadhaar only address update'))return'aadhar_address_update';if(n.includes('aadhar number to pan number')||n.includes('aadhaar number to pan number')||n.includes('pan number to aadhar number')||n.includes('pan number to pan details')||n.includes('pan to aadhar status')||n.includes('mobile number to pan number')||n.includes('ration number to aadhar number')||n.includes('aadhar number to details')||n.includes('aadhar number to aadhar pdf')||n.includes('name & mobile number to aadhar pdf')||n.includes('name and mobile number to aadhar pdf'))return'pdf_details';if(/(^|\s)dl(\s|$)/.test(n)||n.includes('dl pdf')||n.includes('driving licence')||n.includes('driving license'))return'dl_pdf';if(/(^|\s)rc(\s|$)/.test(n)||n.includes('rc pdf')||n.includes('registration certificate'))return'rc_pdf';if(n.includes('election')&&(n.includes('correction')||n.includes('update')))return'election_correction';if(n.includes('new election')||n==='election card'||n.includes('election card new'))return'election_new';return'generic'}
 async function login(){const u=$('username').value.trim().toUpperCase(),p=$('password').value;if(!u||!p)return loginMsg('Retailer ID and Password required.');$('loginBtn').disabled=true;try{const{data,error}=await sb.auth.signInWithPassword({email:emailFor(u),password:p});if(error)throw error;const{data:pr,error:pe}=await sb.from('profiles').select('*').eq('id',data.user.id).maybeSingle();if(pe)throw pe;if(!pr||pr.role!=='retailer')throw new Error('Retailer profile not found.');retailer=pr;if(!isSuperRetailer2())throw new Error('This account does not have Super Retailer 2 access.');showApp();await loadServices();await loadApplicationHistory()}catch(e){console.error(e);loginMsg(e.message||'Login failed.')}finally{$('loginBtn').disabled=false}}
 function showApp(){$('loginCard').classList.add('hidden');$('app').classList.remove('hidden');$('retailerInfo').textContent=(retailer.full_name||'')+' | Retailer ID: '+(retailer.retailer_number||'');$('profileFullName').textContent=retailer.full_name||'-';$('profileDob').textContent=retailer.dob||'-';$('profileAddress').textContent=retailer.address||'-';$('profileEmail').textContent=retailer.email||'-';$('profileRetailerNumber').textContent='🔒 '+(retailer.retailer_number||'-');$('profileMobile').textContent='🔒 '+(retailer.mobile||'-')}
+async function isRationCardService(service){
+  const id=String(service?.id||"");
+  const name=String(service?.name||"").toLowerCase().replace(/\s+/g," ").trim();
+  const known=new Set([
+    "03e7e0b7-bbf6-4923-a0f4-36bbdf41d4cf",
+    "9a6bd3b3-b409-46d2-8620-b1f2a992213a",
+    "fc2baf87-beef-4c3c-bd12-5f71961807b9",
+    "c32380c8-9f2f-4e05-a2fd-db1e966fa184",
+    "68c2e53c-835a-48fc-925a-e634e7451536",
+    "3f26c691-9061-4f36-8ec2-b84b0d991ac9",
+    "56cfcfc2-d886-4fe5-89cf-cca664dee57d",
+    "0417fb20-fdc2-4337-ae22-9e68b33628a1",
+    "d4d35edd-a3a8-403b-8b6e-ee6e3dd00834",
+    "2e57930d-130e-4139-a45f-95b14d2703f2",
+    "c086e584-d162-4ad1-aedb-4c9aacc0d2ca",
+    "aae24c2a-932e-4f69-a503-d1d9e140cabe",
+    "9886de28-ef1e-4b33-b5b8-853153176702"
+  ]);
+  if(known.has(id)) return true;
+  const t=getServiceType(name);
+  if(t.startsWith("ration_")) return true;
+  if(name.includes("ration card") || name.includes("redtion card")) return true;
+  if(name.includes("name add") && !name.includes("pan") && !name.includes("election")) return true;
+  if(name.includes("name delete") || name.includes("delete name")) return true;
+  if(name.includes("pita name to pati name")) return true;
+  if(name.includes("non nsfa") || name.includes("non-nsfa") || name.includes("nsfa")) return true;
+  if(name.includes("vibhajan") || name.includes("division")) return true;
+  if(name.includes("wrong finger") || name.includes("finger correction") || name.includes("fingerprint")) return true;
+  if(name.includes("ration number to aadhar")) return true;
+  return false;
+}
+
 async function loadServices(){const{data,error}=await sb.from('services').select('id,name,amount,without_ration_amount,fields,description,sort_order,active').eq('active',true).order('sort_order',{ascending:true});if(error)throw error;const ration=new Set(['ration_noncard','ration_division','ration_finger','ration_father_husband','ration_delete','ration_add','ration_correction','ration_pvc']);services=(data||[]).filter(s=>!ration.has(getServiceType(s.name)));$('service').innerHTML='<option value="">Select Service</option>';services.forEach(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name+' - ₹'+effectiveServiceAmount(s);$('service').appendChild(o)});$('serviceAccessNote').textContent='All active services except Ration Card services';renderServiceFolders()}
 function serviceCategory(s){const t=getServiceType(s.name);if(t.startsWith('pan_'))return['pan','💳 PAN Card Services'];if(t.startsWith('election_'))return['election','🗳️ Election Card Services'];if(t==='lms')return['lms','🎓 LMS / Certificate Services'];if(t==='dl_pdf')return['dl','🚗 DL Services'];if(t==='rc_pdf')return['rc','🚘 RC Services'];return['other','📁 Other Services']}
 function renderServiceFolders(){const box=$('serviceFolders');box.innerHTML='';const groups={};services.forEach(s=>{const[c,t]=serviceCategory(s);(groups[c]??={title:t,items:[]}).items.push(s)});Object.entries(groups).forEach(([k,g])=>{const f=document.createElement('div');f.className='serviceFolder';f.innerHTML='<div class="serviceFolderHeader"><b>'+g.title+'</b><span>'+g.items.length+' services</span></div><div class="serviceList"></div>';const l=f.querySelector('.serviceList');g.items.forEach(s=>{const b=document.createElement('button');b.type='button';b.className='serviceItem';b.innerHTML='<span><b>'+s.name+'</b><br><small>Click to open form</small></span><b>₹'+effectiveServiceAmount(s)+'</b>';b.onclick=()=>chooseService(s.id);l.appendChild(b)});box.appendChild(f)})}
