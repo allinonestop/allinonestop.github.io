@@ -1840,68 +1840,17 @@ async function loadServices(){
   }
 }
 
-function fixedServicePrice(name, fallback){
-  const n=String(name||"").toLowerCase().replace(/\s+/g," ").trim();
-  const map={
-    "new name add":70,"name add":70,"name delete":100,
-    "ration card correction":350,"ration card wrong finger correction":400,
-    "pita aadhaar se pati name ration card add":500,"pita name to pati name update":500,
-    "ration card vibhajan":2500,"non nsfa to nsfa":3500,"ration card pdf pvc":100,
-    "new pan card with dob proof":350,"new pan card":350,"new pan card - instant":350,
-    "pan card correction":500,"second pan card":2000,"new pan card without dob proof":500,"pan card pdf":100,
-    "aadhaar number to pan number":70,"aadhar number to pan number":70,
-    "pan number to aadhaar number":500,"pan number to aadhar number":500,
-    "pan number to pan details":30,"pan to aadhaar status":50,"pan to aadhar status":50,
-    "mobile number to pan number":70,"voter to mobile number link":70,"voter download":70,
-    "cibil report pdf download":300,"ration number to aadhaar number":500,"ration number to aadhar number":500,
-    "aadhaar number to details":500,"aadhar number to details":500,
-    "aadhaar number to aadhaar pdf":500,"aadhar number to aadhar pdf":500,
-    "name & mobile number to aadhaar pdf":1000,"name & mobile number to aadhar pdf":1000,
-    "aadhaar only address update":700,"aadhar only address update":700,
-    "lms certificate":1500,"election card":500,"election card update":500,
-    "election card correction":500,"new election card":500,"dl pdf":250,"rc pdf":300
-  };
-  if(map[n]!=null) return map[n];
-  if(n.includes("ration card pdf")&&n.includes("pvc")) return 100;
-  if(n.includes("vibhajan")) return 2500;
-  if(n.includes("non nsfa")) return 3500;
-  if(n.includes("wrong finger")) return 400;
-  if(n.includes("pita")&&n.includes("pati")) return 500;
-  if(n.includes("name delete")) return 100;
-  if(n.includes("name add")) return 70;
-  if(n.includes("ration")&&n.includes("correction")) return 350;
-  if(n.includes("without dob")) return 500;
-  if(n.includes("new pan")) return 350;
-  if(n.includes("pan")&&n.includes("correction")) return 500;
-  if(n.includes("second pan")) return 2000;
-  if(n.includes("pan card pdf")) return 100;
-  if(n.includes("aadhaar number to pan")||n.includes("aadhar number to pan")) return 70;
-  if(n.includes("pan number to aadhaar")||n.includes("pan number to aadhar")) return 500;
-  if(n.includes("pan number to pan details")) return 30;
-  if(n.includes("aadhaar status")||n.includes("aadhar status")) return 50;
-  if(n.includes("mobile number to pan")) return 70;
-  if(n.includes("voter to mobile")) return 70;
-  if(n.includes("voter download")) return 70;
-  if(n.includes("cibil")) return 300;
-  if(n.includes("ration number to")) return 500;
-  if(n.includes("aadhaar number to details")||n.includes("aadhar number to details")) return 500;
-  if(n.includes("aadhaar number to aadhaar pdf")||n.includes("aadhar number to aadhar pdf")) return 500;
-  if(n.includes("name & mobile")&&n.includes("aadhaar pdf")) return 1000;
-  if(n.includes("address update")) return 700;
-  if(n.includes("lms")) return 1500;
-  if(n.includes("election")) return 500;
-  if(/\bdl\b/.test(n)||n.includes("driving license")||n.includes("driving licence")) return 250;
-  if(/\brc\b/.test(n)||n.includes("registration certificate")) return 300;
-  return Number(fallback||0);
-}
-
 function effectiveServiceAmount(service){
   if(!service) return 0;
+
+  // Normal retailers: use the normal/global service price from Supabase.
+  // Super Retailer Pro: same exact prices, with only Election New/Correction at ₹250.
   if(isSuperRetailer()){
     const type=getServiceType(service.name);
     if(type === "election_new" || type === "election_correction") return 250;
   }
-  return fixedServicePrice(service.name, service.amount);
+
+  return Number(service.amount || 0);
 }
 
 function serviceCategory(service){
