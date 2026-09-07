@@ -1,0 +1,53 @@
+name: Fix retailer login
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-retailer-login.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Patch login handlers
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('retailer.html')
+          s = p.read_text(encoding='utf-8')
+
+          old = '''<button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true"><strong>👤 Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false"><strong>👑 Super Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false"><strong>⭐ Retailer Pro</strong></button>'''
+          new = '''<button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true" onclick="setLoginMode('retailer')"><strong>👤 Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false" onclick="setLoginMode('super')"><strong>👑 Super Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false" onclick="setLoginMode('pro')"><strong>⭐ Retailer Pro</strong></button>'''
+          if old not in s:
+              raise SystemExit('login mode block not found')
+          s = s.replace(old, new, 1)
+
+          old_form = '<form id="loginForm" autocomplete="on">'
+          new_form = '<form id="loginForm" autocomplete="on" onsubmit="event.preventDefault(); window.login(); return false;">'
+          if old_form not in s:
+              raise SystemExit('login form not found')
+          s = s.replace(old_form, new_form, 1)
+
+          p.write_text(s, encoding='utf-8')
+          print('retailer.html patched')
+          PY
+
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add retailer.html
+          if git diff --cached --quiet; then
+            echo 'No changes needed'
+            exit 0
+          fi
+          git commit -m 'Fix retailer login button and form submit'
+          git push
