@@ -29,25 +29,19 @@ window.ALLINONESTOP_CONFIG = {
       if(typeof retailer==="undefined" || !retailer) return;
       if(typeof services==="undefined" || !Array.isArray(services) || !services.length) return;
       if(typeof getServiceType!=="function") return;
-
       const wantedSuper=isSuper();
       const wanted=wantedSuper ? 250 : 500;
       let changed=false;
-
       services.forEach(function(s){
         const kind=electionKind(s && s.name);
         if(!kind) return;
-        if(Number(s.amount||0)!==wanted){
-          s.amount=wanted;
-          changed=true;
-        }
+        if(Number(s.amount||0)!==wanted){s.amount=wanted;changed=true;}
       });
-
       if(typeof selected!=="undefined" && selected){
         const kind=electionKind(selected.name);
         if(kind){
           const amount=wanted;
-          if(Number(selected.amount||0)!==amount) selected.amount=amount;
+          selected.amount=amount;
           const amountEl=document.getElementById("amount");
           const amountText=document.getElementById("amountText");
           if(amountEl) amountEl.value=String(amount);
@@ -55,31 +49,16 @@ window.ALLINONESTOP_CONFIG = {
           if(typeof generateUPIQR==="function") generateUPIQR(amount);
         }
       }
-
       if(changed && typeof renderServiceFolders==="function") renderServiceFolders();
-    }catch(e){
-      console.warn("Election price patch skipped:",e);
-    }
+    }catch(e){console.warn("Election price patch skipped:",e);}
   }
-
-  function start(){
-    applyElectionPrice();
-    setInterval(applyElectionPrice,500);
-  }
-
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start);
-  else start();
+  function start(){applyElectionPrice();setInterval(applyElectionPrice,500);}
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start); else start();
 })();
 
 /* SUPER RETAILER 2
-   This panel is deliberately independent from the normal retailer and
-   Super Retailer Pro price logic.
-
-   Rules:
-   1) Show ALL active services except the exact known Ration Card service IDs.
-   2) Never apply the Super Retailer Pro ₹250 election override here.
-   3) Use the normal services.amount price for every displayed service.
-*/
+   Definitive rule: ALL active services except the Ration Card service IDs below.
+   Every service keeps the normal services.amount price. */
 (function(){
   const RATION_SERVICE_IDS=new Set([
     "03e7e0b7-bbf6-4923-a0f4-36bbdf41d4cf",
@@ -104,14 +83,11 @@ window.ALLINONESTOP_CONFIG = {
       const rt=String(retailer.retailer_type||retailer.service_access||"")
         .toLowerCase().trim().replace(/[\s-]+/g,"_");
       return ["super_pro_2","super_retailer_2","super_retailer_2_pro"].includes(rt);
-    }catch(e){ return false; }
+    }catch(e){return false;}
   }
 
-  async function forceServices(){
-    if(!isSR2()) return false;
-    if(typeof sb === "undefined") return false;
-    if(typeof services === "undefined") return false;
-
+  async function loadSR2Services(){
+    if(!isSR2() || typeof sb === "undefined" || typeof services === "undefined") return false;
     const {data,error}=await sb.from("services")
       .select("id,name,amount,without_ration_amount,fields,description,sort_order,active")
       .eq("active",true)
@@ -119,15 +95,8 @@ window.ALLINONESTOP_CONFIG = {
     if(error) throw error;
 
     services=(data||[]).filter(function(service){
-      return !RATION_SERVICE_IDS.has(String(service && service.id || ""));
+      return !RATION_SERVICE_IDS.has(String(service?.id||""));
     });
-
-    /* Normal retailer prices only. This intentionally does not use
-       the Super Retailer Pro election ₹250 override. */
-    if(typeof effectiveServiceAmount === "function"){
-      /* lexical binding is replaced below by the page's own function only;
-         keep the actual service amounts unchanged so render uses services.amount. */
-    }
 
     const select=document.getElementById("service");
     if(select){
@@ -141,21 +110,34 @@ window.ALLINONESTOP_CONFIG = {
     }
 
     const note=document.getElementById("serviceAccessNote");
-    if(note) note.textContent="👑 Super Retailer 2 • Ration Card services hidden • Normal retailer prices";
+    if(note) note.textContent="👑 Super Retailer 2 • Ration Card services: NONE • All other active services • Normal retailer prices";
 
     if(typeof renderServiceFolders === "function") renderServiceFolders();
     return true;
   }
 
-  async function patch(){
+  function install(){
     try{
-      if(await forceServices()) clearInterval(timer);
-    }catch(e){
-      console.warn("Super Retailer 2 service refresh skipped:",e);
-    }
+      if(!isSR2()) return;
+      if(typeof loadServices === "function" && !loadServices.__sr2Fixed){
+        const original=loadServices;
+        const fixed=async function(){
+          /* Always use the exact SR2 rule instead of the normal access-type filter. */
+          if(await loadSR2Services()) return;
+          return original.apply(this,arguments);
+        };
+        fixed.__sr2Fixed=true;
+        loadServices=fixed;
+      }
+      /* Also refresh after the page's auto-login has finished loading the account. */
+      loadSR2Services().catch(function(e){console.warn("SR2 service load:",e);});
+    }catch(e){console.warn("SR2 install skipped:",e);}
   }
 
-  const timer=setInterval(patch,300);
-  if(document.readyState!=="loading") patch();
-  else document.addEventListener("DOMContentLoaded",patch);
+  const timer=setInterval(function(){
+    if(isSR2()) install();
+  },300);
+  setTimeout(function(){clearInterval(timer);},15000);
+  if(document.readyState!=="loading") install();
+  else document.addEventListener("DOMContentLoaded",install);
 })();
