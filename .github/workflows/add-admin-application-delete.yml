@@ -17,86 +17,85 @@ jobs:
           set -e
           python3 - <<'PY'
           from pathlib import Path
-          import re
           p=Path('admin.html')
           s=p.read_text(encoding='utf-8')
 
-          if 'function deleteApplication(' not in s:
-              marker = '\n/* =========================================================\n   LOAD STATS\n========================================================= */'
-              fn = r'''
-/* =========================================================
-   DELETE APPLICATION
-========================================================= */
-async function deleteApplication(trNumber){
-  const tr=String(trNumber||'').trim();
-  if(!tr){
-    alert('TR Number not found.');
-    return;
+          script = r'''
+<script>
+/* Admin application delete helper: added without changing existing application logic. */
+(function(){
+  async function deleteAdminApplication(tr){
+    tr=String(tr||'').trim();
+    if(!tr){alert('TR Number not found.');return;}
+    const c=prompt('Delete application '+tr+'?\\n\\nType DELETE to confirm.');
+    if(c!=='DELETE') return;
+    try{
+      if(typeof getSession==='function') await getSession();
+      if(!window.supabaseClient || !window.supabaseClient.from){throw new Error('Supabase client not available.');}
+      const {error}=await window.supabaseClient.from('applications').delete().eq('tr_number',tr);
+      if(error) throw error;
+      alert('Application deleted successfully.');
+      if(typeof refreshDashboard==='function') await refreshDashboard();
+    }catch(e){
+      console.error('DELETE APPLICATION ERROR',e);
+      alert(e?.message || 'Application deletion failed.');
+    }
   }
-  const confirmation=prompt('Delete application '+tr+'?\n\nType DELETE to confirm.');
-  if(confirmation !== 'DELETE') return;
+  window.deleteAdminApplication=deleteAdminApplication;
 
-  try{
-    await getSession();
-    const {error}=await supabaseClient
-      .from('applications')
-      .delete()
-      .eq('tr_number',tr);
-    if(error) throw new Error(error.message);
-    alert('Application deleted successfully.');
-    await refreshDashboard();
-  }catch(error){
-    console.error('DELETE APPLICATION ERROR:',error);
-    alert(error?.message || 'Application deletion failed.');
+  function addDeleteButtons(){
+    const tbody=document.getElementById('applicationRows');
+    if(!tbody) return;
+    Array.from(tbody.querySelectorAll('tr')).forEach(function(row){
+      if(row.dataset.adminDeleteAdded==='1') return;
+      const cells=row.children;
+      if(!cells || cells.length<7) return;
+      const tr=(cells[0].textContent||'').trim();
+      if(!tr || !/^TR[-\\w]+$/i.test(tr)) return;
+      const actionCell=cells[cells.length-1];
+      if(!actionCell) return;
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.className='small-btn delete-btn';
+      btn.textContent='🗑️ Delete';
+      btn.style.marginLeft='6px';
+      btn.addEventListener('click',function(){deleteAdminApplication(tr);});
+      actionCell.appendChild(btn);
+      row.dataset.adminDeleteAdded='1';
+    });
   }
-}
+
+  document.addEventListener('DOMContentLoaded',function(){
+    addDeleteButtons();
+    const tbody=document.getElementById('applicationRows');
+    if(tbody){
+      new MutationObserver(addDeleteButtons).observe(tbody,{childList:true,subtree:true});
+    }
+  });
+})();
+</script>
 '''
-              if marker not in s:
-                  raise SystemExit('LOAD STATS marker not found')
-              s=s.replace(marker, '\n'+fn+'\n'+marker, 1)
-
-          # Add a Delete button next to Save inside every application row.
-          save_block = '''<button
-                  type="button"
-                  class="small-btn"
-                  onclick="saveApplication(
-                    ${JSON.stringify(tr)},
-                    ${JSON.stringify(key)}
-                  )"
-                >
-                  💾 Save
-                </button>'''
-          if 'onclick="deleteApplication' not in s:
-              delete_block = save_block + '''
-
-                <button
-                  type="button"
-                  class="small-btn delete-btn"
-                  onclick="deleteApplication(
-                    ${JSON.stringify(tr)}
-                  )"
-                >
-                  🗑️ Delete
-                </button>'''
-              if save_block not in s:
-                  raise SystemExit('Application Save button block not found')
-              s=s.replace(save_block, delete_block, 1)
-
-          p.write_text(s, encoding='utf-8')
+          if 'deleteAdminApplication' not in s:
+              idx=s.lower().rfind('</body>')
+              if idx < 0: raise SystemExit('BODY closing tag not found')
+              s=s[:idx]+script+'\n'+s[idx:]
+              p.write_text(s,encoding='utf-8')
+          print('Patched admin.html')
           PY
 
+          echo 'Checking HTML/JS syntax...'
           python3 - <<'PY'
           from pathlib import Path
           import re
           s=Path('admin.html').read_text(encoding='utf-8')
-          js='\n'.join(re.findall(r'<script[^>]*>(.*?)</script>', s, re.S))
-          Path('/tmp/admin-check.js').write_text(js,encoding='utf-8')
-          print('JS bytes:',len(js))
+          scripts=re.findall(r'<script[^>]*>(.*?)</script>',s,re.S)
+          Path('/tmp/admin-check.js').write_text('\n'.join(scripts),encoding='utf-8')
+          print('Scripts:',len(scripts))
           PY
           node --check /tmp/admin-check.js
-          grep -q 'function deleteApplication(' admin.html
-          grep -q 'onclick="deleteApplication(' admin.html
-          echo 'Admin application delete patch validation passed.'
+          grep -q 'deleteAdminApplication' admin.html
+          grep -q 'Application deleted successfully' admin.html
+          echo 'Validation passed.'
 
       - name: Commit patch
         shell: bash
@@ -105,5 +104,5 @@ async function deleteApplication(trNumber){
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add admin.html
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Add admin application delete button'
+          git commit -m 'Add admin application delete action'
           git push
