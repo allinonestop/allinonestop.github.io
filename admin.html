@@ -907,7 +907,7 @@
         >
 
         <div class="hint">
-          यही Retailer ID login के लिए use होगी।
+          Retailer → RET-XXXXXX | Super Retailer → SUP-XXXXXX | Retailer Pro → PRO-XXXXXX. यही ID login के लिए use होगी।
         </div>
 
       </div>
@@ -1225,10 +1225,26 @@ function toggleRetailerPassword() {
 }
 
 
+function getSelectedRetailerTypeForId() {
+  const el = document.querySelector('input[name="retailerType"]:checked');
+  return el ? el.value : "all_work";
+}
+
+function retailerIdPrefixForType(type) {
+  if (type === "super_pro") return "SUP-";
+  if (type === "super_pro_2") return "PRO-";
+  return "RET-";
+}
+
+document.querySelectorAll('input[name="retailerType"]').forEach(el=>{
+  el.addEventListener("change",()=>generateRetailerId());
+});
+
 function generateRetailerId() {
 
+  const prefix = retailerIdPrefixForType(getSelectedRetailerTypeForId());
   const username =
-    "RET-" + randomRetailerCode();
+    prefix + randomRetailerCode();
 
   const usernameInput =
     document.getElementById(
