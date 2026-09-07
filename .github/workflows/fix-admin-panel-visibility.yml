@@ -1,0 +1,66 @@
+name: Fix Admin Panel Visibility
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fix admin panel visibility gate
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('admin.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '/* ADMIN PANEL VISIBILITY GUARD */'
+          if marker not in s:
+              patch = r'''<script>
+          /* ADMIN PANEL VISIBILITY GUARD */
+          (function(){
+            function syncAdminVisibility(){
+              const loginBox=document.getElementById('loginBox');
+              const panel=document.getElementById('adminPanel');
+              if(!loginBox || !panel) return;
+              const authenticated=loginBox.classList.contains('hidden');
+              panel.classList.toggle('hidden',!authenticated);
+              if(authenticated) panel.removeAttribute('data-logged-out');
+              else panel.setAttribute('data-logged-out','1');
+            }
+            function start(){
+              const loginBox=document.getElementById('loginBox');
+              const panel=document.getElementById('adminPanel');
+              if(!loginBox || !panel) return;
+              syncAdminVisibility();
+              new MutationObserver(syncAdminVisibility).observe(loginBox,{attributes:true,attributeFilter:['class']});
+            }
+            if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start);
+            else start();
+          })();
+          </script>
+          '''
+              s = s.replace('</body>', patch + '\n</body>')
+              p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add admin.html
+          if git diff --cached --quiet; then
+            echo "No admin.html changes needed."
+          else
+            git commit -m "Fix admin panel visibility before login"
+            git push
+          fi
