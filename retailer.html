@@ -855,11 +855,11 @@ html[data-theme="dark"] .statusBox.successBox{background:#0d281b}
   <div id="loginMsg" class="status"></div>
   <div class="login-mode-title">Select Login Mode</div>
   <div class="login-modes" id="loginModes" role="radiogroup" aria-label="Login Mode">
-    <button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true"><strong>👤 Retailer</strong></button>
-    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false"><strong>👑 Super Retailer</strong></button>
-    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false"><strong>⭐ Retailer Pro</strong></button>
+    <button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true" onclick="setLoginMode('retailer')"><strong>👤 Retailer</strong></button>
+    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false" onclick="setLoginMode('super')"><strong>👑 Super Retailer</strong></button>
+    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false" onclick="setLoginMode('pro')"><strong>⭐ Retailer Pro</strong></button>
   </div>
-  <form id="loginForm" autocomplete="on">
+  <form id="loginForm" autocomplete="on" onsubmit="event.preventDefault(); window.login(); return false;">
     <label for="username">Retailer ID / Username</label>
     <input id="username" placeholder="RET-XXXXXX" autocomplete="username" required>
     <label for="password">Password</label>
