@@ -1,0 +1,60 @@
+name: Fix Admin Retailer and Application Actions
+on:
+  push:
+    paths:
+      - '.github/admin-action-fix-trigger'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch admin.html
+        shell: bash
+        run: |
+          set -e
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('admin.html')
+          s=p.read_text(encoding='utf-8')
+
+          old='''    const {\n      error\n    } =\n      await supabaseClient\n        .from("applications")\n        .update({\n\n          payment_status:\n            payment,\n\n          application_status:\n            status,\n\n          remark:\n            remark\n\n        })\n        .eq(\n          "tr_number",\n          trNumber\n        );\n\n\n    if (error) {\n\n      throw new Error(\n        error.message\n      );\n\n    }'''
+
+          new='''    const {\n      data,\n      error\n    } =\n      await supabaseClient.functions.invoke(\n        RETAILER_FUNCTION,\n        {\n          body:{\n            action:"update_application",\n            tr_number:trNumber,\n            payment_status:payment,\n            application_status:status,\n            remark:remark\n          }\n        }\n      );\n\n\n    if (error) {\n      throw new Error(await readFunctionError(error));\n    }\n\n    if (!data || data.error) {\n      throw new Error(formatFunctionError(data || {}));\n    }'''
+
+          if old not in s:
+              raise SystemExit('Target application update block not found')
+          s=s.replace(old,new,1)
+
+          # Fix admin empty-state colspan values without changing behavior.
+          s=s.replace('<td colspan="5" class="loading">\n            No retailers found.', '<td colspan="6" class="loading">\n            No retailers found.')
+          s=s.replace('<td colspan="5" class="loading">\n          ${escapeHtml(\n            error?.message ||', '<td colspan="6" class="loading">\n          ${escapeHtml(\n            error?.message ||')
+
+          p.write_text(s,encoding='utf-8')
+          PY
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('admin.html').read_text(encoding='utf-8')
+          scripts=re.findall(r'<script[^>]*>(.*?)</script>',s,re.S)
+          js='\n'.join(scripts)
+          Path('/tmp/admin-check.js').write_text(js,encoding='utf-8')
+          print('JS bytes:',len(js))
+          PY
+          node --check /tmp/admin-check.js
+          grep -q 'action:"update_application"' admin.html
+          echo 'Admin patch validation passed.'
+
+      - name: Commit patched admin.html
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Fix admin retailer delete and application updates'
+          git push
