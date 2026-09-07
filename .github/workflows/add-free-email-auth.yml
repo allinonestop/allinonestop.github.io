@@ -21,8 +21,8 @@ jobs:
         run: |
           python3 <<'PY'
           from pathlib import Path
+          import re
 
-          # ---------------- ADMIN ----------------
           p = Path('admin.html')
           s = p.read_text(encoding='utf-8')
 
@@ -36,26 +36,24 @@ jobs:
           new = '''    const status =\n      statusElement.value;\n\n    const originalStatus =\n      statusElement.dataset.originalStatus || "";\n\n    const remarkElement ='''
           if 'const originalStatus =' not in s:
               if old not in s:
-                  raise SystemExit('ADMIN_PATCH_FAILED: saveApplication status marker not found')
+                  raise SystemExit('ADMIN_PATCH_FAILED: saveApplication marker not found')
               s = s.replace(old, new, 1)
 
           old = '''    alert(\n      "Application status updated successfully."\n    );'''
-          new = '''    let emailNote = "";\n\n    // Send retailer email ONLY when application result changes to Success/Failed.\n    if ((status === "Completed" || status === "Rejected") && status !== originalStatus) {\n      try {\n        const emailResult = await supabaseClient.functions.invoke(\n          "send-application-result-email",\n          {\n            body: {\n              tr_number: trNumber,\n              payment_status: payment,\n              application_status: status,\n              remark: remark\n            }\n          }\n        );\n        if (emailResult.error) {\n          console.warn("RESULT EMAIL ERROR", emailResult.error);\n          emailNote = " Email send nahi ho paya.";\n        } else if (emailResult.data?.email_sent) {\n          emailNote = " Retailer ko email bhej diya gaya.";\n        } else {\n          emailNote = " Status update ho gaya, lekin email send nahi hua.";\n        }\n      } catch (emailError) {\n        console.warn("RESULT EMAIL ERROR", emailError);\n        emailNote = " Status update ho gaya, lekin email send nahi hua.";\n      }\n    }\n\n    statusElement.dataset.originalStatus = status;\n\n    alert(\n      "Application status updated successfully." + emailNote\n    );'''
+          new = '''    let emailNote = "";\n\n    if ((status === "Completed" || status === "Rejected") && status !== originalStatus) {\n      try {\n        const emailResult = await supabaseClient.functions.invoke(\n          "send-application-result-email",\n          { body: { tr_number: trNumber, payment_status: payment, application_status: status, remark: remark } }\n        );\n        if (emailResult.error) {\n          console.warn("RESULT EMAIL ERROR", emailResult.error);\n          emailNote = " Email send nahi ho paya.";\n        } else if (emailResult.data?.email_sent) {\n          emailNote = " Retailer ko email bhej diya gaya.";\n        } else {\n          emailNote = " Status update ho gaya, lekin email send nahi hua.";\n        }\n      } catch (emailError) {\n        console.warn("RESULT EMAIL ERROR", emailError);\n        emailNote = " Status update ho gaya, lekin email send nahi hua.";\n      }\n    }\n\n    statusElement.dataset.originalStatus = status;\n\n    alert("Application status updated successfully." + emailNote);'''
           if 'send-application-result-email' not in s:
               if old not in s:
-                  raise SystemExit('ADMIN_PATCH_FAILED: application success alert marker not found')
+                  raise SystemExit('ADMIN_PATCH_FAILED: save success marker not found')
               s = s.replace(old, new, 1)
 
           anchor = '''    /* ============================================\n       CLEAR FORM\n    ============================================ */'''
-          email_patch = '''    // Send credentials to the retailer's registered email.\n    try {\n      const emailResult = await supabaseClient.functions.invoke(\n        "send-retailer-credentials",\n        {\n          body: {\n            user_id: data.retailer_id,\n            username: createdUsername,\n            password: password,\n            full_name: fullName,\n            retailer_number: createdNumber,\n            retailer_type: retailerType\n          }\n        }\n      );\n      if (emailResult.error) {\n        console.warn("CREDENTIAL EMAIL ERROR", emailResult.error);\n      } else if (emailResult.data?.email_sent) {\n        showMessage(\n          "createMessage",\n          "Retailer created successfully.\n\nRetailer ID: " + createdUsername +\n          "\nRetailer Number: " + createdNumber +\n          "\nCredentials email sent to registered email.",\n          false\n        );\n      } else {\n        console.warn("Credential email not sent:", emailResult.data);\n      }\n    } catch (emailError) {\n      console.warn("CREDENTIAL EMAIL ERROR", emailError);\n    }\n\n'''
+          email_patch = '''    // Send newly created retailer credentials to the registered Auth email.\n    try {\n      const emailResult = await supabaseClient.functions.invoke(\n        "send-retailer-credentials",\n        { body: { user_id: data.retailer_id, username: createdUsername, password: password, full_name: fullName, retailer_number: createdNumber, retailer_type: retailerType } }\n      );\n      if (emailResult.error) console.warn("CREDENTIAL EMAIL ERROR", emailResult.error);\n      else if (emailResult.data?.email_sent) {\n        showMessage("createMessage", "Retailer created successfully.\\n\\nRetailer ID: " + createdUsername + "\\nRetailer Number: " + createdNumber + "\\nCredentials email sent to registered email.", false);\n      }\n    } catch (emailError) {\n      console.warn("CREDENTIAL EMAIL ERROR", emailError);\n    }\n\n'''
           if 'send-retailer-credentials' not in s:
               if anchor not in s:
-                  raise SystemExit('ADMIN_PATCH_FAILED: create retailer clear-form marker not found')
+                  raise SystemExit('ADMIN_PATCH_FAILED: clear-form marker not found')
               s = s.replace(anchor, email_patch + anchor, 1)
-
           p.write_text(s, encoding='utf-8')
 
-          # ---------------- RETAILER ----------------
           p = Path('retailer.html')
           s = p.read_text(encoding='utf-8')
           begin = '<!-- ALLINONESTOP FREE AUTH FEATURES BEGIN -->'
@@ -65,6 +63,7 @@ jobs:
 (function(){
   const AUTH_DOMAIN = "@dixsmucrgnyuvudhymdj.supabase.co";
   const resetRedirect = () => window.location.origin + window.location.pathname;
+  const idToEmail = id => String(id || "").trim().toLowerCase() + AUTH_DOMAIN;
 
   function ensureLoginTools(){
     const form=document.getElementById("loginForm");
@@ -84,10 +83,6 @@ jobs:
     b.type="button"; b.id="changePasswordBtn"; b.className="secondary"; b.textContent="🔑 Change Password";
     b.onclick=changePassword;
     if(edit) edit.insertAdjacentElement("afterend",b); else header.appendChild(b);
-  }
-
-  function idToEmail(id){
-    return String(id||"").trim().toLowerCase()+AUTH_DOMAIN;
   }
 
   async function forgotPassword(){
@@ -157,48 +152,37 @@ jobs:
     }
   }
 
-  async function init(){
+  function onReady(){
     ensureLoginTools();
-    ensureChangePassword();
-    try{
-      const {data}=await sb.auth.getSession();
-      const recovery = /type=recovery|access_token=/.test(window.location.hash+"&"+window.location.search);
-      if(recovery) showResetBox();
-      if(data?.session && retailer) ensureChangePassword();
-    }catch(e){console.warn("Auth feature init:",e)}
+    if(retailer) ensureChangePassword();
+    if(/type=recovery|access_token=/.test(window.location.hash+"&"+window.location.search)) showResetBox();
   }
 
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init); else init();
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",onReady); else onReady();
   if(sb?.auth?.onAuthStateChange){
     sb.auth.onAuthStateChange((event)=>{
       if(event==="PASSWORD_RECOVERY") showResetBox();
-      if(event==="SIGNED_IN") ensureChangePassword();
+      if(event==="SIGNED_IN") setTimeout(ensureChangePassword,100);
     });
   }
 })();
 </script>
 <!-- ALLINONESTOP FREE AUTH FEATURES END -->'''
           if begin in s and end in s:
-              import re
               s = re.sub(re.escape(begin)+r'.*?'+re.escape(end), auth_block, s, flags=re.S)
           else:
-              marker='</body>'
-              if marker not in s:
+              if '</body>' not in s:
                   raise SystemExit('RETAILER_PATCH_FAILED: body marker not found')
-              s=s.replace(marker, auth_block+'\n'+marker,1)
+              s=s.replace('</body>',auth_block+'\n</body>',1)
           p.write_text(s, encoding='utf-8')
           print('PATCH_OK')
           PY
 
-      - name: Commit changes
-        shell: bash
+      - name: Commit
         run: |
-          if git diff --quiet -- admin.html retailer.html; then
-            echo "No changes needed";
-            exit 0;
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- admin.html retailer.html; then echo 'Already patched'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add admin.html retailer.html
-          git commit -m "Add retailer credential email and password recovery"
+          git commit -m 'Add free retailer credential email and password recovery'
           git push
