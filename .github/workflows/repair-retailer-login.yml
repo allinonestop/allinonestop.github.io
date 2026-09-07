@@ -13,12 +13,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Restore stable portal
+      - name: Restore last good retailer portal
         shell: bash
         run: |
           set -euo pipefail
-          git show 17ff93249021b6c5dd62f69b9242ddcdeddea802:retailer.html > retailer.html
-      - name: Make the three login modes simple and clickable
+          git show 674e748fd7c6d7061cb5861a4fb233c0faeec39b:retailer.html > retailer.html
+      - name: Make exactly three login buttons and a real submit form
         shell: bash
         run: |
           set -euo pipefail
@@ -28,19 +28,25 @@ jobs:
           p=Path('retailer.html')
           s=p.read_text(encoding='utf-8')
           pattern=r'(<div\s+id="loginCard"\b)[\s\S]*?(?=<!--\s*=+\s*APPLICATION AREA)'
-          replacement='''<div id="loginCard" class="card" style="max-width:450px;margin:45px auto">\n  <h2>Retailer Login</h2>\n  <div id="loginMsg" class="status"></div>\n  <div class="login-mode-title">Select Login Mode</div>\n  <div class="login-modes" id="loginModes" role="radiogroup" aria-label="Login Mode">\n    <button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true" onclick="setLoginMode('retailer')"><strong>👤 Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false" onclick="setLoginMode('super')"><strong>👑 Super Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false" onclick="setLoginMode('pro')"><strong>⭐ Retailer Pro</strong></button>\n  </div>\n  <form id="loginForm" autocomplete="on">\n    <label for="username">Retailer ID / Username</label>\n    <input id="username" placeholder="RET-XXXXXX" autocomplete="username" required>\n    <label for="password">Password</label>\n    <input id="password" type="password" autocomplete="current-password" required>\n    <button id="loginBtn" type="submit" class="primary" style="margin-top:6px;width:100%">Login</button>\n  </form>\n</div>\n\n'''
+          replacement='''<div id="loginCard" class="card" style="max-width:450px;margin:45px auto">\n  <h2>Retailer Login</h2>\n  <div id="loginMsg" class="status"></div>\n  <div class="login-mode-title">Select Login Mode</div>\n  <div class="login-modes" id="loginModes" role="radiogroup" aria-label="Login Mode">\n    <button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true"><strong>👤 Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false"><strong>👑 Super Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false"><strong>⭐ Retailer Pro</strong></button>\n  </div>\n  <form id="loginForm" autocomplete="on">\n    <label for="username">Retailer ID / Username</label>\n    <input id="username" placeholder="RET-XXXXXX" autocomplete="username" required>\n    <label for="password">Password</label>\n    <input id="password" type="password" autocomplete="current-password" required>\n    <button id="loginBtn" type="submit" class="primary" style="margin-top:6px;width:100%">Login</button>\n  </form>\n</div>\n\n'''
           s,n=re.subn(pattern,replacement,s,count=1,flags=re.I)
-          if n!=1: raise SystemExit(f'login card replacement failed: {n}')
+          if n!=1: raise SystemExit('login card patch failed')
+
+          # Replace the mode functions with a version that works with buttons.
           old=r'function setLoginMode\(mode\)\{[\s\S]*?\}\s*\n\s*function initLoginModes\(\)\{[\s\S]*?\}\s*\n'
-          new='''function setLoginMode(mode){\n  const allowed=["retailer","super","pro"];\n  selectedLoginMode=allowed.includes(mode)?mode:"retailer";\n  document.querySelectorAll('.login-mode-card').forEach(c=>{\n    const active=c.dataset.mode===selectedLoginMode;\n    c.classList.toggle('active',active);\n    c.setAttribute('aria-pressed',active?'true':'false');\n  });\n}\nfunction initLoginModes(){setLoginMode(selectedLoginMode);}\n'''
+          new='''function setLoginMode(mode){\n  selectedLoginMode=["retailer","super","pro"].includes(mode)?mode:"retailer";\n  document.querySelectorAll('.login-mode-card').forEach(c=>{\n    const active=c.dataset.mode===selectedLoginMode;\n    c.classList.toggle('active',active);\n    c.setAttribute('aria-pressed',active?'true':'false');\n  });\n}\nfunction initLoginModes(){setLoginMode(selectedLoginMode);}\n'''
           s,n=re.subn(old,new,s,count=1,flags=re.I)
-          if n!=1: raise SystemExit(f'login mode function replacement failed: {n}')
+          if n!=1: raise SystemExit('mode function patch failed')
+
+          # Use an actual form listener so Login click/Enter both work.
           marker='window.addEventListener(\n  "DOMContentLoaded",\n  async () => {'
-          hook='''window.addEventListener("DOMContentLoaded",()=>{\n  initLoginModes();\n  const form=document.getElementById("loginForm");\n  if(form) form.addEventListener("submit",e=>{e.preventDefault();window.login();});\n});\n\n'''
-          if marker not in s: raise SystemExit('DOMContentLoaded marker not found')
+          hook='''window.addEventListener("DOMContentLoaded",()=>{\n  initLoginModes();\n  const form=document.getElementById("loginForm");\n  if(form) form.addEventListener("submit",async e=>{e.preventDefault();await window.login();});\n});\n\n'''
+          if marker not in s: raise SystemExit('DOM marker not found')
           s=s.replace(marker,hook+marker,1)
+
+          # Ensure current login function is callable from the form listener.
           if 'async function login(){' not in s: raise SystemExit('login function missing')
-          s=s.replace('.login-mode-card input{display:none}', '.login-mode-card{appearance:none;box-sizing:border-box;width:100%;text-align:left;font:inherit;color:inherit}')
+
           p.write_text(s,encoding='utf-8')
           js='\n'.join(re.findall(r'<script[^>]*>(.*?)</script>',s,re.S|re.I))
           Path('/tmp/retailer-final-check.js').write_text(js,encoding='utf-8')
@@ -50,13 +56,13 @@ jobs:
           test "$(grep -o 'data-mode="super"' retailer.html | wc -l)" -eq 1
           test "$(grep -o 'data-mode="pro"' retailer.html | wc -l)" -eq 1
           test "$(grep -o 'id="loginBtn"' retailer.html | wc -l)" -eq 1
-          grep -q 'form.addEventListener("submit"' retailer.html
-      - name: Publish repaired retailer.html
+          test "$(grep -o 'id="loginForm"' retailer.html | wc -l)" -eq 1
+      - name: Publish repaired retailer portal
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add retailer.html
-          git commit -m 'Fix retailer login click and keep exactly three modes'
+          git commit -m 'Fix retailer login click and keep three modes'
           git push
