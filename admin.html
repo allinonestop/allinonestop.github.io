@@ -3127,5 +3127,43 @@ document.addEventListener(
 
 </script>
 
+
+<script>
+window.__adminDeleteApplication = async function(tr){
+  tr=String(tr||"").trim();
+  if(!tr)return;
+  if(prompt("Delete application "+tr+"?\n\nType DELETE to confirm.")!=="DELETE")return;
+  try{
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(!session)throw new Error("Admin session expired. Please login again.");
+    const {error}=await supabaseClient.from("applications").delete().eq("tr_number",tr);
+    if(error)throw error;
+    alert("Application deleted successfully.");
+    await refreshDashboard();
+  }catch(e){console.error(e);alert(e.message||"Application deletion failed.");}
+};
+(function(){
+  function patch(){
+    const tb=document.getElementById("applicationRows");
+    if(!tb)return;
+    tb.querySelectorAll("tr").forEach(function(r){
+      if(r.dataset.delAdded==="1"||r.children.length<7)return;
+      const tr=(r.children[0].textContent||"").trim();
+      if(!/^TR-/.test(tr))return;
+      const cell=r.children[r.children.length-1];
+      if(!cell)return;
+      const b=document.createElement("button");
+      b.type="button"; b.className="small-btn delete-btn"; b.style.marginLeft="6px"; b.textContent="🗑️ Delete";
+      b.onclick=function(){window.__adminDeleteApplication(tr);};
+      cell.appendChild(b); r.dataset.delAdded="1";
+    });
+  }
+  document.addEventListener("DOMContentLoaded",function(){
+    patch();
+    const tb=document.getElementById("applicationRows");
+    if(tb)new MutationObserver(patch).observe(tb,{childList:true,subtree:true});
+  });
+})();
+</script>
 </body>
 </html>
