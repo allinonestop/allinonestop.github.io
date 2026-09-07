@@ -1,5 +1,8 @@
 name: Admin Delete Patch
 on:
+  push:
+    paths:
+      - '.github/admin-delete-patch-trigger'
   workflow_dispatch:
 permissions:
   contents: write
