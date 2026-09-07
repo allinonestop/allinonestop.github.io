@@ -36,7 +36,7 @@ window.ALLINONESTOP_CONFIG = {
     if(!id)return;
     try{
       const clean=String(id).trim().toUpperCase();
-      const {data,error}=await getClient().functions.invoke('retailer-forgot-password',{body:{retailer_id:clean}});
+      const {data,error}=await getClient().functions.invoke('retailer-forgot-password-brevo',{body:{retailer_id:clean}});
       if(error)throw error;
       alert(data?.message||'If the account exists, a password reset email has been sent.');
     }catch(e){console.error('Forgot password:',e);alert('Password reset request process nahi ho paya.');}
