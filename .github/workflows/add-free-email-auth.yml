@@ -1,0 +1,204 @@
+name: Add free retailer email and password features
+
+on:
+  push:
+    paths:
+      - '.github/workflows/add-free-email-auth.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Patch admin and retailer pages
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          # ---------------- ADMIN ----------------
+          p = Path('admin.html')
+          s = p.read_text(encoding='utf-8')
+
+          original_status = 'id="status-${key}"'
+          if 'data-original-status="${escapeHtml(status)}"' not in s:
+              if original_status not in s:
+                  raise SystemExit('ADMIN_PATCH_FAILED: status select marker not found')
+              s = s.replace(original_status, original_status + ' data-original-status="${escapeHtml(status)}"', 1)
+
+          old = '''    const status =\n      statusElement.value;\n\n    const remarkElement ='''
+          new = '''    const status =\n      statusElement.value;\n\n    const originalStatus =\n      statusElement.dataset.originalStatus || "";\n\n    const remarkElement ='''
+          if 'const originalStatus =' not in s:
+              if old not in s:
+                  raise SystemExit('ADMIN_PATCH_FAILED: saveApplication status marker not found')
+              s = s.replace(old, new, 1)
+
+          old = '''    alert(\n      "Application status updated successfully."\n    );'''
+          new = '''    let emailNote = "";\n\n    // Send retailer email ONLY when application result changes to Success/Failed.\n    if ((status === "Completed" || status === "Rejected") && status !== originalStatus) {\n      try {\n        const emailResult = await supabaseClient.functions.invoke(\n          "send-application-result-email",\n          {\n            body: {\n              tr_number: trNumber,\n              payment_status: payment,\n              application_status: status,\n              remark: remark\n            }\n          }\n        );\n        if (emailResult.error) {\n          console.warn("RESULT EMAIL ERROR", emailResult.error);\n          emailNote = " Email send nahi ho paya.";\n        } else if (emailResult.data?.email_sent) {\n          emailNote = " Retailer ko email bhej diya gaya.";\n        } else {\n          emailNote = " Status update ho gaya, lekin email send nahi hua.";\n        }\n      } catch (emailError) {\n        console.warn("RESULT EMAIL ERROR", emailError);\n        emailNote = " Status update ho gaya, lekin email send nahi hua.";\n      }\n    }\n\n    statusElement.dataset.originalStatus = status;\n\n    alert(\n      "Application status updated successfully." + emailNote\n    );'''
+          if 'send-application-result-email' not in s:
+              if old not in s:
+                  raise SystemExit('ADMIN_PATCH_FAILED: application success alert marker not found')
+              s = s.replace(old, new, 1)
+
+          anchor = '''    /* ============================================\n       CLEAR FORM\n    ============================================ */'''
+          email_patch = '''    // Send credentials to the retailer's registered email.\n    try {\n      const emailResult = await supabaseClient.functions.invoke(\n        "send-retailer-credentials",\n        {\n          body: {\n            user_id: data.retailer_id,\n            username: createdUsername,\n            password: password,\n            full_name: fullName,\n            retailer_number: createdNumber,\n            retailer_type: retailerType\n          }\n        }\n      );\n      if (emailResult.error) {\n        console.warn("CREDENTIAL EMAIL ERROR", emailResult.error);\n      } else if (emailResult.data?.email_sent) {\n        showMessage(\n          "createMessage",\n          "Retailer created successfully.\n\nRetailer ID: " + createdUsername +\n          "\nRetailer Number: " + createdNumber +\n          "\nCredentials email sent to registered email.",\n          false\n        );\n      } else {\n        console.warn("Credential email not sent:", emailResult.data);\n      }\n    } catch (emailError) {\n      console.warn("CREDENTIAL EMAIL ERROR", emailError);\n    }\n\n'''
+          if 'send-retailer-credentials' not in s:
+              if anchor not in s:
+                  raise SystemExit('ADMIN_PATCH_FAILED: create retailer clear-form marker not found')
+              s = s.replace(anchor, email_patch + anchor, 1)
+
+          p.write_text(s, encoding='utf-8')
+
+          # ---------------- RETAILER ----------------
+          p = Path('retailer.html')
+          s = p.read_text(encoding='utf-8')
+          begin = '<!-- ALLINONESTOP FREE AUTH FEATURES BEGIN -->'
+          end = '<!-- ALLINONESTOP FREE AUTH FEATURES END -->'
+          auth_block = r'''<!-- ALLINONESTOP FREE AUTH FEATURES BEGIN -->
+<script>
+(function(){
+  const AUTH_DOMAIN = "@dixsmucrgnyuvudhymdj.supabase.co";
+  const resetRedirect = () => window.location.origin + window.location.pathname;
+
+  function ensureLoginTools(){
+    const form=document.getElementById("loginForm");
+    if(!form || document.getElementById("forgotPasswordBtn")) return;
+    const box=document.createElement("div");
+    box.style.cssText="margin-top:12px;text-align:center";
+    box.innerHTML='<button type="button" id="forgotPasswordBtn" style="background:none;border:0;color:#2563eb;padding:4px 0;font-weight:800;cursor:pointer;box-shadow:none">Forgot Password?</button><div style="font-size:11px;color:#64748b;margin-top:3px">Reset link registered email par bheja jayega.</div>';
+    form.insertAdjacentElement("afterend",box);
+    document.getElementById("forgotPasswordBtn").onclick=forgotPassword;
+  }
+
+  function ensureChangePassword(){
+    const header=document.querySelector(".profileHeader");
+    if(!header || document.getElementById("changePasswordBtn")) return;
+    const edit=document.getElementById("editProfileBtn");
+    const b=document.createElement("button");
+    b.type="button"; b.id="changePasswordBtn"; b.className="secondary"; b.textContent="🔑 Change Password";
+    b.onclick=changePassword;
+    if(edit) edit.insertAdjacentElement("afterend",b); else header.appendChild(b);
+  }
+
+  function idToEmail(id){
+    return String(id||"").trim().toLowerCase()+AUTH_DOMAIN;
+  }
+
+  async function forgotPassword(){
+    const id=prompt("Apna Retailer ID enter karein:\nRET-XXXXXX / SUP-XXXXXX / PRO-XXXXXX");
+    if(!id) return;
+    const clean=String(id).trim().toUpperCase();
+    try{
+      const {error}=await sb.auth.resetPasswordForEmail(idToEmail(clean),{redirectTo:resetRedirect()});
+      if(error) throw error;
+      alert("Password reset link registered email par bhej diya gaya hai. Inbox/Spam check karein.");
+    }catch(e){
+      console.error("Forgot password:",e);
+      alert(e.message||"Password reset email send nahi hua.");
+    }
+  }
+
+  async function changePassword(){
+    if(!retailer){alert("Please login first.");return;}
+    const p1=prompt("New password enter karein (minimum 8 characters):");
+    if(p1===null) return;
+    const p=String(p1);
+    if(p.length<8){alert("Password minimum 8 characters hona chahiye.");return;}
+    const p2=prompt("New password dobara enter karein:");
+    if(p2===null) return;
+    if(p!==String(p2)){alert("Passwords match nahi karte.");return;}
+    try{
+      const {error}=await sb.auth.updateUser({password:p});
+      if(error) throw error;
+      alert("Password successfully change ho gaya.");
+    }catch(e){
+      console.error("Change password:",e);
+      alert(e.message||"Password change failed.");
+    }
+  }
+
+  function showResetBox(){
+    ensureLoginTools();
+    if(document.getElementById("resetPasswordBox")) return;
+    const card=document.getElementById("loginCard");
+    if(!card) return;
+    const old=document.getElementById("loginForm");
+    const box=document.createElement("div");
+    box.id="resetPasswordBox";
+    box.style.cssText="margin-top:15px;padding:16px;border:1px solid #c7d2fe;border-radius:14px;background:#eef2ff";
+    box.innerHTML='<h3 style="margin:0 0 10px">🔐 Set New Password</h3><input id="resetPassword1" type="password" placeholder="New password (min 8)"><input id="resetPassword2" type="password" placeholder="Confirm new password"><button type="button" class="primary" id="resetPasswordSubmit" style="width:100%">Save New Password</button><div id="resetPasswordMsg" style="margin-top:8px;font-size:13px"></div>';
+    if(old) old.insertAdjacentElement("afterend",box); else card.appendChild(box);
+    document.getElementById("resetPasswordSubmit").onclick=submitResetPassword;
+  }
+
+  async function submitResetPassword(){
+    const a=document.getElementById("resetPassword1")?.value||"";
+    const b=document.getElementById("resetPassword2")?.value||"";
+    const m=document.getElementById("resetPasswordMsg");
+    if(a.length<8){if(m)m.textContent="Password minimum 8 characters hona chahiye.";return;}
+    if(a!==b){if(m)m.textContent="Passwords match nahi karte.";return;}
+    const btn=document.getElementById("resetPasswordSubmit"); if(btn)btn.disabled=true;
+    try{
+      const {error}=await sb.auth.updateUser({password:a});
+      if(error)throw error;
+      if(m)m.textContent="Password successfully changed. Please login again.";
+      await sb.auth.signOut();
+      setTimeout(()=>window.location.href=window.location.pathname,700);
+    }catch(e){
+      console.error("Reset password:",e);
+      if(m)m.textContent=e.message||"Password reset failed.";
+      if(btn)btn.disabled=false;
+    }
+  }
+
+  async function init(){
+    ensureLoginTools();
+    ensureChangePassword();
+    try{
+      const {data}=await sb.auth.getSession();
+      const recovery = /type=recovery|access_token=/.test(window.location.hash+"&"+window.location.search);
+      if(recovery) showResetBox();
+      if(data?.session && retailer) ensureChangePassword();
+    }catch(e){console.warn("Auth feature init:",e)}
+  }
+
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init); else init();
+  if(sb?.auth?.onAuthStateChange){
+    sb.auth.onAuthStateChange((event)=>{
+      if(event==="PASSWORD_RECOVERY") showResetBox();
+      if(event==="SIGNED_IN") ensureChangePassword();
+    });
+  }
+})();
+</script>
+<!-- ALLINONESTOP FREE AUTH FEATURES END -->'''
+          if begin in s and end in s:
+              import re
+              s = re.sub(re.escape(begin)+r'.*?'+re.escape(end), auth_block, s, flags=re.S)
+          else:
+              marker='</body>'
+              if marker not in s:
+                  raise SystemExit('RETAILER_PATCH_FAILED: body marker not found')
+              s=s.replace(marker, auth_block+'\n'+marker,1)
+          p.write_text(s, encoding='utf-8')
+          print('PATCH_OK')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          if git diff --quiet -- admin.html retailer.html; then
+            echo "No changes needed";
+            exit 0;
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add admin.html retailer.html
+          git commit -m "Add retailer credential email and password recovery"
+          git push
