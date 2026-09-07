@@ -1,0 +1,30 @@
+name: Admin Delete Patch
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add delete helper
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('admin.html')
+          s=p.read_text(encoding='utf-8')
+          if 'window.__adminDeleteApplication' in s:
+              print('Already patched')
+              raise SystemExit(0)
+          js='''\n<script>\nwindow.__adminDeleteApplication = async function(tr){\n  tr=String(tr||\"\").trim();\n  if(!tr)return;\n  if(prompt(\"Delete application \"+tr+\"?\\n\\nType DELETE to confirm.\")!==\"DELETE\")return;\n  try{\n    const {data:{session}}=await supabaseClient.auth.getSession();\n    if(!session)throw new Error(\"Admin session expired. Please login again.\");\n    const {error}=await supabaseClient.from(\"applications\").delete().eq(\"tr_number\",tr);\n    if(error)throw error;\n    alert(\"Application deleted successfully.\");\n    await refreshDashboard();\n  }catch(e){console.error(e);alert(e.message||\"Application deletion failed.\");}\n};\n(function(){\n  function patch(){\n    const tb=document.getElementById(\"applicationRows\");\n    if(!tb)return;\n    tb.querySelectorAll(\"tr\").forEach(function(r){\n      if(r.dataset.delAdded===\"1\"||r.children.length<7)return;\n      const tr=(r.children[0].textContent||\"\").trim();\n      if(!/^TR-/.test(tr))return;\n      const cell=r.children[r.children.length-1];\n      if(!cell)return;\n      const b=document.createElement(\"button\");\n      b.type=\"button\"; b.className=\"small-btn delete-btn\"; b.style.marginLeft=\"6px\"; b.textContent=\"🗑️ Delete\";\n      b.onclick=function(){window.__adminDeleteApplication(tr);};\n      cell.appendChild(b); r.dataset.delAdded=\"1\";\n    });\n  }\n  document.addEventListener(\"DOMContentLoaded\",function(){\n    patch();\n    const tb=document.getElementById(\"applicationRows\");\n    if(tb)new MutationObserver(patch).observe(tb,{childList:true,subtree:true});\n  });\n})();\n</script>\n'''
+          marker='</body>'
+          if marker not in s: raise SystemExit('No </body> in admin.html')
+          p.write_text(s.replace(marker,js+marker,1),encoding='utf-8')
+          print('Patched admin.html')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin.html
+          git commit -m 'Add application delete button to admin panel'
+          git push
