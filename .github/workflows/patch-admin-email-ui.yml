@@ -1,0 +1,55 @@
+name: Patch admin registered email
+on:
+  push:
+    paths:
+      - '.github/trigger-admin-email-ui'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch admin
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('admin.html'); s=p.read_text(encoding='utf-8')
+          if 'id="retailerEmail"' not in s:
+              marker='''        <div>\n\n          <label for="retailerNumber">\n            Retailer Number\n          </label>'''
+              insert='''        <div>\n\n          <label for="retailerEmail">\n            Retailer Email\n          </label>\n\n          <input\n            id="retailerEmail"\n            type="email"\n            placeholder="retailer@example.com"\n            autocomplete="email"\n          >\n\n        </div>\n\n\n        <div>\n\n          <label for="retailerNumber">\n            Retailer Number\n          </label>'''
+              if marker not in s: raise SystemExit('ADMIN_EMAIL_PATCH_FAILED: email UI marker not found')
+              s=s.replace(marker,insert,1)
+          if 'const retailerEmail =' not in s:
+              marker='''  let retailerNumber =\n    document\n      .getElementById("retailerNumber")\n      .value\n      .trim();'''
+              insert='''  let retailerNumber =\n    document\n      .getElementById("retailerNumber")\n      .value\n      .trim();\n\n  const retailerEmail =\n    document\n      .getElementById("retailerEmail")\n      .value\n      .trim();'''
+              if marker not in s: raise SystemExit('ADMIN_EMAIL_PATCH_FAILED: email JS marker not found')
+              s=s.replace(marker,insert,1)
+          if 'retailerEmail && !/^\\S+@\\S+\\.\\S+$/.test(retailerEmail)' not in s:
+              marker='''  if (!/^\\d{10}$/.test(mobile)) {'''
+              insert='''  if (retailerEmail && !/^\\S+@\\S+\\.\\S+$/.test(retailerEmail)) {\n\n    showMessage("createMessage","Please enter a valid retailer email.",true);\n    return;\n\n  }\n\n\n  if (!/^\\d{10}$/.test(mobile)) {'''
+              if marker not in s: raise SystemExit('ADMIN_EMAIL_PATCH_FAILED: validation marker not found')
+              s=s.replace(marker,insert,1)
+          if 'email: retailerEmail' not in s:
+              marker='''      full_name: fullName,\n\n      mobile: mobile,\n\n      username: username,'''
+              insert='''      full_name: fullName,\n\n      mobile: mobile,\n\n      email: retailerEmail,\n\n      username: username,'''
+              if marker not in s: raise SystemExit('ADMIN_EMAIL_PATCH_FAILED: request body marker not found')
+              s=s.replace(marker,insert,1)
+          if 'document.getElementById("retailerEmail").value = "";' not in s:
+              marker='''    document\n      .getElementById(\n        "retailerMobile"\n      )\n      .value = "";'''
+              insert='''    document\n      .getElementById(\n        "retailerMobile"\n      )\n      .value = "";\n\n    document\n      .getElementById(\n        "retailerEmail"\n      )\n      .value = "";'''
+              if marker not in s: raise SystemExit('ADMIN_EMAIL_PATCH_FAILED: clear marker not found')
+              s=s.replace(marker,insert,1)
+          p.write_text(s,encoding='utf-8')
+          print('PATCH_OK')
+          PY
+      - name: Commit
+        run: |
+          if git diff --quiet -- admin.html; then echo 'Already patched'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin.html
+          git commit -m 'Add retailer registered email field'
+          git push
