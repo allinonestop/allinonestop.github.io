@@ -1,0 +1,76 @@
+name: Configure Retailer Login Modes
+on:
+  push:
+    paths:
+      - '.github/retailer-login-modes-trigger'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore stable full retailer portal and configure 3 login modes
+        shell: bash
+        run: |
+          set -e
+          TARGET_BLOB='9e8c9a6448b98fabe0f5f7566b723d9e874193b8'
+          FOUND=''
+          while IFS= read -r c; do
+            if [ "$(git rev-parse "$c:retailer.html" 2>/dev/null || true)" = "$TARGET_BLOB" ]; then FOUND="$c"; break; fi
+          done < <(git rev-list --all -- retailer.html)
+          if [ -z "$FOUND" ]; then echo 'Stable retailer.html blob not found'; exit 1; fi
+          git show "$FOUND:retailer.html" > retailer.html
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('retailer.html'); s=p.read_text(encoding='utf-8')
+          mode_html='''\n  <div class="login-mode-title">Select Login Mode</div>\n  <div class="login-modes" id="loginModes">\n    <label class="login-mode-card active" data-mode="retailer"><input type="radio" name="loginMode" value="retailer" checked><strong>👤 Retailer</strong><span>All active services • Ration + PAN + Election + DL + RC + Voter + LMS + PDF + Second PAN</span></label>\n    <label class="login-mode-card" data-mode="super"><input type="radio" name="loginMode" value="super"><strong>👑 Super Retailer</strong><span>Same services as Retailer • Election New/Correction ₹250</span></label>\n    <label class="login-mode-card" data-mode="pro"><input type="radio" name="loginMode" value="pro"><strong>⭐ Retailer Pro</strong><span>No Ration Card • PAN + Election + DL + RC + Voter + LMS + PDF + Second PAN</span></label>\n  </div>\n'''
+          needle='''  <div\n    id="loginMsg"\n    class="status">\n  </div>\n'''
+          if 'id="loginModes"' not in s:
+              if needle not in s: raise SystemExit('login message block not found')
+              s=s.replace(needle,needle+mode_html,1)
+          css='''\n.login-mode-title{font-size:13px;font-weight:900;color:#cbd5e1;margin:12px 0 9px}.login-modes{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:15px}.login-mode-card{display:block;padding:13px 14px;border:1px solid rgba(148,163,184,.18);border-radius:14px;background:rgba(2,6,23,.38);cursor:pointer;transition:.2s}.login-mode-card input{display:none}.login-mode-card strong{display:block;color:#fff;font-size:14px;font-weight:900;margin-bottom:4px}.login-mode-card span{display:block;color:#8190a7;font-size:11px;line-height:1.45}.login-mode-card.active{border-color:#818cf8;background:linear-gradient(145deg,rgba(124,58,237,.18),rgba(37,99,235,.10));box-shadow:0 8px 22px rgba(79,70,229,.13)}.login-mode-card.active strong{color:#c4b5fd}\n'''
+          if '.login-mode-title' not in s:s=s.replace('</style>',css+'</style>',1)
+          s=s.replace('let activeStatusBox = "pending";','let activeStatusBox = "pending";\nlet selectedLoginMode = "retailer";',1)
+          login_re=r'/\* =====================================================\n   LOGIN\n===================================================== \*/\n\nasync function login\(\)\{.*?\n\n\}\n\n\n/\* =====================================================\n   RETAILER PROFILE'
+          login_new='''/* =====================================================\n   LOGIN\n===================================================== */\nfunction modeTypeMatches(mode, profile){const t=String(profile?.retailer_type||profile?.service_access||"").toLowerCase().trim().replace(/[\\s-]+/g,"_");if(mode==="retailer")return["ration_card","ration_card_only","all_work","all_in_one","all_services","all_service","all","retailer"].includes(t);if(mode==="super")return["super_pro","super_retailer_pro","super_retailer"].includes(t);if(mode==="pro")return["super_pro_2","super_retailer_2","super_retailer_2_pro"].includes(t);return false;}\nfunction modeForProfile(profile){const t=String(profile?.retailer_type||profile?.service_access||"").toLowerCase().trim().replace(/[\\s-]+/g,"_");if(["super_pro","super_retailer_pro","super_retailer"].includes(t))return"super";if(["super_pro_2","super_retailer_2","super_retailer_2_pro"].includes(t))return"pro";return"retailer";}\nfunction setLoginMode(mode){selectedLoginMode=mode;document.querySelectorAll('input[name="loginMode"]').forEach(r=>r.checked=r.value===mode);document.querySelectorAll('.login-mode-card').forEach(c=>c.classList.toggle('active',c.dataset.mode===mode));}\nfunction initLoginModes(){document.querySelectorAll('.login-mode-card').forEach(card=>card.addEventListener('click',()=>setLoginMode(card.dataset.mode)));}\nasync function login(){const username=$("username").value.trim().toUpperCase(),password=$("password").value;if(!username||!password){loginMsg("Retailer ID and Password required.");return;}$("loginBtn").disabled=true;try{const{data,error}=await sb.auth.signInWithPassword({email:emailFor(username),password});if(error)throw error;const{data:pr,error:pe}=await sb.from("profiles").select("*").eq("id",data.user.id).maybeSingle();if(pe)throw pe;if(!pr||pr.role!=="retailer")throw new Error("Retailer profile not found.");if(!modeTypeMatches(selectedLoginMode,pr)){await sb.auth.signOut();const wanted=selectedLoginMode==="retailer"?"Retailer":selectedLoginMode==="super"?"Super Retailer":"Retailer Pro";throw new Error("Selected mode "+wanted+" does not match this account. Please select the correct mode.");}retailer=pr;showApp();await loadServices();await loadApplicationHistory();}catch(e){console.error("Login error:",e);loginMsg(e.message||"Login failed.");}finally{$("loginBtn").disabled=false;}}\n\n\n/* =====================================================\n   RETAILER PROFILE'''
+          s,n=re.subn(login_re,lambda m:login_new,s,count=1,flags=re.S)
+          if n!=1:raise SystemExit(f'login replace failed: {n}')
+          load_re=r'/\* =====================================================\n   LOAD SERVICES\n===================================================== \*/\n\nasync function loadServices\(\)\{.*?\n\}\n\nfunction serviceCategory'
+          load_new='''/* =====================================================\n   LOAD SERVICES\n===================================================== */\nfunction isRationServiceName(name){const n=String(name||"").toLowerCase().replace(/[_-]+/g," ").replace(/\\s+/g," ").trim();return/ration|redtion|nsfa|vibhajan|division|wrong finger|finger correction|fingerprint|name add|name delete|delete name|pita name to pati name|ration number to aadhar/.test(n);}\nfunction isRetailerProService(service){const n=String(service?.name||"").toLowerCase().replace(/[_-]+/g," ").replace(/\\s+/g," ").trim();if(isRationServiceName(n))return false;return/pan|election|voter|lms|(^|\\s)dl(\\s|$)|driving licen[cs]e|(^|\\s)rc(\\s|$)|registration certificate|pdf|download|certificate|details|cibil/.test(n);}\nfunction isElectionSpecial(service){const n=String(service?.name||"").toLowerCase().replace(/[_-]+/g," ").replace(/\\s+/g," ").trim();return(n.includes("election")||n.includes("voter"))&&(n.includes("correction")||n.includes("update")||n.includes("new")||n==="election card");}\nfunction modePrice(service){return selectedLoginMode==="super"&&isElectionSpecial(service)?250:Number(service?.amount||0);}\nasync function loadServices(){try{const{data,error}=await sb.from("services").select("id,name,amount,without_ration_amount,fields,description,sort_order,active").eq("active",true).order("sort_order",{ascending:true});if(error)throw error;const allServices=data||[];services=selectedLoginMode==="pro"?allServices.filter(isRetailerProService):allServices;services=services.map(s=>({...s,amount:modePrice(s)}));$("service").innerHTML='<option value="">Select Service</option>';services.forEach(s=>{const option=document.createElement("option");option.value=s.id;option.textContent=s.name+" - ₹"+Number(s.amount||0);$("service").appendChild(option);});$("serviceAccessNote").textContent=selectedLoginMode==="retailer"?"👤 Retailer • All active services":selectedLoginMode==="super"?"👑 Super Retailer • All active services • Election New/Correction ₹250":"⭐ Retailer Pro • No Ration Card • PAN + Election + DL + RC + Voter + LMS + PDF + Second PAN";renderServiceFolders();}catch(e){console.error("Services error:",e);$("serviceFolders").innerHTML='<div class="serviceEmpty">Services could not be loaded.</div>';msg("Services error: "+e.message,"err");}}\n\nfunction serviceCategory'''
+          s,n=re.subn(load_re,lambda m:load_new,s,count=1,flags=re.S)
+          if n!=1:raise SystemExit(f'load replace failed: {n}')
+          marker='window.addEventListener(\n  "DOMContentLoaded",\n  async () => {'
+          if marker in s and 'initLoginModes()' not in s:s=s.replace(marker,'window.addEventListener("DOMContentLoaded",()=>initLoginModes());\n\n'+marker,1)
+          s=s.replace('          retailer =\n            pr;\n\n\n          showApp();','          retailer =\n            pr;\n          setLoginMode(modeForProfile(pr));\n\n\n          showApp();',1)
+          p.write_text(s,encoding='utf-8')
+          js='\n'.join(re.findall(r'<script[^>]*>(.*?)</script>',s,re.S));Path('/tmp/retailer-modes.js').write_text(js)
+          PY
+          node --check /tmp/retailer-modes.js
+          grep -q 'id="loginModes"' retailer.html
+          grep -q 'selectedLoginMode' retailer.html
+      - name: Configure Admin 3 account types
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('admin.html');s=p.read_text(encoding='utf-8')
+          block=re.search(r'<div class="type-options">.*?</div>\s*<div class="hint">Admin jo access select',s,re.S)
+          if block:
+              new='''<div class="type-options">\n            <div class="type-option"><input type="radio" id="retailerTypeAll" name="retailerType" value="all_work" checked><label for="retailerTypeAll"><strong>👤 Retailer</strong><span>All active services including Ration Card, PAN, Election, DL, RC, Voter, LMS, PDF and Second PAN.</span></label></div>\n            <div class="type-option"><input type="radio" id="retailerTypeSuper" name="retailerType" value="super_pro"><label for="retailerTypeSuper"><strong>👑 Super Retailer</strong><span>Same services as Retailer, with Election New/Correction price ₹250.</span></label></div>\n            <div class="type-option"><input type="radio" id="retailerTypePro" name="retailerType" value="super_pro_2"><label for="retailerTypePro"><strong>⭐ Retailer Pro</strong><span>No Ration Card services. PAN, Election, DL, RC, Voter, LMS, PDF and Second PAN.</span></label></div>\n          </div>\n          <div class="hint">Admin jo mode select karega, retailer login me wahi mode use karega.</div>'''
+              s=s[:block.start()]+new+s[block.end():]
+          else: raise SystemExit('Admin type-options block not found')
+          p.write_text(s,encoding='utf-8')
+          PY
+          node -e "const fs=require('fs');const s=fs.readFileSync('admin.html','utf8');const js=[...s.matchAll(/<script[^>]*>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).join('\\n');fs.writeFileSync('/tmp/admin-check.js',js)"
+          node --check /tmp/admin-check.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add retailer.html admin.html
+          git commit -m 'Configure Retailer, Super Retailer and Retailer Pro login modes'
+          git push
