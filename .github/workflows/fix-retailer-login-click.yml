@@ -1,0 +1,71 @@
+name: Fix Retailer Login Mode Buttons
+on:
+  push:
+    paths:
+      - '.github/fix-retailer-login-click-trigger'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch retailer login modes
+        shell: bash
+        run: |
+          set -e
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('retailer.html')
+          s=p.read_text(encoding='utf-8')
+
+          old='''<div class="login-modes" id="loginModes">
+    <label class="login-mode-card active" data-mode="retailer"><input type="radio" name="loginMode" value="retailer" checked><strong>👤 Retailer</strong><span>All active services • Ration + PAN + Election + DL + RC + Voter + LMS + PDF + Second PAN</span></label>
+    <label class="login-mode-card" data-mode="super"><input type="radio" name="loginMode" value="super"><strong>👑 Super Retailer</strong><span>Same services as Retailer • Election New/Correction ₹250</span></label>
+    <label class="login-mode-card" data-mode="pro"><input type="radio" name="loginMode" value="pro"><strong>⭐ Retailer Pro</strong><span>No Ration Card • PAN + Election + DL + RC + Voter + LMS + PDF + Second PAN</span></label>
+  </div>'''
+          new='''<div class="login-modes" id="loginModes" role="radiogroup" aria-label="Login Mode">
+    <button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true" onclick="setLoginMode('retailer')"><strong>👤 Retailer</strong><span>All active services • Ration + PAN + Election + DL + RC + Voter + LMS + PDF + Second PAN</span></button>
+    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false" onclick="setLoginMode('super')"><strong>👑 Super Retailer</strong><span>Same services as Retailer • Election New/Correction ₹250</span></button>
+    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false" onclick="setLoginMode('pro')"><strong>⭐ Retailer Pro</strong><span>No Ration Card • PAN + Election + DL + RC + Voter + LMS + PDF + Second PAN</span></button>
+  </div>'''
+          if old not in s:
+              raise SystemExit('login mode block not found')
+          s=s.replace(old,new,1)
+
+          old_set='''function setLoginMode(mode){selectedLoginMode=mode;document.querySelectorAll('input[name="loginMode"]').forEach(r=>r.checked=r.value===mode);document.querySelectorAll('.login-mode-card').forEach(c=>c.classList.toggle('active',c.dataset.mode===mode));}'''
+          new_set='''function setLoginMode(mode){selectedLoginMode=mode;document.querySelectorAll('.login-mode-card').forEach(c=>{const active=c.dataset.mode===mode;c.classList.toggle('active',active);c.setAttribute('aria-pressed',active?'true':'false');});}'''
+          if old_set not in s:
+              raise SystemExit('setLoginMode function not found')
+          s=s.replace(old_set,new_set,1)
+
+          old_init='''function initLoginModes(){document.querySelectorAll('.login-mode-card').forEach(card=>card.addEventListener('click',()=>setLoginMode(card.dataset.mode)));}'''
+          new_init='''function initLoginModes(){setLoginMode(selectedLoginMode);}'''
+          if old_init in s:
+              s=s.replace(old_init,new_init,1)
+
+          # Remove any stale hidden radio CSS; buttons are the click targets now.
+          s=s.replace('.login-mode-card input{display:none}', '.login-mode-card{appearance:none;width:100%;text-align:left;font:inherit;color:inherit}')
+
+          # Make sure the app itself is never visible before a successful login.
+          s=s.replace('<div id="app">', '<div id="app" class="hidden" aria-hidden="true">', 1)
+          s=s.replace("$('loginCard').classList.add('hidden');$('app').classList.remove('hidden');", "$('loginCard').classList.add('hidden');$('loginCard').setAttribute('aria-hidden','true');$('app').classList.remove('hidden');$('app').setAttribute('aria-hidden','false');", 1)
+
+          p.write_text(s,encoding='utf-8')
+          PY
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('retailer.html').read_text(encoding='utf-8')
+          assert s.count('class="login-mode-card') == 3, 'Expected exactly 3 login modes'
+          assert 'data-mode="retailer"' in s and 'data-mode="super"' in s and 'data-mode="pro"' in s
+          js='\n'.join(re.findall(r'<script[^>]*>(.*?)</script>',s,re.S))
+          Path('/tmp/retailer-login-check.js').write_text(js,encoding='utf-8')
+          PY
+          node --check /tmp/retailer-login-check.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add retailer.html
+          git commit -m 'Make three retailer login modes clickable' || echo 'No changes to commit.'
+          git push
