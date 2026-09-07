@@ -1,0 +1,109 @@
+name: Add Admin Application Delete
+on:
+  push:
+    paths:
+      - '.github/admin-application-delete-trigger'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch admin.html
+        shell: bash
+        run: |
+          set -e
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('admin.html')
+          s=p.read_text(encoding='utf-8')
+
+          if 'function deleteApplication(' not in s:
+              marker = '\n/* =========================================================\n   LOAD STATS\n========================================================= */'
+              fn = r'''
+/* =========================================================
+   DELETE APPLICATION
+========================================================= */
+async function deleteApplication(trNumber){
+  const tr=String(trNumber||'').trim();
+  if(!tr){
+    alert('TR Number not found.');
+    return;
+  }
+  const confirmation=prompt('Delete application '+tr+'?\n\nType DELETE to confirm.');
+  if(confirmation !== 'DELETE') return;
+
+  try{
+    await getSession();
+    const {error}=await supabaseClient
+      .from('applications')
+      .delete()
+      .eq('tr_number',tr);
+    if(error) throw new Error(error.message);
+    alert('Application deleted successfully.');
+    await refreshDashboard();
+  }catch(error){
+    console.error('DELETE APPLICATION ERROR:',error);
+    alert(error?.message || 'Application deletion failed.');
+  }
+}
+'''
+              if marker not in s:
+                  raise SystemExit('LOAD STATS marker not found')
+              s=s.replace(marker, '\n'+fn+'\n'+marker, 1)
+
+          # Add a Delete button next to Save inside every application row.
+          save_block = '''<button
+                  type="button"
+                  class="small-btn"
+                  onclick="saveApplication(
+                    ${JSON.stringify(tr)},
+                    ${JSON.stringify(key)}
+                  )"
+                >
+                  💾 Save
+                </button>'''
+          if 'onclick="deleteApplication' not in s:
+              delete_block = save_block + '''
+
+                <button
+                  type="button"
+                  class="small-btn delete-btn"
+                  onclick="deleteApplication(
+                    ${JSON.stringify(tr)}
+                  )"
+                >
+                  🗑️ Delete
+                </button>'''
+              if save_block not in s:
+                  raise SystemExit('Application Save button block not found')
+              s=s.replace(save_block, delete_block, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('admin.html').read_text(encoding='utf-8')
+          js='\n'.join(re.findall(r'<script[^>]*>(.*?)</script>', s, re.S))
+          Path('/tmp/admin-check.js').write_text(js,encoding='utf-8')
+          print('JS bytes:',len(js))
+          PY
+          node --check /tmp/admin-check.js
+          grep -q 'function deleteApplication(' admin.html
+          grep -q 'onclick="deleteApplication(' admin.html
+          echo 'Admin application delete patch validation passed.'
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Add admin application delete button'
+          git push
