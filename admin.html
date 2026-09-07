@@ -2367,7 +2367,7 @@ async function loadRetailers() {
 
       rows.innerHTML = `
         <tr>
-          <td colspan="5" class="loading">
+          <td colspan="6" class="loading">
             No retailers found.
           </td>
         </tr>
@@ -2491,7 +2491,7 @@ async function loadRetailers() {
 
     rows.innerHTML = `
       <tr>
-        <td colspan="5" class="loading">
+        <td colspan="6" class="loading">
           ${escapeHtml(
             error?.message ||
             "Could not load retailers."
@@ -2843,34 +2843,29 @@ async function saveApplication(
 
 
     const {
+      data,
       error
     } =
-      await supabaseClient
-        .from("applications")
-        .update({
-
-          payment_status:
-            payment,
-
-          application_status:
-            status,
-
-          remark:
-            remark
-
-        })
-        .eq(
-          "tr_number",
-          trNumber
-        );
+      await supabaseClient.functions.invoke(
+        RETAILER_FUNCTION,
+        {
+          body:{
+            action:"update_application",
+            tr_number:trNumber,
+            payment_status:payment,
+            application_status:status,
+            remark:remark
+          }
+        }
+      );
 
 
     if (error) {
+      throw new Error(await readFunctionError(error));
+    }
 
-      throw new Error(
-        error.message
-      );
-
+    if (!data || data.error) {
+      throw new Error(formatFunctionError(data || {}));
     }
 
 
