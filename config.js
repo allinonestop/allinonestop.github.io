@@ -71,8 +71,15 @@ window.ALLINONESTOP_CONFIG = {
   else start();
 })();
 
-/* SUPER RETAILER 2: force the dedicated panel to use ALL active services
-   except the known Ration Card service records, and always use normal prices. */
+/* SUPER RETAILER 2
+   This panel is deliberately independent from the normal retailer and
+   Super Retailer Pro price logic.
+
+   Rules:
+   1) Show ALL active services except the exact known Ration Card service IDs.
+   2) Never apply the Super Retailer Pro ₹250 election override here.
+   3) Use the normal services.amount price for every displayed service.
+*/
 (function(){
   const RATION_SERVICE_IDS=new Set([
     "03e7e0b7-bbf6-4923-a0f4-36bbdf41d4cf",
@@ -90,29 +97,61 @@ window.ALLINONESTOP_CONFIG = {
     "9886de28-ef1e-4b33-b5b8-853153176702"
   ]);
 
-  function patch(){
+  function isSR2(){
     try{
-      if(!/super-retailer-2\.html$/i.test(location.pathname)) return;
-      if(typeof retailer === "undefined" || !retailer) return;
-      const rt=String(retailer.retailer_type||retailer.service_access||"").toLowerCase().trim().replace(/[\s-]+/g,"_");
-      if(!["super_pro_2","super_retailer_2","super_retailer_2_pro"].includes(rt)) return;
+      if(!/super-retailer-2\.html$/i.test(location.pathname)) return false;
+      if(typeof retailer === "undefined" || !retailer) return false;
+      const rt=String(retailer.retailer_type||retailer.service_access||"")
+        .toLowerCase().trim().replace(/[\s-]+/g,"_");
+      return ["super_pro_2","super_retailer_2","super_retailer_2_pro"].includes(rt);
+    }catch(e){ return false; }
+  }
 
-      const exactFilter=function(service){
-        return RATION_SERVICE_IDS.has(String(service?.id||""));
-      };
-      const normalPrice=function(service){
-        return Number(service?.amount||0);
-      };
+  async function forceServices(){
+    if(!isSR2()) return false;
+    if(typeof sb === "undefined") return false;
+    if(typeof services === "undefined") return false;
 
-      window.isRationCardService=exactFilter;
-      window.effectiveServiceAmount=normalPrice;
+    const {data,error}=await sb.from("services")
+      .select("id,name,amount,without_ration_amount,fields,description,sort_order,active")
+      .eq("active",true)
+      .order("sort_order",{ascending:true});
+    if(error) throw error;
 
-      if(typeof loadServices === "function"){
-        loadServices();
-        clearInterval(timer);
-      }
+    services=(data||[]).filter(function(service){
+      return !RATION_SERVICE_IDS.has(String(service && service.id || ""));
+    });
+
+    /* Normal retailer prices only. This intentionally does not use
+       the Super Retailer Pro election ₹250 override. */
+    if(typeof effectiveServiceAmount === "function"){
+      /* lexical binding is replaced below by the page's own function only;
+         keep the actual service amounts unchanged so render uses services.amount. */
+    }
+
+    const select=document.getElementById("service");
+    if(select){
+      select.innerHTML='<option value="">Select Service</option>';
+      services.forEach(function(service){
+        const option=document.createElement("option");
+        option.value=String(service.id);
+        option.textContent=String(service.name||"")+" - ₹"+Number(service.amount||0);
+        select.appendChild(option);
+      });
+    }
+
+    const note=document.getElementById("serviceAccessNote");
+    if(note) note.textContent="👑 Super Retailer 2 • Ration Card services hidden • Normal retailer prices";
+
+    if(typeof renderServiceFolders === "function") renderServiceFolders();
+    return true;
+  }
+
+  async function patch(){
+    try{
+      if(await forceServices()) clearInterval(timer);
     }catch(e){
-      console.warn("Super Retailer 2 runtime patch skipped:",e);
+      console.warn("Super Retailer 2 service refresh skipped:",e);
     }
   }
 
