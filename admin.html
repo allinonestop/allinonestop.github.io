@@ -856,24 +856,11 @@
         <div>
           <label>Retailer Service Access</label>
           <div class="type-options">
-            <div class="type-option">
-              <input type="radio" id="retailerTypeRation" name="retailerType" value="ration_card" checked>
-              <label for="retailerTypeRation"><strong>🍚 Ration Card Only</strong><span>Sirf Ration Card services dikhenge aur use hongi.</span></label>
-            </div>
-            <div class="type-option">
-              <input type="radio" id="retailerTypeAll" name="retailerType" value="all_work">
-              <label for="retailerTypeAll"><strong>🌐 All Work</strong><span>Ration Card + PAN + Election + all services.</span></label>
-            </div>
-            <div class="type-option">
-              <input type="radio" id="retailerTypeSuper" name="retailerType" value="super_pro">
-              <label for="retailerTypeSuper"><strong>👑 Super Retailer Pro</strong><span>All services + private account prices.</span></label>
-            </div>
-            <div class="type-option">
-              <input type="radio" id="retailerTypeSuper2" name="retailerType" value="super_pro_2">
-              <label for="retailerTypeSuper2"><strong>👑 Super Retailer 2</strong><span>All services except Ration Card services.</span></label>
-            </div>
+            <div class="type-option"><input type="radio" id="retailerTypeAll" name="retailerType" value="all_work" checked><label for="retailerTypeAll"><strong>👤 Retailer</strong><span>All active services including Ration Card, PAN, Election, DL, RC, Voter, LMS, PDF and Second PAN.</span></label></div>
+            <div class="type-option"><input type="radio" id="retailerTypeSuper" name="retailerType" value="super_pro"><label for="retailerTypeSuper"><strong>👑 Super Retailer</strong><span>Same services as Retailer, with Election New/Correction price ₹250.</span></label></div>
+            <div class="type-option"><input type="radio" id="retailerTypePro" name="retailerType" value="super_pro_2"><label for="retailerTypePro"><strong>⭐ Retailer Pro</strong><span>No Ration Card services. PAN, Election, DL, RC, Voter, LMS, PDF and Second PAN.</span></label></div>
           </div>
-          <div class="hint">Admin jo access select karega, retailer ko wahi services milengi.</div>
+          <div class="hint">Admin jo mode select karega, retailer login me wahi mode use karega.</div> karega, retailer ko wahi services milengi.</div>
         </div>
 
         <div>
