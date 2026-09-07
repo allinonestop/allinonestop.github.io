@@ -1,0 +1,99 @@
+name: Repair Retailer Login
+on:
+  push:
+    paths:
+      - '.github/repair-retailer-login-trigger'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore stable retailer portal and apply final login fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          TARGET_BLOB='17ff93249021b6c5dd62f69b9242ddcdeddea802'
+          FOUND=''
+          while IFS= read -r c; do
+            if [ "$(git rev-parse "$c:retailer.html" 2>/dev/null || true)" = "$TARGET_BLOB" ]; then
+              FOUND="$c"
+              break
+            fi
+          done < <(git rev-list --all -- retailer.html)
+          if [ -z "$FOUND" ]; then
+            echo 'Stable retailer.html source not found'
+            exit 1
+          fi
+          git show "$FOUND:retailer.html" > retailer.html
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('retailer.html')
+          s = p.read_text(encoding='utf-8')
+          old = re.search(r'<div\s+id="loginCard".*?</div>\s*<!-- =====================================================\s*APPLICATION AREA', s, re.S)
+          if not old:
+              raise SystemExit('login card block not found')
+          block = '''<div id="loginCard" class="card" style="max-width:450px;margin:45px auto">
+          <h2>Retailer Login</h2>
+          <div id="loginMsg" class="status"></div>
+          <div class="login-mode-title">Select Login Mode</div>
+          <div class="login-modes" id="loginModes" role="radiogroup" aria-label="Login Mode">
+            <button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true" onclick="setLoginMode('retailer')"><strong>👤 Retailer</strong></button>
+            <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false" onclick="setLoginMode('super')"><strong>👑 Super Retailer</strong></button>
+            <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false" onclick="setLoginMode('pro')"><strong>⭐ Retailer Pro</strong></button>
+          </div>
+          <form id="loginForm" autocomplete="on" onsubmit="event.preventDefault(); window.doRetailerLogin();">
+            <label for="username">Retailer ID / Username</label>
+            <input id="username" placeholder="RET-XXXXXX" autocomplete="username" required>
+            <label for="password">Password</label>
+            <input id="password" type="password" autocomplete="current-password" required>
+            <button id="loginBtn" type="submit" class="primary" style="margin-top:6px;width:100%">Login</button>
+          </form>
+        </div>
+
+        <!-- =====================================================
+             APPLICATION AREA'''
+          s = s[:old.start()] + block + s[old.end()-len('<!-- =====================================================\n             APPLICATION AREA'):]
+          pat = r'function setLoginMode\(mode\)\{.*?\}\s*\n\s*function initLoginModes\(\)\{.*?\}\s*\n'
+          repl = '''function setLoginMode(mode){
+            const allowed=["retailer","super","pro"];
+            selectedLoginMode=allowed.includes(mode)?mode:"retailer";
+            document.querySelectorAll('.login-mode-card').forEach(c=>{
+              const active=c.dataset.mode===selectedLoginMode;
+              c.classList.toggle('active',active);
+              c.setAttribute('aria-pressed',active?'true':'false');
+            });
+          }
+          function initLoginModes(){ setLoginMode(selectedLoginMode); }
+          '''
+          s, n = re.subn(pat, repl, s, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit(f'login mode function patch failed: {n}')
+          if 'window.doRetailerLogin' not in s:
+              marker = '\n\n/* =====================================================\n   RETAILER PROFILE'
+              if marker not in s:
+                  raise SystemExit('profile marker not found')
+              s = s.replace(marker, '\n\nwindow.doRetailerLogin = function(){ return window.login(); };' + marker, 1)
+          s = s.replace('.login-mode-card input{display:none}', '.login-mode-card{appearance:none;box-sizing:border-box;width:100%;text-align:left;font:inherit;color:inherit}')
+          s = s.replace('.login-mode-card{display:block;', '.login-mode-card{display:block;')
+          js = '\n'.join(re.findall(r'<script[^>]*>(.*?)</script>', s, re.S|re.I))
+          Path('/tmp/retailer-final-check.js').write_text(js, encoding='utf-8')
+          p.write_text(s, encoding='utf-8')
+          PY
+          node --check /tmp/retailer-final-check.js
+          test "$(grep -o 'data-mode=\"retailer\"' retailer.html | wc -l)" -eq 1
+          test "$(grep -o 'data-mode=\"super\"' retailer.html | wc -l)" -eq 1
+          test "$(grep -o 'data-mode=\"pro\"' retailer.html | wc -l)" -eq 1
+          test "$(grep -o 'id=\"loginForm\"' retailer.html | wc -l)" -eq 1
+          test "$(grep -o 'id=\"loginBtn\"' retailer.html | wc -l)" -eq 1
+          grep -q 'window.doRetailerLogin' retailer.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add retailer.html
+          git commit -m 'Fix retailer login button and keep exactly three modes'
+          git push
