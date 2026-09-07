@@ -3168,5 +3168,29 @@ window.__adminDeleteApplication = async function(tr){
   });
 })();
 </script>
+<script>
+/* ADMIN PANEL VISIBILITY GUARD */
+(function(){
+  function syncAdminVisibility(){
+    const loginBox=document.getElementById('loginBox');
+    const panel=document.getElementById('adminPanel');
+    if(!loginBox || !panel) return;
+    const authenticated=loginBox.classList.contains('hidden');
+    panel.classList.toggle('hidden',!authenticated);
+    if(authenticated) panel.removeAttribute('data-logged-out');
+    else panel.setAttribute('data-logged-out','1');
+  }
+  function start(){
+    const loginBox=document.getElementById('loginBox');
+    const panel=document.getElementById('adminPanel');
+    if(!loginBox || !panel) return;
+    syncAdminVisibility();
+    new MutationObserver(syncAdminVisibility).observe(loginBox,{attributes:true,attributeFilter:['class']});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start);
+  else start();
+})();
+</script>
+
 </body>
 </html>
