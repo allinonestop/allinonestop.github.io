@@ -27,26 +27,22 @@ jobs:
           import re
           p=Path('retailer.html')
           s=p.read_text(encoding='utf-8')
-          pattern=r'(<div\s+id="loginCard"\b)[\s\S]*?(?=<!--\s*=+\s*APPLICATION AREA)'
-          replacement='''<div id="loginCard" class="card" style="max-width:450px;margin:45px auto">\n  <h2>Retailer Login</h2>\n  <div id="loginMsg" class="status"></div>\n  <div class="login-mode-title">Select Login Mode</div>\n  <div class="login-modes" id="loginModes" role="radiogroup" aria-label="Login Mode">\n    <button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true"><strong>👤 Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false"><strong>👑 Super Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false"><strong>⭐ Retailer Pro</strong></button>\n  </div>\n  <form id="loginForm" autocomplete="on">\n    <label for="username">Retailer ID / Username</label>\n    <input id="username" placeholder="RET-XXXXXX" autocomplete="username" required>\n    <label for="password">Password</label>\n    <input id="password" type="password" autocomplete="current-password" required>\n    <button id="loginBtn" type="submit" class="primary" style="margin-top:6px;width:100%">Login</button>\n  </form>\n</div>\n\n'''
-          s,n=re.subn(pattern,replacement,s,count=1,flags=re.I)
-          if n!=1: raise SystemExit('login card patch failed')
-
-          # Replace the mode functions with a version that works with buttons.
+          start='<!-- =====================================================\n     LOGIN\n===================================================== -->'
+          end='<!-- =====================================================\n     APPLICATION AREA\n===================================================== -->'
+          a=s.find(start)
+          b=s.find(end)
+          if a<0 or b<0 or b<=a: raise SystemExit(f'login markers not found: {a}, {b}')
+          replacement='''<!-- =====================================================\n     LOGIN\n===================================================== -->\n\n<div id="loginCard" class="card" style="max-width:450px;margin:45px auto">\n  <h2>Retailer Login</h2>\n  <div id="loginMsg" class="status"></div>\n  <div class="login-mode-title">Select Login Mode</div>\n  <div class="login-modes" id="loginModes" role="radiogroup" aria-label="Login Mode">\n    <button type="button" class="login-mode-card active" data-mode="retailer" aria-pressed="true"><strong>👤 Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="super" aria-pressed="false"><strong>👑 Super Retailer</strong></button>\n    <button type="button" class="login-mode-card" data-mode="pro" aria-pressed="false"><strong>⭐ Retailer Pro</strong></button>\n  </div>\n  <form id="loginForm" autocomplete="on">\n    <label for="username">Retailer ID / Username</label>\n    <input id="username" placeholder="RET-XXXXXX" autocomplete="username" required>\n    <label for="password">Password</label>\n    <input id="password" type="password" autocomplete="current-password" required>\n    <button id="loginBtn" type="submit" class="primary" style="margin-top:6px;width:100%">Login</button>\n  </form>\n</div>\n\n'''
+          s=s[:a]+replacement+s[b:]
           old=r'function setLoginMode\(mode\)\{[\s\S]*?\}\s*\n\s*function initLoginModes\(\)\{[\s\S]*?\}\s*\n'
           new='''function setLoginMode(mode){\n  selectedLoginMode=["retailer","super","pro"].includes(mode)?mode:"retailer";\n  document.querySelectorAll('.login-mode-card').forEach(c=>{\n    const active=c.dataset.mode===selectedLoginMode;\n    c.classList.toggle('active',active);\n    c.setAttribute('aria-pressed',active?'true':'false');\n  });\n}\nfunction initLoginModes(){setLoginMode(selectedLoginMode);}\n'''
-          s,n=re.subn(old,new,s,count=1,flags=re.I)
+          s,n=re.subn(old,new,s,count=1,flags=re.S)
           if n!=1: raise SystemExit('mode function patch failed')
-
-          # Use an actual form listener so Login click/Enter both work.
           marker='window.addEventListener(\n  "DOMContentLoaded",\n  async () => {'
           hook='''window.addEventListener("DOMContentLoaded",()=>{\n  initLoginModes();\n  const form=document.getElementById("loginForm");\n  if(form) form.addEventListener("submit",async e=>{e.preventDefault();await window.login();});\n});\n\n'''
           if marker not in s: raise SystemExit('DOM marker not found')
           s=s.replace(marker,hook+marker,1)
-
-          # Ensure current login function is callable from the form listener.
           if 'async function login(){' not in s: raise SystemExit('login function missing')
-
           p.write_text(s,encoding='utf-8')
           js='\n'.join(re.findall(r'<script[^>]*>(.*?)</script>',s,re.S|re.I))
           Path('/tmp/retailer-final-check.js').write_text(js,encoding='utf-8')
