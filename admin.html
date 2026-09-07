@@ -836,6 +836,22 @@
 
         <div>
 
+          <label for="retailerEmail">
+            Retailer Email
+          </label>
+
+          <input
+            id="retailerEmail"
+            type="email"
+            placeholder="retailer@example.com"
+            autocomplete="email"
+          >
+
+        </div>
+
+
+        <div>
+
           <label for="retailerNumber">
             Retailer Number
           </label>
@@ -1687,6 +1703,12 @@ async function createRetailer() {
       .value
       .trim();
 
+  const retailerEmail =
+    document
+      .getElementById("retailerEmail")
+      .value
+      .trim();
+
   const password =
     document
       .getElementById("retailerPassword")
@@ -1709,6 +1731,14 @@ async function createRetailer() {
       true
     );
 
+    return;
+
+  }
+
+
+  if (retailerEmail && !/^\S+@\S+\.\S+$/.test(retailerEmail)) {
+
+    showMessage("createMessage","Please enter a valid retailer email.",true);
     return;
 
   }
@@ -1805,6 +1835,8 @@ async function createRetailer() {
       full_name: fullName,
 
       mobile: mobile,
+
+      email: retailerEmail,
 
       username: username,
 
@@ -1911,6 +1943,12 @@ async function createRetailer() {
     document
       .getElementById(
         "retailerMobile"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "retailerEmail"
       )
       .value = "";
 
