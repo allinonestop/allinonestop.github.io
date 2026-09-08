@@ -1,0 +1,3234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AllInOneStop Admin Panel</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+
+    *{box-sizing:border-box}
+
+    :root{
+      --bg:#070b14;
+      --bg2:#0b1120;
+      --panel:rgba(15,23,42,.92);
+      --panel2:rgba(17,25,45,.96);
+      --border:rgba(148,163,184,.16);
+      --border2:rgba(99,102,241,.30);
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --muted2:#cbd5e1;
+      --primary:#7c3aed;
+      --primary2:#2563eb;
+      --cyan:#06b6d4;
+      --green:#22c55e;
+      --red:#ef4444;
+      --yellow:#f59e0b;
+      --shadow:0 22px 70px rgba(0,0,0,.38);
+      --shadow2:0 10px 30px rgba(0,0,0,.28);
+    }
+
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      background:
+        radial-gradient(circle at 8% 5%,rgba(124,58,237,.22),transparent 28%),
+        radial-gradient(circle at 92% 8%,rgba(6,182,212,.17),transparent 25%),
+        radial-gradient(circle at 50% 100%,rgba(37,99,235,.12),transparent 35%),
+        linear-gradient(145deg,var(--bg),var(--bg2) 48%,#090d18);
+      background-attachment:fixed;
+      color:var(--text);
+      min-height:100vh;
+      font-weight:500;
+    }
+
+    body:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+      background-size:42px 42px;
+      mask-image:linear-gradient(to bottom,black,transparent 85%);
+    }
+
+    button,input,select{font:inherit}
+
+    button{
+      border:0;
+      cursor:pointer;
+    }
+
+    button:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      transform:none!important;
+      box-shadow:none!important;
+    }
+
+    .wrap{
+      width:min(1220px,calc(100% - 30px));
+      margin:28px auto;
+      position:relative;
+      z-index:1;
+    }
+
+    .box{
+      background:
+        linear-gradient(145deg,rgba(17,25,45,.97),rgba(10,16,30,.94));
+      border-radius:24px;
+      padding:25px;
+      margin-bottom:20px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--border);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .box:before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:0;
+      height:2px;
+      background:linear-gradient(90deg,transparent,var(--primary),var(--cyan),transparent);
+      opacity:.8;
+    }
+
+    .hidden{display:none!important}
+
+    h1{
+      margin:0;
+      color:#fff;
+      font-size:clamp(25px,3vw,34px);
+      font-weight:900;
+      letter-spacing:-.8px;
+    }
+
+    h2{
+      margin-top:0;
+      color:#fff;
+      font-size:22px;
+      font-weight:850;
+      letter-spacing:-.35px;
+    }
+
+    p{
+      color:var(--muted);
+      line-height:1.6;
+      font-weight:500;
+    }
+
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:850;
+      color:var(--muted2);
+      margin-bottom:7px;
+      letter-spacing:.25px;
+      text-transform:none;
+    }
+
+    input,select{
+      width:100%;
+      padding:13px 14px;
+      border:1px solid rgba(148,163,184,.20);
+      border-radius:13px;
+      background:rgba(2,6,23,.72);
+      color:#f8fafc;
+      margin-bottom:15px;
+      outline:none;
+      transition:.2s ease;
+      font-weight:600;
+    }
+
+    input::placeholder{color:#64748b}
+
+    input:hover,select:hover{
+      border-color:rgba(124,58,237,.42);
+    }
+
+    input:focus,select:focus{
+      outline:none;
+      border-color:#818cf8;
+      box-shadow:0 0 0 3px rgba(99,102,241,.15),0 8px 24px rgba(0,0,0,.20);
+      background:rgba(3,8,24,.94);
+    }
+
+    select option{
+      background:#0f172a;
+      color:#f8fafc;
+    }
+
+    button,.btn{
+      padding:11px 16px;
+      border-radius:13px;
+      color:white;
+      font-weight:850;
+      background:linear-gradient(135deg,#7c3aed,#2563eb);
+      text-decoration:none;
+      display:inline-block;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:0 8px 24px rgba(37,99,235,.18);
+      transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+    }
+
+    button:hover,.btn:hover{
+      transform:translateY(-2px);
+      filter:brightness(1.08);
+      box-shadow:0 13px 30px rgba(37,99,235,.28);
+    }
+
+    .logout{
+      background:linear-gradient(135deg,#334155,#1e293b);
+      box-shadow:0 8px 22px rgba(0,0,0,.20);
+    }
+
+    .delete-btn{
+      background:linear-gradient(135deg,#dc2626,#991b1b);
+    }
+
+    .password-btn{
+      background:linear-gradient(135deg,#8b5cf6,#4f46e5);
+    }
+
+    .small-btn{
+      padding:7px 10px;
+      font-size:12px;
+      border-radius:10px;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      flex-wrap:wrap;
+    }
+
+    .actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+    }
+
+    .divider{
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(148,163,184,.18),transparent);
+      margin:22px 0;
+    }
+
+    .hint{
+      font-size:12px;
+      color:#8190a7;
+      font-weight:550;
+    }
+
+    .badge,.online{
+      display:inline-flex;
+      align-items:center;
+      gap:5px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:850;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .badge{
+      background:rgba(99,102,241,.14);
+      color:#a5b4fc;
+    }
+
+    .online{
+      background:rgba(34,197,94,.10);
+      color:#86efac;
+    }
+
+    .msg{
+      padding:13px;
+      border-radius:13px;
+      margin-top:14px;
+      background:rgba(34,197,94,.10);
+      border:1px solid rgba(34,197,94,.18);
+      color:#86efac;
+      font-size:14px;
+      font-weight:750;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    .msg.error{
+      background:rgba(239,68,68,.10);
+      border-color:rgba(239,68,68,.20);
+      color:#fca5a5;
+    }
+
+    .msg.warning{
+      background:rgba(245,158,11,.10);
+      border-color:rgba(245,158,11,.20);
+      color:#fcd34d;
+    }
+
+    .id-box{
+      background:rgba(2,6,23,.50);
+      border:1px solid rgba(99,102,241,.20);
+      border-radius:15px;
+      padding:13px;
+      margin-top:5px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+    }
+
+    .id-box input{
+      margin-bottom:5px;
+      background:rgba(15,23,42,.80);
+      color:#a5b4fc;
+      font-weight:900;
+      font-size:18px;
+      letter-spacing:1px;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:15px;
+      margin-bottom:20px;
+    }
+
+    .stat{
+      background:
+        linear-gradient(145deg,rgba(17,25,45,.96),rgba(10,16,30,.96));
+      border-radius:20px;
+      padding:20px;
+      box-shadow:var(--shadow2);
+      border:1px solid var(--border);
+      position:relative;
+      overflow:hidden;
+      transition:.2s ease;
+    }
+
+    .stat:hover{
+      transform:translateY(-3px);
+      border-color:rgba(124,58,237,.35);
+      box-shadow:0 18px 42px rgba(0,0,0,.34);
+    }
+
+    .stat:after{
+      content:"";
+      position:absolute;
+      width:90px;
+      height:90px;
+      right:-35px;
+      bottom:-35px;
+      border-radius:50%;
+      background:rgba(124,58,237,.10);
+    }
+
+    .stat-icon{
+      font-size:25px;
+      filter:drop-shadow(0 5px 12px rgba(0,0,0,.35));
+    }
+
+    .stat-number{
+      font-size:31px;
+      font-weight:950;
+      margin-top:8px;
+      color:#fff;
+      letter-spacing:-.7px;
+    }
+
+    .stat-title{
+      color:#94a3b8;
+      font-size:12px;
+      font-weight:750;
+      margin-top:2px;
+    }
+
+    .table-wrap{
+      overflow-x:auto;
+      border:1px solid var(--border);
+      border-radius:15px;
+      margin-top:12px;
+      background:rgba(2,6,23,.30);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:850px;
+    }
+
+    th,td{
+      padding:12px;
+      border-bottom:1px solid rgba(148,163,184,.10);
+      text-align:left;
+      font-size:13px;
+      vertical-align:middle;
+    }
+
+    th{
+      background:rgba(30,41,59,.60);
+      color:#cbd5e1;
+      font-size:11px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.45px;
+    }
+
+    td{
+      color:#dbe4f0;
+      font-weight:550;
+    }
+
+    tr:last-child td{border-bottom:0}
+
+    tbody tr{
+      transition:.15s ease;
+    }
+
+    tbody tr:hover{
+      background:rgba(99,102,241,.055);
+    }
+
+    td strong{
+      color:#fff;
+      font-weight:900;
+    }
+
+    .loading{
+      text-align:center;
+      padding:25px;
+      color:#94a3b8;
+      font-weight:650;
+    }
+
+    .login-box{
+      max-width:550px;
+      margin:70px auto;
+    }
+
+    .login-icon{
+      width:72px;
+      height:72px;
+      border-radius:21px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#7c3aed,#06b6d4);
+      color:white;
+      font-size:34px;
+      margin-bottom:18px;
+      box-shadow:0 16px 35px rgba(124,58,237,.28);
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .status-pill{
+      display:inline-block;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:850;
+    }
+
+    .paid{
+      background:rgba(34,197,94,.12);
+      color:#86efac;
+    }
+
+    .pending{
+      background:rgba(245,158,11,.12);
+      color:#fcd34d;
+    }
+
+    .failed,.rejected{
+      background:rgba(239,68,68,.12);
+      color:#fca5a5;
+    }
+
+    .type-options{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:15px
+    }
+
+    .type-option{position:relative}
+    .type-option input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none
+    }
+
+    .type-option label{
+      display:block;
+      padding:15px 16px;
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:15px;
+      background:rgba(2,6,23,.42);
+      cursor:pointer;
+      margin:0;
+      transition:.2s ease
+    }
+
+    .type-option label:hover{
+      border-color:rgba(124,58,237,.45);
+      transform:translateY(-1px);
+    }
+
+    .type-option label strong{
+      display:block;
+      color:#f8fafc;
+      font-size:14px;
+      font-weight:900;
+      margin-bottom:5px
+    }
+
+    .type-option label span{
+      display:block;
+      color:#8190a7;
+      font-size:12px;
+      font-weight:550
+    }
+
+    .type-option input:checked+label{
+      border-color:#818cf8;
+      background:linear-gradient(145deg,rgba(124,58,237,.18),rgba(37,99,235,.10));
+      box-shadow:0 10px 26px rgba(79,70,229,.16),inset 0 0 0 1px rgba(129,140,248,.10)
+    }
+
+    .type-option input:checked+label strong{color:#c4b5fd}
+
+    .type-badge{
+      display:inline-flex;
+      align-items:center;
+      padding:5px 9px;
+      border-radius:999px;
+      font-size:10px;
+      font-weight:900;
+      background:rgba(99,102,241,.13);
+      color:#a5b4fc;
+      border:1px solid rgba(99,102,241,.18);
+    }
+
+    .type-badge.all{
+      background:rgba(34,197,94,.11);
+      color:#86efac;
+      border-color:rgba(34,197,94,.18)
+    }
+
+    .password-wrap{position:relative;width:100%}
+
+    .password-wrap input{
+      width:100%;
+      padding-right:52px;
+    }
+
+    .password-toggle{
+      position:absolute;
+      right:8px;
+      top:50%;
+      transform:translateY(-50%);
+      width:40px;
+      height:40px;
+      padding:0;
+      border:0;
+      border-radius:10px;
+      background:transparent;
+      cursor:pointer;
+      font-size:19px;
+      box-shadow:none;
+    }
+
+    .password-toggle:hover{
+      background:rgba(129,140,248,.10);
+      transform:translateY(-50%);
+      box-shadow:none;
+    }
+
+    @media (max-width:900px){
+      .stats{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width:700px){
+      .wrap{
+        width:min(100% - 18px,1220px);
+        margin:10px auto;
+      }
+
+      .box{padding:18px;border-radius:19px}
+
+      .grid{grid-template-columns:1fr}
+
+      .stats{grid-template-columns:1fr}
+
+      .type-options{grid-template-columns:1fr}
+
+      .login-box{margin:25px auto}
+
+      h1{font-size:25px}
+      h2{font-size:20px}
+    }
+
+
+.type-badge.super{background:#f3e8ff;color:#6d28d9;border:1px solid #d8b4fe}.type-badge.super2{background:#e0f2fe;color:#0369a1;border:1px solid #7dd3fc}
+''</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <!-- =====================================================
+       LOGIN
+  ====================================================== -->
+
+  <div class="box login-box" id="loginBox">
+
+    <div class="login-icon">🔐</div>
+
+    <h1>Admin Login</h1>
+
+    <p>AllInOneStop management portal</p>
+
+    <label for="email">Admin Email</label>
+
+    <input
+      id="email"
+      type="email"
+      placeholder="Enter admin email"
+      autocomplete="username"
+    >
+
+    <label for="password">Admin Password</label>
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Enter admin password"
+      autocomplete="current-password"
+    >
+
+    <div class="actions">
+
+      <button
+        id="loginBtn"
+        type="button"
+        onclick="login()"
+      >
+        🔐 Login
+      </button>
+
+      <a
+        class="btn logout"
+        href="../"
+      >
+        🏠 Home
+      </a>
+
+    </div>
+
+    <div id="loginMessage"></div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ADMIN PANEL
+  ====================================================== -->
+
+  <div id="adminPanel" class="hidden">
+
+    <!-- HEADER -->
+
+    <div class="box">
+
+      <div class="top">
+
+        <div>
+
+          <h1>🛠️ AllInOneStop Admin Panel</h1>
+
+          <div style="margin-top:8px">
+
+            <span class="online">
+              ● Admin Online
+            </span>
+
+            <span
+              id="adminName"
+              class="badge"
+            >
+              Admin
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <a
+            class="btn logout"
+            href="../"
+          >
+            🏠 Home
+          </a>
+
+          <button
+            type="button"
+            class="logout"
+            onclick="logout()"
+          >
+            🚪 Logout
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         STATS
+    ================================================== -->
+
+    <div class="stats">
+
+      <div class="stat">
+
+        <div class="stat-icon">👥</div>
+
+        <div
+          class="stat-number"
+          id="totalRetailers"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Total Retailers
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">📋</div>
+
+        <div
+          class="stat-number"
+          id="totalApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Total Applications
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">💰</div>
+
+        <div
+          class="stat-number"
+          id="paidApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Paid Applications
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">⏳</div>
+
+        <div
+          class="stat-number"
+          id="pendingApplications"
+        >
+          0
+        </div>
+
+        <div class="stat-title">
+          Pending Applications
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CREATE RETAILER
+    ================================================== -->
+
+    <div class="box">
+
+      <h2>➕ Create New Retailer</h2>
+
+      <p>
+        Retailer account इसी admin panel से create होगा।
+      </p>
+
+      <div class="divider"></div>
+
+      <div class="grid">
+
+        <div>
+
+          <label for="retailerName">
+            Retailer Full Name
+          </label>
+
+          <input
+            id="retailerName"
+            type="text"
+            placeholder="Retailer full name"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label for="retailerMobile">
+            Mobile Number
+          </label>
+
+          <input
+            id="retailerMobile"
+            type="tel"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="10 digit mobile number"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label for="retailerEmail">
+            Retailer Email
+          </label>
+
+          <input
+            id="retailerEmail"
+            type="email"
+            placeholder="retailer@example.com"
+            autocomplete="email"
+          >
+
+        </div>
+
+
+        <div>
+
+          <label for="retailerNumber">
+            Retailer Number
+          </label>
+
+          <input
+            id="retailerNumber"
+            type="text"
+            placeholder="Optional"
+          >
+
+          <div class="hint">
+            खाली छोड़ने पर Auto Generated ID ही Retailer Number बनेगा।
+          </div>
+
+        </div>
+
+
+        <div>
+          <label>Retailer Service Access</label>
+          <div class="type-options">
+            <div class="type-option"><input type="radio" id="retailerTypeAll" name="retailerType" value="all_work" checked><label for="retailerTypeAll"><strong>👤 Retailer</strong><span>All active services including Ration Card, PAN, Election, DL, RC, Voter, LMS, PDF and Second PAN.</span></label></div>
+            <div class="type-option"><input type="radio" id="retailerTypeSuper" name="retailerType" value="super_pro"><label for="retailerTypeSuper"><strong>👑 Super Retailer</strong><span>Same services as Retailer, with Election New/Correction price ₹250.</span></label></div>
+            <div class="type-option"><input type="radio" id="retailerTypePro" name="retailerType" value="super_pro_2"><label for="retailerTypePro"><strong>⭐ Retailer Pro</strong><span>No Ration Card services. PAN, Election, DL, RC, Voter, LMS, PDF and Second PAN.</span></label></div>
+          </div>
+          <div class="hint">Admin jo mode select karega, retailer login me wahi mode use karega.</div> karega, retailer ko wahi services milengi.</div>
+        </div>
+
+        <div>
+          <label for="retailerPassword">
+            Retailer Password
+          </label>
+
+          <div class="password-wrap">
+            <input
+              id="retailerPassword"
+              type="password"
+              placeholder="Enter password manually"
+              autocomplete="new-password"
+            >
+            <button
+              type="button"
+              class="password-toggle"
+              id="retailerPasswordToggle"
+              onclick="toggleRetailerPassword()"
+              aria-label="Show password"
+              title="Show / Hide Password"
+            >👁️</button>
+          </div>
+
+          <div class="hint">
+            Minimum 6 characters
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="id-box">
+
+        <label for="retailerUsername">
+          Auto Generated Retailer ID
+        </label>
+
+        <input
+          id="retailerUsername"
+          type="text"
+          readonly
+        >
+
+        <div class="hint">
+          Retailer → RET-XXXXXX | Super Retailer → SUP-XXXXXX | Retailer Pro → PRO-XXXXXX. यही ID login के लिए use होगी।
+        </div>
+
+      </div>
+
+
+      <div class="actions">
+
+        <button
+          type="button"
+          onclick="generateRetailerId()"
+        >
+          🔄 Generate ID
+        </button>
+
+        <button
+          type="button"
+          id="createRetailerBtn"
+          onclick="createRetailer()"
+        >
+          👤 Create Retailer
+        </button>
+
+      </div>
+
+
+      <div id="createMessage"></div>
+
+    </div>
+
+
+    <!-- =================================================
+         RETAILER HISTORY
+    ================================================== -->
+
+    <div class="box">
+
+      <div class="top">
+
+        <div>
+
+          <h2>👥 Retailer History</h2>
+
+          <p class="hint">
+            सभी registered retailers
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          onclick="loadRetailers()"
+        >
+          🔄 Refresh
+        </button>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Retailer ID</th>
+              <th>Name</th>
+              <th>Mobile</th>
+              <th>Retailer No.</th>
+              <th>Service Access</th>
+              <th>Actions</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="retailerRows">
+
+            <tr>
+              <td
+                colspan="6"
+                class="loading"
+              >
+                Loading retailers...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         APPLICATIONS
+    ================================================== -->
+
+    <div class="box">
+
+      <div class="top">
+
+        <div>
+
+          <h2>📋 Applications</h2>
+
+          <p class="hint">
+            Payment और application status
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          onclick="loadApplications()"
+        >
+          🔄 Refresh
+        </button>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>TR Number</th>
+              <th>Service</th>
+              <th>Amount</th>
+              <th>Payment</th>
+              <th>Status</th>
+              <th>Remark</th>
+              <th>Save</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="applicationRows">
+
+            <tr>
+              <td
+                colspan="7"
+                class="loading"
+              >
+                Loading applications...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE CONFIG
+========================================================= */
+
+const SUPABASE_URL =
+  "https://dixsmucrgnyuvudhymdj.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_Z5T2Fbbr0RPMZds67p7-9Q_Yw2-jMVn";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* =========================================================
+   EDGE FUNCTION
+========================================================= */
+
+const RETAILER_FUNCTION =
+  "admin-create-retailer";
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHtml(value) {
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g, function(char) {
+
+      const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      };
+
+      return map[char];
+
+    });
+
+}
+
+
+function showMessage(
+  elementId,
+  text,
+  isError = false,
+  isWarning = false
+) {
+
+  const element =
+    document.getElementById(elementId);
+
+  if (!element) {
+    return;
+  }
+
+  let className = "msg";
+
+  if (isError) {
+    className += " error";
+  }
+
+  if (isWarning) {
+    className += " warning";
+  }
+
+  element.innerHTML =
+    '<div class="' +
+    className +
+    '">' +
+    escapeHtml(text) +
+    '</div>';
+
+}
+
+
+function clearMessage(elementId) {
+
+  const element =
+    document.getElementById(elementId);
+
+  if (element) {
+    element.innerHTML = "";
+  }
+
+}
+
+
+/* =========================================================
+   RETAILER ID
+========================================================= */
+
+function randomRetailerCode() {
+
+  const chars =
+    "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+  let result = "";
+
+  for (let i = 0; i < 6; i++) {
+
+    result +=
+      chars[
+        Math.floor(
+          Math.random() * chars.length
+        )
+      ];
+
+  }
+
+  return result;
+
+}
+
+
+/* =========================================================
+   RETAILER PASSWORD SHOW / HIDE
+========================================================= */
+
+function toggleRetailerPassword() {
+
+  const input =
+    document.getElementById("retailerPassword");
+
+  const button =
+    document.getElementById("retailerPasswordToggle");
+
+  if (!input || !button) return;
+
+  if (input.type === "password") {
+    input.type = "text";
+    button.textContent = "🙈";
+    button.setAttribute("aria-label", "Hide password");
+    button.title = "Hide Password";
+  } else {
+    input.type = "password";
+    button.textContent = "👁️";
+    button.setAttribute("aria-label", "Show password");
+    button.title = "Show Password";
+  }
+}
+
+
+function getSelectedRetailerTypeForId() {
+  const el = document.querySelector('input[name="retailerType"]:checked');
+  return el ? el.value : "all_work";
+}
+
+function retailerIdPrefixForType(type) {
+  if (type === "super_pro") return "SUP-";
+  if (type === "super_pro_2") return "PRO-";
+  return "RET-";
+}
+
+document.querySelectorAll('input[name="retailerType"]').forEach(el=>{
+  el.addEventListener("change",()=>generateRetailerId());
+});
+
+function generateRetailerId() {
+
+  const prefix = retailerIdPrefixForType(getSelectedRetailerTypeForId());
+  const username =
+    prefix + randomRetailerCode();
+
+  const usernameInput =
+    document.getElementById(
+      "retailerUsername"
+    );
+
+  const numberInput =
+    document.getElementById(
+      "retailerNumber"
+    );
+
+  if (usernameInput) {
+    usernameInput.value = username;
+  }
+
+  if (
+    numberInput &&
+    !numberInput.value.trim()
+  ) {
+
+    numberInput.value =
+      username;
+
+  }
+
+}
+
+
+/* =========================================================
+   SESSION
+========================================================= */
+
+async function getSession() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.getSession();
+
+  if (error) {
+
+    throw new Error(
+      "Session error: " +
+      error.message
+    );
+
+  }
+
+  if (
+    !data ||
+    !data.session ||
+    !data.session.access_token
+  ) {
+
+    throw new Error(
+      "Admin session expired. Please login again."
+    );
+
+  }
+
+  return data.session;
+
+}
+
+
+/* =========================================================
+   CHECK ADMIN PROFILE
+========================================================= */
+
+async function getAdminProfile(userId) {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select(
+        "id,full_name,role"
+      )
+      .eq(
+        "id",
+        userId
+      )
+      .maybeSingle();
+
+  if (error) {
+
+    throw new Error(
+      "Admin profile check failed: " +
+      error.message
+    );
+
+  }
+
+  if (!data) {
+
+    throw new Error(
+      "Admin profile not found."
+    );
+
+  }
+
+  if (data.role !== "admin") {
+
+    throw new Error(
+      "This account is not an admin account."
+    );
+
+  }
+
+  return data;
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function login() {
+
+  clearMessage("loginMessage");
+
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("password")
+      .value;
+
+  if (!email) {
+
+    showMessage(
+      "loginMessage",
+      "Please enter admin email.",
+      true
+    );
+
+    return;
+
+  }
+
+  if (!password) {
+
+    showMessage(
+      "loginMessage",
+      "Please enter admin password.",
+      true
+    );
+
+    return;
+
+  }
+
+  const button =
+    document.getElementById(
+      "loginBtn"
+    );
+
+  button.disabled = true;
+
+  button.textContent =
+    "⏳ Logging in...";
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth
+        .signInWithPassword({
+
+          email: email,
+
+          password: password
+
+        });
+
+    if (error) {
+
+      throw new Error(
+        "Login failed: " +
+        error.message
+      );
+
+    }
+
+    if (
+      !data ||
+      !data.user
+    ) {
+
+      throw new Error(
+        "Login failed. User account not found."
+      );
+
+    }
+
+    const profile =
+      await getAdminProfile(
+        data.user.id
+      );
+
+    await openAdminPanel(
+      profile,
+      data.user
+    );
+
+  }
+  catch (error) {
+
+    console.error(
+      "ADMIN LOGIN ERROR:",
+      error
+    );
+
+    showMessage(
+      "loginMessage",
+      error?.message ||
+      "Login failed. Please try again.",
+      true
+    );
+
+  }
+  finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "🔐 Login";
+
+  }
+
+}
+
+
+/* =========================================================
+   OPEN ADMIN PANEL
+========================================================= */
+
+async function openAdminPanel(
+  profile,
+  user
+) {
+
+  document
+    .getElementById("loginBox")
+    .classList.add("hidden");
+
+  document
+    .getElementById("adminPanel")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("adminName")
+    .textContent =
+      "👤 " +
+      (
+        profile.full_name ||
+        user.email ||
+        "Admin"
+      );
+
+  await refreshDashboard();
+
+}
+
+
+/* =========================================================
+   RESTORE SESSION
+========================================================= */
+
+async function restoreSession() {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth
+        .getSession();
+
+    if (error) {
+
+      console.error(
+        "SESSION ERROR:",
+        error
+      );
+
+      return;
+
+    }
+
+    if (
+      !data ||
+      !data.session
+    ) {
+
+      return;
+
+    }
+
+    const user =
+      data.session.user;
+
+    const profile =
+      await getAdminProfile(
+        user.id
+      );
+
+    await openAdminPanel(
+      profile,
+      user
+    );
+
+  }
+  catch (error) {
+
+    console.warn(
+      "RESTORE SESSION:",
+      error.message
+    );
+
+    await supabaseClient.auth.signOut();
+
+  }
+
+}
+
+
+
+/* =========================================================
+   CHANGE RETAILER ACCESS
+========================================================= */
+async function changeRetailerAccess(userId, retailerId, currentType){
+  const options = [
+    ["ration_card","🍚 Ration Card Only"],
+    ["all_work","🌐 All Work"],
+    ["super_pro","👑 Super Retailer Pro"],
+    ["super_pro_2","👑 Super Retailer 2"]
+  ];
+  const label = options.map((x,i)=>`${i+1}. ${x[1]}`).join("\n");
+  const answer = prompt("Change access for "+retailerId+"\n\n"+label+"\n\nEnter 1, 2 or 3:");
+  if(answer===null) return;
+  const selectedIndex=Number(answer)-1;
+  if(!Number.isInteger(selectedIndex) || !options[selectedIndex]){
+    alert("Invalid choice.");
+    return;
+  }
+  const newType=options[selectedIndex][0];
+  if(newType===currentType){
+    alert("This retailer already has this access.");
+    return;
+  }
+  if(!confirm("Change "+retailerId+" to "+options[selectedIndex][1]+"?")) return;
+
+  try{
+    await getSession();
+    const {data,error}=await supabaseClient.functions.invoke(RETAILER_FUNCTION,{
+      body:{action:"update_access",user_id:userId,retailer_type:newType}
+    });
+    if(error) throw new Error(await readFunctionError(error));
+    if(!data || data.error) throw new Error(formatFunctionError(data||{}));
+    alert("Access updated successfully.");
+    await loadRetailers();
+  }catch(e){
+    console.error("CHANGE ACCESS ERROR",e);
+    alert(e.message||"Access update failed.");
+  }
+}
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout() {
+
+  try {
+
+    await supabaseClient.auth.signOut();
+
+  }
+  catch (error) {
+
+    console.error(
+      "LOGOUT ERROR:",
+      error
+    );
+
+  }
+
+  window.location.href =
+    "admin.html";
+
+}
+
+
+/* =========================================================
+   CREATE RETAILER
+========================================================= */
+
+async function createRetailer() {
+
+  clearMessage("createMessage");
+
+  const button =
+    document.getElementById(
+      "createRetailerBtn"
+    );
+
+  const fullName =
+    document
+      .getElementById("retailerName")
+      .value
+      .trim();
+
+  const mobile =
+    document
+      .getElementById("retailerMobile")
+      .value
+      .trim();
+
+  let username =
+    document
+      .getElementById("retailerUsername")
+      .value
+      .trim();
+
+  let retailerNumber =
+    document
+      .getElementById("retailerNumber")
+      .value
+      .trim();
+
+  const retailerEmail =
+    document
+      .getElementById("retailerEmail")
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById("retailerPassword")
+      .value;
+
+  const retailerTypeElement =
+    document.querySelector('input[name="retailerType"]:checked');
+
+  const retailerType =
+    retailerTypeElement ? retailerTypeElement.value : "ration_card";
+
+
+  /* ================= VALIDATION ================= */
+
+  if (!fullName) {
+
+    showMessage(
+      "createMessage",
+      "Retailer full name is required.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (retailerEmail && !/^\S+@\S+\.\S+$/.test(retailerEmail)) {
+
+    showMessage("createMessage","Please enter a valid retailer email.",true);
+    return;
+
+  }
+
+
+  if (!/^\d{10}$/.test(mobile)) {
+
+    showMessage(
+      "createMessage",
+      "Mobile number must be exactly 10 digits.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (!username) {
+
+    const rationTypeRadio = document.getElementById("retailerTypeRation");
+    if (rationTypeRadio) rationTypeRadio.checked = true;
+
+    generateRetailerId();
+
+    username =
+      document
+        .getElementById(
+          "retailerUsername"
+        )
+        .value
+        .trim();
+
+  }
+
+
+  if (!retailerNumber) {
+
+    retailerNumber =
+      username;
+
+  }
+
+
+  if (!password) {
+
+    showMessage(
+      "createMessage",
+      "Please enter retailer password.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  if (password.length < 6) {
+
+    showMessage(
+      "createMessage",
+      "Password must be at least 6 characters.",
+      true
+    );
+
+    return;
+
+  }
+
+
+  button.disabled = true;
+
+  button.textContent =
+    "⏳ Creating...";
+
+
+  try {
+
+    /* ============================================
+       CHECK ADMIN SESSION
+    ============================================ */
+
+    await getSession();
+
+
+    /* ============================================
+       REQUEST
+    ============================================ */
+
+    const requestBody = {
+
+      action: "create",
+
+      full_name: fullName,
+
+      mobile: mobile,
+
+      email: retailerEmail,
+
+      username: username,
+
+      retailer_number: retailerNumber,
+
+      retailer_type: retailerType,
+
+      password: password
+
+    };
+
+
+    console.log(
+      "CREATE RETAILER REQUEST:",
+      {
+        ...requestBody,
+        password: "[HIDDEN]"
+      }
+    );
+
+
+    /* ============================================
+       EDGE FUNCTION
+    ============================================ */
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.functions.invoke(
+        RETAILER_FUNCTION,
+        {
+          body: requestBody
+        }
+      );
+
+
+    if (error) {
+
+      throw new Error(
+        await readFunctionError(error)
+      );
+
+    }
+
+
+    if (!data) {
+
+      throw new Error(
+        "Edge Function returned empty response."
+      );
+
+    }
+
+
+    if (data.error) {
+
+      throw new Error(
+        formatFunctionError(data)
+      );
+
+    }
+
+
+    /* ============================================
+       SUCCESS
+    ============================================ */
+
+    const createdUsername =
+      data.username ||
+      username;
+
+    const createdNumber =
+      data.retailer_number ||
+      retailerNumber;
+
+
+    showMessage(
+      "createMessage",
+
+      "Retailer created successfully.\n\n" +
+      "Retailer ID: " +
+      createdUsername +
+      "\n" +
+      "Retailer Number: " +
+      createdNumber +
+      "\n\n" +
+      "Password was saved securely in Supabase Authentication.",
+
+      false
+    );
+
+
+    /* ============================================
+       CLEAR FORM
+    ============================================ */
+
+    document
+      .getElementById(
+        "retailerName"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "retailerMobile"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "retailerEmail"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "retailerNumber"
+      )
+      .value = "";
+
+    document
+      .getElementById(
+        "retailerPassword"
+      )
+      .value = "";
+
+
+    generateRetailerId();
+
+
+    await refreshDashboard();
+
+  }
+  catch (error) {
+
+    console.error(
+      "CREATE RETAILER ERROR:",
+      error
+    );
+
+    showMessage(
+      "createMessage",
+
+      error?.message ||
+      "Failed to create retailer.",
+
+      true
+    );
+
+  }
+  finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "👤 Create Retailer";
+
+  }
+
+}
+
+
+/* =========================================================
+   EDGE FUNCTION ERROR READER
+========================================================= */
+
+async function readFunctionError(error) {
+
+  let message =
+    error?.message ||
+    "Edge Function request failed.";
+
+  try {
+
+    const context =
+      error?.context;
+
+    if (
+      context &&
+      typeof context.clone === "function"
+    ) {
+
+      const cloned =
+        context.clone();
+
+      const contentType =
+        cloned.headers?.get(
+          "content-type"
+        ) || "";
+
+      if (
+        contentType.includes(
+          "application/json"
+        )
+      ) {
+
+        const body =
+          await cloned.json();
+
+        if (body) {
+
+          message =
+            formatFunctionError(
+              body
+            );
+
+        }
+
+      }
+      else {
+
+        const text =
+          await cloned.text();
+
+        if (text) {
+          message = text;
+        }
+
+      }
+
+    }
+
+  }
+  catch (readerError) {
+
+    console.warn(
+      "Could not read Edge Function error:",
+      readerError
+    );
+
+  }
+
+  return message;
+
+}
+
+
+function formatFunctionError(data) {
+
+  let message =
+    data?.error ||
+    data?.message ||
+    "Edge Function request failed.";
+
+  if (data?.details) {
+
+    message +=
+      "\nDetails: " +
+      data.details;
+
+  }
+
+  return String(message);
+
+}
+
+
+/* =========================================================
+   CALL RETAILER EDGE FUNCTION
+========================================================= */
+
+async function callRetailerFunction(
+  action,
+  userId,
+  password = ""
+) {
+
+  await getSession();
+
+
+  const body = {
+
+    action: action,
+
+    user_id: userId
+
+  };
+
+
+  if (
+    action ===
+    "reset_password"
+  ) {
+
+    body.password =
+      password;
+
+  }
+
+
+  console.log(
+    "CALLING RETAILER FUNCTION:",
+    RETAILER_FUNCTION
+  );
+
+  console.log(
+    "ACTION:",
+    action
+  );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.functions.invoke(
+      RETAILER_FUNCTION,
+      {
+        body: body
+      }
+    );
+
+
+  if (error) {
+
+    throw new Error(
+      await readFunctionError(error)
+    );
+
+  }
+
+
+  if (!data) {
+
+    throw new Error(
+      "Edge Function returned empty response."
+    );
+
+  }
+
+
+  if (data.error) {
+
+    throw new Error(
+      formatFunctionError(data)
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================================
+   RESET RETAILER PASSWORD
+========================================================= */
+
+async function resetRetailerPassword(
+  userId,
+  retailerId
+) {
+
+  const newPassword =
+    prompt(
+      "Retailer: " +
+      retailerId +
+      "\n\nEnter NEW password:"
+    );
+
+
+  if (newPassword === null) {
+    return;
+  }
+
+
+  const trimmedPassword =
+    newPassword.trim();
+
+
+  if (!trimmedPassword) {
+
+    alert(
+      "Password cannot be empty."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    trimmedPassword.length < 6
+  ) {
+
+    alert(
+      "Password must be at least 6 characters."
+    );
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      "Reset password for " +
+      retailerId +
+      "?"
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    await callRetailerFunction(
+      "reset_password",
+      userId,
+      trimmedPassword
+    );
+
+
+    /*
+      IMPORTANT:
+      New password is deliberately NOT
+      displayed anywhere after reset.
+    */
+
+    alert(
+      "Password updated successfully.\n\n" +
+      "Retailer ID: " +
+      retailerId
+    );
+
+  }
+  catch (error) {
+
+    console.error(
+      "RESET PASSWORD ERROR:",
+      error
+    );
+
+    alert(
+      error?.message ||
+      "Password reset failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DELETE RETAILER
+========================================================= */
+
+async function deleteRetailer(
+  userId,
+  retailerId
+) {
+
+  const confirmation =
+    prompt(
+      "Delete retailer " +
+      retailerId +
+      "?\n\nType DELETE to confirm."
+    );
+
+
+  if (
+    confirmation !==
+    "DELETE"
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    await callRetailerFunction(
+      "delete",
+      userId
+    );
+
+
+    alert(
+      "Retailer deleted successfully."
+    );
+
+
+    await refreshDashboard();
+
+  }
+  catch (error) {
+
+    console.error(
+      "DELETE RETAILER ERROR:",
+      error
+    );
+
+    alert(
+      error?.message ||
+      "Retailer deletion failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD RETAILERS
+========================================================= */
+
+async function loadRetailers() {
+
+  const rows =
+    document.getElementById(
+      "retailerRows"
+    );
+
+
+  rows.innerHTML = `
+    <tr>
+      <td colspan="6" class="loading">
+        Loading retailers...
+      </td>
+    </tr>
+  `;
+
+
+  try {
+
+    await getSession();
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id,full_name,mobile,retailer_number,role,retailer_type"
+        )
+        .eq(
+          "role",
+          "retailer"
+        )
+        .order(
+          "full_name",
+          {
+            ascending: true
+          }
+        );
+
+
+    if (error) {
+
+      throw new Error(
+        error.message
+      );
+
+    }
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      rows.innerHTML = `
+        <tr>
+          <td colspan="6" class="loading">
+            No retailers found.
+          </td>
+        </tr>
+      `;
+
+      return;
+
+    }
+
+
+    rows.innerHTML =
+      data.map(
+        function(retailer) {
+
+          const retailerId =
+            retailer.retailer_number ||
+            "RET";
+
+
+          const userId =
+            escapeHtml(
+              retailer.id
+            );
+
+
+          const safeRetailerId =
+            escapeHtml(
+              retailerId
+            );
+
+
+          return `
+            <tr>
+
+              <td>
+                <strong>
+                  ${safeRetailerId}
+                </strong>
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  retailer.full_name
+                )}
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  retailer.mobile
+                )}
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  retailer.retailer_number ||
+                  retailerId
+                )}
+              </td>
+
+              <td>
+
+                <span class="type-badge ${retailer.retailer_type === "all_work" ? "all" : retailer.retailer_type === "super_pro" ? "super" : retailer.retailer_type === "super_pro_2" ? "super2" : ""}">
+                  ${retailer.retailer_type === "all_work" ? "🌐 All Work" : retailer.retailer_type === "super_pro" ? "👑 Super Retailer Pro" : retailer.retailer_type === "super_pro_2" ? "👑 Super Retailer 2" : "🍚 Ration Card Only"}
+                </span>
+              </td>
+
+              <td>
+
+                <div class="actions">
+
+                  <button
+                    type="button"
+                    class="small-btn"
+                    style="background:linear-gradient(135deg,#0ea5e9,#2563eb)"
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    data-retailer-type="${escapeHtml(retailer.retailer_type || "ration_card")}"
+                    onclick="changeRetailerAccess(this.dataset.userId,this.dataset.retailerId,this.dataset.retailerType)"
+                  >
+                    🔄 Change Access
+                  </button>
+
+                  <button
+                    type="button"
+                    class="small-btn password-btn"
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    onclick="resetFromButton(this)"
+                  >
+                    🔑 Reset Password
+                  </button>
+
+                  <button
+                    type="button"
+                    class="small-btn delete-btn"
+                    data-user-id="${userId}"
+                    data-retailer-id="${safeRetailerId}"
+                    onclick="deleteFromButton(this)"
+                  >
+                    🗑️ Delete
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+          `;
+
+        }
+      ).join("");
+
+  }
+  catch (error) {
+
+    console.error(
+      "LOAD RETAILERS ERROR:",
+      error
+    );
+
+
+    rows.innerHTML = `
+      <tr>
+        <td colspan="6" class="loading">
+          ${escapeHtml(
+            error?.message ||
+            "Could not load retailers."
+          )}
+        </td>
+      </tr>
+    `;
+
+  }
+
+}
+
+
+function resetFromButton(
+  button
+) {
+
+  resetRetailerPassword(
+    button.dataset.userId,
+    button.dataset.retailerId
+  );
+
+}
+
+
+function deleteFromButton(
+  button
+) {
+
+  deleteRetailer(
+    button.dataset.userId,
+    button.dataset.retailerId
+  );
+
+}
+
+
+/* =========================================================
+   LOAD APPLICATIONS
+========================================================= */
+
+async function loadApplications() {
+
+  const rows =
+    document.getElementById(
+      "applicationRows"
+    );
+
+
+  rows.innerHTML = `
+    <tr>
+      <td colspan="7" class="loading">
+        Loading applications...
+      </td>
+    </tr>
+  `;
+
+
+  try {
+
+    await getSession();
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("applications")
+        .select(
+          "tr_number,service_name,amount,payment_status,application_status,remark"
+        )
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
+
+
+    if (error) {
+
+      throw new Error(
+        error.message
+      );
+
+    }
+
+
+    if (
+      !data ||
+      data.length === 0
+    ) {
+
+      rows.innerHTML = `
+        <tr>
+          <td colspan="7" class="loading">
+            No applications yet.
+          </td>
+        </tr>
+      `;
+
+      return;
+
+    }
+
+
+    rows.innerHTML =
+      data.map(
+        function(app, index) {
+
+          const tr =
+            String(
+              app.tr_number || ""
+            );
+
+
+          const key =
+            (
+              tr +
+              "-" +
+              index
+            ).replace(
+              /[^a-zA-Z0-9_-]/g,
+              "_"
+            );
+
+
+          const payment =
+            app.payment_status ||
+            "Pending";
+
+
+          const status =
+            app.application_status ||
+            "Received";
+
+
+          return `
+            <tr>
+
+              <td>
+                <strong>
+                  ${escapeHtml(tr)}
+                </strong>
+              </td>
+
+              <td>
+                ${escapeHtml(
+                  app.service_name
+                )}
+              </td>
+
+              <td>
+                ₹${escapeHtml(
+                  app.amount
+                )}
+              </td>
+
+              <td>
+
+                <select
+                  id="payment-${key}"
+                >
+
+                  <option
+                    value="Pending"
+                    ${payment === "Pending" ? "selected" : ""}
+                  >
+                    Pending
+                  </option>
+
+                  <option
+                    value="Paid"
+                    ${payment === "Paid" ? "selected" : ""}
+                  >
+                    Paid
+                  </option>
+
+                  <option
+                    value="Failed"
+                    ${payment === "Failed" ? "selected" : ""}
+                  >
+                    Failed
+                  </option>
+
+                </select>
+
+              </td>
+
+              <td>
+
+                <select
+                  id="status-${key}"
+                >
+
+                  <option
+                    value="Received"
+                    ${status === "Received" ? "selected" : ""}
+                  >
+                    Received
+                  </option>
+
+                  <option
+                    value="Verification"
+                    ${status === "Verification" ? "selected" : ""}
+                  >
+                    Verification
+                  </option>
+
+                  <option
+                    value="Processing"
+                    ${status === "Processing" ? "selected" : ""}
+                  >
+                    Processing
+                  </option>
+
+                  <option
+                    value="Completed"
+                    ${status === "Completed" ? "selected" : ""}
+                  >
+                    Completed
+                  </option>
+
+                  <option
+                    value="Rejected"
+                    ${status === "Rejected" ? "selected" : ""}
+                  >
+                    Rejected
+                  </option>
+
+                </select>
+
+              </td>
+
+              <td>
+
+                <input
+                  id="remark-${key}"
+                  value="${escapeHtml(
+                    app.remark || ""
+                  )}"
+                  placeholder="Remark"
+                >
+
+              </td>
+
+              <td>
+
+                <button
+                  type="button"
+                  class="small-btn"
+                  onclick="saveApplication(
+                    ${JSON.stringify(tr)},
+                    ${JSON.stringify(key)}
+                  )"
+                >
+                  💾 Save
+                </button>
+
+              </td>
+
+            </tr>
+          `;
+
+        }
+      ).join("");
+
+  }
+  catch (error) {
+
+    console.error(
+      "LOAD APPLICATIONS ERROR:",
+      error
+    );
+
+
+    rows.innerHTML = `
+      <tr>
+        <td colspan="7" class="loading">
+          ${escapeHtml(
+            error?.message ||
+            "Could not load applications."
+          )}
+        </td>
+      </tr>
+    `;
+
+  }
+
+}
+
+
+/* =========================================================
+   SAVE APPLICATION
+========================================================= */
+
+async function saveApplication(
+  trNumber,
+  key
+) {
+
+  try {
+
+    await getSession();
+
+
+    const paymentElement =
+      document.getElementById(
+        "payment-" + key
+      );
+
+
+    const statusElement =
+      document.getElementById(
+        "status-" + key
+      );
+
+
+    const remarkElement =
+      document.getElementById(
+        "remark-" + key
+      );
+
+
+    if (
+      !paymentElement ||
+      !statusElement ||
+      !remarkElement
+    ) {
+
+      throw new Error(
+        "Application form fields not found."
+      );
+
+    }
+
+
+    const payment =
+      paymentElement.value;
+
+
+    const status =
+      statusElement.value;
+
+
+    const remark =
+      remarkElement.value.trim();
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.functions.invoke(
+        RETAILER_FUNCTION,
+        {
+          body:{
+            action:"update_application",
+            tr_number:trNumber,
+            payment_status:payment,
+            application_status:status,
+            remark:remark
+          }
+        }
+      );
+
+
+    if (error) {
+      throw new Error(await readFunctionError(error));
+    }
+
+    if (!data || data.error) {
+      throw new Error(formatFunctionError(data || {}));
+    }
+
+
+    alert(
+      "Application status updated successfully."
+    );
+
+
+    await refreshDashboard();
+
+  }
+  catch (error) {
+
+    console.error(
+      "SAVE APPLICATION ERROR:",
+      error
+    );
+
+
+    alert(
+      error?.message ||
+      "Status update failed."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD STATS
+========================================================= */
+
+async function loadStats() {
+
+  try {
+
+    await getSession();
+
+
+    /* ============================================
+       RETAILER COUNT
+    ============================================ */
+
+    const {
+      count,
+      error: retailerError
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select(
+          "id",
+          {
+            count: "exact",
+            head: true
+          }
+        )
+        .eq(
+          "role",
+          "retailer"
+        );
+
+
+    if (retailerError) {
+
+      throw retailerError;
+
+    }
+
+
+    document
+      .getElementById(
+        "totalRetailers"
+      )
+      .textContent =
+        count || 0;
+
+
+    /* ============================================
+       APPLICATIONS
+    ============================================ */
+
+    const {
+      data: applications,
+      error: applicationError
+    } =
+      await supabaseClient
+        .from("applications")
+        .select(
+          "payment_status"
+        );
+
+
+    if (applicationError) {
+
+      throw applicationError;
+
+    }
+
+
+    const list =
+      applications || [];
+
+
+    document
+      .getElementById(
+        "totalApplications"
+      )
+      .textContent =
+        list.length;
+
+
+    document
+      .getElementById(
+        "paidApplications"
+      )
+      .textContent =
+        list.filter(
+          function(item) {
+
+            return (
+              item.payment_status ===
+              "Paid"
+            );
+
+          }
+        ).length;
+
+
+    document
+      .getElementById(
+        "pendingApplications"
+      )
+      .textContent =
+        list.filter(
+          function(item) {
+
+            return (
+              !item.payment_status ||
+              item.payment_status ===
+              "Pending"
+            );
+
+          }
+        ).length;
+
+  }
+  catch (error) {
+
+    console.error(
+      "LOAD STATS ERROR:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   REFRESH DASHBOARD
+========================================================= */
+
+async function refreshDashboard() {
+
+  await Promise.allSettled([
+
+    loadRetailers(),
+
+    loadApplications(),
+
+    loadStats()
+
+  ]);
+
+}
+
+
+/* =========================================================
+   AUTH LISTENER
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  function(event, session) {
+
+    console.log(
+      "AUTH EVENT:",
+      event
+    );
+
+    if (
+      event === "SIGNED_OUT" &&
+      !window.location.pathname.endsWith(
+        "admin.html"
+      )
+    ) {
+
+      window.location.href =
+        "admin.html";
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   ENTER KEY LOGIN
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Enter" &&
+      !document
+        .getElementById("loginBox")
+        .classList.contains("hidden")
+    ) {
+
+      const active =
+        document.activeElement;
+
+      if (
+        active &&
+        (
+          active.id === "email" ||
+          active.id === "password"
+        )
+      ) {
+
+        event.preventDefault();
+
+        login();
+
+      }
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    generateRetailerId();
+
+    restoreSession();
+
+  }
+);
+
+</script>
+
+
+<script>
+window.__adminDeleteApplication = async function(tr){
+  tr=String(tr||"").trim();
+  if(!tr)return;
+  if(prompt("Delete application "+tr+"?\n\nType DELETE to confirm.")!=="DELETE")return;
+  try{
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(!session)throw new Error("Admin session expired. Please login again.");
+    const {error}=await supabaseClient.from("applications").delete().eq("tr_number",tr);
+    if(error)throw error;
+    alert("Application deleted successfully.");
+    await refreshDashboard();
+  }catch(e){console.error(e);alert(e.message||"Application deletion failed.");}
+};
+(function(){
+  function patch(){
+    const tb=document.getElementById("applicationRows");
+    if(!tb)return;
+    tb.querySelectorAll("tr").forEach(function(r){
+      if(r.dataset.delAdded==="1"||r.children.length<7)return;
+      const tr=(r.children[0].textContent||"").trim();
+      if(!/^TR-/.test(tr))return;
+      const cell=r.children[r.children.length-1];
+      if(!cell)return;
+      const b=document.createElement("button");
+      b.type="button"; b.className="small-btn delete-btn"; b.style.marginLeft="6px"; b.textContent="🗑️ Delete";
+      b.onclick=function(){window.__adminDeleteApplication(tr);};
+      cell.appendChild(b); r.dataset.delAdded="1";
+    });
+  }
+  document.addEventListener("DOMContentLoaded",function(){
+    patch();
+    const tb=document.getElementById("applicationRows");
+    if(tb)new MutationObserver(patch).observe(tb,{childList:true,subtree:true});
+  });
+})();
+</script>
+<script>
+/* ADMIN PANEL VISIBILITY GUARD */
+(function(){
+  function syncAdminVisibility(){
+    const loginBox=document.getElementById('loginBox');
+    const panel=document.getElementById('adminPanel');
+    if(!loginBox || !panel) return;
+    const authenticated=loginBox.classList.contains('hidden');
+    panel.classList.toggle('hidden',!authenticated);
+    if(authenticated) panel.removeAttribute('data-logged-out');
+    else panel.setAttribute('data-logged-out','1');
+  }
+  function start(){
+    const loginBox=document.getElementById('loginBox');
+    const panel=document.getElementById('adminPanel');
+    if(!loginBox || !panel) return;
+    syncAdminVisibility();
+    new MutationObserver(syncAdminVisibility).observe(loginBox,{attributes:true,attributeFilter:['class']});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start);
+  else start();
+})();
+</script>
+
+</body>
+</html>

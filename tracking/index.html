@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>Track Application - AllInOneStop</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="../config.js"></script>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6fb;
+      color: #172033;
+    }
+
+    .header {
+      background: #0d47a1;
+      color: white;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .header div {
+      margin-top: 3px;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: 25px auto;
+      padding: 0 15px;
+    }
+
+    .top-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .home-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: #1976d2;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 7px;
+      font-weight: bold;
+    }
+
+    .home-btn:hover {
+      background: #1565c0;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.08);
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccd4df;
+      border-radius: 7px;
+      font-size: 16px;
+      text-transform: uppercase;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #1976d2;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 13px;
+      border: 0;
+      border-radius: 7px;
+      background: #1976d2;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1565c0;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .status {
+      display: none;
+      padding: 13px;
+      border-radius: 7px;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+
+    .success {
+      display: block;
+      background: #e8f5e9;
+      color: #1b5e20;
+      border: 1px solid #a5d6a7;
+    }
+
+    .error {
+      display: block;
+      background: #ffebee;
+      color: #b71c1c;
+      border: 1px solid #ef9a9a;
+    }
+
+    .info {
+      display: block;
+      background: #e3f2fd;
+      color: #0d47a1;
+      border: 1px solid #90caf9;
+    }
+
+    .result {
+      display: none;
+    }
+
+    .tr {
+      text-align: center;
+      background: #e8f5e9;
+      border: 2px solid #43a047;
+      padding: 18px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tr-number {
+      font-size: 25px;
+      font-weight: bold;
+      color: #1b5e20;
+      margin-top: 8px;
+      word-break: break-word;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e9ef;
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .key {
+      font-weight: bold;
+      color: #455a64;
+      min-width: 45%;
+    }
+
+    .value {
+      text-align: right;
+      font-weight: 600;
+      word-break: break-word;
+    }
+
+    .received {
+      color: #1565c0;
+    }
+
+    .pending {
+      color: #e65100;
+    }
+
+    .completed {
+      color: #2e7d32;
+    }
+
+    .rejected {
+      color: #c62828;
+    }
+
+    .drive-box {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .drive-link {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 15px;
+      background: #455a64;
+      color: white;
+      text-decoration: none;
+      border-radius: 7px;
+      font-weight: bold;
+    }
+
+    .drive-link:hover {
+      background: #263238;
+    }
+
+    .footer {
+      text-align: center;
+      color: #607d8b;
+      padding: 20px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+
+      .container {
+        margin-top: 15px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .row {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .value {
+        text-align: left;
+      }
+
+      .key {
+        min-width: auto;
+      }
+
+      .tr-number {
+        font-size: 21px;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="header">
+
+    <h1>AllInOneStop</h1>
+
+    <div>
+      Application Tracking
+    </div>
+
+  </div>
+
+
+  <div class="container">
+
+    <!-- HOME BUTTON -->
+
+    <div class="top-buttons">
+
+      <a
+        class="home-btn"
+        href="../">
+        🏠 Home
+      </a>
+
+    </div>
+
+
+    <!-- SEARCH CARD -->
+
+    <div class="card">
+
+      <h2>
+        Track Your Application
+      </h2>
+
+      <div
+        id="status"
+        class="status">
+      </div>
+
+
+      <label for="trNumber">
+        TR Number
+      </label>
+
+      <input
+        id="trNumber"
+        type="text"
+        placeholder="TR-20260824-123456"
+        autocomplete="off">
+
+
+      <button
+        id="trackBtn"
+        type="button"
+        onclick="trackApplication()">
+
+        Track Application
+
+      </button>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+      id="result"
+      class="card result">
+
+
+      <div class="tr">
+
+        <div>
+          Application TR Number
+        </div>
+
+        <div
+          class="tr-number"
+          id="resultTr">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Application Status
+        </div>
+
+        <div
+          class="value"
+          id="applicationStatus">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Payment Status
+        </div>
+
+        <div
+          class="value"
+          id="paymentStatus">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Service
+        </div>
+
+        <div
+          class="value"
+          id="serviceName">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Applicant Name
+        </div>
+
+        <div
+          class="value"
+          id="applicantName">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Customer Mobile
+        </div>
+
+        <div
+          class="value"
+          id="customerMobile">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Amount
+        </div>
+
+        <div
+          class="value"
+          id="amount">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          UTR Number
+        </div>
+
+        <div
+          class="value"
+          id="utrNumber">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Created At
+        </div>
+
+        <div
+          class="value"
+          id="createdAt">
+        </div>
+
+      </div>
+
+
+      <div class="row">
+
+        <div class="key">
+          Remark
+        </div>
+
+        <div
+          class="value"
+          id="remark">
+        </div>
+
+      </div>
+
+
+      <div
+        id="driveBox"
+        class="drive-box"
+        style="display:none;">
+
+        <strong>
+          📁 Documents
+        </strong>
+
+        <br>
+
+        <a
+          id="driveLink"
+          class="drive-link"
+          target="_blank"
+          rel="noopener noreferrer">
+
+          Open Documents
+
+        </a>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <div class="footer">
+
+    AllInOneStop © 2026
+
+  </div>
+
+
+<script>
+
+  /*
+   * ==========================================
+   * SUPABASE CONFIG
+   * ==========================================
+   */
+
+  const SUPABASE_URL =
+    window.ALLINONESTOP_CONFIG.SUPABASE_URL;
+
+  const SUPABASE_PUBLISHABLE_KEY =
+    window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY;
+
+
+  /*
+   * ==========================================
+   * TRACK FUNCTION
+   * ==========================================
+   */
+
+  const TRACK_FUNCTION =
+    "track-application";
+
+
+  /*
+   * ==========================================
+   * TRACK APPLICATION
+   * ==========================================
+   */
+
+  async function trackApplication() {
+
+    const input =
+      document.getElementById("trNumber");
+
+    const tr =
+      input.value.trim().toUpperCase();
+
+
+    if (!tr) {
+
+      showStatus(
+        "TR Number required.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    const button =
+      document.getElementById("trackBtn");
+
+
+    button.disabled = true;
+
+    button.textContent =
+      "Searching...";
+
+
+    hideResult();
+
+    showStatus(
+      "Searching application...",
+      "info"
+    );
+
+
+    try {
+
+      const apiUrl =
+        SUPABASE_URL +
+        "/functions/v1/" +
+        TRACK_FUNCTION +
+        "?trNumber=" +
+        encodeURIComponent(tr);
+
+
+      const response =
+        await fetch(
+          apiUrl,
+          {
+            method: "GET",
+
+            headers: {
+              "apikey":
+                SUPABASE_PUBLISHABLE_KEY,
+
+              "Content-Type":
+                "application/json"
+            }
+          }
+        );
+
+
+      let result;
+
+
+      try {
+
+        result =
+          await response.json();
+
+      } catch (jsonError) {
+
+        throw new Error(
+          "Tracking server returned an invalid response."
+        );
+
+      }
+
+
+      if (
+        !response.ok ||
+        !result.success
+      ) {
+
+        showStatus(
+          result.message ||
+          "Application not found.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      displayResult(result);
+
+    } catch (error) {
+
+      console.error(
+        "Tracking error:",
+        error
+      );
+
+
+      showStatus(
+        "Tracking error: " +
+        (error.message ||
+        "Unable to connect to tracking server."),
+        "error"
+      );
+
+    } finally {
+
+      button.disabled = false;
+
+      button.textContent =
+        "Track Application";
+
+    }
+
+  }
+
+
+  /*
+   * ==========================================
+   * DISPLAY RESULT
+   * ==========================================
+   */
+
+  function displayResult(data) {
+
+    document.getElementById(
+      "result"
+    ).style.display = "block";
+
+
+    setText(
+      "resultTr",
+      data.trNumber ||
+      data.tr_number ||
+      "-"
+    );
+
+
+    setText(
+      "applicationStatus",
+      data.applicationStatus ||
+      "Received"
+    );
+
+
+    setText(
+      "paymentStatus",
+      data.paymentStatus ||
+      "Pending"
+    );
+
+
+    setText(
+      "serviceName",
+      data.serviceName ||
+      "-"
+    );
+
+
+    setText(
+      "applicantName",
+      data.applicantName ||
+      "-"
+    );
+
+
+    setText(
+      "customerMobile",
+      data.customerMobile ||
+      "-"
+    );
+
+
+    const amount =
+      Number(data.amount);
+
+
+    if (
+      Number.isFinite(amount)
+    ) {
+
+      setText(
+        "amount",
+        "₹" +
+        amount
+      );
+
+    } else {
+
+      setText(
+        "amount",
+        "-"
+      );
+
+    }
+
+
+    setText(
+      "utrNumber",
+      data.utrNumber ||
+      "-"
+    );
+
+
+    setText(
+      "createdAt",
+      formatDate(
+        data.createdAt
+      )
+    );
+
+
+    setText(
+      "remark",
+      data.remark ||
+      "-"
+    );
+
+
+    /*
+     * DRIVE DOCUMENT
+     */
+
+    const driveBox =
+      document.getElementById(
+        "driveBox"
+      );
+
+    const driveLink =
+      document.getElementById(
+        "driveLink"
+      );
+
+
+    if (
+      data.driveFolderUrl
+    ) {
+
+      driveBox.style.display =
+        "block";
+
+      driveLink.href =
+        data.driveFolderUrl;
+
+    } else {
+
+      driveBox.style.display =
+        "none";
+
+      driveLink.removeAttribute(
+        "href"
+      );
+
+    }
+
+
+    colorStatus(
+      "applicationStatus",
+      data.applicationStatus
+    );
+
+
+    colorStatus(
+      "paymentStatus",
+      data.paymentStatus
+    );
+
+
+    showStatus(
+      "Application found successfully.",
+      "success"
+    );
+
+
+    document
+      .getElementById("result")
+      .scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+
+  }
+
+
+  /*
+   * ==========================================
+   * SET TEXT
+   * ==========================================
+   */
+
+  function setText(
+    id,
+    value
+  ) {
+
+    const element =
+      document.getElementById(id);
+
+    if (!element) return;
+
+    element.textContent =
+      value || "-";
+
+  }
+
+
+  /*
+   * ==========================================
+   * FORMAT DATE
+   * ==========================================
+   */
+
+  function formatDate(value) {
+
+    if (!value) {
+      return "-";
+    }
+
+    try {
+
+      const date =
+        new Date(value);
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return value;
+      }
+
+      return date.toLocaleString(
+        "en-IN",
+        {
+          dateStyle: "medium",
+          timeStyle: "short"
+        }
+      );
+
+    } catch {
+
+      return value;
+
+    }
+
+  }
+
+
+  /*
+   * ==========================================
+   * STATUS COLOR
+   * ==========================================
+   */
+
+  function colorStatus(
+    id,
+    value
+  ) {
+
+    const element =
+      document.getElementById(id);
+
+    if (!element) return;
+
+
+    const text =
+      String(value || "")
+        .toLowerCase();
+
+
+    element.classList.remove(
+      "received",
+      "pending",
+      "completed",
+      "rejected"
+    );
+
+
+    if (
+      text.includes("complete") ||
+      text.includes("approved") ||
+      text.includes("success")
+    ) {
+
+      element.classList.add(
+        "completed"
+      );
+
+    } else if (
+      text.includes("reject") ||
+      text.includes("cancel")
+    ) {
+
+      element.classList.add(
+        "rejected"
+      );
+
+    } else if (
+      text.includes("pending")
+    ) {
+
+      element.classList.add(
+        "pending"
+      );
+
+    } else {
+
+      element.classList.add(
+        "received"
+      );
+
+    }
+
+  }
+
+
+  /*
+   * ==========================================
+   * HIDE RESULT
+   * ==========================================
+   */
+
+  function hideResult() {
+
+    document.getElementById(
+      "result"
+    ).style.display = "none";
+
+
+    document.getElementById(
+      "driveBox"
+    ).style.display = "none";
+
+  }
+
+
+  /*
+   * ==========================================
+   * STATUS MESSAGE
+   * ==========================================
+   */
+
+  function showStatus(
+    message,
+    type
+  ) {
+
+    const element =
+      document.getElementById(
+        "status"
+      );
+
+
+    element.className =
+      "status " +
+      type;
+
+
+    element.textContent =
+      message;
+
+  }
+
+
+  /*
+   * ==========================================
+   * ENTER KEY
+   * ==========================================
+   */
+
+  document
+    .getElementById("trNumber")
+    .addEventListener(
+      "keydown",
+      function(event) {
+
+        if (
+          event.key === "Enter"
+        ) {
+
+          event.preventDefault();
+
+          trackApplication();
+
+        }
+
+      }
+    );
+
+</script>
+
+</body>
+</html>
