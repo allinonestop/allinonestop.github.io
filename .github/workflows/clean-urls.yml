@@ -1,0 +1,88 @@
+name: Build clean URLs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-clean-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build clean URL folders
+        shell: bash
+        run: |
+          set -e
+
+          mkdir -p retailer admin tracking super-retailer-pro-admin
+
+          cp retailer.html retailer/index.html
+          cp admin.html admin/index.html
+          cp tracking.html tracking/index.html
+          cp super-retailer-pro-admin.html super-retailer-pro-admin/index.html
+
+          # Root page: point navigation to clean folder URLs.
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('href="retailer.html"', 'href="retailer/"')
+          s = s.replace('href="admin.html"', 'href="admin/"')
+          s = s.replace('href="tracking.html"', 'href="tracking/"')
+          s = s.replace('href="index.html"', 'href="/"')
+          p.write_text(s, encoding='utf-8')
+          PY
+
+          # Nested pages: use root config and clean navigation.
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              'retailer/index.html': {
+                  'src="config.js"': 'src="../config.js"',
+                  'href="index.html"': 'href="../"',
+              },
+              'admin/index.html': {
+                  'src="config.js"': 'src="../config.js"',
+                  'href="index.html"': 'href="../"',
+                  'location.href="admin.html"': 'location.href="../admin/"',
+                  "location.href = 'admin.html'": "location.href = '../admin/'",
+                  'location.href = "admin.html"': 'location.href = "../admin/"',
+              },
+              'tracking/index.html': {
+                  'src="config.js"': 'src="../config.js"',
+                  'href="index.html"': 'href="../"',
+              },
+              'super-retailer-pro-admin/index.html': {
+                  'src="config.js"': 'src="../config.js"',
+                  'href="admin.html"': 'href="../admin/"',
+                  'retailer.html': 'retailer/',
+              },
+          }
+
+          for name, reps in replacements.items():
+              p = Path(name)
+              s = p.read_text(encoding='utf-8')
+              for old, new in reps.items():
+                  s = s.replace(old, new)
+              p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit generated clean URL pages
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html retailer/index.html admin/index.html tracking/index.html super-retailer-pro-admin/index.html .github/workflows/clean-urls.yml
+          if git diff --cached --quiet; then
+            echo "No clean URL changes to commit."
+          else
+            git commit -m "Add clean folder URLs for site pages"
+            git push
+          fi
