@@ -9,6 +9,10 @@ This version changes the backend architecture to:
 
 Your uploaded UI is kept as the base for `index.html`, `retailer.html`, `admin.html`, and `tracking.html`.
 
+## Auth routing fix
+
+The retailer portal now authenticates a retailer by **Retailer ID + password** through the `retailer-login` Edge Function, so existing retailer accounts whose Supabase Auth email differs from the Retailer ID login alias can still sign in. Admin logout returns directly to `/index.html`.
+
 ## 1. Supabase SQL
 
 Open Supabase → SQL Editor and run:
@@ -78,11 +82,12 @@ Copy the deployed Web App URL.
 
 ## 4. Supabase Edge Functions
 
-Deploy these three functions:
+Deploy these functions:
 
 - `admin-create-retailer`
 - `submit-application`
 - `track-application`
+- `retailer-login`
 
 Using Supabase CLI:
 
@@ -90,6 +95,7 @@ Using Supabase CLI:
 supabase functions deploy admin-create-retailer
 supabase functions deploy submit-application
 supabase functions deploy track-application --no-verify-jwt
+supabase functions deploy retailer-login --no-verify-jwt
 ```
 
 Set these function secrets:
@@ -121,16 +127,12 @@ The retailer ID remains like:
 
 `RET-K4CFYQ`
 
-The system creates an internal Supabase Auth email:
-
-`ret-k4cfyq@retailer.allinonestop.local`
-
 The retailer still enters only:
 
 - Retailer ID
 - Password
 
-The internal email is never shown as the login credential.
+The internal Auth email is never shown as the login credential.
 
 ## 7. Application submission flow
 
