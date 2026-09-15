@@ -1,0 +1,34 @@
+name: Fix retailer home button
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-retailer-home.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch Home button
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('retailer.html')
+          s = p.read_text(encoding='utf-8')
+          old = s
+          s = re.sub(r'<button\s+class="primary"\s+onclick="goHome\(\)"\s*>\s*Home\s*</button>', '<button type="button" class="primary" onclick="window.location.href=\'index.html\'">Home</button>', s, count=1)
+          if s == old:
+              raise SystemExit('Home button pattern not found; no change made')
+          p.write_text(s, encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add retailer.html
+          git commit -m 'Fix retailer Home button navigation'
+          git push
