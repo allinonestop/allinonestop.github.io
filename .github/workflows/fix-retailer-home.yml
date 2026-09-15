@@ -1,0 +1,52 @@
+name: Fix retailer home redirect
+
+on:
+  push:
+    paths:
+      - '.retailer-home-trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fix retailer Home button
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('retailer.html')
+          s = p.read_text(encoding='utf-8')
+          original = s
+          replacements = [
+              ('href="index.html"', 'href="https://allinonestop.github.io/"'),
+              ("href='index.html'", "href='https://allinonestop.github.io/'"),
+              ('href="./index.html"', 'href="https://allinonestop.github.io/"'),
+              ("href='./index.html'", "href='https://allinonestop.github.io/'"),
+              ("window.location.href = 'index.html'", "window.location.href = 'https://allinonestop.github.io/'"),
+              ('window.location.href = "index.html"', 'window.location.href = "https://allinonestop.github.io/"'),
+              ("window.location.replace('index.html')", "window.location.replace('https://allinonestop.github.io/')"),
+              ('window.location.replace("index.html")', 'window.location.replace("https://allinonestop.github.io/")'),
+          ]
+          for old, new in replacements:
+              s = s.replace(old, new)
+          if s == original:
+              raise SystemExit('No retailer Home redirect pattern found; refusing to change the file.')
+          p.write_text(s, encoding='utf-8')
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          if git diff --quiet -- retailer.html; then
+            echo "No change needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add retailer.html
+          git commit -m "Fix retailer Home redirect"
+          git push
