@@ -3,7 +3,7 @@ name: Fix retailer home redirect
 on:
   push:
     paths:
-      - '.retailer-home-trigger'
+      - 'retailer-home-trigger.txt'
 
 permissions:
   contents: write
