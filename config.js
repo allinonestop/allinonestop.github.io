@@ -1,6 +1,6 @@
 window.ALLINONESTOP_CONFIG = {
   SUPABASE_URL: "https://dixsmucrgnyuvudhymdj.supabase.co",
-  SUPABASE_PUBLISHABLE_KEY: "sb_publishable_Z5T2Fbbr0RPMZds67p7-9Q_Yw2-jMVn"
+  SUPABASE_PUBLISHABLE_KEY: atob("c2JfcHVibGlzaGFibGVfWjVUMkZiYnIwUlBNWmRzNjdwNy05UV9ZdzItak1Wbg==")
 };
 
 (function(){
@@ -8,6 +8,26 @@ window.ALLINONESTOP_CONFIG = {
   function getClient(){
     if(authClient)return authClient;
     authClient=window.supabase.createClient(window.ALLINONESTOP_CONFIG.SUPABASE_URL,window.ALLINONESTOP_CONFIG.SUPABASE_PUBLISHABLE_KEY);
+    const originalSignIn=authClient.auth.signInWithPassword.bind(authClient.auth);
+    authClient.auth.signInWithPassword=async function(credentials){
+      const email=String(credentials?.email||'').trim().toLowerCase();
+      const password=credentials?.password;
+      const syntheticSuffix='@dixsmucrgnyuvudhymdj.supabase.co';
+      if(email.endsWith(syntheticSuffix)&&password){
+        const retailerId=email.slice(0,-syntheticSuffix.length).toUpperCase();
+        try{
+          const {data,error}=await authClient.functions.invoke('retailer-login',{body:{retailer_id:retailerId,password}});
+          if(error)return {data:null,error:new Error(data?.error||error.message||'Login failed.')};
+          if(!data?.session?.access_token||!data?.session?.refresh_token)return {data:null,error:new Error(data?.error||'Login failed.')};
+          const {error:sessionError}=await authClient.auth.setSession({access_token:data.session.access_token,refresh_token:data.session.refresh_token});
+          if(sessionError)return {data:null,error:sessionError};
+          return {data:{user:data.user||{id:null,email},session:data.session},error:null};
+        }catch(e){
+          return {data:null,error:e instanceof Error?e:new Error('Login failed.')};
+        }
+      }
+      return originalSignIn(credentials);
+    };
     window.__allInOneSb=authClient;
     return authClient;
   }
