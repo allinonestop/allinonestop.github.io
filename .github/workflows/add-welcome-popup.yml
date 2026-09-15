@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/trigger-welcome-popup'
+      - '.github/trigger-welcome-popup-2'
   workflow_dispatch:
 
 permissions:
@@ -16,12 +17,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Add welcome popup
+      - name: Add welcome popup safely
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
+
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
+
+          if 'id="rajkumarWelcome"' in s:
+              print('Welcome popup already present; nothing to change.')
+              raise SystemExit(0)
 
           css = r'''
 /* RAJKUMAR WELCOME POPUP */
@@ -98,13 +105,19 @@ function closeRajkumarWelcome(){
 </script>
 '''
 
-          if 'id="rajkumarWelcome"' not in s:
-              s = s.replace('</head>', css + '\n</head>', 1)
-              s = s.replace('<body>', '<body>\n' + popup, 1)
-              s = s.replace('</body>', script + '\n</body>', 1)
-              p.write_text(s, encoding='utf-8')
-          else:
-              print('Welcome popup already present; no changes needed.')
+          if not re.search(r'</head\s*>', s, re.I):
+              raise SystemExit('ERROR: </head> not found; index.html was not changed.')
+          body_match = re.search(r'<body\b[^>]*>', s, re.I)
+          if not body_match:
+              raise SystemExit('ERROR: <body> not found; index.html was not changed.')
+          if not re.search(r'</body\s*>', s, re.I):
+              raise SystemExit('ERROR: </body> not found; index.html was not changed.')
+
+          s = re.sub(r'</head\s*>', css + '\n</head>', s, count=1, flags=re.I)
+          s = s[:body_match.end()] + '\n' + popup + s[body_match.end():]
+          s = re.sub(r'</body\s*>', script + '\n</body>', s, count=1, flags=re.I)
+          p.write_text(s, encoding='utf-8')
+          print('Welcome popup added successfully without replacing existing homepage code.')
           PY
 
       - name: Commit changes
@@ -116,5 +129,5 @@ function closeRajkumarWelcome(){
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "Add Rajkumar welcome popup to homepage"
+          git commit -m "Add safe Rajkumar welcome popup"
           git push
