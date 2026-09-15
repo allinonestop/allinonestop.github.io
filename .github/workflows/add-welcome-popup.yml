@@ -1,0 +1,120 @@
+name: Add Rajkumar Welcome Popup
+
+on:
+  push:
+    paths:
+      - '.github/trigger-welcome-popup'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add welcome popup
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          css = r'''
+/* RAJKUMAR WELCOME POPUP */
+#rajkumarWelcome {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(12, 18, 38, .62);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+#rajkumarWelcome .welcome-card {
+  width: min(430px, 94vw);
+  padding: 38px 28px 30px;
+  text-align: center;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: 0 25px 80px rgba(0,0,0,.28);
+  animation: rajWelcomeIn .35s ease-out;
+}
+#rajkumarWelcome h2 {
+  margin: 0;
+  color: #18233f;
+  font-size: clamp(27px, 7vw, 38px);
+  line-height: 1.1;
+  font-weight: 900;
+}
+#rajkumarWelcome p {
+  margin: 12px 0 25px;
+  color: #64718b;
+  font-size: 16px;
+  font-weight: 700;
+}
+#rajkumarWelcome button {
+  border: 0;
+  min-width: 130px;
+  padding: 13px 28px;
+  border-radius: 13px;
+  color: #fff;
+  background: linear-gradient(135deg, #635bff, #287cff);
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(67,88,255,.25);
+}
+#rajkumarWelcome button:hover { transform: translateY(-2px); }
+@keyframes rajWelcomeIn {
+  from { opacity: 0; transform: translateY(12px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+'''
+
+          popup = r'''
+<!-- RAJKUMAR WELCOME POPUP -->
+<div id="rajkumarWelcome" role="dialog" aria-modal="true" aria-label="Welcome">
+  <div class="welcome-card">
+    <h2>Welcome to Rajkumar</h2>
+    <p>Fast &amp; Trusted Website</p>
+    <button type="button" onclick="closeRajkumarWelcome()">OK</button>
+  </div>
+</div>
+'''
+
+          script = r'''
+<script>
+function closeRajkumarWelcome(){
+  const popup = document.getElementById('rajkumarWelcome');
+  if (popup) popup.remove();
+}
+</script>
+'''
+
+          if 'id="rajkumarWelcome"' not in s:
+              s = s.replace('</head>', css + '\n</head>', 1)
+              s = s.replace('<body>', '<body>\n' + popup, 1)
+              s = s.replace('</body>', script + '\n</body>', 1)
+              p.write_text(s, encoding='utf-8')
+          else:
+              print('Welcome popup already present; no changes needed.')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "Add Rajkumar welcome popup to homepage"
+          git push
