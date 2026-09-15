@@ -1592,7 +1592,12 @@ async function restoreSession() {
       error.message
     );
 
-    await supabaseClient.auth.signOut();
+    await Promise.race([
+      supabaseClient.auth.signOut(),
+      new Promise(resolve => setTimeout(resolve, 1000))
+    ]);
+
+    window.location.replace("https://allinonestop.github.io/");
 
   }
 
